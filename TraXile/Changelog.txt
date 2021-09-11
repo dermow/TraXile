@@ -1,0 +1,5 @@
+﻿0.3.1
+- Added Settings menue
+- Added option to reset statistics
+- Added option to reparse the logfile
+- Prevent application to be started twice

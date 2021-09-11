@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31321.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{800E35AB-28FC-4DCE-91C8-07E4B380AEDD}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TraXile", "TraXile\TraXile.csproj", "{2D010E92-B659-4567-B1D0-9F6474D124E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D010E92-B659-4567-B1D0-9F6474D124E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D010E92-B659-4567-B1D0-9F6474D124E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D010E92-B659-4567-B1D0-9F6474D124E2}.Debug|x86.ActiveCfg = Debug|x86
+		{2D010E92-B659-4567-B1D0-9F6474D124E2}.Debug|x86.Build.0 = Debug|x86
+		{2D010E92-B659-4567-B1D0-9F6474D124E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D010E92-B659-4567-B1D0-9F6474D124E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D010E92-B659-4567-B1D0-9F6474D124E2}.Release|x86.ActiveCfg = Release|x86
+		{2D010E92-B659-4567-B1D0-9F6474D124E2}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BC6BB56D-97EC-49F0-802A-A253B81881A9}
+	EndGlobalSection
+EndGlobal
