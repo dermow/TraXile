@@ -1295,8 +1295,9 @@ namespace TraXile
                     }
                     else
                     {
-                        foreach(KeyValuePair<string, int> kvp in numStats)
+                        for(int i = 0; i < numStats.Count; i++)
                         {
+                            KeyValuePair<string, int> kvp = numStats.ElementAt(i);
                             statLvItems[kvp.Key].SubItems[1].Text = kvp.Value.ToString();
                         }
                     }
