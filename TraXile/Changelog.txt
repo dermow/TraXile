@@ -3,3 +3,6 @@
 - Added option to reset statistics
 - Added option to reparse the logfile
 - Prevent application to be started twice
+
+0.3.2
+- FIX: update of stats list was not thread safe
