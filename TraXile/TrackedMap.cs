@@ -22,6 +22,7 @@ namespace TraXile
         private int iTrialMasterCount;
         private int iDeathCounter;
         private long lTimestamp;
+        private string sCustomStopWatchVaule;
 
         public TrackedMap()
         {
@@ -59,13 +60,26 @@ namespace TraXile
             get { return stopWatch.Elapsed; }
         }
 
+        public string CustomStopWatchValue
+        {
+            get { return sCustomStopWatchVaule; }
+            set { sCustomStopWatchVaule = value; }
+        }
+
         public string StopWatchValue
         {
             get
             {
-                TimeSpan ts = stopWatch.Elapsed;
-                return String.Format("{0:00}:{1:00}:{2:00}",
-                    ts.Hours, ts.Minutes, ts.Seconds);
+                if(CustomStopWatchValue != null)
+                {
+                    return sCustomStopWatchVaule;
+                }
+                else
+                {
+                    TimeSpan ts = stopWatch.Elapsed;
+                    return String.Format("{0:00}:{1:00}:{2:00}",
+                        ts.Hours, ts.Minutes, ts.Seconds);
+                }
             }
         }
 

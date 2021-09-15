@@ -135,6 +135,12 @@
     <Compile Include="CustomProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ExportActvityList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExportActvityList.Designer.cs">
+      <DependentUpon>ExportActvityList.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileSelectScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,6 +179,9 @@
     </Compile>
     <Compile Include="TrackedEvent.cs" />
     <Compile Include="TrackedMap.cs" />
+    <EmbeddedResource Include="ExportActvityList.resx">
+      <DependentUpon>ExportActvityList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FileSelectScreen.resx">
       <DependentUpon>FileSelectScreen.cs</DependentUpon>
     </EmbeddedResource>
