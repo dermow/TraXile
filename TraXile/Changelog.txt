@@ -8,3 +8,5 @@
 - Fixed a bug which causes the game to crash when dying in game
 - Added export feature for activity log
 - Fixed: Timestamps from activity log were parsed as UTC time instead of local time
+- FIX: update of stats list was not thread safe
+
