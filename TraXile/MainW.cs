@@ -670,10 +670,13 @@ namespace TraXile
 
             while(sqlReader.Read())
             {
+                TimeSpan ts = TimeSpan.FromSeconds(sqlReader.GetInt32(3));
+
                 TrackedMap map = new TrackedMap
                 {
-                    Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)),
+                    Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
                     TimeStamp = sqlReader.GetInt32(0),
+                    CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds),
                     Type = sqlReader.GetString(1),
                     Area = sqlReader.GetString(2),
                     DeathCounter = sqlReader.GetInt32(4),
@@ -682,9 +685,8 @@ namespace TraXile
                 //mapHistory
                 mapHistory.Insert(0, map);
 
-                TimeSpan ts = TimeSpan.FromSeconds(sqlReader.GetInt32(3));
-                AddMapLvItem(map, false, String.Format("{0:00}:{1:00}:{2:00}",
-                    ts.Hours, ts.Minutes, ts.Seconds));
+               
+                AddMapLvItem(map, false);
                 
             }
             bHistoryInitialized = true;
@@ -1235,7 +1237,7 @@ namespace TraXile
             });
         }
                 
-        private void AddMapLvItem(TrackedMap map, bool bZana = false, string custom_duration = "")
+        private void AddMapLvItem(TrackedMap map, bool bZana = false)
         {
             this.Invoke((MethodInvoker)delegate
             {
@@ -1245,7 +1247,7 @@ namespace TraXile
                     sName += " (Zana)";
                 lvi.SubItems.Add(map.Type);
                 lvi.SubItems.Add(map.Area);
-                lvi.SubItems.Add(custom_duration == "" ? map.StopWatchValue.ToString() : custom_duration);
+                lvi.SubItems.Add(map.StopWatchValue.ToString());
                 lvi.SubItems.Add(map.DeathCounter.ToString());
 
                 listView1.Items.Insert(0, lvi);
@@ -1751,6 +1753,29 @@ namespace TraXile
 
         }
 
+        public void WriteActivitiesToCSV(string sPath)
+        {
+            StreamWriter wrt = new StreamWriter(sPath);
+            TrackedMap tm;
+
+            //Write headline
+            string sLine = "time;type;area;stopwatch;death_counter";
+            wrt.WriteLine(sLine);
+
+            for(int i = 0; i < mapHistory.Count; i++)
+            {
+                tm = mapHistory[i];
+                sLine = "";
+                sLine += tm.Started;
+                sLine += ";" + tm.Type;
+                sLine += ";" + tm.Area;
+                sLine += ";" + tm.StopWatchValue;
+                sLine += ";" + tm.DeathCounter;
+                wrt.WriteLine(sLine);
+            }
+            wrt.Close();
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (sPoELogFilePath == null)
@@ -1876,12 +1901,16 @@ namespace TraXile
             }
         }
 
-#pragma warning disable IDE1006 // Benennungsstile
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-#pragma warning restore IDE1006 // Benennungsstile
         {
             Settings stt = new Settings(this);
             stt.ShowDialog();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ExportActvityList exp = new ExportActvityList(this);
+            exp.Show();
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)

@@ -3,3 +3,8 @@
 - Added option to reset statistics
 - Added option to reparse the logfile
 - Prevent application to be started twice
+
+0.3.2
+- Fixed a bug which causes the game to crash when dying in game
+- Added export feature for activity log
+- Fixed: Timestamps from activity log were parsed as UTC time instead of local time

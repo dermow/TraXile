@@ -1,6 +1,17 @@
 # TraXile
 Tracking tool for Path of Exile
 
+## Screenshots
+
+### Map Tracking
+![Preview image](https://imgur.com/a/80Go8iY)
+
+### Statistics
+![Preview image](https://imgur.com/GNbWCN6)
+
+### Bossing Info
+![Preview image](https://imgur.com/pnX4Nd6)
+
 ## Features
 * Live tracking of your map runs and other activities
 * Calculation of statistics
