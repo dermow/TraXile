@@ -971,7 +971,7 @@ namespace TraXile
                         IncrementStat("TotalKilledCount", ev.EventTime, 1);
                         dtLastDeath = DateTime.Now;
                         sLastDeathReason = GetDeathReasonromEvent(ev);
-                        if (currentMap != null)
+                        if ((currentMap != null) && CheckIfAreaIsMap(sCurrentArea))
                         {
                             if (bIsMapZana)
                             {

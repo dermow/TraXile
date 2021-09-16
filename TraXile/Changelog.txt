@@ -10,3 +10,5 @@
 - Fixed: Timestamps from activity log were parsed as UTC time instead of local time
 - FIX: update of stats list was not thread safe
 
+0.3.3
+- Fix: Deaths after map run in non-map areas (Delve, Leveling) were added to the last maps death counter

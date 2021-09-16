@@ -18,6 +18,8 @@ namespace TraXile
             this.Text = APPINFO.NAME + " " + APPINFO.VERSION;
             label2.Text = "Version: " + APPINFO.VERSION;
             linkLabel2.Text = APPINFO.ISSUE_URL;
+            label1.Text = "Build: " + APPINFO.BUILDTIME;
+
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
