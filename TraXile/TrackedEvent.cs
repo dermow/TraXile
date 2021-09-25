@@ -8,9 +8,7 @@ namespace TraXile
 {
     class TrackedEvent
     {
-#pragma warning disable IDE0044 // Modifizierer "readonly" hinzufügen
         private EVENT_TYPES evType;
-#pragma warning restore IDE0044 // Modifizierer "readonly" hinzufügen
         private string sLogLine;
         private DateTime dtEvStart;
 
@@ -28,6 +26,11 @@ namespace TraXile
             {
                 this.sLogLine = value;
             }
+        }
+
+        public override string ToString()
+        {
+            return "TrackedEvent -> Time: " + dtEvStart + ", Type: " + evType.ToString() + ", MatchedLine: '" + sLogLine + "'";
         }
 
         public DateTime EventTime

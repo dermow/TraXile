@@ -12,3 +12,10 @@
 
 0.3.3
 - Fix: Deaths after map run in non-map areas (Delve, Leveling) were added to the last maps death counter
+
+0.4.0
+- Added auto tags for activities (blight, zana...)
+
+0.4.1
+- Added logfile
+- Added option to enable or disable grid lines in Activity Log

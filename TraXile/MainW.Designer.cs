@@ -32,11 +32,11 @@ namespace TraXile
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TabControl tabControl1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainW));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             ""}, -1, System.Drawing.Color.Empty, System.Drawing.SystemColors.HotTrack, null);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -69,6 +69,7 @@ namespace TraXile
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel3 = new System.Windows.Forms.Panel();
+            this.button9 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -175,6 +176,21 @@ namespace TraXile
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.label60 = new System.Windows.Forms.Label();
+            this.button14 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label58 = new System.Windows.Forms.Label();
+            this.button12 = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.label57 = new System.Windows.Forms.Label();
+            this.listView3 = new System.Windows.Forms.ListView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -203,25 +219,13 @@ namespace TraXile
             this.pictureBox15 = new System.Windows.Forms.PictureBox();
             this.label51 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
-            this.button9 = new System.Windows.Forms.Button();
-            this.listView3 = new System.Windows.Forms.ListView();
-            this.label57 = new System.Windows.Forms.Label();
-            this.button10 = new System.Windows.Forms.Button();
-            this.button11 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button12 = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label61 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.listView2 = new TraXile.ListViewNF();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label58 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label59 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.button13 = new System.Windows.Forms.Button();
-            this.button14 = new System.Windows.Forms.Button();
-            this.label60 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             tabControl1 = new System.Windows.Forms.TabControl();
             tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -261,13 +265,14 @@ namespace TraXile
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage7.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
-            this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -646,6 +651,16 @@ namespace TraXile
             this.panel3.Size = new System.Drawing.Size(514, 29);
             this.panel3.TabIndex = 5;
             // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(246, 3);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(75, 21);
+            this.button9.TabIndex = 3;
+            this.button9.Text = "reload";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // button5
             // 
             this.button5.Location = new System.Drawing.Point(165, 3);
@@ -748,28 +763,28 @@ namespace TraXile
             this.chart1.BackColor = System.Drawing.Color.Black;
             this.chart1.BackSecondaryColor = System.Drawing.Color.Red;
             this.chart1.BorderlineColor = System.Drawing.Color.Transparent;
-            chartArea1.BackColor = System.Drawing.Color.Black;
-            chartArea1.BorderColor = System.Drawing.Color.Red;
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea2.BackColor = System.Drawing.Color.Black;
+            chartArea2.BorderColor = System.Drawing.Color.Red;
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.BackColor = System.Drawing.Color.Black;
-            legend1.ForeColor = System.Drawing.Color.Red;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            legend2.BackColor = System.Drawing.Color.Black;
+            legend2.ForeColor = System.Drawing.Color.Red;
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(3, 521);
             this.chart1.Name = "chart1";
-            series1.BackSecondaryColor = System.Drawing.Color.Red;
-            series1.ChartArea = "ChartArea1";
-            series1.Color = System.Drawing.Color.Red;
-            series1.LabelBackColor = System.Drawing.Color.Red;
-            series1.LabelBorderColor = System.Drawing.Color.Red;
-            series1.LabelForeColor = System.Drawing.Color.Red;
-            series1.Legend = "Legend1";
-            series1.MarkerBorderColor = System.Drawing.Color.Red;
-            series1.MarkerColor = System.Drawing.Color.Red;
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series2.BackSecondaryColor = System.Drawing.Color.Red;
+            series2.ChartArea = "ChartArea1";
+            series2.Color = System.Drawing.Color.Red;
+            series2.LabelBackColor = System.Drawing.Color.Red;
+            series2.LabelBorderColor = System.Drawing.Color.Red;
+            series2.LabelForeColor = System.Drawing.Color.Red;
+            series2.Legend = "Legend1";
+            series2.MarkerBorderColor = System.Drawing.Color.Red;
+            series2.MarkerColor = System.Drawing.Color.Red;
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(963, 182);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
@@ -1826,6 +1841,7 @@ namespace TraXile
             // tabPage6
             // 
             this.tabPage6.BackColor = System.Drawing.Color.Black;
+            this.tabPage6.Controls.Add(this.groupBox4);
             this.tabPage6.Controls.Add(this.groupBox2);
             this.tabPage6.Controls.Add(this.groupBox1);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
@@ -1842,14 +1858,14 @@ namespace TraXile
             this.groupBox2.ForeColor = System.Drawing.Color.Red;
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(476, 124);
+            this.groupBox2.Size = new System.Drawing.Size(445, 124);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "General";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(13, 49);
+            this.textBox1.Location = new System.Drawing.Point(9, 33);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(402, 20);
             this.textBox1.TabIndex = 1;
@@ -1857,7 +1873,8 @@ namespace TraXile
             // label56
             // 
             this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(10, 33);
+            this.label56.ForeColor = System.Drawing.Color.Gold;
+            this.label56.Location = new System.Drawing.Point(6, 16);
             this.label56.Name = "label56";
             this.label56.Size = new System.Drawing.Size(60, 13);
             this.label56.TabIndex = 0;
@@ -1922,6 +1939,150 @@ namespace TraXile
             this.tabPage7.Size = new System.Drawing.Size(961, 680);
             this.tabPage7.TabIndex = 1;
             this.tabPage7.Text = "Tags";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.textBox5);
+            this.groupBox3.Controls.Add(this.label60);
+            this.groupBox3.Controls.Add(this.button14);
+            this.groupBox3.Controls.Add(this.button13);
+            this.groupBox3.Controls.Add(this.textBox4);
+            this.groupBox3.Controls.Add(this.label59);
+            this.groupBox3.Controls.Add(this.textBox3);
+            this.groupBox3.Controls.Add(this.label58);
+            this.groupBox3.ForeColor = System.Drawing.Color.Gold;
+            this.groupBox3.Location = new System.Drawing.Point(346, 75);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(450, 300);
+            this.groupBox3.TabIndex = 6;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Edit Tag";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(107, 100);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(59, 20);
+            this.textBox5.TabIndex = 13;
+            // 
+            // label60
+            // 
+            this.label60.AutoSize = true;
+            this.label60.Location = new System.Drawing.Point(6, 103);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(64, 13);
+            this.label60.TabIndex = 12;
+            this.label60.Text = "History Tag:";
+            // 
+            // button14
+            // 
+            this.button14.ForeColor = System.Drawing.Color.Red;
+            this.button14.Location = new System.Drawing.Point(91, 255);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(75, 23);
+            this.button14.TabIndex = 11;
+            this.button14.Text = "Cancel";
+            this.button14.UseVisualStyleBackColor = true;
+            // 
+            // button13
+            // 
+            this.button13.ForeColor = System.Drawing.Color.Red;
+            this.button13.Location = new System.Drawing.Point(10, 255);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(75, 23);
+            this.button13.TabIndex = 10;
+            this.button13.Text = "Save";
+            this.button13.UseVisualStyleBackColor = true;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(107, 66);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(133, 20);
+            this.textBox4.TabIndex = 9;
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(7, 69);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(63, 13);
+            this.label59.TabIndex = 8;
+            this.label59.Text = "Description:";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(107, 35);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(133, 20);
+            this.textBox3.TabIndex = 7;
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(7, 38);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(21, 13);
+            this.label58.TabIndex = 0;
+            this.label58.Text = "ID:";
+            // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(148, 45);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(75, 23);
+            this.button12.TabIndex = 5;
+            this.button12.Text = "add";
+            this.button12.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(9, 48);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(133, 20);
+            this.textBox2.TabIndex = 4;
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(247, 104);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(75, 23);
+            this.button11.TabIndex = 3;
+            this.button11.Text = "delete";
+            this.button11.UseVisualStyleBackColor = true;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(247, 75);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(75, 23);
+            this.button10.TabIndex = 2;
+            this.button10.Text = "edit";
+            this.button10.UseVisualStyleBackColor = true;
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.ForeColor = System.Drawing.Color.Red;
+            this.label57.Location = new System.Drawing.Point(6, 3);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(31, 13);
+            this.label57.TabIndex = 1;
+            this.label57.Text = "Tags";
+            // 
+            // listView3
+            // 
+            this.listView3.BackColor = System.Drawing.Color.Black;
+            this.listView3.HideSelection = false;
+            this.listView3.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem3,
+            listViewItem4});
+            this.listView3.Location = new System.Drawing.Point(6, 75);
+            this.listView3.Name = "listView3";
+            this.listView3.Size = new System.Drawing.Size(234, 300);
+            this.listView3.TabIndex = 0;
+            this.listView3.UseCompatibleStateImageBehavior = false;
+            this.listView3.View = System.Windows.Forms.View.List;
             // 
             // menuStrip1
             // 
@@ -2186,91 +2347,38 @@ namespace TraXile
             this.label36.Size = new System.Drawing.Size(16, 18);
             this.label36.TabIndex = 25;
             // 
-            // button9
+            // groupBox4
             // 
-            this.button9.Location = new System.Drawing.Point(246, 3);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(75, 21);
-            this.button9.TabIndex = 3;
-            this.button9.Text = "reload";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
+            this.groupBox4.Controls.Add(this.checkBox2);
+            this.groupBox4.Controls.Add(this.checkBox1);
+            this.groupBox4.Controls.Add(this.label61);
+            this.groupBox4.ForeColor = System.Drawing.Color.Red;
+            this.groupBox4.Location = new System.Drawing.Point(454, 3);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(445, 124);
+            this.groupBox4.TabIndex = 4;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "UI";
             // 
-            // listView3
+            // label61
             // 
-            this.listView3.BackColor = System.Drawing.Color.Black;
-            this.listView3.HideSelection = false;
-            this.listView3.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2});
-            this.listView3.Location = new System.Drawing.Point(6, 75);
-            this.listView3.Name = "listView3";
-            this.listView3.Size = new System.Drawing.Size(234, 300);
-            this.listView3.TabIndex = 0;
-            this.listView3.UseCompatibleStateImageBehavior = false;
-            this.listView3.View = System.Windows.Forms.View.List;
+            this.label61.AutoSize = true;
+            this.label61.Location = new System.Drawing.Point(6, 33);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(0, 13);
+            this.label61.TabIndex = 0;
             // 
-            // label57
+            // checkBox1
             // 
-            this.label57.AutoSize = true;
-            this.label57.ForeColor = System.Drawing.Color.Red;
-            this.label57.Location = new System.Drawing.Point(6, 3);
-            this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(31, 13);
-            this.label57.TabIndex = 1;
-            this.label57.Text = "Tags";
-            // 
-            // button10
-            // 
-            this.button10.Location = new System.Drawing.Point(247, 75);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(75, 23);
-            this.button10.TabIndex = 2;
-            this.button10.Text = "edit";
-            this.button10.UseVisualStyleBackColor = true;
-            // 
-            // button11
-            // 
-            this.button11.Location = new System.Drawing.Point(247, 104);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(75, 23);
-            this.button11.TabIndex = 3;
-            this.button11.Text = "delete";
-            this.button11.UseVisualStyleBackColor = true;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(9, 48);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(133, 20);
-            this.textBox2.TabIndex = 4;
-            // 
-            // button12
-            // 
-            this.button12.Location = new System.Drawing.Point(148, 45);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(75, 23);
-            this.button12.TabIndex = 5;
-            this.button12.Text = "add";
-            this.button12.UseVisualStyleBackColor = true;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.textBox5);
-            this.groupBox3.Controls.Add(this.label60);
-            this.groupBox3.Controls.Add(this.button14);
-            this.groupBox3.Controls.Add(this.button13);
-            this.groupBox3.Controls.Add(this.textBox4);
-            this.groupBox3.Controls.Add(this.label59);
-            this.groupBox3.Controls.Add(this.textBox3);
-            this.groupBox3.Controls.Add(this.label58);
-            this.groupBox3.ForeColor = System.Drawing.Color.Gold;
-            this.groupBox3.Location = new System.Drawing.Point(346, 75);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(450, 300);
-            this.groupBox3.TabIndex = 6;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Edit Tag";
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.ForeColor = System.Drawing.Color.Gold;
+            this.checkBox1.Location = new System.Drawing.Point(9, 19);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(159, 17);
+            this.checkBox1.TabIndex = 3;
+            this.checkBox1.Text = "Show grid lines in activity list";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // listView2
             // 
@@ -2300,73 +2408,17 @@ namespace TraXile
             // 
             this.columnHeader6.Text = "Value";
             // 
-            // label58
+            // checkBox2
             // 
-            this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(7, 38);
-            this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(21, 13);
-            this.label58.TabIndex = 0;
-            this.label58.Text = "ID:";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(107, 35);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(133, 20);
-            this.textBox3.TabIndex = 7;
-            // 
-            // label59
-            // 
-            this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(7, 69);
-            this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(63, 13);
-            this.label59.TabIndex = 8;
-            this.label59.Text = "Description:";
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(107, 66);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(133, 20);
-            this.textBox4.TabIndex = 9;
-            // 
-            // button13
-            // 
-            this.button13.ForeColor = System.Drawing.Color.Red;
-            this.button13.Location = new System.Drawing.Point(10, 255);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(75, 23);
-            this.button13.TabIndex = 10;
-            this.button13.Text = "Save";
-            this.button13.UseVisualStyleBackColor = true;
-            // 
-            // button14
-            // 
-            this.button14.ForeColor = System.Drawing.Color.Red;
-            this.button14.Location = new System.Drawing.Point(91, 255);
-            this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(75, 23);
-            this.button14.TabIndex = 11;
-            this.button14.Text = "Cancel";
-            this.button14.UseVisualStyleBackColor = true;
-            // 
-            // label60
-            // 
-            this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(6, 103);
-            this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(64, 13);
-            this.label60.TabIndex = 12;
-            this.label60.Text = "History Tag:";
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(107, 100);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(59, 20);
-            this.textBox5.TabIndex = 13;
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.ForeColor = System.Drawing.Color.Gold;
+            this.checkBox2.Location = new System.Drawing.Point(9, 36);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(166, 17);
+            this.checkBox2.TabIndex = 4;
+            this.checkBox2.Text = "Show grid lines in statistics list";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // MainW
             // 
@@ -2430,6 +2482,8 @@ namespace TraXile
             this.groupBox1.ResumeLayout(false);
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).EndInit();
@@ -2437,8 +2491,8 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2630,6 +2684,10 @@ namespace TraXile
         private System.Windows.Forms.Label label59;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label58;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label61;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
 

@@ -79,6 +79,7 @@ namespace TraXile
         private bool bIsMapZana;
         private bool bExit;
         private bool bElderFightActive;
+        private bool bSettingActivityLogShowGrid;
         private int iShaperKillsInFight;
         private SqliteConnection dbconn;
         private bool bHistoryInitialized;
@@ -94,7 +95,8 @@ namespace TraXile
         List<ActivityTag> tags;
         Dictionary<string, Label> tagLabels;
         ILog log;
-        
+        private bool bSettingStatsShowGrid;
+
         public MainW()
         {
             this.Visible = false;
@@ -105,6 +107,8 @@ namespace TraXile
         private void Init()
         {
             this.Opacity = 0;
+
+            log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
             listView1.Columns[0].Width = 120;
             listView1.Columns[1].Width = 50;
@@ -413,6 +417,8 @@ namespace TraXile
 
             InitNumStats();
             SaveStatsCache();
+
+            log.Info("Stats cleared.");
         }
 
         private void InitDatabase()
@@ -467,6 +473,8 @@ namespace TraXile
                 "(" +
                 "player_name )";
             cmd.ExecuteNonQuery();
+
+            log.Info("Database initialized.");
         }
 
         private void AddKnownPlayerIfNotExists(string s_name)
@@ -478,6 +486,7 @@ namespace TraXile
                 cmd = dbconn.CreateCommand();
                 cmd.CommandText = "insert into tx_known_players (player_name) VALUES ('" + s_name + "')";
                 cmd.ExecuteNonQuery();
+                log.Info("KnownPlayerAdded -> name: " + s_name);
             }
         }
 
@@ -885,6 +894,8 @@ namespace TraXile
 
         private void ParseLogFile()
         {
+            log.Info("Started logfile parsing. Last hash was " + iLastHash.ToString());
+
             dLogLinesTotal = Convert.ToDouble(GetLogFileLineCount());
 
             var fs = new FileStream(sPoELogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -1052,7 +1063,7 @@ namespace TraXile
                     // Special calculation for Elder fight - he has no start dialoge.
                     if(sAreaName == "Absence of Value and Meaning".Trim())
                     {
-                        if(!bElderFightActive) // && (sCurrentInstanceEndpoint != sCurrentElderEndpoint))
+                        if(!bElderFightActive)
                         {
                             IncrementStat("ElderTried", ev.EventTime, 1);
                         }
@@ -1373,6 +1384,8 @@ namespace TraXile
             }
 
             if (!bInit) TextLogEvent(ev);
+            LogEvent(ev);
+            
         }
 
         private void IncrementStat(string s_key, DateTime dt, int i_value = 1)
@@ -1382,6 +1395,8 @@ namespace TraXile
             SqliteCommand cmd = dbconn.CreateCommand();
             cmd.CommandText = "INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + numStats[s_key] + ")";
             cmd.ExecuteNonQuery();
+
+            log.Debug("IncrementStat -> key: " + s_key + ", increment: " + i_value + ", new value: " + numStats[s_key].ToString());
         }
 
         private string GetEndpointFromInstanceEvent(TrackedEvent ev)
@@ -1470,11 +1485,16 @@ namespace TraXile
             wrt.Close();
         }
 
+        private void LogEvent(TrackedEvent ev)
+        {
+            log.Info(ev.ToString());
+        }
+
         private void TextLogEvent(TrackedEvent ev)
         {
             this.Invoke((MethodInvoker)delegate
             {
-                textBoxLogView.Text += "[" + ev.EventTime.ToString() + "] " + ev.EventType.ToString() + " - line: " + ev.LogLine + Environment.NewLine;
+                textBoxLogView.Text += ev.ToString() + Environment.NewLine;
             });
         }
 
@@ -1484,6 +1504,7 @@ namespace TraXile
             {
                 textBoxLogView.Text += "[" + DateTime.Now.ToString() + "] " + sTxt + Environment.NewLine;
             });
+            log.Info(sTxt);
         }
 
         private void ResetMapHistory()
@@ -1549,6 +1570,8 @@ namespace TraXile
         private void UpdateGUI()
         {
             TimeSpan tsAreaTime = (DateTime.Now - this.dtInAreaSince);
+            checkBox1.Checked = bSettingActivityLogShowGrid;
+            checkBox2.Checked = bSettingStatsShowGrid;
 
             if(bEventQInitialized)
             {
@@ -1731,6 +1754,11 @@ namespace TraXile
         private void ReadSettings()
         {
             this.sPoELogFilePath = ReadSetting("PoELogFilePath");
+            this.bSettingActivityLogShowGrid = Convert.ToBoolean(ReadSetting("ActivityLogShowGrid"));
+            this.bSettingStatsShowGrid = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
+
+            listView1.GridLines = bSettingActivityLogShowGrid;
+            listView2.GridLines = bSettingStatsShowGrid;
         }
 
         public string ReadSetting(string key)
@@ -1750,6 +1778,7 @@ namespace TraXile
             bExit = true;
             if (currentMap != null)
                 FinishMap(currentMap, null, currentMap.Type, DateTime.Now);
+            log.Info("Exitting.");
             Application.Exit();
         }
 
@@ -1769,6 +1798,7 @@ namespace TraXile
                 }
                 configFile.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+                log.Info("Updated setting: " + key + "=" + value);
             }
             catch (ConfigurationErrorsException)
             {
@@ -2262,6 +2292,20 @@ namespace TraXile
         private void button9_Click(object sender, EventArgs e)
         {
             ResetMapHistory();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            bSettingActivityLogShowGrid = checkBox1.Checked;
+            AddUpdateAppSettings("ActivityLogShowGrid", checkBox1.Checked.ToString());
+            listView1.GridLines = bSettingActivityLogShowGrid;
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            bSettingStatsShowGrid = checkBox2.Checked;
+            AddUpdateAppSettings("StatsShowGrid", checkBox2.Checked.ToString());
+            listView2.GridLines = bSettingStatsShowGrid;
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
