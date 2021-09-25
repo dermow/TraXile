@@ -131,6 +131,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ActivityDetails.Designer.cs">
+      <DependentUpon>ActivityDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="APPINFO.cs" />
     <Compile Include="CustomProgressBar.cs">
       <SubType>Component</SubType>
@@ -177,8 +183,12 @@
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="ActivityTag.cs" />
     <Compile Include="TrackedEvent.cs" />
-    <Compile Include="TrackedMap.cs" />
+    <Compile Include="TrackedActivity.cs" />
+    <EmbeddedResource Include="ActivityDetails.resx">
+      <DependentUpon>ActivityDetails.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExportActvityList.resx">
       <DependentUpon>ExportActvityList.cs</DependentUpon>
     </EmbeddedResource>

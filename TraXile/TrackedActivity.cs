@@ -7,10 +7,11 @@ using System.Diagnostics;
 
 namespace TraXile
 {
-    class TrackedMap
+    public class TrackedActivity
     {
         private readonly Stopwatch stopWatch;
-        private TrackedMap zanaMap;
+        private TrackedActivity zanaMap;
+        private List<string> tags;
         private DateTime dtStarted;
         private string sInstanceEndpoint;
         private string sArea;
@@ -24,10 +25,19 @@ namespace TraXile
         private long lTimestamp;
         private string sCustomStopWatchVaule;
 
-        public TrackedMap()
+        public TrackedActivity()
         {
             stopWatch = new Stopwatch();
             zanaMap = null;
+            tags = new List<string>();
+        }
+
+        public void AddTag(string s_id)
+        {
+            if(!tags.Contains(s_id))
+            {
+                tags.Add(s_id);
+            }
         }
 
         public void Pause()
@@ -106,7 +116,7 @@ namespace TraXile
             set { iDeathCounter = value; }
         }
 
-        public TrackedMap ZanaMap
+        public TrackedActivity ZanaMap
         {
             get { return zanaMap; }
             set { zanaMap = value; }
@@ -155,6 +165,11 @@ namespace TraXile
         {
             get { return lTimestamp; }
             set { lTimestamp = value; }
+        }
+
+        public List<string> Tags
+        {
+            get { return tags; }
         }
 
     }

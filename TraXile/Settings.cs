@@ -25,9 +25,7 @@ namespace TraXile
             this.textBox1.Enabled = false;
         }
 
-#pragma warning disable IDE1006 // Benennungsstile
         private void button1_Click(object sender, EventArgs e)
-#pragma warning restore IDE1006 // Benennungsstile
         {
             DialogResult dr = MessageBox.Show("With this action, the statistics will be set to 0 without reloading the log. Continue?", "Warning", MessageBoxButtons.YesNo);
             if (dr == DialogResult.Yes)
