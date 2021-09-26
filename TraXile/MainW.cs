@@ -10,6 +10,8 @@ using System.Collections.Concurrent;
 using Microsoft.Data.Sqlite;
 using log4net;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace TraXile
 {
@@ -55,7 +57,8 @@ namespace TraXile
         NIKO_ENCOUNTER,
         EINHAR_ENCOUNTER,
         ZANA_ENCOUNTER,
-        SYNDICATE_ENCOUNTER
+        SYNDICATE_ENCOUNTER,
+        LEVELUP
     }
 
     public partial class MainW : Form
@@ -80,10 +83,12 @@ namespace TraXile
         private bool bExit;
         private bool bElderFightActive;
         private bool bSettingActivityLogShowGrid;
+        private bool bRestoreMOde;
         private int iShaperKillsInFight;
         private SqliteConnection dbconn;
         private bool bHistoryInitialized;
         List<string> mapList, heistList, knownPlayers;
+        BindingList<string> backups;
         Dictionary<string, EVENT_TYPES> eventMap;
         Dictionary<int, string> dict;
         Dictionary<string, int> numStats;
@@ -109,6 +114,8 @@ namespace TraXile
             this.Opacity = 0;
 
             log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            ReadSettings();
+            DoBackupRestoreIfPrepared();
 
             listView1.Columns[0].Width = 120;
             listView1.Columns[1].Width = 50;
@@ -142,6 +149,7 @@ namespace TraXile
             eventQueue = new ConcurrentQueue<TrackedEvent>();
             mapHistory = new List<TrackedActivity>();
             knownPlayers = new List<string>();
+            backups = new BindingList<string>();
             statLvItems = new Dictionary<string, ListViewItem>();
             sCurrentArea = "-";
             dtInAreaSince = DateTime.Now;
@@ -155,7 +163,7 @@ namespace TraXile
             this.Text = APPINFO.NAME + " " + APPINFO.VERSION;
             dtInitStart = DateTime.Now;
 
-            ReadSettings();
+           
 
             if(sPoELogFilePath == null)
             {
@@ -179,12 +187,6 @@ namespace TraXile
             BuildEventMap();
             ReadKnownPlayers();
             InitDefaultTags();
-
-            listView3.Items.Clear();
-            foreach(ActivityTag tag in tags)
-            {
-                listView3.Items.Add(new ListViewItem(tag.ID) { BackColor = tag.BackColor, ForeColor = tag.ForeColor });
-            }
 
             foreach(ActivityTag tag in tags)
             {
@@ -295,64 +297,69 @@ namespace TraXile
         {
             numStats = new Dictionary<string, int>
             {
+                { "AreaChanges", 0 },
+                { "BaranStarted", 0 },
+                { "BaranKilled", 0 },
+                { "CatarinaTried", 0 },
+                { "CatarinaKilled", 0 },
+                { "DroxStarted", 0 },
+                { "DroxKilled", 0 },
+                { "EinharCaptures", 0 },
+                { "ElderTried", 0 },
+                { "ElderKilled", 0 },
+                { "HighestLevel", 0 },
+                { "HunterKilled", 0 },
+                { "HunterStarted", 0 },
+                { "LevelUps", 0 },
+                { "MavenStarted", 0 },
+                { "MavenKilled", 0 },
                 { "TotalMapsDone", 0 },
                 { "TotalHeistsDone", 0 },
                 { "TotalKilledCount", 0 },
-                { "ElderTried", 0 },
-                { "ElderKilled", 0 },
                 { "ShaperTried", 0 },
                 { "ShaperKilled", 0 },
                 { "SirusStarted", 0 },
                 { "SirusKilled", 0 },
-                { "HunterKilled", 0 },
-                { "HunterStarted", 0 },
-                { "VeritaniaKilled", 0 },
-                { "VeritaniaStarted", 0 },
-                { "BaranStarted", 0 },
-                { "BaranKilled", 0 },
-                { "DroxStarted", 0 },
-                { "DroxKilled", 0 },
                 { "TrialMasterStarted", 0 },
                 { "TrialMasterKilled", 0 },
-                { "MavenStarted", 0 },
-                { "MavenKilled", 0 },
-                { "EinharCaptures", 0 },
                 { "TrialMasterTookReward", 0 },
                 { "TrialMasterVictory", 0 },
                 { "TrialMasterSuccess", 0 },
-                { "CatarinaTried", 0 },
-                { "CatarinaKilled", 0 }
+                { "VeritaniaKilled", 0 },
+                { "VeritaniaStarted", 0 },
             };
 
             statNamesLong = new Dictionary<string, string>
             {
                 { "TotalMapsDone", "Total maps done" },
                 { "TotalHeistsDone", "Total heists done" },
-                { "ElderKilled", "Killed the Elder" },
-                { "ShaperKilled", "Killed the Shaper" },
-                { "SirusStarted", "Tried Sirus" },
-                { "SirusKilled", "Killed Sirus" },
-                { "HunterKilled", "Killed Al-Hezmin, the Hunter (not reliable*)" },
-                { "HunterStarted", "Tried Al-Hezmin, the Hunter" },
-                { "VeritaniaKilled", "Killed Veritania, the Redeemer (not reliable*)" },
-                { "VeritaniaStarted", "Tried Veritania, the Redeemer" },
-                { "BaranStarted", "Tried Baran, the Crusader" },
-                { "BaranKilled", "Killed Baran, the Crusader (not reliable*)" },
-                { "DroxStarted", "Tried Drox, the Warlord" },
-                { "DroxKilled", "Killed Drox, the Warlord (not reliable*)" },
-                { "TrialMasterStarted", "Tried Trialmaster-Fight" },
-                { "TrialMasterKilled", "Killed the Trialmaster" },
-                { "MavenStarted", "Tried the Maven" },
-                { "MavenKilled", "Killed the Maven" },
+                { "ElderKilled", "Elder killed" },
+                { "ShaperKilled", "Shaper killed" },
+                { "SirusStarted", "Sirus tried" },
+                { "SirusKilled", "Sirus killed" },
+                { "HunterKilled", "Hunter killed (not reliable*)" },
+                { "HunterStarted", "Hunter tried" },
+                { "VeritaniaKilled", "Veritania killed (not reliable*)" },
+                { "VeritaniaStarted", "Veritania tried" },
+                { "BaranStarted", "Baran tried" },
+                { "BaranKilled", "Baran killed (not reliable*)" },
+                { "DroxStarted", "Drox tried" },
+                { "DroxKilled", "Drox killed (not reliable*)" },
+                { "HighestLevel", "Highest level reached" },
+                { "TrialMasterStarted", "Trialmaster-Fight tried" },
+                { "TrialMasterKilled", "Trialmaster killed" },
+                { "MavenStarted", "Maven tried" },
+                { "MavenKilled", "Maven killed" },
                 { "TotalKilledCount", "Death count" },
                 { "EinharCaptures", "Einhar beasts captured" },
                 { "TrialMasterTookReward", "Ultimatum: took rewards" },
                 { "TrialMasterVictory", "Ultimatum: cleared all rounds" },
                 { "TrialMasterSuccess", "Ultimatum: did not fail" },
-                { "ShaperTried", "Tried the Shaper" },
-                { "ElderTried", "Tried the Elder" },
-                { "CatarinaTried", "Tried Catarina" },
-                { "CatarinaKilled", "Killed Catarina" }
+                { "ShaperTried", "Shaper tried" },
+                { "ElderTried", "Elder tried" },
+                { "CatarinaTried", "Catarina tried" },
+                { "CatarinaKilled", "Catarina killed" },
+                { "LevelUps", "Level Ups" }
             };
 
             foreach (string s in mapList)
@@ -421,6 +428,50 @@ namespace TraXile
             log.Info("Stats cleared.");
         }
 
+        private void ClearActivityLog()
+        {
+            SqliteCommand cmd;
+
+            mapHistory.Clear();
+            listView1.Items.Clear();
+
+            cmd = dbconn.CreateCommand();
+            cmd.CommandText = "drop table tx_activity_log";
+            cmd.ExecuteNonQuery();
+
+            cmd = dbconn.CreateCommand();
+            cmd.CommandText = "create table if not exists tx_activity_log " +
+                 "(timestamp int, " +
+                 "act_type text, " +
+                 "act_area text, " +
+                 "act_stopwatch int, " +
+                 "act_deathcounter int," +
+                 "act_ulti_rounds int," +
+                 "act_is_zana int," +
+                 "act_tags" + ")";
+            cmd.ExecuteNonQuery();
+
+            InitNumStats();
+            SaveStatsCache();
+
+            log.Info("Activity log cleared.");
+        }
+
+        private void ReadBackupList()
+        {
+            if(Directory.Exists("backups"))
+            {
+                foreach(string s in Directory.GetDirectories("backups"))
+                {
+                    foreach(string s2 in Directory.GetDirectories(s))
+                    {
+                        if(!backups.Contains(s2))
+                            backups.Add(s2);
+                    }
+                }
+            }
+        }
+
         private void InitDatabase()
         {
             dbconn = new SqliteConnection("Data Source=data.db");
@@ -448,9 +499,8 @@ namespace TraXile
                 cmd.CommandText = "alter table tx_activity_log add column act_tags text";
                 cmd.ExecuteNonQuery();
             }
-            catch(SqliteException ex)
+            catch
             {
-
             }
             
 
@@ -569,6 +619,7 @@ namespace TraXile
                 { "Connecting to instance server at", EVENT_TYPES.INSTANCE_CONNECTED },
                 { "Zana, Master Cartographer: I'm sorry... Sirus... This was all my fault. I'm sorry. I'm so, so sorry.", EVENT_TYPES.SIRUS_KILLED },
                 { "Sirus, Awakener of Worlds: Did you really think this would work?", EVENT_TYPES.SIRUS_FIGHT_STARTED },
+                { " is now level ", EVENT_TYPES.LEVELUP },
 
                 // Veritania Fight Events
                 { "You and I both know this isn't over.", EVENT_TYPES.VERITANIA_KILLED },
@@ -904,12 +955,14 @@ namespace TraXile
             using (StreamReader reader = new StreamReader(fs))
             {
                 string line;
+                int lineHash = 0;
+               
 
                 // Keep file open
-                while(!bExit)
+                while (!bExit)
                 {
                     line = reader.ReadLine();
-
+                    
                     if (line == null)
                     {
                         if (!bEventQInitialized)
@@ -923,15 +976,17 @@ namespace TraXile
                                 EventTime = DateTime.Now, 
                                 LogLine = "Application initialized in " 
                                   + Math.Round(tsInitDuration.TotalSeconds, 2) + " seconds." 
-                            });                        
+                            });
+                            iLastHash = lineHash;
                         }
                         bEventQInitialized = true;
 
                         Thread.Sleep(100);
                         continue;
                     }
-              
-                    int lineHash = line.GetHashCode();
+
+                    lineHash = line.GetHashCode();
+
                     if (dict.ContainsKey(lineHash))
                         continue;
 
@@ -1059,6 +1114,8 @@ namespace TraXile
                     bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
 
                     dtInAreaSince = ev.EventTime;
+
+                    IncrementStat("AreaChanges", ev.EventTime, 1);
 
                     // Special calculation for Elder fight - he has no start dialoge.
                     if(sAreaName == "Absence of Value and Meaning".Trim())
@@ -1362,6 +1419,29 @@ namespace TraXile
                         }
                     }
                     break;
+                case EVENT_TYPES.LEVELUP:
+                    bool bIsMySelf = true;
+                    foreach (string s in knownPlayers)
+                    {
+                        if (ev.LogLine.Contains(s))
+                        {
+                            bIsMySelf = false;
+                            break;
+                        }
+                    }
+                    if (bIsMySelf)
+                    {
+                        IncrementStat("LevelUps", ev.EventTime, 1);
+                        string[] spl = ev.LogLine.Split(' ');
+                        int iLevel = Convert.ToInt32(spl[spl.Length - 1]);
+                        if(iLevel > numStats["HighestLevel"])
+                        {
+                            SetStat("HighestLevel", ev.EventTime, iLevel);
+                        }
+                    }
+
+                    break;
+               
             }
 
             // Sometimes conqueror fire their death speech twice...
@@ -1397,6 +1477,17 @@ namespace TraXile
             cmd.ExecuteNonQuery();
 
             log.Debug("IncrementStat -> key: " + s_key + ", increment: " + i_value + ", new value: " + numStats[s_key].ToString());
+        }
+
+        private void SetStat(string s_key, DateTime dt, int i_value)
+        {
+            numStats[s_key] = i_value;
+
+            SqliteCommand cmd = dbconn.CreateCommand();
+            cmd.CommandText = "INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + numStats[s_key] + ")";
+            cmd.ExecuteNonQuery();
+
+            log.Debug("SetStat -> key: " + s_key + ", new value: " + numStats[s_key].ToString());
         }
 
         private string GetEndpointFromInstanceEvent(TrackedEvent ev)
@@ -1572,16 +1663,23 @@ namespace TraXile
             TimeSpan tsAreaTime = (DateTime.Now - this.dtInAreaSince);
             checkBox1.Checked = bSettingActivityLogShowGrid;
             checkBox2.Checked = bSettingStatsShowGrid;
+            ReadBackupList();
+            listBox1.DataSource = backups;
 
-            if(bEventQInitialized)
+            if (bEventQInitialized)
             {
                 loadScreen.Close();
                 this.Invoke((MethodInvoker)delegate
                 {
                     this.Show();
 
-                    RenderTags();
+                    if(bRestoreMOde)
+                    {
+                        bRestoreMOde = false;
+                        MessageBox.Show("Successfully restored from Backup!");
+                    }
 
+                    RenderTags();
 
                     if(listView2.Items.Count == 0)
                     {
@@ -1875,7 +1973,16 @@ namespace TraXile
                 lTS1 = ((DateTimeOffset)dt1).ToUnixTimeSeconds();
                 lTS2 = ((DateTimeOffset)dt2).ToUnixTimeSeconds();
                 cmd = dbconn.CreateCommand();
-                cmd.CommandText = "SELECT COUNT(*) FROM tx_stats WHERE stat_name = '" + sStatName + "' AND timestamp BETWEEN " + lTS1 + " AND " + lTS2;
+
+                if(sStatName == "HighestLevel")
+                {
+                    cmd.CommandText = "SELECT stat_value FROM tx_stats WHERE stat_name = '" + sStatName + "' AND timestamp BETWEEN " + lTS1 + " AND " + lTS2;
+                }
+                else
+                {
+                    cmd.CommandText = "SELECT COUNT(*) FROM tx_stats WHERE stat_name = '" + sStatName + "' AND timestamp BETWEEN " + lTS1 + " AND " + lTS2;
+                }
+                
                 sqlReader = cmd.ExecuteReader();
                 while (sqlReader.Read())
                 {
@@ -1888,173 +1995,173 @@ namespace TraXile
         {
             mapList = new List<string>
             {
-                "Volcano",
-                "Pen",
-                "Arcade",
-                "Jungle Valley",
-                "Coves",
-                "Peninsula",
-                "Grotto",
-                "Frozen Cabins",
-                "Fields",
-                "Wharf",
-                "Underground Sea",
-                "Crater",
-                "Underground River",
-                "Gardens",
-                "Infested Valley",
-                "Tropical Island",
-                "Moon Temple",
-                "Tower",
-                "Arena",
-                "Promenade",
-                "Lair",
-                "Spider Forest",
-                "Defiled Cathedral",
-                "Sunken City",
-                "Graveyard",
-                "Arid Lake",
-                "Strand",
-                "Glacier",
-                "Canyon",
-                "Forking River",
-                "Sulphur Vents",
-                "Toxic Sewer",
-                "Ancient City",
-                "Ashen Wood",
-                "Cemetery",
-                "Lava Chamber",
-                "Laboratory",
-                "Overgrown Ruin",
-                "Vaal Pyramid",
-                "Geode",
-                "Courtyard",
-                "Mud Geyser",
-                "Shore",
-                "Temple",
-                "Belfry",
-                "Pier",
-                "Orchard",
-                "Factory",
-                "Primordial Blocks",
-                "Plaza",
-                "Basilica",
-                "Reef",
-                "Lookout",
-                "Desert",
-                "Marshes",
-                "Iceberg",
-                "Cage",
-                "Leyline",
-                "Courthouse",
-                "Channel",
                 "Academy",
-                "Ramparts",
-                "Dunes",
-                "Bone Crypt",
-                "Museum",
-                "Wasteland",
-                "Precinct",
-                "Primordial Pool",
-                "Crystal Ore",
-                "Arsenal",
-                "Crimson Temple",
-                "Cells",
-                "Chateau",
-                "Lighthouse",
-                "Haunted Mansion",
-                "Atoll",
-                "Armoury",
-                "Waste Pool",
-                "Shrine",
-                "Desert Spring",
-                "Palace",
-                "Carcass",
-                "The Beachhead",
-                "Malformation",
-                "Silo",
-                "Waterways",
-                "Dark Forest",
-                "Alleyways",
-                "Dry Sea",
-                "Racecourse",
-                "Dungeon",
-                "Relic Chambers",
-                "Spider Lair",
-                "Mausoleum",
-                "Mineral Pools",
-                "Overgrown Shrine",
-                "Stagnation",
-                "Forbidden Woods",
-                "Phantasmagoria",
-                "Scriptorium",
-                "Ghetto",
-                "The Beachhead",
-                "Flooded Mine",
-                "Fungal Hollow",
-                "Port",
-                "Grave Trough",
-                "Cold River",
-                "Conservatory",
-                "Ivory Temple",
-                "Crimson Township",
-                "Coral Ruins",
-                "Siege",
-                "Shipyard",
-                "Dig",
-                "Maze",
-                "Plateau",
-                "Cursed Crypt",
-                "Park",
-                "Beach",
-                "Excavation",
-                "City Square",
-                "Barrows",
-                "Thicket",
-                "Residence",
-                "Sepulchre",
-                "Mesa",
-                "Caldera",
-                "Core",
-                "Colosseum",
                 "Acid Caverns",
-                "Bramble Valley",
-                "Foundry",
-                "Bazaar",
-                "Estuary",
-                "Vault",
-                "Arachnid Tomb",
-                "Bog",
-                "Colonnade",
-                "Summit",
-                "Castle Ruins",
-                "Villa",
-                "Terrace",
-                "Lava Lake",
-                "The Beachhead",
-                "Burial Chambers",
+                "Alleyways",
+                "Ancient City",
                 "Arachnid Nest",
-                "Pit",
-                "Necropolis",
-                "Pit of the Chimera",
-                "Lair of the Hydra",
-                "Maze of the Minotaur",
+                "Arachnid Tomb",
+                "Arcade",
+                "Arena",
+                "Arid Lake",
+                "Armoury",
+                "Arsenal",
+                "Ashen Wood",
+                "Atoll",
+                "Barrows",
+                "Basilica",
+                "Bazaar",
+                "Beach",
+                "Belfry",
+                "Bog",
+                "Bone Crypt",
+                "Bramble Valley",
+                "Burial Chambers",
+                "Cage",
+                "Caldera",
+                "Canyon",
+                "Carcass",
+                "Castle Ruins",
+                "Cells",
+                "Cemetery",
+                "Channel",
+                "Chateau",
+                "City Square",
+                "Cold River",
+                "Colonnade",
+                "Colosseum",
+                "Conservatory",
+                "Coral Ruins",
+                "Core",
+                "Courthouse",
+                "Courtyard",
+                "Coves",
+                "Crater",
+                "Crimson Temple",
+                "Crimson Township",
+                "Crystal Ore",
+                "Cursed Crypt",
+                "Dark Forest",
+                "Defiled Cathedral",
+                "Desert Spring",
+                "Desert",
+                "Dig",
+                "Dry Sea",
+                "Dunes",
+                "Dungeon",
+                "Estuary",
+                "Excavation",
+                "Factory",
+                "Fields",
+                "Flooded Mine",
+                "Forbidden Woods",
                 "Forge of the Phoenix",
+                "Forking River",
+                "Foundry",
+                "Frozen Cabins",
+                "Fungal Hollow",
+                "Gardens",
+                "Geode",
+                "Ghetto",
+                "Glacier",
+                "Grave Trough",
+                "Graveyard",
+                "Grotto",
+                "Haunted Mansion",
+                "Iceberg",
+                "Infested Valley",
+                "Ivory Temple",
+                "Jungle Valley",
+                "Laboratory",
+                "Lair of the Hydra",
+                "Lair",
+                "Lava Chamber",
+                "Lava Lake",
+                "Leyline",
+                "Lighthouse",
+                "Lookout",
+                "Malformation",
+                "Marshes",
+                "Mausoleum",
+                "Maze of the Minotaur",
+                "Maze",
+                "Mesa",
+                "Mineral Pools",
+                "Moon Temple",
+                "Mud Geyser",
+                "Museum",
+                "Necropolis",
+                "Orchard",
+                "Overgrown Ruin",
+                "Overgrown Shrine",
+                "Palace",
+                "Park",
+                "Pen",
+                "Peninsula",
+                "Phantasmagoria",
+                "Pier",
+                "Pit of the Chimera",
+                "Pit",
+                "Plateau",
+                "Plaza",
+                "Port",
+                "Precinct",
+                "Primordial Blocks",
+                "Primordial Pool",
+                "Promenade",
+                "Racecourse",
+                "Ramparts",
+                "Reef",
+                "Relic Chambers",
+                "Residence",
+                "Scriptorium",
+                "Sepulchre",
+                "Shipyard",
+                "Shore",
+                "Shrine",
+                "Siege",
+                "Silo",
+                "Spider Forest",
+                "Spider Lair",
+                "Stagnation",
+                "Strand",
+                "Sulphur Vents",
+                "Summit",
+                "Sunken City",
+                "Temple",
+                "Terrace",
+                "The Beachhead",
+                "The Beachhead",
+                "The Beachhead",
+                "The Temple of Atzoatl",
+                "Thicket",
+                "Tower",
+                "Toxic Sewer",
+                "Tropical Island",
+                "Underground River",
+                "Underground Sea",
+                "Vaal Pyramid",
                 "Vaal Temple",
-                "The Temple of Atzoatl"
+                "Vault",
+                "Villa",
+                "Volcano",
+                "Waste Pool",
+                "Wasteland",
+                "Waterways",
+                "Wharf",
             };
 
             heistList = new List<string>
             {
                 "Bunker",
-                "Smuggler's Den",
                 "Laboratory",
-                "Repository",
-                "Tunnels",
+                "Mansion",
                 "Prohibited Library",
-                "Underbelly",
                 "Records Office",
-                "Mansion"
+                "Repository",
+                "Smuggler's Den",
+                "Tunnels",
+                "Underbelly",
             };
 
         }
@@ -2067,6 +2174,31 @@ namespace TraXile
                     return tag;
             }
             return null;
+        }
+
+        private void CreateBackup(string s_name)
+        {
+            string sBackupDir = "backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+            System.IO.Directory.CreateDirectory(sBackupDir);
+            
+            if(System.IO.File.Exists(sPoELogFilePath))
+                System.IO.File.Copy(sPoELogFilePath, sBackupDir + @"/Client.txt");
+            if(System.IO.File.Exists("stats.cache"))
+                System.IO.File.Copy("stats.cache", sBackupDir + @"/stats.cache");
+            if(System.IO.File.Exists("data.db"))
+                System.IO.File.Copy("data.db", sBackupDir + @"/data.db");
+            if(System.IO.File.Exists("TraXile.exe.config"))
+                System.IO.File.Copy("TraXile.exe.config", sBackupDir + @"/TraXile.exe.config");
+        }
+
+        private void DoFullReset()
+        {
+            // Make logfile empty
+            FileStream fs1 = new FileStream(sPoELogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            ResetStats();
+            ClearActivityLog();
+            iLastHash = 0;
+            File.Delete("stats.cache");
         }
 
         private void OpenActivityDetails(TrackedActivity ta)
@@ -2306,6 +2438,129 @@ namespace TraXile
             bSettingStatsShowGrid = checkBox2.Checked;
             AddUpdateAppSettings("StatsShowGrid", checkBox2.Checked.ToString());
             listView2.GridLines = bSettingStatsShowGrid;
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("With this action your Path of Exile log will be flushed and all data and statistics in TraXile will be deleted." + Environment.NewLine
+                + Environment.NewLine +  "It is recommendet to create a backup first - using the 'Create Backup' function. Do you want to create a backup before reset?", "Warning", MessageBoxButtons.YesNoCancel);
+
+            if (dr == DialogResult.Yes)
+                CreateBackup("Auto_Backup");
+
+            if (dr != DialogResult.Cancel)
+            {
+                DoFullReset();
+                MessageBox.Show("Reset successful! The Application will be restarted now.");
+                Application.Restart();
+            }
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(textBox6.Text == "")
+                {
+                    textBox6.Text = "Default";
+                }
+
+                if(textBox6.Text.Contains("/") || textBox6.Text.Contains("."))
+                {
+                    MessageBox.Show("Please do not define a path in the field name");
+                }
+                else
+                {
+                    CreateBackup(textBox6.Text);
+                    MessageBox.Show("Backup successfully created!");
+                }
+               
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
+        }
+
+        private void PrepareBackupRestore(string sPath)
+        {
+            File.Copy(sPath + @"/stats.cache", "_stats.cache.restore");
+            File.Copy(sPath + @"/data.db", "_data.db.restore");
+            File.Copy(sPath + @"/Client.txt", Directory.GetParent(sPoELogFilePath) + @"/_Client.txt.restore");
+            log.Info("Backup restore successfully prepared! Restarting Application");
+            Application.Restart();
+        }
+
+        private void DoBackupRestoreIfPrepared()
+        {
+            if (File.Exists("_stats.cache.restore"))
+            {
+                File.Delete("stats.cache");
+                File.Move("_stats.cache.restore", "stats.cache");
+                log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: stats.cache");
+                bRestoreMOde = true;
+            }
+
+            if (File.Exists("_data.db.restore"))
+            {
+                File.Delete("data.db");
+                File.Move("_data.db.restore", "data.db");
+                log.Info("BackupRestored -> Source: _data.db.restore, Destination: data.db");
+                bRestoreMOde = true;
+            }
+
+            try
+            {
+                if (File.Exists(Directory.GetParent(sPoELogFilePath) + @"/_Client.txt.restore"))
+                {
+                    File.Delete(sPoELogFilePath);
+                    File.Move(Directory.GetParent(sPoELogFilePath) + @"/_Client.txt.restore", sPoELogFilePath);
+                    log.Info("BackupRestored -> Source: " + Directory.GetParent(sPoELogFilePath) + @"/_Client.txt.restore" +
+                        ", Destination: " + Directory.GetParent(sPoELogFilePath) + @"/_Client.txt");
+                    bRestoreMOde = true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                log.Error("Could not restore Client.txt, please make sure that Path of Exile is not running.");
+                log.Debug(ex.ToString());
+            }
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            DialogResult dr;
+
+            if(Process.GetProcessesByName("PathOfExileSteam").Length > 0 ||
+                Process.GetProcessesByName("PathOfExile").Length > 0)
+            {
+                MessageBox.Show("It seems that PathOfExile is running at the moment. Please close it first.");
+            }
+           else
+            {
+                dr = MessageBox.Show("Do you really want to restore the selected Backup? The Application will be restarted. Please make sure that your PathOfExile Client is not running.", "Warning", MessageBoxButtons.YesNo);
+                if (dr == DialogResult.Yes)
+                {
+                    PrepareBackupRestore(listBox1.SelectedItem.ToString());
+                }
+            }
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("Do you really want to delete the selected Backup?", "Warning", MessageBoxButtons.YesNo);
+            if (dr == DialogResult.Yes)
+            {
+                DeleteBackup(listBox1.SelectedItem.ToString());
+            }
+        }
+
+        private void DeleteBackup(string s_path)
+        {
+            Directory.Delete(s_path, true);
+            backups.Remove(listBox1.SelectedItem.ToString());
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
