@@ -87,7 +87,7 @@ namespace TraXile
         private int iShaperKillsInFight;
         private SqliteConnection dbconn;
         private bool bHistoryInitialized;
-        List<string> mapList, heistList, knownPlayers;
+        List<string> mapList, heistList, knownPlayers, simuList;
         BindingList<string> backups;
         Dictionary<string, EVENT_TYPES> eventMap;
         Dictionary<int, string> dict;
@@ -101,6 +101,7 @@ namespace TraXile
         Dictionary<string, Label> tagLabels;
         ILog log;
         private bool bSettingStatsShowGrid;
+        private string sLastSimuEndpoint;
 
         public MainW()
         {
@@ -156,6 +157,7 @@ namespace TraXile
             sLastDeathReason = "-";
             bEventQInitialized = false;
             tagLabels = new Dictionary<string, Label>();
+            sLastSimuEndpoint = "";
 
             log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             log.Info("Application started");
@@ -318,6 +320,7 @@ namespace TraXile
                 { "TotalKilledCount", 0 },
                 { "ShaperTried", 0 },
                 { "ShaperKilled", 0 },
+                { "SimulacrumStarted", 0 },
                 { "SirusStarted", 0 },
                 { "SirusKilled", 0 },
                 { "TrialMasterStarted", 0 },
@@ -359,7 +362,8 @@ namespace TraXile
                 { "ElderTried", "Elder tried" },
                 { "CatarinaTried", "Catarina tried" },
                 { "CatarinaKilled", "Catarina killed" },
-                { "LevelUps", "Level Ups" }
+                { "LevelUps", "Level Ups" },
+                { "SimulacrumStarted", "Simulacrums started" },
             };
 
             foreach (string s in mapList)
@@ -699,7 +703,7 @@ namespace TraXile
                 { "This one is captured. Einhar will take it.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
 
                 // Ultimatum
-                /* { "The Trialmaster: Kill them all.", EVENT_TYPES.TRIALMASTER_ROUND_STARTED },
+                { "The Trialmaster: Kill them all.", EVENT_TYPES.TRIALMASTER_ROUND_STARTED },
                 { "The Trialmaster: Slay everything.", EVENT_TYPES.TRIALMASTER_ROUND_STARTED },
                 { "The Trialmaster: Leave none alive.", EVENT_TYPES.TRIALMASTER_ROUND_STARTED },
                 { "The Trialmaster: Bring death.", EVENT_TYPES.TRIALMASTER_ROUND_STARTED },
@@ -837,7 +841,7 @@ namespace TraXile
                 { "The Trialmaster: I should have become a priest of Yaomac instead...", EVENT_TYPES.TRIALMASTER_VICTORY },
                 { "The Trialmaster: You win... again.", EVENT_TYPES.TRIALMASTER_VICTORY },
                 { "The Trialmaster: This is insufferable...", EVENT_TYPES.TRIALMASTER_VICTORY },
-                { "The Trialmaster: Take your prize and go.", EVENT_TYPES.TRIALMASTER_VICTORY } */
+                { "The Trialmaster: Take your prize and go.", EVENT_TYPES.TRIALMASTER_VICTORY },
                 {"Catarina, Master of Undeath: You found me at last... Very resourceful, Jun. I too am resourceful. Witness.", EVENT_TYPES.CATARINA_FIGHT_STARTED },
                 {"Catarina, Master of Undeath: Don't do this, Exile. You can still join us. It's your chance to bring back anyone you've ever loved or cared about.", EVENT_TYPES.CATARINA_KILLED },
 
@@ -1116,6 +1120,16 @@ namespace TraXile
                     dtInAreaSince = ev.EventTime;
 
                     IncrementStat("AreaChanges", ev.EventTime, 1);
+
+                    //Simu?
+                    if(simuList.Contains(sAreaName))
+                    {
+                        if(sCurrentInstanceEndpoint != sLastSimuEndpoint)
+                        {
+                            IncrementStat("SimulacrumStarted", ev.EventTime, 1);
+                            sLastSimuEndpoint = sCurrentInstanceEndpoint;
+                        }
+                    }
 
                     // Special calculation for Elder fight - he has no start dialoge.
                     if(sAreaName == "Absence of Value and Meaning".Trim())
@@ -1741,26 +1755,6 @@ namespace TraXile
                             labelStopWatch.Text = currentMap.ZanaMap.StopWatchValue.ToString();
                             labelTrackingArea.Text = currentMap.ZanaMap.Area + " (Zana)";
                             labelTrackingDied.Text = currentMap.ZanaMap.DeathCounter.ToString();
-                            
-                            /*if(currentMap.ZanaMap.TrialMasterCount == 0)
-                            {
-                                labelUltimatum.Text = "Not started";
-                            }
-                            else
-                            {
-                                if(currentMap.ZanaMap.TrialMasterFullFinished)
-                                {
-                                    labelUltimatum.Text = "Completed, " + currentMap.ZanaMap.TrialMasterCount.ToString() + " rounds.";
-                                }
-                                else if(currentMap.ZanaMap.TrialMasterSuccess)
-                                {
-                                    labelUltimatum.Text = "Took rewards, " + currentMap.ZanaMap.TrialMasterCount.ToString() + " rounds.";
-                                }
-                                else
-                                {
-                                    labelUltimatum.Text = "Started, " + currentMap.ZanaMap.TrialMasterCount.ToString() + " rounds.";
-                                }
-                            }*/
                         }
                         else
                         {
@@ -1769,26 +1763,6 @@ namespace TraXile
                             labelTrackingArea.Text = currentMap.Area;
                             labelTrackingType.Text = currentMap.Type;
                             labelTrackingDied.Text = currentMap.DeathCounter.ToString();
-
-                            /*if (currentMap.TrialMasterCount == 0)
-                            {
-                                labelUltimatum.Text = "Not started";
-                            }
-                            else
-                            {
-                                if (currentMap.TrialMasterFullFinished)
-                                {
-                                    labelUltimatum.Text = "Completed, " + currentMap.TrialMasterCount.ToString() + " rounds.";
-                                }
-                                else if (currentMap.TrialMasterSuccess)
-                                {
-                                    labelUltimatum.Text = "Took rewards, " + currentMap.TrialMasterCount.ToString() + " rounds.";
-                                }
-                                else
-                                {
-                                    labelUltimatum.Text = "Started, " + currentMap.TrialMasterCount.ToString() + " rounds.";
-                                }
-                            }*/
                         }
                     }
                     else
@@ -2162,6 +2136,15 @@ namespace TraXile
                 "Smuggler's Den",
                 "Tunnels",
                 "Underbelly",
+            };
+
+            simuList = new List<string>
+            {
+               "Lunacy's Watch", 
+               "The Bridge Enraptured",
+               "The Syndrome Encampment",
+               "Hysteriagate",
+               "Oriath Delusion"
             };
 
         }
