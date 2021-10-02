@@ -1930,7 +1930,7 @@ namespace TraXile
         {
             chart1.Series[0].Points.Clear();
             DateTime dtStart = DateTime.Now.AddDays(i_days_back * -1);
-            string sStatName = GetStatShortName(listView2.SelectedItems[0].Text);
+            string sStatName = numStats.ElementAt(listView2.SelectedIndices[0]).Key;
 
             DateTime dt1, dt2;
             SqliteDataReader sqlReader;
