@@ -35,6 +35,9 @@ namespace TraXile
             this.label3 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -95,12 +98,52 @@ namespace TraXile
             this.label1.TabIndex = 7;
             this.label1.Text = "Build: ";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Red;
+            this.label4.Location = new System.Drawing.Point(92, 276);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(125, 18);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Special thanks to:";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.LinkColor = System.Drawing.Color.Gold;
+            this.linkLabel1.Location = new System.Drawing.Point(72, 304);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(156, 13);
+            this.linkLabel1.TabIndex = 9;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Esturnat (Name, Testing, Ideas)";
+            this.linkLabel1.VisitedLinkColor = System.Drawing.Color.Gold;
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.LinkColor = System.Drawing.Color.Gold;
+            this.linkLabel3.Location = new System.Drawing.Point(92, 329);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(115, 13);
+            this.linkLabel3.TabIndex = 10;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "seibmich (Logo design)";
+            this.linkLabel3.VisitedLinkColor = System.Drawing.Color.Gold;
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            // 
             // About
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(344, 335);
+            this.ClientSize = new System.Drawing.Size(344, 420);
+            this.Controls.Add(this.linkLabel3);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.label3);
@@ -122,5 +165,8 @@ namespace TraXile
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel linkLabel3;
     }
 }

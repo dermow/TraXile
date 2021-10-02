@@ -29,7 +29,17 @@ namespace TraXile
 
         private void label3_Click(object sender, EventArgs e)
         {
+            System.Diagnostics.Process.Start("https://de.pathofexile.com/account/view-profile/Esturnat2");
+        }
 
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/seibmich");
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://de.pathofexile.com/account/view-profile/Esturnat2");
         }
     }
 }

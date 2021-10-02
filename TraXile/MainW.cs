@@ -58,7 +58,8 @@ namespace TraXile
         EINHAR_ENCOUNTER,
         ZANA_ENCOUNTER,
         SYNDICATE_ENCOUNTER,
-        LEVELUP
+        LEVELUP,
+        SIMULACRUM_FULLCLEAR
     }
 
     public partial class MainW : Form
@@ -320,6 +321,7 @@ namespace TraXile
                 { "TotalKilledCount", 0 },
                 { "ShaperTried", 0 },
                 { "ShaperKilled", 0 },
+                { "SimulacrumCleared", 0 },
                 { "SimulacrumStarted", 0 },
                 { "SirusStarted", 0 },
                 { "SirusKilled", 0 },
@@ -363,7 +365,8 @@ namespace TraXile
                 { "CatarinaTried", "Catarina tried" },
                 { "CatarinaKilled", "Catarina killed" },
                 { "LevelUps", "Level Ups" },
-                { "SimulacrumStarted", "Simulacrums started" },
+                { "SimulacrumStarted", "Simulacrum started" },
+                { "SimulacrumCleared", "Simulacrum 100% done" },
             };
 
             foreach (string s in mapList)
@@ -844,6 +847,7 @@ namespace TraXile
                 { "The Trialmaster: Take your prize and go.", EVENT_TYPES.TRIALMASTER_VICTORY },
                 {"Catarina, Master of Undeath: You found me at last... Very resourceful, Jun. I too am resourceful. Witness.", EVENT_TYPES.CATARINA_FIGHT_STARTED },
                 {"Catarina, Master of Undeath: Don't do this, Exile. You can still join us. It's your chance to bring back anyone you've ever loved or cared about.", EVENT_TYPES.CATARINA_KILLED },
+                {"Strange Voice: So be it.", EVENT_TYPES.SIMULACRUM_FULLCLEAR },
 
                 // Encounters
                 {"Strange Voice: ", EVENT_TYPES.DELIRIUM_ENCOUNTER },
@@ -867,8 +871,8 @@ namespace TraXile
                 {"Thane Jorgin the Banished", EVENT_TYPES.SYNDICATE_ENCOUNTER },
                 {"Tora, the Culler", EVENT_TYPES.SYNDICATE_ENCOUNTER },
                 {"Vorici, Silent Brother", EVENT_TYPES.SYNDICATE_ENCOUNTER },
-                {"Vagan, Victory's Herald", EVENT_TYPES.SYNDICATE_ENCOUNTER }
-
+                {"Vagan, Victory's Herald", EVENT_TYPES.SYNDICATE_ENCOUNTER },
+                
             };
 
         }
@@ -1453,7 +1457,9 @@ namespace TraXile
                             SetStat("HighestLevel", ev.EventTime, iLevel);
                         }
                     }
-
+                    break;
+                case EVENT_TYPES.SIMULACRUM_FULLCLEAR:
+                    IncrementStat("SimulacrumCleared", ev.EventTime, 1);
                     break;
                
             }
