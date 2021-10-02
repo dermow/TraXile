@@ -27,6 +27,10 @@ Just download the latest release from the GitHub releases page, extract it and s
 ## Bug or feature request?
 Please submit an issue here on GitHub!
 
+## Special thanks goes to:
+* [Esturnat](https://de.pathofexile.com/account/view-profile/Esturnat2) for the name "TraXile", great testing and ideas.
+* [seibmich](https://github.com/seibmich) for the logo design
+
 ## License
 This work is licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/3.0/ or 
 
