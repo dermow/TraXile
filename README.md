@@ -4,13 +4,13 @@ Tracking tool for Path of Exile
 ## Screenshots
 
 ### Map Tracking
-![Preview image](https://i.imgur.com/xGdgQRm.png)
+![Preview image](https://i.imgur.com/0oPA6nX.png)
 
 ### Statistics
-![Preview image](https://i.imgur.com/JHEQQXl.png)
+![Preview image](https://i.imgur.com/878GMdo.png)
 
 ### Bossing Info
-![Preview image](https://i.imgur.com/hAHU7IV.png)
+![Preview image](https://i.imgur.com/s36ZihO.png)
 
 ## Features
 * Live tracking of your map runs and other activities

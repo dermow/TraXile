@@ -28,4 +28,5 @@
 - New Stat "AreaChanges"
 - New Stat "Level Ups"
 - New Stat "Highest Level"
+- New Stat "Simulacrum Started"
 - Shortened some Statistic names (e.g. "Killed Baran the Crusader" -> "Baran killed")
