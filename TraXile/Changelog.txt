@@ -40,3 +40,7 @@
 - Users are now able to create custom tags
 - Users are now able to modify tag appearance and display text
 - Removed "Last death reason" since there no more information in the log (was ultra rare anyway)
+- Added Chat-Commands: Users can control tracking per ingame chat
+- Save some Layouts (Window size, Listview columns)
+- TrayIcon added
+- Added Help window for Chat commands

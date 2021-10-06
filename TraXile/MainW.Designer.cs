@@ -198,6 +198,7 @@ namespace TraXile
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.button20 = new System.Windows.Forms.Button();
             this.label59 = new System.Windows.Forms.Label();
             this.button19 = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -238,8 +239,14 @@ namespace TraXile
             this.label51 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.button20 = new System.Windows.Forms.Button();
-            this.button21 = new System.Windows.Forms.Button();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chatCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.chatCommandsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.listView2 = new TraXile.ListViewNF();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -298,6 +305,7 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -627,7 +635,7 @@ namespace TraXile
             this.tableLayoutPanel5.Size = new System.Drawing.Size(520, 706);
             this.tableLayoutPanel5.TabIndex = 5;
             // 
-            // listView1
+            // listViewActLog
             // 
             this.listViewActLog.Alignment = System.Windows.Forms.ListViewAlignment.Default;
             this.listViewActLog.BackColor = System.Drawing.Color.Black;
@@ -646,7 +654,7 @@ namespace TraXile
             this.listViewActLog.HideSelection = false;
             this.listViewActLog.Location = new System.Drawing.Point(3, 39);
             this.listViewActLog.MultiSelect = false;
-            this.listViewActLog.Name = "listView1";
+            this.listViewActLog.Name = "listViewActLog";
             this.listViewActLog.Size = new System.Drawing.Size(514, 664);
             this.listViewActLog.TabIndex = 4;
             this.listViewActLog.UseCompatibleStateImageBehavior = false;
@@ -676,7 +684,6 @@ namespace TraXile
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.panel3.Controls.Add(this.button21);
             this.panel3.Controls.Add(this.button9);
             this.panel3.Controls.Add(this.button5);
             this.panel3.Controls.Add(this.button4);
@@ -2245,6 +2252,16 @@ namespace TraXile
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Edit";
             // 
+            // button20
+            // 
+            this.button20.Location = new System.Drawing.Point(243, 48);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(88, 23);
+            this.button20.TabIndex = 11;
+            this.button20.Text = "Reset default";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.Click += new System.EventHandler(this.button20_Click);
+            // 
             // label59
             // 
             this.label59.AutoSize = true;
@@ -2355,7 +2372,8 @@ namespace TraXile
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(983, 24);
@@ -2614,25 +2632,66 @@ namespace TraXile
             this.label36.Size = new System.Drawing.Size(16, 18);
             this.label36.TabIndex = 25;
             // 
-            // button20
+            // helpToolStripMenuItem
             // 
-            this.button20.Location = new System.Drawing.Point(243, 48);
-            this.button20.Name = "button20";
-            this.button20.Size = new System.Drawing.Size(88, 23);
-            this.button20.TabIndex = 11;
-            this.button20.Text = "Reset default";
-            this.button20.UseVisualStyleBackColor = true;
-            this.button20.Click += new System.EventHandler(this.button20_Click);
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.chatCommandsToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
             // 
-            // button21
+            // chatCommandsToolStripMenuItem
             // 
-            this.button21.BackColor = System.Drawing.Color.Silver;
-            this.button21.Location = new System.Drawing.Point(327, 3);
-            this.button21.Name = "button21";
-            this.button21.Size = new System.Drawing.Size(75, 21);
-            this.button21.TabIndex = 4;
-            this.button21.Text = "filter";
-            this.button21.UseVisualStyleBackColor = false;
+            this.chatCommandsToolStripMenuItem.Name = "chatCommandsToolStripMenuItem";
+            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.chatCommandsToolStripMenuItem.Text = "Chat Commands";
+            this.chatCommandsToolStripMenuItem.Click += new System.EventHandler(this.chatCommandsToolStripMenuItem_Click);
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem1,
+            this.helpToolStripMenuItem1,
+            this.exitToolStripMenuItem1});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(108, 70);
+            this.contextMenuStrip1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.contextMenuStrip1_MouseDoubleClick);
+            // 
+            // exitToolStripMenuItem1
+            // 
+            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
+            this.exitToolStripMenuItem1.Text = "Exit";
+            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem1.Text = "About";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
+            // 
+            // helpToolStripMenuItem1
+            // 
+            this.helpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.chatCommandsToolStripMenuItem1});
+            this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
+            this.helpToolStripMenuItem1.Text = "Help";
+            // 
+            // chatCommandsToolStripMenuItem1
+            // 
+            this.chatCommandsToolStripMenuItem1.Name = "chatCommandsToolStripMenuItem1";
+            this.chatCommandsToolStripMenuItem1.Size = new System.Drawing.Size(164, 22);
+            this.chatCommandsToolStripMenuItem1.Text = "Chat Commands";
+            this.chatCommandsToolStripMenuItem1.Click += new System.EventHandler(this.chatCommandsToolStripMenuItem1_Click);
             // 
             // listView2
             // 
@@ -2678,6 +2737,7 @@ namespace TraXile
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainW_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainW_FormClosed);
             tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -2745,6 +2805,7 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2959,7 +3020,14 @@ namespace TraXile
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Button button20;
-        private System.Windows.Forms.Button button21;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem chatCommandsToolStripMenuItem;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem chatCommandsToolStripMenuItem1;
     }
 }
 

@@ -59,7 +59,8 @@ namespace TraXile
         ZANA_ENCOUNTER,
         SYNDICATE_ENCOUNTER,
         LEVELUP,
-        SIMULACRUM_FULLCLEAR
+        SIMULACRUM_FULLCLEAR,
+        CHAT_CMD_RECEIVED
     }
 
     public partial class MainW : Form
@@ -224,8 +225,11 @@ namespace TraXile
             {
                 AddUpdateAppSettings("layout.listview.cols." + ch.Name + ".width", ch.Width.ToString());
             }
-            AddUpdateAppSettings("layout.window.width", this.Width.ToString());
-            AddUpdateAppSettings("layout.window.height", this.Height.ToString());
+            if(this.Width > 50 && this.Height > 50)
+            {
+                AddUpdateAppSettings("layout.window.width", this.Width.ToString());
+                AddUpdateAppSettings("layout.window.height", this.Height.ToString());
+            }
         }
 
         private void LoadLayout()
@@ -234,8 +238,16 @@ namespace TraXile
             {
                 ch.Width = Convert.ToInt32(ReadSetting("layout.listview.cols." + ch.Name + ".width"));
             }
-            this.Width = Convert.ToInt32(ReadSetting("layout.window.width"));
-            this.Height = Convert.ToInt32(ReadSetting("layout.window.height"));
+
+            int iWidth = Convert.ToInt32(ReadSetting("layout.window.width"));
+            int iHeight = Convert.ToInt32(ReadSetting("layout.window.height"));
+
+            if(iWidth > 50 && iHeight > 50)
+            {
+                this.Width = iWidth;
+                this.Height = iHeight;
+            }
+            
         }
 
         private void InitDefaultTags()
@@ -831,6 +843,9 @@ namespace TraXile
         {
             eventMap = new Dictionary<string, EVENT_TYPES>
             {
+                // System Commands
+                { "trax::", EVENT_TYPES.CHAT_CMD_RECEIVED },
+
                 // Generic events
                 { "You have entered", EVENT_TYPES.ENTERED_AREA },
                 { "has joined the area", EVENT_TYPES.PARTYMEMBER_ENTERED_AREA },
@@ -1328,10 +1343,94 @@ namespace TraXile
             return false;
         }
 
+        private void HandleChatCommand(string s_command)
+        {
+            log.Info("ChatCommand -> " + s_command);
+            string[] spl = s_command.Split(' ');
+            string sMain = "";
+            string sArgs = "";
+
+            sMain = spl[0];
+
+            if(spl.Length > 1)
+            {
+                sArgs = spl[1];
+            }
+
+            TrackedActivity currentAct = null;
+            if (currentMap != null)
+            {
+                if (bIsMapZana && currentMap.ZanaMap != null)
+                {
+                    currentAct = currentMap.ZanaMap;
+                }
+                else
+                {
+                    currentAct = currentMap;
+                }
+            }
+
+            switch (sMain)
+            {
+                case "tag":
+                    if(currentAct != null)
+                    {
+                        MethodInvoker mi = delegate
+                        {
+                            AddTagAutoCreate(sArgs, currentAct);
+                        };
+                        this.Invoke(mi);
+                    }
+                    break;
+                case "untag":
+                    if (currentAct != null)
+                    {
+                        MethodInvoker mi = delegate
+                        {
+                            RemoveTagFromActivity(sArgs, currentAct);
+                        };
+                        this.Invoke(mi);
+
+                    }
+                    break;
+                case "pause":
+                    if (currentAct != null)
+                    {
+                        currentAct.Pause();
+                    }
+                    break;
+                case "resume":
+                    if (currentAct != null)
+                    {
+                        currentAct.Resume();
+                    }
+                    break;
+                case "finish":
+                    if (currentAct != null)
+                    {
+                        MethodInvoker mi = delegate
+                        {
+                            FinishMap(currentMap, null, "Map", DateTime.Now);
+                        };
+                        BeginInvoke(mi);
+                    }
+                    break;
+            }
+        }
+
         private void HandleSingleEvent(TrackedEvent ev, bool bInit = false)
         {
             switch (ev.EventType)
             {
+                case EVENT_TYPES.CHAT_CMD_RECEIVED:
+                    string sCmd = ev.LogLine.Split(new string[] { "::" }, StringSplitOptions.None)[1];
+                    
+                    if(bEventQInitialized)
+                    {
+                        HandleChatCommand(sCmd);
+                    }
+                    break;
+
                 case EVENT_TYPES.ENTERED_AREA:
 
                     string sSourceArea = sCurrentArea;
@@ -1972,11 +2071,6 @@ namespace TraXile
                     {
                         ReadActivityLogFromSQLite();
                     }
-                    else
-                    {
-                        SaveLayout();
-                    }
-
                     
                     labelCurrArea.Text = sCurrentArea;
                     labelLastDeath.Text = dtLastDeath.Year > 2000 ? dtLastDeath.ToString() : "-";
@@ -2111,7 +2205,7 @@ namespace TraXile
             Application.Exit();
         }
 
-        public void AddUpdateAppSettings(string key, string value)
+        public void AddUpdateAppSettings(string key, string value, bool b_log = false)
         {
             try
             {
@@ -2127,7 +2221,8 @@ namespace TraXile
                 }
                 configFile.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
-                log.Info("Updated setting: " + key + "=" + value);
+                if(b_log)
+                    log.Info("Updated setting: " + key + "=" + value);
             }
             catch (ConfigurationErrorsException)
             {
@@ -2511,6 +2606,7 @@ namespace TraXile
 
         private void MainW_FormClosing(object sender, FormClosingEventArgs e)
         {
+            SaveLayout();
             Exit();
         }
 
@@ -2655,7 +2751,7 @@ namespace TraXile
                 DialogResult dr2 = ofd.ShowDialog();
                 if (dr2 == DialogResult.OK)
                 {
-                    AddUpdateAppSettings("PoELogFilePath", ofd.FileName);
+                    AddUpdateAppSettings("PoELogFilePath", ofd.FileName, false);
                     ReloadLogFile();
                 }
             }
@@ -2876,19 +2972,23 @@ namespace TraXile
                 tag = tags[iIndex];
             }
 
-            act.AddTag(tag.ID);
-
-            string sTags = "";
-            // Update tags in DB // TODO
-            for (int i = 0; i < act.Tags.Count; i++)
+            if(!tag.IsDefault)
             {
-                sTags += act.Tags[i];
-                if (i < (act.Tags.Count - 1))
-                    sTags += "|";
+                act.AddTag(tag.ID);
+
+                string sTags = "";
+                // Update tags in DB // TODO
+                for (int i = 0; i < act.Tags.Count; i++)
+                {
+                    sTags += act.Tags[i];
+                    if (i < (act.Tags.Count - 1))
+                        sTags += "|";
+                }
+                SqliteCommand cmd = dbconn.CreateCommand();
+                cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
+                cmd.ExecuteNonQuery();
             }
-            SqliteCommand cmd = dbconn.CreateCommand();
-            cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
-            cmd.ExecuteNonQuery();
+           
         }
 
         public void RemoveTagFromActivity(string s_id, TrackedActivity act)
@@ -2982,6 +3082,41 @@ namespace TraXile
         private void button20_Click(object sender, EventArgs e)
         {
             textBox5.Text = textBox4.Text;
+        }
+
+        private void MainW_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+        }
+
+        private void chatCommandsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChatCommandHelp cmh = new ChatCommandHelp();
+            cmh.ShowDialog();
+        }
+
+        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            this.Exit();
+        }
+
+        private void contextMenuStrip1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+        }
+
+        private void chatCommandsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ChatCommandHelp cmh = new ChatCommandHelp();
+            cmh.ShowDialog();
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            About ab = new About();
+            ab.ShowDialog();
         }
 
         private void DeleteTag(string s_id)
