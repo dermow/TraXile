@@ -1837,10 +1837,10 @@ namespace TraXile
         private void FinishMap(TrackedActivity map, string sNextMap, string sNextMapType, DateTime dtNextMapStarted)
         {
             currentMap.StopStopWatch();
-            mapHistory.Insert(0, currentMap);
 
             if(bEventQInitialized)
             {
+                mapHistory.Insert(0, currentMap);
                 TextLog("Map finished (" + map.Area + "): " + currentMap.StopWatchValue.ToString());
                 AddMapLvItem(map);
                 SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), map.Type, map.Area, Convert.ToInt32(map.StopWatchTimeSpan.TotalSeconds), map.DeathCounter, map.TrialMasterCount, false, map.Tags);
@@ -2993,6 +2993,9 @@ namespace TraXile
 
         public void RemoveTagFromActivity(string s_id, TrackedActivity act)
         {
+            ActivityTag tag = GetTagByID(s_id);
+            if(tag != null && !tag.IsDefault)
+            {
                 act.RemoveTag(s_id);
                 string sTags = "";
 
@@ -3006,6 +3009,7 @@ namespace TraXile
                     cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
                     cmd.ExecuteNonQuery();
                 }
+            }
         }
 
         private void UpdateTag(string s_id, string s_display_name, string s_forecolor, string s_backcolor)
