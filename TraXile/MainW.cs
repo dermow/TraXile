@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using System.Configuration;
-using System.Threading;
-using System.IO;
-using System.Collections.Concurrent;
+﻿using log4net;
 using Microsoft.Data.Sqlite;
-using log4net;
-using System.Windows.Forms.DataVisualization.Charting;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace TraXile
 {
@@ -98,8 +98,8 @@ namespace TraXile
         LoadScreen loadScreen;
         List<TrackedActivity> mapHistory;
         ConcurrentQueue<TrackedEvent> eventQueue;
-        List<ActivityTag> tags;
-        Dictionary<string, Label> tagLabels;
+        public List<ActivityTag> tags;
+        Dictionary<string, Label> tagLabels, tagLabelsConfig;
         ILog log;
         private bool bSettingStatsShowGrid;
         private string sLastSimuEndpoint;
@@ -119,11 +119,11 @@ namespace TraXile
             ReadSettings();
             DoBackupRestoreIfPrepared();
 
-            listView1.Columns[0].Width = 120;
-            listView1.Columns[1].Width = 50;
-            listView1.Columns[2].Width = 110;
-            listView1.Columns[3].Width = 100;
-            listView1.Columns[4].Width = 50;
+            listViewActLog.Columns[0].Width = 120;
+            listViewActLog.Columns[1].Width = 50;
+            listViewActLog.Columns[2].Width = 110;
+            listViewActLog.Columns[3].Width = 100;
+            listViewActLog.Columns[4].Width = 50;
             listView2.Columns[0].Width = 500;
             listView2.Columns[1].Width = 300;
 
@@ -158,7 +158,9 @@ namespace TraXile
             sLastDeathReason = "-";
             bEventQInitialized = false;
             tagLabels = new Dictionary<string, Label>();
+            tagLabelsConfig = new Dictionary<string, Label>();
             sLastSimuEndpoint = "";
+            tags = new List<ActivityTag>();
 
             log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             log.Info("Application started");
@@ -189,12 +191,17 @@ namespace TraXile
             ReadStatsCache();
             BuildEventMap();
             ReadKnownPlayers();
-            InitDefaultTags();
+            LoadCustomTags();
+            ResetMapHistory();
+            LoadLayout();
 
+            /*
             foreach(ActivityTag tag in tags)
             {
-                listView1.Columns.Add(tag.ID);
-            }
+                ColumnHeader ch = new ColumnHeader() { Name = "actlog_tag_" + tag.ID, Text = tag.DisplayName };
+
+                listViewActLog.Columns.Add(ch);
+            }*/
 
             // Thread for Log Parsing and Enqueuing
             thParseLog = new Thread(new ThreadStart(LogParsing))
@@ -204,40 +211,189 @@ namespace TraXile
             thParseLog.Start();
 
             // Thread for Queue processing / Dequeuing
-            thEvents = new Thread(new ThreadStart(HandleEvents))
+            thEvents = new Thread(new ThreadStart(EventHandling))
             {
                 IsBackground = true
             };
             thEvents.Start();
         }
 
-        private void InitDefaultTags()
+        private void SaveLayout()
         {
-            tags = new List<ActivityTag>();
-            tags.Add(new ActivityTag("blight") { Description = "Blight Encounter", BackColor = Color.LightGreen, ForeColor = Color.Black });
-            tags.Add(new ActivityTag("delirium") { Description = "Delirium Encounter", BackColor = Color.WhiteSmoke, ForeColor = Color.Black });
-            tags.Add(new ActivityTag("einhar") { Description = "Einhar Encounter", BackColor = Color.Red, ForeColor = Color.Black });
-            tags.Add(new ActivityTag("incursion") { Description = "Incursion Encounter", BackColor = Color.Turquoise, ForeColor = Color.Black });
-            tags.Add(new ActivityTag("syndicate") { Description = "Syndicate Encounter", BackColor = Color.Gold, ForeColor = Color.Black });
-            tags.Add(new ActivityTag("zana") { Description = "Zana Encounter", BackColor = Color.Blue, ForeColor = Color.White });
-            tags.Add(new ActivityTag("niko") { Description = "Niko Encounter", BackColor = Color.OrangeRed, ForeColor = Color.Black });
+            foreach(ColumnHeader ch in listViewActLog.Columns)
+            {
+                AddUpdateAppSettings("layout.listview.cols." + ch.Name + ".width", ch.Width.ToString());
+            }
+            AddUpdateAppSettings("layout.window.width", this.Width.ToString());
+            AddUpdateAppSettings("layout.window.height", this.Height.ToString());
         }
 
-        private void RenderTags()
+        private void LoadLayout()
         {
+            foreach (ColumnHeader ch in listViewActLog.Columns)
+            {
+                ch.Width = Convert.ToInt32(ReadSetting("layout.listview.cols." + ch.Name + ".width"));
+            }
+            this.Width = Convert.ToInt32(ReadSetting("layout.window.width"));
+            this.Height = Convert.ToInt32(ReadSetting("layout.window.height"));
+        }
+
+        private void InitDefaultTags()
+        {
+            List<ActivityTag> tmpTags;
+            tmpTags = new List<ActivityTag>();
+            tmpTags.Add(new ActivityTag("blight") { BackColor = Color.LightGreen, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("delirium") { BackColor = Color.WhiteSmoke, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("einhar") { BackColor = Color.Red, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("incursion") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("syndicate") { BackColor = Color.Gold, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("zana") { BackColor = Color.Blue, ForeColor = Color.White });
+            tmpTags.Add(new ActivityTag("niko") { BackColor = Color.OrangeRed, ForeColor = Color.Black });
+
+            foreach(ActivityTag tag in tmpTags)
+            {
+                try
+                {
+                    SqliteCommand cmd = dbconn.CreateCommand();
+                    cmd.CommandText = "insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type) values " +
+                                  "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default')";
+                    cmd.ExecuteNonQuery();
+                    log.Info("Default tag '" + tag.ID + "' added to database");
+                }
+                catch(SqliteException e)
+                {
+                    if(e.Message.Contains("SQLite Error 19"))
+                    {
+                        log.Info("Default tag '" + tag.ID + "' already in database, nothing todo");
+                    }
+                    else
+                    {
+                        log.Error(e.ToString());
+                    }
+                }
+               
+            }
+        }
+
+        private void LoadCustomTags()
+        {
+            SqliteDataReader sqlReader;
+            SqliteCommand cmd;
+
+            cmd = dbconn.CreateCommand();
+            cmd.CommandText = "SELECT * FROM tx_tags ORDER BY tag_id DESC";
+            sqlReader = cmd.ExecuteReader();
+
+            while (sqlReader.Read())
+            {
+                string sID = sqlReader.GetString(0);
+                string sType = sqlReader.GetString(4);
+                ActivityTag tag = new ActivityTag(sID, sType == "custom" ? false : true);
+                tag.DisplayName = sqlReader.GetString(1);
+                tag.BackColor = Color.FromArgb(Convert.ToInt32(sqlReader.GetString(2)));
+                tag.ForeColor = Color.FromArgb(Convert.ToInt32(sqlReader.GetString(3)));
+                tags.Add(tag);
+            }
+        }
+
+        private void RenderTagsForConfig(bool b_reinit = false)
+        {
+            if (b_reinit)
+            {
+                groupBox3.Controls.Clear();
+                tagLabelsConfig.Clear();
+            }
+
             int iOffsetX = 10;
-            int ioffsetY = 10;
+            int ioffsetY = 23;
 
             int iX = iOffsetX;
             int iY = ioffsetY;
+            int iLabelWidth = 100;
+            int iMaxCols = 10;
 
-            int iCols = 3;
+            int iCols = groupBox3.Width / iLabelWidth;
+            if (iCols > iMaxCols) iCols = iMaxCols;
             int iCurrCols = 0;
 
             for (int i = 0; i < tags.Count; i++)
             {
                 ActivityTag tag = tags[i];
-                Label b = new Label();
+                Label lbl = new Label();
+                lbl.Width = iLabelWidth;
+
+                if (iCurrCols > (iCols - 1))
+                {
+                    iY += 28;
+                    iX = iOffsetX;
+                    iCurrCols = 0;
+                }
+
+                if (!tagLabelsConfig.ContainsKey(tag.ID))
+                {
+                    lbl.Text = tag.DisplayName;
+                    lbl.TextAlign = ContentAlignment.MiddleCenter;
+                    lbl.BackColor = tag.BackColor;
+                    lbl.ForeColor = tag.ForeColor;
+                    lbl.MouseHover += tagLabel_MouseOver;
+                    lbl.MouseLeave += tagLabel_MouseLeave;
+                    lbl.MouseClick += Lbl_MouseClick1;
+                    lbl.Location = new Point(iX, iY);
+
+                    groupBox3.Controls.Add(lbl);
+                    tagLabelsConfig.Add(tag.ID, lbl);
+                }
+
+                iX += lbl.Width + 5;
+                iCurrCols++;
+            }
+        }
+
+        private void Lbl_MouseClick1(object sender, MouseEventArgs e)
+        {
+            ActivityTag tag = GetTagByDisplayName(((Label)sender).Text);
+            textBox4.Text = tag.ID;
+            textBox5.Text = tag.DisplayName;
+            label63.ForeColor = tag.ForeColor;
+            label63.BackColor = tag.BackColor;
+            label63.Text = tag.DisplayName;
+        }
+
+        private void tagLabel_MouseLeave(object sender, EventArgs e)
+        {
+            ((Label)sender).BorderStyle = BorderStyle.None;
+        }
+
+        private void tagLabel_MouseOver(object sender, EventArgs e)
+        {
+            ((Label)sender).BorderStyle = BorderStyle.Fixed3D;
+        }
+
+        private void RenderTagsForTracking(bool b_reinit = false)
+        {
+            if (b_reinit)
+            {
+                groupBox8.Controls.Clear();
+                tagLabels.Clear();
+            }
+
+            int iOffsetX = 10;
+            int ioffsetY = 20;
+            int iLabelWidth = 100;
+            int iMaxCols = 5;
+
+            int iX = iOffsetX;
+            int iY = ioffsetY;
+
+            int iCols = groupBox8.Width / iLabelWidth;
+            if (iCols > iMaxCols) iCols = iMaxCols;
+            int iCurrCols = 0;
+
+            for (int i = 0; i < tags.Count; i++)
+            {
+                ActivityTag tag = tags[i];
+                Label lbl = new Label();
+                lbl.Width = iLabelWidth;
 
                 if (iCurrCols > (iCols - 1))
                 {
@@ -248,14 +404,17 @@ namespace TraXile
 
                 if(!tagLabels.ContainsKey(tag.ID))
                 {
-                    b.Text = tag.ID;
-                    b.TextAlign = ContentAlignment.MiddleCenter;
-                    b.BackColor = Color.Gray;
-                    b.ForeColor = Color.LightGray;
-                    b.Location = new Point(iX, iY);
-
-                    panelTags.Controls.Add(b);
-                    tagLabels.Add(tag.ID, b);
+                    lbl.Text = tag.DisplayName;
+                    lbl.TextAlign = ContentAlignment.MiddleCenter;
+                    lbl.BackColor = Color.Gray;
+                    lbl.ForeColor = Color.LightGray;
+                    lbl.Location = new Point(iX, iY);
+                    lbl.MouseHover += tagLabel_MouseOver;
+                    lbl.MouseLeave += tagLabel_MouseLeave;
+                    lbl.MouseClick += Lbl_MouseClick;
+                    
+                    groupBox8.Controls.Add(lbl);
+                    tagLabels.Add(tag.ID, lbl);
                 }
                 else
                 {
@@ -267,7 +426,6 @@ namespace TraXile
                         {
                             tagLabels[tag.ID].BackColor = tag.BackColor;
                             tagLabels[tag.ID].ForeColor = tag.ForeColor;
-
                         }
                         else
                         {
@@ -282,9 +440,59 @@ namespace TraXile
                     }
                 }
 
-                iX += b.Width + 5;
+                iX += lbl.Width + 5;
                 iCurrCols++;
             }
+        }
+
+        public ActivityTag GetTagByDisplayName(string s_display_name)
+        {
+            foreach(ActivityTag t in tags)
+            {
+                if (t.DisplayName == s_display_name)
+                    return t;
+            }
+
+            return null;
+        }
+
+        private void Lbl_MouseClick(object sender, MouseEventArgs e)
+        {
+            ActivityTag tag = GetTagByDisplayName(((Label)sender).Text);
+            if(!tag.IsDefault)
+            {
+                if(currentMap != null)
+                {
+                    if(bIsMapZana && currentMap.ZanaMap != null)
+                    {
+                        if (currentMap.ZanaMap.HasTag(tag.ID))
+                        {
+                            currentMap.ZanaMap.RemoveTag(tag.ID);
+                        }
+                        else
+                        {
+                            currentMap.ZanaMap.AddTag(tag.ID);
+                        }
+                    }
+                    else
+                    {
+                        if(currentMap.HasTag(tag.ID))
+                        {
+                            currentMap.RemoveTag(tag.ID);
+                        }
+                        else
+                        {
+                            currentMap.AddTag(tag.ID);
+                        }
+                        
+                    }
+                }
+            }
+        }
+
+        private void Lbl_MouseHover(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public void ReloadLogFile()
@@ -440,7 +648,7 @@ namespace TraXile
             SqliteCommand cmd;
 
             mapHistory.Clear();
-            listView1.Items.Clear();
+            listViewActLog.Items.Clear();
 
             cmd = dbconn.CreateCommand();
             cmd.CommandText = "drop table tx_activity_log";
@@ -499,6 +707,19 @@ namespace TraXile
                 "act_tags" + ")";
             cmd.ExecuteNonQuery();
 
+            cmd = dbconn.CreateCommand();
+            cmd.CommandText = "create table if not exists tx_tags " +
+                "(tag_id text, " +
+                "tag_display text," +
+                "tag_bgcolor text, " +
+                "tag_forecolor text," +
+                "tag_type text)";
+            cmd.ExecuteNonQuery();
+
+            cmd = dbconn.CreateCommand();
+            cmd.CommandText = "create unique index if not exists tx_tag_id on tx_tags(tag_id)";
+            cmd.ExecuteNonQuery();
+
             // Update 0.3.4
             try
             {
@@ -530,7 +751,7 @@ namespace TraXile
                 "(" +
                 "player_name )";
             cmd.ExecuteNonQuery();
-
+            InitDefaultTags();
             log.Info("Database initialized.");
         }
 
@@ -919,10 +1140,9 @@ namespace TraXile
 
                 //mapHistory
                 mapHistory.Add(map);
-                AddMapLvItem(map, false, -1);
-                
             }
             bHistoryInitialized = true;
+            ResetMapHistory();
         }
 
         private void LogParsing()
@@ -1048,7 +1268,7 @@ namespace TraXile
             }
         }
 
-        private void HandleEvents()
+        private void EventHandling()
         {
             while (true)
             {
@@ -1618,11 +1838,38 @@ namespace TraXile
             log.Info(sTxt);
         }
 
-        private void ResetMapHistory()
+        public void ResetMapHistory()
         {
-            listView1.Items.Clear();
+            listViewActLog.Items.Clear();
+            listViewActLog.Columns.Clear();
 
-            foreach(TrackedActivity act in mapHistory)
+            ColumnHeader
+                chTime = new ColumnHeader() { Name = "actlog_time", Text = "Time", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_time.width", "60")) },
+                chType = new ColumnHeader() { Name = "actlog_type", Text = "Type", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_type.width", "60")) },
+                chArea = new ColumnHeader() { Name = "actlog_area", Text = "Area", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_area.width", "60")) },
+                chStopwatch = new ColumnHeader() { Name = "actlog_stopwatch", Text = "Stopwatch", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_stopwatch.width", "60")) },
+                chDeath = new ColumnHeader() { Name = "actlog_death", Text = "Deaths", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_death.width", "60")) };
+
+
+            listViewActLog.Columns.Add(chTime);
+            listViewActLog.Columns.Add(chType);
+            listViewActLog.Columns.Add(chArea);
+            listViewActLog.Columns.Add(chStopwatch);
+            listViewActLog.Columns.Add(chDeath);
+
+
+            foreach (ActivityTag tag in tags)
+            {
+                ColumnHeader ch = new ColumnHeader() 
+                { 
+                    Name = "actlog_tag_" + tag.ID, 
+                    Text = tag.DisplayName, 
+                    Width =  Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_tag_" + tag.ID + ".width", "60"))
+                };
+                listViewActLog.Columns.Add(ch);
+            }
+
+            foreach (TrackedActivity act in mapHistory)
             {
                 AddMapLvItem(act, act.IsZana, -1);
             }
@@ -1649,11 +1896,11 @@ namespace TraXile
 
                 if(iPos == -1)
                 {
-                    listView1.Items.Add(lvi);
+                    listViewActLog.Items.Add(lvi);
                 }
                 else
                 {
-                    listView1.Items.Insert(iPos, lvi);
+                    listViewActLog.Items.Insert(iPos, lvi);
                 }
                 
             });
@@ -1699,7 +1946,8 @@ namespace TraXile
                         MessageBox.Show("Successfully restored from Backup!");
                     }
 
-                    RenderTags();
+                    RenderTagsForTracking();
+                    RenderTagsForConfig();
 
                     if(listView2.Items.Count == 0)
                     {
@@ -1724,11 +1972,14 @@ namespace TraXile
                     {
                         ReadActivityLogFromSQLite();
                     }
+                    else
+                    {
+                        SaveLayout();
+                    }
 
                     
                     labelCurrArea.Text = sCurrentArea;
                     labelLastDeath.Text = dtLastDeath.Year > 2000 ? dtLastDeath.ToString() : "-";
-                    labelLastDeathReason.Text = sLastDeathReason;
                     
                     if(sCurrentArea.Contains("Hideout"))
                     {
@@ -1835,19 +2086,19 @@ namespace TraXile
             this.bSettingActivityLogShowGrid = Convert.ToBoolean(ReadSetting("ActivityLogShowGrid"));
             this.bSettingStatsShowGrid = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
 
-            listView1.GridLines = bSettingActivityLogShowGrid;
+            listViewActLog.GridLines = bSettingActivityLogShowGrid;
             listView2.GridLines = bSettingStatsShowGrid;
         }
 
-        public string ReadSetting(string key)
+        public string ReadSetting(string key, string s_default = null)
         {
             try
             {
-                return ConfigurationManager.AppSettings[key] ?? null;
+                return ConfigurationManager.AppSettings[key] ?? s_default;
             }
             catch (ConfigurationErrorsException)
             {
-                return null;
+                return s_default;
             }
         }
 
@@ -2324,20 +2575,20 @@ namespace TraXile
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if(listView1.SelectedItems.Count == 1)
+            if(listViewActLog.SelectedItems.Count == 1)
             {
-                int iIndex = listView1.SelectedIndices[0];
+                int iIndex = listViewActLog.SelectedIndices[0];
                 long lTimestamp = mapHistory[iIndex].TimeStamp;
-                string sType = listView1.Items[iIndex].SubItems[1].Text;
-                string sArea = listView1.Items[iIndex].SubItems[2].Text;
+                string sType = listViewActLog.Items[iIndex].SubItems[1].Text;
+                string sArea = listViewActLog.Items[iIndex].SubItems[2].Text;
 
                 if (MessageBox.Show("Do you really want to delete this Activity? " + Environment.NewLine
                     + Environment.NewLine
                     + "Type: " + sType + Environment.NewLine
                     + "Area: " + sArea + Environment.NewLine
-                    + "Time: " + listView1.Items[iIndex].SubItems[0].Text, "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    + "Time: " + listViewActLog.Items[iIndex].SubItems[0].Text, "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    listView1.Items.Remove(listView1.SelectedItems[0]);
+                    listViewActLog.Items.Remove(listViewActLog.SelectedItems[0]);
                     mapHistory.RemoveAt(iIndex);
                     DeleteActLogEntry(lTimestamp);
                 }
@@ -2360,9 +2611,9 @@ namespace TraXile
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if(listView1.SelectedIndices.Count > 0)
+            if(listViewActLog.SelectedIndices.Count > 0)
             {
-                int iIndex = listView1.SelectedIndices[0];
+                int iIndex = listViewActLog.SelectedIndices[0];
                 OpenActivityDetails(mapHistory[iIndex]);
             }
 
@@ -2370,9 +2621,9 @@ namespace TraXile
 
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (listView1.SelectedIndices.Count > 0)
+            if (listViewActLog.SelectedIndices.Count > 0)
             {
-                int iIndex = listView1.SelectedIndices[0];
+                int iIndex = listViewActLog.SelectedIndices[0];
                 OpenActivityDetails(mapHistory[iIndex]);
             }
         }
@@ -2419,7 +2670,7 @@ namespace TraXile
         {
             bSettingActivityLogShowGrid = checkBox1.Checked;
             AddUpdateAppSettings("ActivityLogShowGrid", checkBox1.Checked.ToString());
-            listView1.GridLines = bSettingActivityLogShowGrid;
+            listViewActLog.GridLines = bSettingActivityLogShowGrid;
         }
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
@@ -2518,6 +2769,33 @@ namespace TraXile
             }
         }
 
+        private bool CheckTagExists(string s_id)
+        {
+            foreach(ActivityTag tag in tags)
+            {
+                if(tag.ID == s_id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void AddTag(ActivityTag tag)
+        {
+            tags.Add(tag);
+
+            SqliteCommand cmd = dbconn.CreateCommand();
+            cmd.CommandText = "INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type) VALUES "
+                + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom')";
+            cmd.ExecuteNonQuery();
+
+            listViewActLog.Columns.Add(tag.DisplayName);
+            ResetMapHistory();
+            RenderTagsForConfig(true);
+            RenderTagsForTracking(true);
+        }
+
         private void button17_Click(object sender, EventArgs e)
         {
             DialogResult dr;
@@ -2537,12 +2815,200 @@ namespace TraXile
             }
         }
 
+        private void panelTags_SizeChanged(object sender, EventArgs e)
+        {
+            if(bEventQInitialized)
+                RenderTagsForTracking(true);
+        }
+
+        private void panelEditTags_SizeChanged(object sender, EventArgs e)
+        {
+            if(bEventQInitialized)
+                RenderTagsForConfig(true);
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if(!CheckTagExists(textBox2.Text))
+            {
+                AddTag(new ActivityTag(textBox2.Text, false) { DisplayName = textBox3.Text });
+                RenderTagsForConfig(true);
+                RenderTagsForTracking(true);
+                textBox2.Clear();
+            }
+            else
+            {
+                MessageBox.Show("Tag '" + textBox2.Text + "' already exists.");
+            }
+            
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            textBox3.Text = textBox2.Text;
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            colorDialog1.ShowDialog();
+            label63.BackColor = colorDialog1.Color;
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            colorDialog1.ShowDialog();
+            label63.ForeColor = colorDialog1.Color;
+        }
+
+        public void AddTagAutoCreate(string s_id, TrackedActivity act)
+        {
+            int iIndex = GetTagIndex(s_id);
+            ActivityTag tag;
+            if(iIndex < 0)
+            {
+                tag = new ActivityTag(s_id, false);
+                tag.BackColor = Color.White;
+                tag.ForeColor = Color.Black;
+                AddTag(tag);
+            }
+            else
+            {
+                tag = tags[iIndex];
+            }
+
+            act.AddTag(tag.ID);
+
+            string sTags = "";
+            // Update tags in DB // TODO
+            for (int i = 0; i < act.Tags.Count; i++)
+            {
+                sTags += act.Tags[i];
+                if (i < (act.Tags.Count - 1))
+                    sTags += "|";
+            }
+            SqliteCommand cmd = dbconn.CreateCommand();
+            cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
+            cmd.ExecuteNonQuery();
+        }
+
+        public void RemoveTagFromActivity(string s_id, TrackedActivity act)
+        {
+                act.RemoveTag(s_id);
+                string sTags = "";
+
+                // Update tags in DB // TODO
+                for (int i = 0; i < act.Tags.Count; i++)
+                {
+                    sTags += act.Tags[i];
+                    if (i < (act.Tags.Count - 1))
+                        sTags += "|";
+                    SqliteCommand cmd = dbconn.CreateCommand();
+                    cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
+                    cmd.ExecuteNonQuery();
+                }
+        }
+
+        private void UpdateTag(string s_id, string s_display_name, string s_forecolor, string s_backcolor)
+        {
+            int iTagIndex = GetTagIndex(s_id);
+
+            if(iTagIndex >= 0)
+            {
+                tags[iTagIndex].DisplayName = s_display_name;
+                tags[iTagIndex].ForeColor = Color.FromArgb(Convert.ToInt32(s_forecolor));
+                tags[iTagIndex].BackColor = Color.FromArgb(Convert.ToInt32(s_backcolor));
+
+                SqliteCommand cmd = dbconn.CreateCommand();
+                cmd.CommandText = "UPDATE tx_tags SET tag_display = '" + s_display_name + "', tag_forecolor = '" + s_forecolor + "', tag_bgcolor = '" + s_backcolor + "'" +
+                    " WHERE tag_id = '" + s_id + "'";
+                cmd.ExecuteNonQuery();
+            }
+
+            RenderTagsForConfig(true);
+            RenderTagsForTracking(true);
+            ResetMapHistory();
+        }
+
+        private int GetTagIndex(string s_id)
+        {
+            for(int i = 0; i < tags.Count; i++)
+            {
+                if(tags[i].ID == s_id)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            UpdateTag(textBox4.Text, textBox5.Text, label63.ForeColor.ToArgb().ToString(), label63.BackColor.ToArgb().ToString());
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            textBox4.Text = "";
+            textBox5.Text = "";
+            label63.BackColor = Color.White;
+            label63.ForeColor = Color.Black;
+            label63.Text = "MyCustomTag";
+        }
+
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+            label63.Text = textBox5.Text;
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            DeleteTag(textBox4.Text);
+            textBox4.Text = "";
+            textBox5.Text = "";
+            label63.BackColor = Color.White;
+            label63.ForeColor = Color.Black;
+            label63.Text = "MyCustomTag";
+        }
+
         private void button18_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show("Do you really want to delete the selected Backup?", "Warning", MessageBoxButtons.YesNo);
             if (dr == DialogResult.Yes)
             {
                 DeleteBackup(listBox1.SelectedItem.ToString());
+            }
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            textBox5.Text = textBox4.Text;
+        }
+
+        private void DeleteTag(string s_id)
+        {
+            int iIndex = GetTagIndex(s_id);
+            if(iIndex >= 0)
+            {
+                ActivityTag tag = tags[iIndex];
+
+                if(tag.IsDefault)
+                {
+                    MessageBox.Show("Sorry. You cannot delete a default tag!");
+                }
+                else
+                {
+                    DialogResult dr = MessageBox.Show("Do you really want to delete the tag '" + s_id + "'?", "Warning", MessageBoxButtons.YesNo);
+                    if(dr == DialogResult.Yes)
+                    {
+                        tags.RemoveAt(iIndex);
+                        SqliteCommand cmd = dbconn.CreateCommand();
+                        cmd.CommandText = "DELETE FROM tx_tags WHERE tag_id = '" + s_id + "' AND tag_type != 'default'";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                RenderTagsForConfig(true);
+                RenderTagsForTracking(true);
+                ResetMapHistory();
             }
         }
 

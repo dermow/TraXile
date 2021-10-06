@@ -14,12 +14,14 @@ namespace TraXile
     {
         private TrackedActivity activity;
         private MainW mainW;
+        private bool bDeleteMode;
 
         public ActivityDetails(TrackedActivity ta, MainW main)
         {
             InitializeComponent();
             mainW = main;
             activity = ta;
+            bDeleteMode = false;
 
             labelTime.Text = ta.Started.ToString();
             labelType.Text = ta.Type.ToString();
@@ -31,11 +33,23 @@ namespace TraXile
             labelStopWatch.Text = ta.StopWatchValue;
             labelDeaths.Text = ta.DeathCounter.ToString();
             Text = ta.Type + " Details: " + ta.Area;
+
+            foreach(ActivityTag tag in main.tags)
+            {
+                if(!tag.IsDefault)
+                {
+                    comboBox1.Items.Add(tag.DisplayName);
+                }
+            }
+
             RenderTags();
         }
 
-        private void RenderTags()
+        private void RenderTags(bool b_init = false)
         {
+            if (b_init)
+                panelTags.Controls.Clear();
+
             int iOffsetX = 10;
             int ioffsetY = 10;
 
@@ -52,7 +66,7 @@ namespace TraXile
                 if (tag == null)
                     continue;
 
-                Label b = new Label();
+                Label lbl = new Label();
 
                 if (iCurrCols > (iCols-1))
                 {
@@ -61,16 +75,63 @@ namespace TraXile
                     iCurrCols = 0;
                 }
 
-                b.Text = tag.ID;
-                b.TextAlign = ContentAlignment.MiddleCenter;
-                b.BackColor = tag.BackColor;
-                b.ForeColor = tag.ForeColor;
-                b.Location = new Point(iX, iY);
+                lbl.Text = tag.DisplayName;
+                lbl.TextAlign = ContentAlignment.MiddleCenter;
+                lbl.BackColor = tag.BackColor;
+                lbl.ForeColor = tag.ForeColor;
+                lbl.Location = new Point(iX, iY);
+                lbl.MouseClick += Lbl_MouseClick;
 
-                iX += b.Width + 5;
+                iX += lbl.Width + 5;
                 iCurrCols++;
 
-                panelTags.Controls.Add(b);
+                panelTags.Controls.Add(lbl);
+            }
+        }
+
+        private void Lbl_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(bDeleteMode)
+            {
+                ActivityTag tag = mainW.GetTagByDisplayName(((Label)sender).Text);
+                if(tag.IsDefault)
+                {
+                    MessageBox.Show("Sorry. You cannot remove auto tags.");
+                }
+                else
+                {
+                    mainW.RemoveTagFromActivity(tag.ID, activity);
+                    activity.RemoveTag(tag.ID);
+                    RenderTags(true);
+                    mainW.ResetMapHistory();
+                }
+               
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            mainW.AddTagAutoCreate(comboBox1.Text, activity);
+            RenderTags(true);
+            mainW.ResetMapHistory();
+        }
+
+        private void ActivityDetails_FormClosed(object sender, FormClosedEventArgs e)
+        {
+           
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if(!bDeleteMode)
+            {
+                bDeleteMode = true;
+                label8.ForeColor = Color.Red;
+            }
+            else
+            {
+                bDeleteMode = false;
+                label8.ForeColor = Color.Black;
             }
         }
     }

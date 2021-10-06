@@ -35,3 +35,8 @@
 0.4.3
 - Updated README
 - Added Statistic "Simulacrum 100% finished"
+
+0.4.4
+- Users are now able to create custom tags
+- Users are now able to modify tag appearance and display text
+- Removed "Last death reason" since there no more information in the log (was ultra rare anyway)
