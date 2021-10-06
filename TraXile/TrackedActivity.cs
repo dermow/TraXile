@@ -32,6 +32,22 @@ namespace TraXile
             tags = new List<string>();
         }
 
+        public bool HasTag(string s_id)
+        {
+            foreach(string tag in tags)
+            {
+                if (tag == s_id)
+                    return true;
+            }
+            return false;
+        }
+
+        public void RemoveTag(string s_id)
+        {
+            if(HasTag(s_id))
+               tags.Remove(s_id);
+        }
+
         public void AddTag(string s_id)
         {
             if(!tags.Contains(s_id))

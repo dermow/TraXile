@@ -31,20 +31,24 @@ namespace TraXile
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.labelTime = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.labelType = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.labelArea = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.labelStopWatch = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.labelDeaths = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.labelStopWatch = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.labelArea = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.labelType = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.labelTime = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelTags = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -88,96 +92,15 @@ namespace TraXile
             this.panel1.Size = new System.Drawing.Size(447, 169);
             this.panel1.TabIndex = 0;
             // 
-            // label1
+            // labelDeaths
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Red;
-            this.label1.Location = new System.Drawing.Point(3, 6);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(121, 24);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "General Infos";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.Gold;
-            this.label2.Location = new System.Drawing.Point(14, 47);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(33, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Time:";
-            // 
-            // labelTime
-            // 
-            this.labelTime.AutoSize = true;
-            this.labelTime.ForeColor = System.Drawing.Color.Gold;
-            this.labelTime.Location = new System.Drawing.Point(111, 47);
-            this.labelTime.Name = "labelTime";
-            this.labelTime.Size = new System.Drawing.Size(49, 13);
-            this.labelTime.TabIndex = 2;
-            this.labelTime.Text = "00:00:00";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.Color.Gold;
-            this.label3.Location = new System.Drawing.Point(14, 67);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(34, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Type:";
-            // 
-            // labelType
-            // 
-            this.labelType.AutoSize = true;
-            this.labelType.ForeColor = System.Drawing.Color.Gold;
-            this.labelType.Location = new System.Drawing.Point(111, 67);
-            this.labelType.Name = "labelType";
-            this.labelType.Size = new System.Drawing.Size(28, 13);
-            this.labelType.TabIndex = 4;
-            this.labelType.Text = "Map";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.Gold;
-            this.label4.Location = new System.Drawing.Point(14, 87);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(32, 13);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Area:";
-            // 
-            // labelArea
-            // 
-            this.labelArea.AutoSize = true;
-            this.labelArea.ForeColor = System.Drawing.Color.Gold;
-            this.labelArea.Location = new System.Drawing.Point(111, 87);
-            this.labelArea.Name = "labelArea";
-            this.labelArea.Size = new System.Drawing.Size(38, 13);
-            this.labelArea.TabIndex = 6;
-            this.labelArea.Text = "Dunes";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.Gold;
-            this.label5.Location = new System.Drawing.Point(14, 107);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 13);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "Stopwatch:";
-            // 
-            // labelStopWatch
-            // 
-            this.labelStopWatch.AutoSize = true;
-            this.labelStopWatch.ForeColor = System.Drawing.Color.Gold;
-            this.labelStopWatch.Location = new System.Drawing.Point(111, 107);
-            this.labelStopWatch.Name = "labelStopWatch";
-            this.labelStopWatch.Size = new System.Drawing.Size(49, 13);
-            this.labelStopWatch.TabIndex = 8;
-            this.labelStopWatch.Text = "00:00:00";
+            this.labelDeaths.AutoSize = true;
+            this.labelDeaths.ForeColor = System.Drawing.Color.Gold;
+            this.labelDeaths.Location = new System.Drawing.Point(111, 127);
+            this.labelDeaths.Name = "labelDeaths";
+            this.labelDeaths.Size = new System.Drawing.Size(13, 13);
+            this.labelDeaths.TabIndex = 10;
+            this.labelDeaths.Text = "0";
             // 
             // label6
             // 
@@ -189,15 +112,96 @@ namespace TraXile
             this.label6.TabIndex = 9;
             this.label6.Text = "Deaths:";
             // 
-            // labelDeaths
+            // labelStopWatch
             // 
-            this.labelDeaths.AutoSize = true;
-            this.labelDeaths.ForeColor = System.Drawing.Color.Gold;
-            this.labelDeaths.Location = new System.Drawing.Point(111, 127);
-            this.labelDeaths.Name = "labelDeaths";
-            this.labelDeaths.Size = new System.Drawing.Size(13, 13);
-            this.labelDeaths.TabIndex = 10;
-            this.labelDeaths.Text = "0";
+            this.labelStopWatch.AutoSize = true;
+            this.labelStopWatch.ForeColor = System.Drawing.Color.Gold;
+            this.labelStopWatch.Location = new System.Drawing.Point(111, 107);
+            this.labelStopWatch.Name = "labelStopWatch";
+            this.labelStopWatch.Size = new System.Drawing.Size(49, 13);
+            this.labelStopWatch.TabIndex = 8;
+            this.labelStopWatch.Text = "00:00:00";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.Gold;
+            this.label5.Location = new System.Drawing.Point(14, 107);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(61, 13);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Stopwatch:";
+            // 
+            // labelArea
+            // 
+            this.labelArea.AutoSize = true;
+            this.labelArea.ForeColor = System.Drawing.Color.Gold;
+            this.labelArea.Location = new System.Drawing.Point(111, 87);
+            this.labelArea.Name = "labelArea";
+            this.labelArea.Size = new System.Drawing.Size(38, 13);
+            this.labelArea.TabIndex = 6;
+            this.labelArea.Text = "Dunes";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.Gold;
+            this.label4.Location = new System.Drawing.Point(14, 87);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(32, 13);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Area:";
+            // 
+            // labelType
+            // 
+            this.labelType.AutoSize = true;
+            this.labelType.ForeColor = System.Drawing.Color.Gold;
+            this.labelType.Location = new System.Drawing.Point(111, 67);
+            this.labelType.Name = "labelType";
+            this.labelType.Size = new System.Drawing.Size(28, 13);
+            this.labelType.TabIndex = 4;
+            this.labelType.Text = "Map";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.Gold;
+            this.label3.Location = new System.Drawing.Point(14, 67);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(34, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Type:";
+            // 
+            // labelTime
+            // 
+            this.labelTime.AutoSize = true;
+            this.labelTime.ForeColor = System.Drawing.Color.Gold;
+            this.labelTime.Location = new System.Drawing.Point(111, 47);
+            this.labelTime.Name = "labelTime";
+            this.labelTime.Size = new System.Drawing.Size(49, 13);
+            this.labelTime.TabIndex = 2;
+            this.labelTime.Text = "00:00:00";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.Gold;
+            this.label2.Location = new System.Drawing.Point(14, 47);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(33, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Time:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Red;
+            this.label1.Location = new System.Drawing.Point(3, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(121, 24);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "General Infos";
             // 
             // panelTags
             // 
@@ -209,6 +213,10 @@ namespace TraXile
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.button2);
+            this.panel2.Controls.Add(this.label8);
+            this.panel2.Controls.Add(this.button1);
+            this.panel2.Controls.Add(this.comboBox1);
             this.panel2.Controls.Add(this.label7);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 178);
@@ -223,9 +231,48 @@ namespace TraXile
             this.label7.ForeColor = System.Drawing.Color.Red;
             this.label7.Location = new System.Drawing.Point(3, -3);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(101, 24);
+            this.label7.Size = new System.Drawing.Size(57, 24);
             this.label7.TabIndex = 12;
-            this.label7.Text = "Auto Tags:";
+            this.label7.Text = "Tags:";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.comboBox1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(66, 0);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(103, 21);
+            this.comboBox1.TabIndex = 13;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(175, -1);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(27, 24);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "+";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(243, 4);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(142, 13);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "Select custom tag to remove";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(208, -1);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(27, 24);
+            this.button2.TabIndex = 16;
+            this.button2.Text = "-";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // ActivityDetails
             // 
@@ -237,6 +284,7 @@ namespace TraXile
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ActivityDetails";
             this.Text = "ActivityDetails";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ActivityDetails_FormClosed);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -264,5 +312,9 @@ namespace TraXile
         private System.Windows.Forms.Panel panelTags;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label8;
     }
 }
