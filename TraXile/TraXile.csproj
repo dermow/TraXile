@@ -172,6 +172,7 @@
       <DependentUpon>FilterScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ListViewManager.cs" />
     <Compile Include="LoadScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,6 +190,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchHelp.Designer.cs">
+      <DependentUpon>SearchHelp.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -232,6 +239,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SearchHelp.resx">
+      <DependentUpon>SearchHelp.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>

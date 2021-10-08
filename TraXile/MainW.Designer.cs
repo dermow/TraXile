@@ -32,9 +32,9 @@ namespace TraXile
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.TabControl tabControl1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainW));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -71,9 +71,6 @@ namespace TraXile
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBoxLogView = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -210,11 +207,15 @@ namespace TraXile
             this.button11 = new System.Windows.Forms.Button();
             this.label63 = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.textBoxLogView = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chatCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.infoToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -245,10 +246,15 @@ namespace TraXile
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.chatCommandsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.infoToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.listView2 = new TraXile.ListViewNF();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.label65 = new System.Windows.Forms.Label();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.label66 = new System.Windows.Forms.Label();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.listViewStats = new TraXile.ListViewNF();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             tabControl1 = new System.Windows.Forms.TabControl();
             tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -268,7 +274,6 @@ namespace TraXile
             this.panel7.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -298,6 +303,7 @@ namespace TraXile
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
@@ -305,6 +311,7 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -517,7 +524,7 @@ namespace TraXile
             this.labelCurrArea.AutoSize = true;
             this.labelCurrArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCurrArea.ForeColor = System.Drawing.Color.Gold;
-            this.labelCurrArea.Location = new System.Drawing.Point(173, 22);
+            this.labelCurrArea.Location = new System.Drawing.Point(172, 20);
             this.labelCurrArea.Name = "labelCurrArea";
             this.labelCurrArea.Size = new System.Drawing.Size(14, 20);
             this.labelCurrArea.TabIndex = 5;
@@ -528,7 +535,7 @@ namespace TraXile
             this.labelCurrActivity.AutoSize = true;
             this.labelCurrActivity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCurrActivity.ForeColor = System.Drawing.Color.Gold;
-            this.labelCurrActivity.Location = new System.Drawing.Point(173, 1);
+            this.labelCurrActivity.Location = new System.Drawing.Point(172, 0);
             this.labelCurrActivity.Name = "labelCurrActivity";
             this.labelCurrActivity.Size = new System.Drawing.Size(62, 20);
             this.labelCurrActivity.TabIndex = 4;
@@ -539,7 +546,7 @@ namespace TraXile
             this.label52.AutoSize = true;
             this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label52.ForeColor = System.Drawing.Color.Gold;
-            this.label52.Location = new System.Drawing.Point(4, 1);
+            this.label52.Location = new System.Drawing.Point(3, 0);
             this.label52.Name = "label52";
             this.label52.Size = new System.Drawing.Size(62, 20);
             this.label52.TabIndex = 0;
@@ -550,7 +557,7 @@ namespace TraXile
             this.label53.AutoSize = true;
             this.label53.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label53.ForeColor = System.Drawing.Color.Gold;
-            this.label53.Location = new System.Drawing.Point(4, 22);
+            this.label53.Location = new System.Drawing.Point(3, 20);
             this.label53.Name = "label53";
             this.label53.Size = new System.Drawing.Size(47, 20);
             this.label53.TabIndex = 1;
@@ -561,7 +568,7 @@ namespace TraXile
             this.label54.AutoSize = true;
             this.label54.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label54.ForeColor = System.Drawing.Color.Gold;
-            this.label54.Location = new System.Drawing.Point(4, 43);
+            this.label54.Location = new System.Drawing.Point(3, 40);
             this.label54.Name = "label54";
             this.label54.Size = new System.Drawing.Size(89, 20);
             this.label54.TabIndex = 2;
@@ -572,7 +579,7 @@ namespace TraXile
             this.labelLastDeath.AutoSize = true;
             this.labelLastDeath.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelLastDeath.ForeColor = System.Drawing.Color.Gold;
-            this.labelLastDeath.Location = new System.Drawing.Point(173, 43);
+            this.labelLastDeath.Location = new System.Drawing.Point(172, 40);
             this.labelLastDeath.Name = "labelLastDeath";
             this.labelLastDeath.Size = new System.Drawing.Size(14, 20);
             this.labelLastDeath.TabIndex = 6;
@@ -628,7 +635,7 @@ namespace TraXile
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 82F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.Size = new System.Drawing.Size(520, 706);
             this.tableLayoutPanel5.TabIndex = 5;
@@ -650,10 +657,10 @@ namespace TraXile
             this.listViewActLog.GridLines = true;
             this.listViewActLog.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewActLog.HideSelection = false;
-            this.listViewActLog.Location = new System.Drawing.Point(3, 39);
+            this.listViewActLog.Location = new System.Drawing.Point(3, 85);
             this.listViewActLog.MultiSelect = false;
             this.listViewActLog.Name = "listViewActLog";
-            this.listViewActLog.Size = new System.Drawing.Size(514, 664);
+            this.listViewActLog.Size = new System.Drawing.Size(514, 618);
             this.listViewActLog.TabIndex = 4;
             this.listViewActLog.UseCompatibleStateImageBehavior = false;
             this.listViewActLog.View = System.Windows.Forms.View.Details;
@@ -666,6 +673,7 @@ namespace TraXile
             // columnHeader7
             // 
             this.columnHeader7.Text = "Type";
+            this.columnHeader7.Width = 62;
             // 
             // columnHeader2
             // 
@@ -682,6 +690,9 @@ namespace TraXile
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel3.Controls.Add(this.linkLabel1);
+            this.panel3.Controls.Add(this.textBox8);
+            this.panel3.Controls.Add(this.label66);
             this.panel3.Controls.Add(this.button9);
             this.panel3.Controls.Add(this.button5);
             this.panel3.Controls.Add(this.button4);
@@ -689,7 +700,7 @@ namespace TraXile
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(514, 30);
+            this.panel3.Size = new System.Drawing.Size(514, 76);
             this.panel3.TabIndex = 5;
             // 
             // button9
@@ -736,40 +747,6 @@ namespace TraXile
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.button1);
-            this.tabPage2.Controls.Add(this.textBoxLogView);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(975, 712);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "EventLog";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(3, 715);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Clear";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // textBoxLogView
-            // 
-            this.textBoxLogView.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
-            this.textBoxLogView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxLogView.ForeColor = System.Drawing.Color.Gold;
-            this.textBoxLogView.Location = new System.Drawing.Point(3, 3);
-            this.textBoxLogView.Multiline = true;
-            this.textBoxLogView.Name = "textBoxLogView";
-            this.textBoxLogView.ReadOnly = true;
-            this.textBoxLogView.Size = new System.Drawing.Size(969, 706);
-            this.textBoxLogView.TabIndex = 0;
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.tableLayoutPanel1);
@@ -786,16 +763,17 @@ namespace TraXile
             this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.listView2, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.listViewStats, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.chart1, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.label38, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.label46, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.panel6, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 6;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
@@ -809,29 +787,29 @@ namespace TraXile
             this.chart1.BackColor = System.Drawing.Color.Black;
             this.chart1.BackSecondaryColor = System.Drawing.Color.Red;
             this.chart1.BorderlineColor = System.Drawing.Color.Transparent;
-            chartArea1.BackColor = System.Drawing.Color.Black;
-            chartArea1.BorderColor = System.Drawing.Color.Red;
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea2.BackColor = System.Drawing.Color.Black;
+            chartArea2.BorderColor = System.Drawing.Color.Red;
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.BackColor = System.Drawing.Color.Black;
-            legend1.ForeColor = System.Drawing.Color.Red;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(3, 527);
+            legend2.BackColor = System.Drawing.Color.Black;
+            legend2.ForeColor = System.Drawing.Color.Red;
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
+            this.chart1.Location = new System.Drawing.Point(3, 530);
             this.chart1.Name = "chart1";
-            series1.BackSecondaryColor = System.Drawing.Color.Red;
-            series1.ChartArea = "ChartArea1";
-            series1.Color = System.Drawing.Color.Red;
-            series1.LabelBackColor = System.Drawing.Color.Red;
-            series1.LabelBorderColor = System.Drawing.Color.Red;
-            series1.LabelForeColor = System.Drawing.Color.Red;
-            series1.Legend = "Legend1";
-            series1.MarkerBorderColor = System.Drawing.Color.Red;
-            series1.MarkerColor = System.Drawing.Color.Red;
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(963, 176);
+            series2.BackSecondaryColor = System.Drawing.Color.Red;
+            series2.ChartArea = "ChartArea1";
+            series2.Color = System.Drawing.Color.Red;
+            series2.LabelBackColor = System.Drawing.Color.Red;
+            series2.LabelBorderColor = System.Drawing.Color.Red;
+            series2.LabelForeColor = System.Drawing.Color.Red;
+            series2.Legend = "Legend1";
+            series2.MarkerBorderColor = System.Drawing.Color.Red;
+            series2.MarkerColor = System.Drawing.Color.Red;
+            series2.Name = "Series1";
+            this.chart1.Series.Add(series2);
+            this.chart1.Size = new System.Drawing.Size(963, 173);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             // 
@@ -841,7 +819,7 @@ namespace TraXile
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.comboBox1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 477);
+            this.panel1.Location = new System.Drawing.Point(3, 480);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(963, 24);
             this.panel1.TabIndex = 7;
@@ -897,7 +875,7 @@ namespace TraXile
             this.label38.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label38.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label38.ForeColor = System.Drawing.Color.Red;
-            this.label38.Location = new System.Drawing.Point(3, 504);
+            this.label38.Location = new System.Drawing.Point(3, 507);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(963, 20);
             this.label38.TabIndex = 8;
@@ -908,7 +886,7 @@ namespace TraXile
             this.label46.AutoSize = true;
             this.label46.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label46.ForeColor = System.Drawing.Color.Red;
-            this.label46.Location = new System.Drawing.Point(3, 444);
+            this.label46.Location = new System.Drawing.Point(3, 447);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(963, 30);
             this.label46.TabIndex = 9;
@@ -2367,6 +2345,40 @@ namespace TraXile
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.button1);
+            this.tabPage2.Controls.Add(this.textBoxLogView);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(975, 712);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "EventLog";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(3, 715);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Clear";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // textBoxLogView
+            // 
+            this.textBoxLogView.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.textBoxLogView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxLogView.ForeColor = System.Drawing.Color.Gold;
+            this.textBoxLogView.Location = new System.Drawing.Point(3, 3);
+            this.textBoxLogView.Multiline = true;
+            this.textBoxLogView.Name = "textBoxLogView";
+            this.textBoxLogView.ReadOnly = true;
+            this.textBoxLogView.Size = new System.Drawing.Size(969, 706);
+            this.textBoxLogView.TabIndex = 0;
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -2408,6 +2420,13 @@ namespace TraXile
             this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.chatCommandsToolStripMenuItem.Text = "Chat Commands";
             this.chatCommandsToolStripMenuItem.Click += new System.EventHandler(this.chatCommandsToolStripMenuItem_Click);
+            // 
+            // infoToolStripMenuItem1
+            // 
+            this.infoToolStripMenuItem1.Name = "infoToolStripMenuItem1";
+            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(164, 22);
+            this.infoToolStripMenuItem1.Text = "Info";
+            this.infoToolStripMenuItem1.Click += new System.EventHandler(this.infoToolStripMenuItem1_Click);
             // 
             // timer1
             // 
@@ -2677,32 +2696,71 @@ namespace TraXile
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
-            // infoToolStripMenuItem1
+            // panel6
             // 
-            this.infoToolStripMenuItem1.Name = "infoToolStripMenuItem1";
-            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(164, 22);
-            this.infoToolStripMenuItem1.Text = "Info";
-            this.infoToolStripMenuItem1.Click += new System.EventHandler(this.infoToolStripMenuItem1_Click);
+            this.panel6.Controls.Add(this.textBox7);
+            this.panel6.Controls.Add(this.label65);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(3, 3);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(963, 25);
+            this.panel6.TabIndex = 10;
             // 
-            // listView2
+            // label65
             // 
-            this.listView2.BackColor = System.Drawing.SystemColors.InfoText;
-            this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.label65.AutoSize = true;
+            this.label65.ForeColor = System.Drawing.Color.Gold;
+            this.label65.Location = new System.Drawing.Point(6, 4);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(44, 13);
+            this.label65.TabIndex = 0;
+            this.label65.Text = "Search:";
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(56, 1);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(267, 20);
+            this.textBox7.TabIndex = 1;
+            this.textBox7.TextChanged += new System.EventHandler(this.textBox7_TextChanged);
+            // 
+            // label66
+            // 
+            this.label66.AutoSize = true;
+            this.label66.ForeColor = System.Drawing.Color.Gold;
+            this.label66.Location = new System.Drawing.Point(5, 34);
+            this.label66.Name = "label66";
+            this.label66.Size = new System.Drawing.Size(44, 13);
+            this.label66.TabIndex = 4;
+            this.label66.Text = "Search:";
+            // 
+            // textBox8
+            // 
+            this.textBox8.Location = new System.Drawing.Point(55, 31);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(281, 20);
+            this.textBox8.TabIndex = 5;
+            this.textBox8.TextChanged += new System.EventHandler(this.textBox8_TextChanged);
+            // 
+            // listViewStats
+            // 
+            this.listViewStats.BackColor = System.Drawing.SystemColors.InfoText;
+            this.listViewStats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader5,
             this.columnHeader6});
-            this.listView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.listView2.ForeColor = System.Drawing.Color.Gold;
-            this.listView2.FullRowSelect = true;
-            this.listView2.HideSelection = false;
-            this.listView2.Location = new System.Drawing.Point(3, 23);
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(963, 418);
-            this.listView2.TabIndex = 0;
-            this.listView2.UseCompatibleStateImageBehavior = false;
-            this.listView2.View = System.Windows.Forms.View.Details;
-            this.listView2.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView2_ColumnClick);
-            this.listView2.SelectedIndexChanged += new System.EventHandler(this.listView2_SelectedIndexChanged);
+            this.listViewStats.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.listViewStats.ForeColor = System.Drawing.Color.Gold;
+            this.listViewStats.FullRowSelect = true;
+            this.listViewStats.HideSelection = false;
+            this.listViewStats.Location = new System.Drawing.Point(3, 34);
+            this.listViewStats.Name = "listViewStats";
+            this.listViewStats.Size = new System.Drawing.Size(963, 410);
+            this.listViewStats.TabIndex = 0;
+            this.listViewStats.UseCompatibleStateImageBehavior = false;
+            this.listViewStats.View = System.Windows.Forms.View.Details;
+            this.listViewStats.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView2_ColumnClick);
+            this.listViewStats.SelectedIndexChanged += new System.EventHandler(this.listView2_SelectedIndexChanged);
             // 
             // columnHeader5
             // 
@@ -2711,6 +2769,19 @@ namespace TraXile
             // columnHeader6
             // 
             this.columnHeader6.Text = "Value";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.ForeColor = System.Drawing.Color.Red;
+            this.linkLabel1.LinkColor = System.Drawing.Color.Red;
+            this.linkLabel1.Location = new System.Drawing.Point(343, 34);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(74, 13);
+            this.linkLabel1.TabIndex = 6;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Search syntax";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // MainW
             // 
@@ -2750,8 +2821,7 @@ namespace TraXile
             this.panel7.PerformLayout();
             this.tableLayoutPanel5.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.panel3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -2789,6 +2859,8 @@ namespace TraXile
             this.panel5.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).EndInit();
@@ -2797,6 +2869,8 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2812,7 +2886,7 @@ namespace TraXile
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TabPage tabPage4;
-        private ListViewNF listView2;
+        private ListViewNF listViewStats;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.TabPage tabPage5;
@@ -3018,6 +3092,12 @@ namespace TraXile
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem chatCommandsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem1;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.Label label65;
+        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.Label label66;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
 

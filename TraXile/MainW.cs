@@ -118,6 +118,8 @@ namespace TraXile
         private bool bSettingStatsShowGrid;
         private string sLastSimuEndpoint;
 
+        private ListViewManager lvmStats, lvmActLog;
+
         public MainW()
         {
             this.Visible = false;
@@ -138,8 +140,8 @@ namespace TraXile
             listViewActLog.Columns[2].Width = 110;
             listViewActLog.Columns[3].Width = 100;
             listViewActLog.Columns[4].Width = 50;
-            listView2.Columns[0].Width = 500;
-            listView2.Columns[1].Width = 300;
+            listViewStats.Columns[0].Width = 500;
+            listViewStats.Columns[1].Width = 300;
 
             chart1.ChartAreas[0].AxisX.LineColor = Color.Red;
             chart1.ChartAreas[0].AxisY.LineColor = Color.Red;
@@ -158,6 +160,9 @@ namespace TraXile
             textBox1.Text = ReadSetting("PoELogFilePath");
             textBox1.Enabled = false;
         
+
+            lvmStats = new ListViewManager(listViewStats);
+            lvmActLog = new ListViewManager(listViewActLog);
 
             comboBox1.SelectedIndex = 1;
 
@@ -2115,8 +2120,8 @@ namespace TraXile
 
         public void ResetMapHistory()
         {
-            listViewActLog.Items.Clear();
-            listViewActLog.Columns.Clear();
+            lvmActLog.ClearLvItems();
+            lvmActLog.Columns.Clear();
 
             ColumnHeader
                 chTime = new ColumnHeader() { Name = "actlog_time", Text = "Time", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_time.width", "60")) },
@@ -2126,11 +2131,11 @@ namespace TraXile
                 chDeath = new ColumnHeader() { Name = "actlog_death", Text = "Deaths", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_death.width", "60")) };
 
 
-            listViewActLog.Columns.Add(chTime);
-            listViewActLog.Columns.Add(chType);
-            listViewActLog.Columns.Add(chArea);
-            listViewActLog.Columns.Add(chStopwatch);
-            listViewActLog.Columns.Add(chDeath);
+            lvmActLog.Columns.Add(chTime);
+            lvmActLog.Columns.Add(chType);
+            lvmActLog.Columns.Add(chArea);
+            lvmActLog.Columns.Add(chStopwatch);
+            lvmActLog.Columns.Add(chDeath);
 
 
             foreach (ActivityTag tag in tags)
@@ -2141,7 +2146,7 @@ namespace TraXile
                     Text = tag.DisplayName, 
                     Width =  Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_tag_" + tag.ID + ".width", "60"))
                 };
-                listViewActLog.Columns.Add(ch);
+                lvmActLog.Columns.Add(ch);
             }
 
             foreach (TrackedActivity act in mapHistory)
@@ -2171,14 +2176,26 @@ namespace TraXile
 
                 if(iPos == -1)
                 {
-                    listViewActLog.Items.Add(lvi);
+                    //listViewActLog.Items.Add(lvi);
+                    lvmActLog.AddLvItem(lvi, map.TimeStamp + "_" + map.Area);
                 }
                 else
                 {
-                    listViewActLog.Items.Insert(iPos, lvi);
+                    //listViewActLog.Items.Insert(iPos, lvi);
+                    lvmActLog.InsertLvItem(lvi, map.TimeStamp + "_" + map.Area, iPos);
                 }
                 
             });
+        }
+
+        private TrackedActivity GetActivityFromListItemName(string s_name)
+        {
+            foreach(TrackedActivity ta in mapHistory)
+            {
+                if (ta.TimeStamp + "_" + ta.Area == s_name)
+                    return ta;
+            }
+            return null;
         }
 
         private string GetStringFromActType(ACTIVITY_TYPES a_type)
@@ -2229,14 +2246,13 @@ namespace TraXile
                     RenderTagsForTracking();
                     RenderTagsForConfig();
 
-                    if(listView2.Items.Count == 0)
+                    if(listViewStats.Items.Count == 0)
                     {
                         foreach(KeyValuePair<string,int> kvp in numStats)
                         {
                             ListViewItem lvi = new ListViewItem(GetStatLongName(kvp.Key));
                             lvi.SubItems.Add("0");
-                            statLvItems.Add(kvp.Key, lvi);
-                            listView2.Items.Add(lvi);
+                            lvmStats.AddLvItem(lvi, "stats_" + kvp.Key);
                         }
                     }
                     else
@@ -2244,7 +2260,7 @@ namespace TraXile
                         for(int i = 0; i < numStats.Count; i++)
                         {
                             KeyValuePair<string, int> kvp = numStats.ElementAt(i);
-                            statLvItems[kvp.Key].SubItems[1].Text = kvp.Value.ToString();
+                            lvmStats.GetLvItem("stats_" + kvp.Key).SubItems[1].Text = kvp.Value.ToString();
                         }
                     }
 
@@ -2355,7 +2371,7 @@ namespace TraXile
             this.bSettingStatsShowGrid = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
 
             listViewActLog.GridLines = bSettingActivityLogShowGrid;
-            listView2.GridLines = bSettingStatsShowGrid;
+            listViewStats.GridLines = bSettingStatsShowGrid;
         }
 
         public string ReadSetting(string key, string s_default = null)
@@ -2456,14 +2472,14 @@ namespace TraXile
         {
             chart1.Series[0].Points.Clear();
             DateTime dtStart = DateTime.Now.AddDays(i_days_back * -1);
-            string sStatName = numStats.ElementAt(listView2.SelectedIndices[0]).Key;
+            string sStatName = numStats.ElementAt(listViewStats.SelectedIndices[0]).Key;
 
             DateTime dt1, dt2;
             SqliteDataReader sqlReader;
             SqliteCommand cmd;
             long lTS1, lTS2;
 
-            label38.Text = listView2.SelectedItems[0].Text;
+            label38.Text = listViewStats.SelectedItems[0].Text;
 
             for (int i = 0; i <= i_days_back; i++)
             {
@@ -2826,7 +2842,7 @@ namespace TraXile
 
         private void listView2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listView2.SelectedItems.Count > 0)
+            if (listViewStats.SelectedItems.Count > 0)
                 RefreshChart();
         }
        
@@ -2834,13 +2850,13 @@ namespace TraXile
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
             button2.Focus();
-            if(listView2.SelectedItems.Count > 0)
+            if(listViewStats.SelectedItems.Count > 0)
                 RefreshChart();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (listView2.SelectedItems.Count > 0)
+            if (listViewStats.SelectedItems.Count > 0)
                 RefreshChart();
         }
 
@@ -2894,10 +2910,12 @@ namespace TraXile
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if(listViewActLog.SelectedIndices.Count > 0)
+            if (listViewActLog.SelectedIndices.Count > 0)
             {
                 int iIndex = listViewActLog.SelectedIndices[0];
-                OpenActivityDetails(mapHistory[iIndex]);
+                TrackedActivity act = GetActivityFromListItemName(listViewActLog.Items[iIndex].Name);
+                if(act != null)
+                    OpenActivityDetails(act);
             }
 
         }
@@ -2907,7 +2925,9 @@ namespace TraXile
             if (listViewActLog.SelectedIndices.Count > 0)
             {
                 int iIndex = listViewActLog.SelectedIndices[0];
-                OpenActivityDetails(mapHistory[iIndex]);
+                TrackedActivity act = GetActivityFromListItemName(listViewActLog.Items[iIndex].Name);
+                if (act != null)
+                    OpenActivityDetails(act);
             }
         }
 
@@ -2960,7 +2980,7 @@ namespace TraXile
         {
             bSettingStatsShowGrid = checkBox2.Checked;
             AddUpdateAppSettings("StatsShowGrid", checkBox2.Checked.ToString());
-            listView2.GridLines = bSettingStatsShowGrid;
+            listViewStats.GridLines = bSettingStatsShowGrid;
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -3302,6 +3322,92 @@ namespace TraXile
         {
             ChatCommandHelp cmh = new ChatCommandHelp();
             cmh.ShowDialog();
+        }
+
+        private void textBox7_TextChanged(object sender, EventArgs e)
+        {
+            if(textBox7.Text == String.Empty)
+            {
+                lvmStats.Reset();
+            }
+            lvmStats.ApplyFullTextFilter(textBox7.Text);
+        }
+
+        private void textBox8_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox8.Text == String.Empty)
+            {
+                lvmActLog.Reset();
+            }
+            else if (textBox8.Text.Contains("tags=="))
+            {
+                List<string> itemNames = new List<string>();
+                try
+                {
+                    string[] sTagFilter = textBox8.Text.Split(new string[] { "==" }, StringSplitOptions.None)[1].Split(',');
+                    int iMatched = 0;
+                    foreach (TrackedActivity ta in mapHistory)
+                    {
+                        iMatched = 0;
+                        foreach (string tag in sTagFilter)
+                        {
+                            if (ta.HasTag(tag))
+                            {
+                                iMatched++;
+                            }
+                            else
+                            {
+                                iMatched = 0;
+                                break;
+                            }
+                        }
+                        if (iMatched > 0)
+                        {
+                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
+                        }
+                    }
+                    lvmActLog.FilterByNameList(itemNames);
+                }
+                catch { }
+            }
+            else if(textBox8.Text.Contains("tags="))
+            {
+                List<string> itemNames = new List<string>();
+                try
+                {
+                    string[] sTagFilter = textBox8.Text.Split('=')[1].Split(',');
+                    int iMatched = 0;
+                    foreach(TrackedActivity ta in mapHistory)
+                    {
+                        iMatched = 0;
+                        foreach(string tag in sTagFilter)
+                        {
+                            if(ta.HasTag(tag))
+                            {
+                                iMatched++;
+                            }
+                        }
+                        if(iMatched > 0)
+                        {
+                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);    
+                        }
+                    }
+                    lvmActLog.FilterByNameList(itemNames);
+                }
+                catch { }
+            }
+           
+            else
+            {
+                lvmActLog.ApplyFullTextFilter(textBox8.Text);
+            }
+            
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SearchHelp sh = new SearchHelp();
+            sh.Show();
         }
 
         private void infoToolStripMenuItem1_Click(object sender, EventArgs e)

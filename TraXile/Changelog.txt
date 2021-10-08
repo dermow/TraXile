@@ -52,3 +52,6 @@
 - Added some labyrinth specific stats
 - Optimized About Window Layout
 - Optimized File Select Screen Layout
+- Fulltext search implemented in stats list
+- Fulltext search implemented in activity list
+- Small search syntax added for activity log (e.g 'tags=zana,blight')
