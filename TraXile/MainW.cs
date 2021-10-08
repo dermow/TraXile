@@ -1581,7 +1581,7 @@ namespace TraXile
                     }
 
                     // Delving?
-                    if(currentActivity == null || currentActivity.Type != ACTIVITY_TYPES.DELVE)
+                    if((currentActivity == null || currentActivity.Type != ACTIVITY_TYPES.DELVE) && actType == ACTIVITY_TYPES.DELVE)
                     {
                         currentActivity = new TrackedActivity
                         {
