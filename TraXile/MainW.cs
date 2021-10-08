@@ -329,9 +329,9 @@ namespace TraXile
             int iX = iOffsetX;
             int iY = ioffsetY;
             int iLabelWidth = 100;
-            int iMaxCols = 10;
+            int iMaxCols = 5;
 
-            int iCols = groupBox3.Width / iLabelWidth;
+            int iCols = (groupBox3.Width-20) / iLabelWidth;
             if (iCols > iMaxCols) iCols = iMaxCols;
             int iCurrCols = 0;
 

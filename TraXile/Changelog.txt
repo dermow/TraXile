@@ -45,8 +45,10 @@
 - TrayIcon added
 - Added Help window for Chat commands
 
-0.4.5-beta1
+0.4.5
 - Added Activity Type "Labyrinth"
 - Added Activity Type "Delve"
 - Added Activity Type "Simulacrum"
 - Added some labyrinth specific stats
+- Optimized About Window Layout
+- Optimized File Select Screen Layout
