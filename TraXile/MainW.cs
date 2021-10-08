@@ -2804,7 +2804,7 @@ namespace TraXile
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            About f1 = new About();
+            AboutW f1 = new AboutW();
             f1.Show();
         }
 
@@ -3304,9 +3304,15 @@ namespace TraXile
             cmh.ShowDialog();
         }
 
+        private void infoToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AboutW ab = new AboutW();
+            ab.ShowDialog();
+        }
+
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            About ab = new About();
+            AboutW ab = new AboutW();
             ab.ShowDialog();
         }
 

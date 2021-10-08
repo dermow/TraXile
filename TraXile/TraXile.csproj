@@ -131,6 +131,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutW.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutW.Designer.cs">
+      <DependentUpon>AboutW.cs</DependentUpon>
+    </Compile>
     <Compile Include="ActivityDetails.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,12 +164,6 @@
     </Compile>
     <Compile Include="FileSelectScreen.Designer.cs">
       <DependentUpon>FileSelectScreen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="About.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="About.Designer.cs">
-      <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="FilterScreen.cs">
       <SubType>Form</SubType>
@@ -198,6 +198,9 @@
     <Compile Include="ActivityTag.cs" />
     <Compile Include="TrackedEvent.cs" />
     <Compile Include="TrackedActivity.cs" />
+    <EmbeddedResource Include="AboutW.resx">
+      <DependentUpon>AboutW.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ActivityDetails.resx">
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </EmbeddedResource>
@@ -209,9 +212,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FileSelectScreen.resx">
       <DependentUpon>FileSelectScreen.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="About.resx">
-      <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FilterScreen.resx">
       <DependentUpon>FilterScreen.cs</DependentUpon>

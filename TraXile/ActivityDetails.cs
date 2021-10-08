@@ -33,6 +33,7 @@ namespace TraXile
             labelStopWatch.Text = ta.StopWatchValue;
             labelDeaths.Text = ta.DeathCounter.ToString();
             Text = ta.Type + " Details: " + ta.Area;
+            label9.Text = ta.Type.ToString();
 
             foreach(ActivityTag tag in main.tags)
             {
