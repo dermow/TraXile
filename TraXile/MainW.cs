@@ -204,8 +204,14 @@ namespace TraXile
             
             lastEvType = EVENT_TYPES.APP_STARTED;
             InitNumStats();
-                      
-                        
+
+            foreach (KeyValuePair<string, int> kvp in numStats)
+            {
+                ListViewItem lvi = new ListViewItem(GetStatLongName(kvp.Key));
+                lvi.SubItems.Add("0");
+                lvmStats.AddLvItem(lvi, "stats_" + kvp.Key);
+            }
+
             eventQueue.Enqueue(new TrackedEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
 
             ReadStatsCache();
@@ -537,6 +543,7 @@ namespace TraXile
                 { "BaranKilled", 0 },
                 { "CatarinaTried", 0 },
                 { "CatarinaKilled", 0 },
+                { "TotalKilledCount", 0 },
                 { "DroxStarted", 0 },
                 { "DroxKilled", 0 },
                 { "EinharCaptures", 0 },
@@ -551,7 +558,6 @@ namespace TraXile
                 { "MavenKilled", 0 },
                 { "TotalMapsDone", 0 },
                 { "TotalHeistsDone", 0 },
-                { "TotalKilledCount", 0 },
                 { "ShaperTried", 0 },
                 { "ShaperKilled", 0 },
                 { "SimulacrumCleared", 0 },
@@ -2246,18 +2252,9 @@ namespace TraXile
                     RenderTagsForTracking();
                     RenderTagsForConfig();
 
-                    if(listViewStats.Items.Count == 0)
+                    if(listViewStats.Items.Count > 0)
                     {
-                        foreach(KeyValuePair<string,int> kvp in numStats)
-                        {
-                            ListViewItem lvi = new ListViewItem(GetStatLongName(kvp.Key));
-                            lvi.SubItems.Add("0");
-                            lvmStats.AddLvItem(lvi, "stats_" + kvp.Key);
-                        }
-                    }
-                    else
-                    {
-                        for(int i = 0; i < numStats.Count; i++)
+                        for (int i = 0; i < numStats.Count; i++)
                         {
                             KeyValuePair<string, int> kvp = numStats.ElementAt(i);
                             lvmStats.GetLvItem("stats_" + kvp.Key).SubItems[1].Text = kvp.Value.ToString();
@@ -2850,8 +2847,24 @@ namespace TraXile
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
             button2.Focus();
-            if(listViewStats.SelectedItems.Count > 0)
-                RefreshChart();
+            if(comboBox1.SelectedIndex > 5)
+            {
+                if (MessageBox.Show("Selecting more than 3 month could lead to high loading times. Continue?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    if (listViewStats.SelectedItems.Count > 0)
+                        RefreshChart();
+                }
+                else
+                {
+                    comboBox1.SelectedIndex = 0;
+                }
+            }
+            else
+            {
+                if (listViewStats.SelectedItems.Count > 0)
+                    RefreshChart();
+            }
+           
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -3396,7 +3409,6 @@ namespace TraXile
                 }
                 catch { }
             }
-           
             else
             {
                 lvmActLog.ApplyFullTextFilter(textBox8.Text);
@@ -3408,6 +3420,21 @@ namespace TraXile
         {
             SearchHelp sh = new SearchHelp();
             sh.Show();
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            textBox8.Text = "";
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            textBox7.Text = "";
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void infoToolStripMenuItem1_Click(object sender, EventArgs e)

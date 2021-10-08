@@ -108,6 +108,7 @@ namespace TraXile
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "SearchHelp";
+            this.ShowIcon = false;
             this.Text = "SearchHelp";
             this.ResumeLayout(false);
             this.PerformLayout();

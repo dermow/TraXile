@@ -36,7 +36,7 @@ namespace TraXile
 
             foreach(ListViewItem lvi in masterList)
             {
-                if(lvi.Text.ToLower().Contains(s_filter))
+                if(lvi.Text.ToLower().Contains(s_filter.ToLower()))
                 {
                     if(!names.Contains(lvi.Name))
                     {
@@ -47,7 +47,7 @@ namespace TraXile
                 {
                     foreach(ListViewSubItem si in lvi.SubItems)
                     {
-                        if(si.Text.Contains(s_filter))
+                        if(si.Text.ToLower().Contains(s_filter.ToLower()))
                         {
                             if (!names.Contains(lvi.Name))
                             {
@@ -99,23 +99,29 @@ namespace TraXile
 
         public void AddLvItem(ListViewItem lvi, string s_name)
         {
-            lvi.Name = s_name;
-            masterList.Add(lvi);
-            itemMap.Add(s_name, lvi);
-            if(!bIsFiltered)
+            if(!itemMap.ContainsKey(s_name))
             {
-                lv.Items.Add(lvi);
+                lvi.Name = s_name;
+                masterList.Add(lvi);
+                itemMap.Add(s_name, lvi);
+                if (!bIsFiltered)
+                {
+                    lv.Items.Add(lvi);
+                }
             }
         }
 
         public void InsertLvItem(ListViewItem lvi, string s_name, int i_pos)
         {
-            lvi.Name = s_name;
-            masterList.Insert(i_pos, lvi);
-            itemMap.Add(s_name, lvi);
-            if (!bIsFiltered)
+            if(!itemMap.ContainsKey(s_name))
             {
-                lv.Items.Insert(i_pos, lvi);
+                lvi.Name = s_name;
+                masterList.Insert(i_pos, lvi);
+                itemMap.Add(s_name, lvi);
+                if (!bIsFiltered)
+                {
+                    lv.Items.Insert(i_pos, lvi);
+                }
             }
         }
 
