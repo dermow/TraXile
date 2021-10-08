@@ -15,7 +15,7 @@ namespace TraXile
         private DateTime dtStarted;
         private string sInstanceEndpoint;
         private string sArea;
-        private string sType;
+        private ACTIVITY_TYPES sType;
         private bool bIsZana;
         private bool bIsPaused;
         private bool bTrialmasterSuccess;
@@ -109,7 +109,7 @@ namespace TraXile
             }
         }
 
-        public string Type
+        public ACTIVITY_TYPES Type
         {
             get { return sType; }
             set { sType = value; }

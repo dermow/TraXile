@@ -60,7 +60,19 @@ namespace TraXile
         SYNDICATE_ENCOUNTER,
         LEVELUP,
         SIMULACRUM_FULLCLEAR,
-        CHAT_CMD_RECEIVED
+        CHAT_CMD_RECEIVED,
+        LAB_FINISHED,
+        LAB_START_INFO_RECEIVED
+    }
+
+    public enum ACTIVITY_TYPES
+    {
+        MAP,
+        HEIST,
+        LABYRINTH,
+        SIMULACRUM,
+        BLIGHTED_MAP,
+        DELVE
     }
 
     public partial class MainW : Form
@@ -78,8 +90,9 @@ namespace TraXile
         private DateTime dtInitStart;
         private DateTime dtInitEnd;
         private EVENT_TYPES lastEvType;
-        private TrackedActivity currentMap;
+        private TrackedActivity currentActivity;
         private string sLastDeathReason;
+        private string sNextLabType;
         private bool bEventQInitialized;
         private bool bIsMapZana;
         private bool bExit;
@@ -89,7 +102,7 @@ namespace TraXile
         private int iShaperKillsInFight;
         private SqliteConnection dbconn;
         private bool bHistoryInitialized;
-        List<string> mapList, heistList, knownPlayers, simuList;
+        List<string> mapList, heistList, knownPlayers, simuList, campList;
         BindingList<string> backups;
         Dictionary<string, EVENT_TYPES> eventMap;
         Dictionary<int, string> dict;
@@ -162,6 +175,7 @@ namespace TraXile
             tagLabelsConfig = new Dictionary<string, Label>();
             sLastSimuEndpoint = "";
             tags = new List<ActivityTag>();
+            campList = new List<string>();
 
             log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             log.Info("Application started");
@@ -195,14 +209,7 @@ namespace TraXile
             LoadCustomTags();
             ResetMapHistory();
             LoadLayout();
-
-            /*
-            foreach(ActivityTag tag in tags)
-            {
-                ColumnHeader ch = new ColumnHeader() { Name = "actlog_tag_" + tag.ID, Text = tag.DisplayName };
-
-                listViewActLog.Columns.Add(ch);
-            }*/
+           
 
             // Thread for Log Parsing and Enqueuing
             thParseLog = new Thread(new ThreadStart(LogParsing))
@@ -430,9 +437,9 @@ namespace TraXile
                 }
                 else
                 {
-                    if(currentMap != null)
+                    if(currentActivity != null)
                     {
-                        TrackedActivity mapToCheck = bIsMapZana ? currentMap.ZanaMap : currentMap;
+                        TrackedActivity mapToCheck = bIsMapZana ? currentActivity.ZanaMap : currentActivity;
 
                         if(mapToCheck.Tags.Contains(tag.ID))
                         {
@@ -473,28 +480,28 @@ namespace TraXile
             ActivityTag tag = GetTagByDisplayName(((Label)sender).Text);
             if(!tag.IsDefault)
             {
-                if(currentMap != null)
+                if(currentActivity != null)
                 {
-                    if(bIsMapZana && currentMap.ZanaMap != null)
+                    if(bIsMapZana && currentActivity.ZanaMap != null)
                     {
-                        if (currentMap.ZanaMap.HasTag(tag.ID))
+                        if (currentActivity.ZanaMap.HasTag(tag.ID))
                         {
-                            currentMap.ZanaMap.RemoveTag(tag.ID);
+                            currentActivity.ZanaMap.RemoveTag(tag.ID);
                         }
                         else
                         {
-                            currentMap.ZanaMap.AddTag(tag.ID);
+                            currentActivity.ZanaMap.AddTag(tag.ID);
                         }
                     }
                     else
                     {
-                        if(currentMap.HasTag(tag.ID))
+                        if(currentActivity.HasTag(tag.ID))
                         {
-                            currentMap.RemoveTag(tag.ID);
+                            currentActivity.RemoveTag(tag.ID);
                         }
                         else
                         {
-                            currentMap.AddTag(tag.ID);
+                            currentActivity.AddTag(tag.ID);
                         }
                         
                     }
@@ -533,6 +540,7 @@ namespace TraXile
                 { "HighestLevel", 0 },
                 { "HunterKilled", 0 },
                 { "HunterStarted", 0 },
+                { "LabsFinished", 0 },
                 { "LevelUps", 0 },
                 { "MavenStarted", 0 },
                 { "MavenKilled", 0 },
@@ -587,7 +595,33 @@ namespace TraXile
                 { "LevelUps", "Level Ups" },
                 { "SimulacrumStarted", "Simulacrum started" },
                 { "SimulacrumCleared", "Simulacrum 100% done" },
+                { "LabsFinished", "Finished labs" },
             };
+
+            List<string> labs = new List<string>();
+            labs.Add("The Merciless Labyrinth");
+            labs.Add("The Cruel Labyrinth");
+            labs.Add("The Labyrinth");
+            labs.Add("Uber-Lab");
+            labs.Add("Advanced-Lab");
+
+            foreach (string s in heistList)
+            {
+                string sName = s.Replace("'", "");
+                if (!numStats.ContainsKey("HeistsFinished_" + sName))
+                    numStats.Add("HeistsFinished_" + sName, 0);
+                if (!statNamesLong.ContainsKey("HeistsFinished_" + sName))
+                    statNamesLong.Add("HeistsFinished_" + sName, "Heists done: " + sName);
+            }
+
+            foreach (string s in labs)
+            {
+                string sName = s.Replace("'", "");
+                if (!numStats.ContainsKey("LabsCompleted_" + sName))
+                    numStats.Add("LabsCompleted_" + sName, 0);
+                if (!statNamesLong.ContainsKey("LabsCompleted_" + sName))
+                    statNamesLong.Add("LabsCompleted_" + sName, "Labs completed: " + sName);
+            }
 
             foreach (string s in mapList)
             {
@@ -595,16 +629,17 @@ namespace TraXile
                 if (!numStats.ContainsKey("MapsFinished_" + sName))
                     numStats.Add("MapsFinished_" + sName, 0);
                 if (!statNamesLong.ContainsKey("MapsFinished_" + sName))
-                    statNamesLong.Add("MapsFinished_" + sName, "Maps finished: " + sName);
+                    statNamesLong.Add("MapsFinished_" + sName, "Maps done: " + sName);
             }
-            foreach (string s in heistList)
+            foreach (string s in simuList)
             {
                 string sName = s.Replace("'", "");
-                if (!numStats.ContainsKey("HeistsFinished_" + sName))
-                    numStats.Add("HeistsFinished_" + sName, 0);
-                if (!statNamesLong.ContainsKey("HeistsFinished_" + sName))
-                    statNamesLong.Add("HeistsFinished_" + sName, "Heists finished: " + sName);
+                if (!numStats.ContainsKey("SimulacrumFinished_" + sName))
+                    numStats.Add("SimulacrumFinished_" + sName, 0);
+                if (!statNamesLong.ContainsKey("SimulacrumFinished_" + sName))
+                    statNamesLong.Add("SimulacrumFinished_" + sName, "Simulacrum done: " + sName);
             }
+            
         }
 
         private string GetStatShortName(string s_key)
@@ -1108,9 +1143,40 @@ namespace TraXile
                 {"Tora, the Culler", EVENT_TYPES.SYNDICATE_ENCOUNTER },
                 {"Vorici, Silent Brother", EVENT_TYPES.SYNDICATE_ENCOUNTER },
                 {"Vagan, Victory's Herald", EVENT_TYPES.SYNDICATE_ENCOUNTER },
-                
+
+                // Lab
+                { "Izaro: Triumphant at last!", EVENT_TYPES.LAB_FINISHED },
+                { "Izaro: You are free!", EVENT_TYPES.LAB_FINISHED },
+                { "Izaro: I die for the Empire!", EVENT_TYPES.LAB_FINISHED },
+                { "Izaro: The trap of tyranny is inescapable.", EVENT_TYPES.LAB_FINISHED },
+                { "Izaro: Delight in your gilded dungeon, ascendant.", EVENT_TYPES.LAB_FINISHED },
+                { "Izaro: Your destination is more dangerous than the journey, ascendant.", EVENT_TYPES.LAB_FINISHED },
+                { "area \"Estate Path\" with seed", EVENT_TYPES.LAB_START_INFO_RECEIVED },
+                { "area \"Estate Walkways\" with seed", EVENT_TYPES.LAB_START_INFO_RECEIVED },
+                { "area \"Estate Crossing\" with seed", EVENT_TYPES.LAB_START_INFO_RECEIVED },
+
             };
 
+        }
+
+        private ACTIVITY_TYPES GetActTypeFromString(string s_type)
+        {
+            switch (s_type)
+            {
+                case "map":
+                    return ACTIVITY_TYPES.MAP;
+                case "heist":
+                    return ACTIVITY_TYPES.HEIST;
+                case "simularum":
+                    return ACTIVITY_TYPES.SIMULACRUM;
+                case "blighted_map":
+                    return ACTIVITY_TYPES.BLIGHTED_MAP;
+                case "labyrinth":
+                    return ACTIVITY_TYPES.LABYRINTH;
+                case "delve":
+                    return ACTIVITY_TYPES.DELVE;
+            }
+            return ACTIVITY_TYPES.MAP;
         }
 
         private void ReadActivityLogFromSQLite()
@@ -1126,13 +1192,16 @@ namespace TraXile
             while(sqlReader.Read())
             {
                 TimeSpan ts = TimeSpan.FromSeconds(sqlReader.GetInt32(3));
+                string sType = sqlReader.GetString(1);
+                ACTIVITY_TYPES aType = GetActTypeFromString(sType);
+               
 
                 TrackedActivity map = new TrackedActivity
                 {
                     Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
                     TimeStamp = sqlReader.GetInt32(0),
                     CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds),
-                    Type = sqlReader.GetString(1),
+                    Type = aType,
                     Area = sqlReader.GetString(2),
                     DeathCounter = sqlReader.GetInt32(4),
                     TrialMasterCount = sqlReader.GetInt32(5)
@@ -1210,7 +1279,7 @@ namespace TraXile
                     {
                         if (!bEventQInitialized)
                         {
-                            currentMap = null;
+                            currentActivity = null;
                             bIsMapZana = false;
                             dtInitEnd = DateTime.Now;
                             TimeSpan tsInitDuration = (dtInitEnd - dtInitStart);
@@ -1358,15 +1427,15 @@ namespace TraXile
             }
 
             TrackedActivity currentAct = null;
-            if (currentMap != null)
+            if (currentActivity != null)
             {
-                if (bIsMapZana && currentMap.ZanaMap != null)
+                if (bIsMapZana && currentActivity.ZanaMap != null)
                 {
-                    currentAct = currentMap.ZanaMap;
+                    currentAct = currentActivity.ZanaMap;
                 }
                 else
                 {
-                    currentAct = currentMap;
+                    currentAct = currentActivity;
                 }
             }
 
@@ -1410,7 +1479,7 @@ namespace TraXile
                     {
                         MethodInvoker mi = delegate
                         {
-                            FinishMap(currentMap, null, "Map", DateTime.Now);
+                            FinishMap(currentActivity, null, ACTIVITY_TYPES.MAP, DateTime.Now);
                         };
                         BeginInvoke(mi);
                     }
@@ -1439,6 +1508,9 @@ namespace TraXile
                     bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea);
                     bool bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea);
                     bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
+                    bool bTargetAreaIsSimu = false;
+                    bool bTargetAreaMine = sTargetArea == "Azurite Mine";
+                    bool bTargetAreaIsLab = sTargetArea == "Estate Path" || sTargetArea == "Estate Walkways" || sTargetArea == "Estate Crossing";
 
                     dtInAreaSince = ev.EventTime;
 
@@ -1447,6 +1519,7 @@ namespace TraXile
                     //Simu?
                     if(simuList.Contains(sAreaName))
                     {
+                        bTargetAreaIsSimu = true;
                         if(sCurrentInstanceEndpoint != sLastSimuEndpoint)
                         {
                             IncrementStat("SimulacrumStarted", ev.EventTime, 1);
@@ -1464,23 +1537,86 @@ namespace TraXile
                         bElderFightActive = true;
                     }
 
-                    if(bTargetAreaIsMap || bTargetAreaIsHeist)
+                    ACTIVITY_TYPES actType = ACTIVITY_TYPES.MAP;
+                    if (bTargetAreaIsMap)
+                    {
+                        actType = ACTIVITY_TYPES.MAP;
+                    }
+                    else if (bTargetAreaIsHeist)
+                    {
+                        actType = ACTIVITY_TYPES.HEIST;
+                    }
+                    else if (bTargetAreaIsSimu)
+                    {
+                        actType = ACTIVITY_TYPES.SIMULACRUM;
+                    }
+                    else if(bTargetAreaIsLab)
+                    {
+                        actType = ACTIVITY_TYPES.LABYRINTH;
+                    }
+                    else if(bTargetAreaMine)
+                    {
+                        actType = ACTIVITY_TYPES.DELVE;
+                    }
+
+                    //Lab started?
+                    if(actType == ACTIVITY_TYPES.LABYRINTH && sSourceArea == "Aspirants' Plaza")
+                    {
+                        currentActivity = new TrackedActivity
+                        {
+                            Area = sNextLabType,
+                            Type = actType,
+                            Started = DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]),
+                            InstanceEndpoint = sCurrentInstanceEndpoint
+                        };
+                    }
+
+                    //Lab cancelled?
+                    if(currentActivity != null && currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+                    {
+                        if(sTargetArea.Contains("Hideout") || campList.Contains(sTargetArea))
+                        {
+                            FinishMap(currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
+                        }
+                    }
+
+                    // Delving?
+                    if(currentActivity != null && currentActivity.Type != ACTIVITY_TYPES.DELVE)
+                    {
+                        currentActivity = new TrackedActivity
+                        {
+                            Area = "Azurite Mine",
+                            Type = actType,
+                            Started = DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]),
+                            InstanceEndpoint = sCurrentInstanceEndpoint
+                        };
+                    }
+
+
+                    // End Delving?
+                    if (currentActivity != null && currentActivity.Type == ACTIVITY_TYPES.DELVE && !bTargetAreaMine)
+                    {
+                         FinishMap(currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
+                    }
+
+                    if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsLab || bTargetAreaMine)
                     {
                         bElderFightActive = false;
                         iShaperKillsInFight = 0;
+                       
 
-                        if(currentMap == null)
+                        if(currentActivity == null)
                         {
-                            currentMap = new TrackedActivity
+                            currentActivity = new TrackedActivity
                             {
                                 Area = sTargetArea,
-                                Type = bTargetAreaIsHeist ? "Heist" : "Map",
+                                Type = actType,
                                 Started = DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]),
                                 InstanceEndpoint = sCurrentInstanceEndpoint
                             };
                         }
-                        if(!currentMap.Paused)
-                            currentMap.StartStopWatch();
+                        if(!currentActivity.Paused)
+                            currentActivity.StartStopWatch();
 
                         if(bSourceAreaIsMap && bTargetAreaIsMap)
                         {
@@ -1488,48 +1624,48 @@ namespace TraXile
                             {
                                 // entered Zana Map
                                 bIsMapZana = true;
-                                currentMap.StopStopWatch();
-                                if(currentMap.ZanaMap == null)
+                                currentActivity.StopStopWatch();
+                                if(currentActivity.ZanaMap == null)
                                 {
-                                    currentMap.ZanaMap = new TrackedActivity
+                                    currentActivity.ZanaMap = new TrackedActivity
                                     {
-                                        Type = "Map",
+                                        Type = ACTIVITY_TYPES.MAP,
                                         Area = sTargetArea,
                                         Started = DateTime.Now
                                         
                                     };
                                 }
-                                if(!currentMap.ZanaMap.Paused)
-                                    currentMap.ZanaMap.StartStopWatch();
+                                if(!currentActivity.ZanaMap.Paused)
+                                    currentActivity.ZanaMap.StartStopWatch();
                             }
                             else
                             {
                                 // leave Zana Map
-                                if(currentMap.ZanaMap != null)
+                                if(currentActivity.ZanaMap != null)
                                 {
                                     bIsMapZana = false;
-                                    currentMap.ZanaMap.StopStopWatch();
-                                    if(!currentMap.Paused)
-                                        currentMap.StartStopWatch();
+                                    currentActivity.ZanaMap.StopStopWatch();
+                                    if(!currentActivity.Paused)
+                                        currentActivity.StartStopWatch();
                                 }
                             }
                         }
                         else
                         {
                             // Do not track Lab-Trials
-                            if(!sSourceArea.Contains("Trial of"))
+                            if((!sSourceArea.Contains("Trial of")) && (currentActivity.Type != ACTIVITY_TYPES.LABYRINTH) && (currentActivity.Type != ACTIVITY_TYPES.DELVE))
                             {
-                                if (sTargetArea != currentMap.Area || sCurrentInstanceEndpoint != currentMap.InstanceEndpoint)
+                                if (sTargetArea != currentActivity.Area || sCurrentInstanceEndpoint != currentActivity.InstanceEndpoint)
                                 {
-                                    FinishMap(currentMap, sTargetArea, bTargetAreaIsHeist ? "Heist" : "Map", DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]));
+                                    FinishMap(currentActivity, sTargetArea, actType, DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]));
                                 }
                             }
                         }
                     }
                     else
                     {
-                        if (currentMap != null)
-                            currentMap.StopStopWatch();
+                        if (currentActivity != null && currentActivity.Type != ACTIVITY_TYPES.LABYRINTH)
+                            currentActivity.StopStopWatch();
                     }
 
                     sCurrentArea = sAreaName;
@@ -1541,20 +1677,26 @@ namespace TraXile
                         IncrementStat("TotalKilledCount", ev.EventTime, 1);
                         dtLastDeath = DateTime.Now;
                         sLastDeathReason = GetDeathReasonromEvent(ev);
-                        if ((currentMap != null) && CheckIfAreaIsMap(sCurrentArea))
+                        if (currentActivity != null)
                         {
                             if (bIsMapZana)
                             {
-                                if (currentMap.ZanaMap != null)
+                                if (currentActivity.ZanaMap != null)
                                 {
-                                    currentMap.ZanaMap.DeathCounter++;
+                                    currentActivity.ZanaMap.DeathCounter++;
                                 }
 
                             }
                             else
                             {
-                                currentMap.DeathCounter++;
+                                currentActivity.DeathCounter++;
                             }
+                        }
+
+                        // Lab?
+                        if(currentActivity != null && currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+                        {
+                            FinishMap(currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
                         }
                     }
                    
@@ -1605,19 +1747,19 @@ namespace TraXile
                 case EVENT_TYPES.TRIALMASTER_VICTORY:
                     IncrementStat("TrialMasterSuccess", ev.EventTime, 1);
                     IncrementStat("TrialMasterVictory", ev.EventTime, 1);
-                    if (currentMap != null)
+                    if (currentActivity != null)
                     {
-                        currentMap.TrialMasterSuccess = true;
-                        currentMap.TrialMasterFullFinished = true;
+                        currentActivity.TrialMasterSuccess = true;
+                        currentActivity.TrialMasterFullFinished = true;
                     }
                     break;
                 case EVENT_TYPES.TRIALMASTER_TOOK_REWARD:
                     IncrementStat("TrialMasterTookReward", ev.EventTime, 1);
                     IncrementStat("TrialMasterSuccess", ev.EventTime, 1);
-                    if (currentMap != null)
+                    if (currentActivity != null)
                     {
-                        currentMap.TrialMasterSuccess = true;
-                        currentMap.TrialMasterFullFinished = false;
+                        currentActivity.TrialMasterSuccess = true;
+                        currentActivity.TrialMasterFullFinished = false;
                     }
                     break;
                 case EVENT_TYPES.MAVEN_KILLED:
@@ -1651,9 +1793,9 @@ namespace TraXile
                     }
                     break;
                 case EVENT_TYPES.TRIALMASTER_ROUND_STARTED:
-                    if(currentMap != null)
+                    if(currentActivity != null)
                     {
-                        currentMap.TrialMasterCount += 1;
+                        currentActivity.TrialMasterCount += 1;
                     }
                     break;
                 case EVENT_TYPES.EINHAR_BEAST_CAPTURE:
@@ -1673,86 +1815,86 @@ namespace TraXile
                     break;
                 case EVENT_TYPES.DELIRIUM_ENCOUNTER:
 
-                    if(CheckIfAreaIsMap(sCurrentArea) && currentMap != null)
+                    if(CheckIfAreaIsMap(sCurrentArea) && currentActivity != null)
                     {
-                        if(bIsMapZana && currentMap.ZanaMap != null)
+                        if(bIsMapZana && currentActivity.ZanaMap != null)
                         {
-                            currentMap.ZanaMap.AddTag("delirium");
+                            currentActivity.ZanaMap.AddTag("delirium");
                         }
                         else
                         {
-                            currentMap.AddTag("delirium");
+                            currentActivity.AddTag("delirium");
                         }
                     }
                     break;
                 case EVENT_TYPES.BLIGHT_ENCOUNTER:
-                    if (CheckIfAreaIsMap(sCurrentArea) && currentMap != null)
+                    if (CheckIfAreaIsMap(sCurrentArea) && currentActivity != null)
                     {
-                        if (bIsMapZana && currentMap.ZanaMap != null)
+                        if (bIsMapZana && currentActivity.ZanaMap != null)
                         {
-                            currentMap.ZanaMap.AddTag("blight");
+                            currentActivity.ZanaMap.AddTag("blight");
                         }
                         else
                         {
-                            currentMap.AddTag("blight");
+                            currentActivity.AddTag("blight");
                         }
                     }
                     break;
                 case EVENT_TYPES.EINHAR_ENCOUNTER:
-                    if (CheckIfAreaIsMap(sCurrentArea) && currentMap != null)
+                    if (CheckIfAreaIsMap(sCurrentArea) && currentActivity != null)
                     {
-                        if (bIsMapZana && currentMap.ZanaMap != null)
+                        if (bIsMapZana && currentActivity.ZanaMap != null)
                         {
-                            currentMap.ZanaMap.AddTag("einhar");
+                            currentActivity.ZanaMap.AddTag("einhar");
                         }
                         else
                         {
-                            currentMap.AddTag("einhar");
+                            currentActivity.AddTag("einhar");
                         }
                     }
                     break;
                 case EVENT_TYPES.INCURSION_ENCOUNTER:
-                    if (CheckIfAreaIsMap(sCurrentArea) && currentMap != null)
+                    if (CheckIfAreaIsMap(sCurrentArea) && currentActivity != null)
                     {
-                        if (bIsMapZana && currentMap.ZanaMap != null)
+                        if (bIsMapZana && currentActivity.ZanaMap != null)
                         {
-                            currentMap.ZanaMap.AddTag("incursion");
+                            currentActivity.ZanaMap.AddTag("incursion");
                         }
                         else
                         {
-                            currentMap.AddTag("incursion");
+                            currentActivity.AddTag("incursion");
                         }
                     }
                     break;
                 case EVENT_TYPES.NIKO_ENCOUNTER:
-                    if (CheckIfAreaIsMap(sCurrentArea) && currentMap != null)
+                    if (CheckIfAreaIsMap(sCurrentArea) && currentActivity != null)
                     {
-                        if (bIsMapZana && currentMap.ZanaMap != null)
+                        if (bIsMapZana && currentActivity.ZanaMap != null)
                         {
-                            currentMap.ZanaMap.AddTag("niko");
+                            currentActivity.ZanaMap.AddTag("niko");
                         }
                         else
                         {
-                            currentMap.AddTag("niko");
+                            currentActivity.AddTag("niko");
                         }
                     }
                     break;
                 case EVENT_TYPES.ZANA_ENCOUNTER:
-                    if (CheckIfAreaIsMap(sCurrentArea) && currentMap != null)
+                    if (CheckIfAreaIsMap(sCurrentArea) && currentActivity != null)
                     {
-                        currentMap.AddTag("zana");
+                        currentActivity.AddTag("zana");
                     }
                     break;
                 case EVENT_TYPES.SYNDICATE_ENCOUNTER:
-                    if (CheckIfAreaIsMap(sCurrentArea) && currentMap != null)
+                    if (CheckIfAreaIsMap(sCurrentArea) && currentActivity != null)
                     {
-                        if (bIsMapZana && currentMap.ZanaMap != null)
+                        if (bIsMapZana && currentActivity.ZanaMap != null)
                         {
-                            currentMap.ZanaMap.AddTag("syndicate");
+                            currentActivity.ZanaMap.AddTag("syndicate");
                         }
                         else
                         {
-                            currentMap.AddTag("syndicate");
+                            currentActivity.AddTag("syndicate");
                         }
                     }
                     break;
@@ -1779,6 +1921,36 @@ namespace TraXile
                     break;
                 case EVENT_TYPES.SIMULACRUM_FULLCLEAR:
                     IncrementStat("SimulacrumCleared", ev.EventTime, 1);
+                    break;
+                case EVENT_TYPES.LAB_FINISHED:
+                    if(currentActivity != null && currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+                    {
+                        IncrementStat("LabsFinished", ev.EventTime, 1);
+                        IncrementStat("LabsCompleted_" + currentActivity.Area, ev.EventTime, 1);
+                        FinishMap(currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                    }
+                    break;
+                case EVENT_TYPES.LAB_START_INFO_RECEIVED:
+                    if(ev.LogLine.Contains("Generating level 33"))
+                    {
+                        sNextLabType = "The Labyrinth";
+                    }
+                    if (ev.LogLine.Contains("Generating level 55"))
+                    {
+                        sNextLabType = "The Cruel Labyrinth";
+                    }
+                    if (ev.LogLine.Contains("Generating level 68"))
+                    {
+                        sNextLabType = "The Merciless Labyrinth";
+                    }
+                    if (ev.LogLine.Contains("Generating level 75"))
+                    {
+                        sNextLabType = "Uber-Lab";
+                    }
+                    if (ev.LogLine.Contains("Generating level 83"))
+                    {
+                        sNextLabType = "Advanced Uber-Lab";
+                    }
                     break;
                
             }
@@ -1834,48 +2006,52 @@ namespace TraXile
             return ev.LogLine.Split(new String[] { "Connecting to instance server at "}, StringSplitOptions.None)[1];
         }
 
-        private void FinishMap(TrackedActivity map, string sNextMap, string sNextMapType, DateTime dtNextMapStarted)
+        private void FinishMap(TrackedActivity map, string sNextMap, ACTIVITY_TYPES sNextMapType, DateTime dtNextMapStarted)
         {
-            currentMap.StopStopWatch();
+            currentActivity.StopStopWatch();
 
             if(bEventQInitialized)
             {
-                mapHistory.Insert(0, currentMap);
-                TextLog("Map finished (" + map.Area + "): " + currentMap.StopWatchValue.ToString());
+                mapHistory.Insert(0, currentActivity);
+                TextLog("Map finished (" + map.Area + "): " + currentActivity.StopWatchValue.ToString());
                 AddMapLvItem(map);
-                SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), map.Type, map.Area, Convert.ToInt32(map.StopWatchTimeSpan.TotalSeconds), map.DeathCounter, map.TrialMasterCount, false, map.Tags);
+                SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.Area, Convert.ToInt32(map.StopWatchTimeSpan.TotalSeconds), map.DeathCounter, map.TrialMasterCount, false, map.Tags);
                 if (map.ZanaMap != null)
                 {
                     AddMapLvItem(map.ZanaMap, true);
-                    SaveToActivityLog(((DateTimeOffset)map.ZanaMap.Started).ToUnixTimeSeconds(), map.Type, map.ZanaMap.Area, Convert.ToInt32(map.ZanaMap.StopWatchTimeSpan.TotalSeconds), map.ZanaMap.DeathCounter, map.ZanaMap.TrialMasterCount, true, map.Tags);
+                    SaveToActivityLog(((DateTimeOffset)map.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.ZanaMap.Area, Convert.ToInt32(map.ZanaMap.StopWatchTimeSpan.TotalSeconds), map.ZanaMap.DeathCounter, map.ZanaMap.TrialMasterCount, true, map.Tags);
                 }
             }
            
             if(sNextMap != null)
             {
-                currentMap = new TrackedActivity
+                currentActivity = new TrackedActivity
                 {
                     Area = sNextMap,
                     Type = sNextMapType,
                     InstanceEndpoint = sCurrentInstanceEndpoint,
                     Started = dtNextMapStarted
                 };
-                currentMap.StartStopWatch();
+                currentActivity.StartStopWatch();
             }
             else
             {
-                currentMap = null;
+                currentActivity = null;
             }
 
-            if(map.Type == "Heist")
+            if(map.Type == ACTIVITY_TYPES.HEIST)
             {
                 IncrementStat("TotalHeistsDone", map.Started, 1);
                 IncrementStat("HeistsFinished_" + map.Area, map.Started, 1);
             }
-            else
+            else if(map.Type == ACTIVITY_TYPES.MAP)
             {
                 IncrementStat("TotalMapsDone", map.Started, 1);
                 IncrementStat("MapsFinished_" + map.Area, map.Started, 1);
+            }
+            else if (map.Type == ACTIVITY_TYPES.SIMULACRUM)
+            {
+                IncrementStat("SimulacrumFinished_" + map.Area, map.Started, 1);
             }
         }
 
@@ -1983,7 +2159,7 @@ namespace TraXile
                 string sName = map.Area;
                 if (bZana)
                     sName += " (Zana)";
-                lvi.SubItems.Add(map.Type);
+                lvi.SubItems.Add(GetStringFromActType(map.Type));
                 lvi.SubItems.Add(map.Area);
                 lvi.SubItems.Add(map.StopWatchValue.ToString());
                 lvi.SubItems.Add(map.DeathCounter.ToString());
@@ -2003,6 +2179,11 @@ namespace TraXile
                 }
                 
             });
+        }
+
+        private string GetStringFromActType(ACTIVITY_TYPES a_type)
+        {
+            return a_type.ToString().ToLower();
         }
 
         private string GetAreaNameFromEvent(TrackedEvent ev)
@@ -2081,16 +2262,9 @@ namespace TraXile
                     }
                     else
                     {
-                        if (currentMap != null)
+                        if (currentActivity != null)
                         {
-                            if (currentMap.Type == "Map")
-                            {
-                                labelCurrActivity.Text = "Mapping";
-                            }
-                            else
-                            {
-                                labelCurrActivity.Text = "In Heist";
-                            }
+                            labelCurrActivity.Text = currentActivity.Type.ToString();
                         }
                         else
                         {
@@ -2099,21 +2273,21 @@ namespace TraXile
                     }
 
 
-                    if (currentMap != null)
+                    if (currentActivity != null)
                     {
-                        if (bIsMapZana && currentMap.ZanaMap != null)
+                        if (bIsMapZana && currentActivity.ZanaMap != null)
                         {
-                            labelStopWatch.Text = currentMap.ZanaMap.StopWatchValue.ToString();
-                            labelTrackingArea.Text = currentMap.ZanaMap.Area + " (Zana)";
-                            labelTrackingDied.Text = currentMap.ZanaMap.DeathCounter.ToString();
+                            labelStopWatch.Text = currentActivity.ZanaMap.StopWatchValue.ToString();
+                            labelTrackingArea.Text = currentActivity.ZanaMap.Area + " (Zana)";
+                            labelTrackingDied.Text = currentActivity.ZanaMap.DeathCounter.ToString();
                         }
                         else
                         {
-                            labelStopWatch.Text = currentMap.StopWatchValue.ToString();
-                            if (currentMap.Paused) labelStopWatch.Text += " (||)";
-                            labelTrackingArea.Text = currentMap.Area;
-                            labelTrackingType.Text = currentMap.Type;
-                            labelTrackingDied.Text = currentMap.DeathCounter.ToString();
+                            labelStopWatch.Text = currentActivity.StopWatchValue.ToString();
+                            if (currentActivity.Paused) labelStopWatch.Text += " (||)";
+                            labelTrackingArea.Text = currentActivity.Area;
+                            labelTrackingType.Text = GetStringFromActType(currentActivity.Type).ToUpper();
+                            labelTrackingDied.Text = currentActivity.DeathCounter.ToString();
                         }
                     }
                     else
@@ -2199,8 +2373,8 @@ namespace TraXile
         private void Exit()
         {
             bExit = true;
-            if (currentMap != null)
-                FinishMap(currentMap, null, currentMap.Type, DateTime.Now);
+            if (currentActivity != null)
+                FinishMap(currentActivity, null, currentActivity.Type, DateTime.Now);
             log.Info("Exitting.");
             Application.Exit();
         }
@@ -2499,6 +2673,19 @@ namespace TraXile
                "Oriath Delusion"
             };
 
+            campList = new List<string>
+            {
+               "Lioneye's Watch",
+               "The Forest Encampment",
+               "The Sarn Encampment",
+               "Highgate",
+               "Overseer's Tower",
+               "The Bridge Encampment",
+               "Oriath",
+               "Oriath Docks",
+               "Karui Shores"
+            };
+
         }
 
         public ActivityTag GetTagByID(string s_id)
@@ -2623,14 +2810,14 @@ namespace TraXile
 
         private void pictureBox14_Click_1(object sender, EventArgs e)
         {
-            if (currentMap != null)
-                currentMap.Resume();
+            if (currentActivity != null)
+                currentActivity.Resume();
         }
 
         private void pictureBox13_Click_1(object sender, EventArgs e)
         {
-            if (currentMap != null)
-                currentMap.Pause();
+            if (currentActivity != null)
+                currentActivity.Pause();
         }
 
         private void listView2_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -2659,14 +2846,14 @@ namespace TraXile
 
         private void pictureBox17_Click(object sender, EventArgs e)
         {
-            if (currentMap != null && currentMap.Paused)
-                currentMap.Resume();
+            if (currentActivity != null && currentActivity.Paused)
+                currentActivity.Resume();
         }
 
         private void pictureBox18_Click(object sender, EventArgs e)
         {
-            if (currentMap != null && !currentMap.Paused)
-                currentMap.Pause();
+            if (currentActivity != null && !currentActivity.Paused)
+                currentActivity.Pause();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -3159,15 +3346,15 @@ namespace TraXile
 
         private void pictureBox19_Click(object sender, EventArgs e)
         {
-            if (currentMap != null)
-                FinishMap(currentMap, null, "Map", DateTime.Now);
+            if (currentActivity != null)
+                FinishMap(currentActivity, null, currentActivity.Type, DateTime.Now);
         }
 
         private void pictureBox15_Click_1(object sender, EventArgs e)
         {
-            if (currentMap != null)
+            if (currentActivity != null)
             {
-                FinishMap(currentMap, null, "Map", DateTime.Now);
+                FinishMap(currentActivity, null, currentActivity.Type, DateTime.Now);
             }
         }
        
