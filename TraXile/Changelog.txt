@@ -45,7 +45,7 @@
 - TrayIcon added
 - Added Help window for Chat commands
 
-0.4.5
+0.4.5-beta1
 - Added Activity Type "Labyrinth"
 - Added Activity Type "Delve"
 - Added Activity Type "Simulacrum"
