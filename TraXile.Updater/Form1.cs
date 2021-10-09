@@ -154,7 +154,7 @@ namespace TraXile.Updater
                 }
                 catch(Exception ex)
                 {
-                    Log("ERROR: Could not check for update: " + ex.Message);
+                    Log("ERROR: Could not update: " + ex.Message);
                     Log(Environment.NewLine);
                     Log(ex.ToString());
                 }
