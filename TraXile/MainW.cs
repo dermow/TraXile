@@ -3143,20 +3143,47 @@ namespace TraXile
                 RenderTagsForConfig(true);
         }
 
+        public bool ValidateTagName(string s_name, bool b_showmessage = false)
+        {
+            bool bValid = true;
+            char[] invalid = new char[] { '=', ',', ';', ' ' };
+
+            if (String.IsNullOrEmpty(s_name))
+                bValid = false;
+
+            foreach(char c in invalid)
+            {
+                if(s_name.Contains(c))
+                {
+                    bValid = false;
+                }
+            }
+
+            if(bValid == false && b_showmessage )
+            {
+                MessageBox.Show("Sorry. this is not a valid tag ID!");
+            }
+
+            return bValid;
+        }
+
         private void button10_Click(object sender, EventArgs e)
         {
-            if(!CheckTagExists(textBox2.Text))
+            if(ValidateTagName(textBox2.Text, true))
             {
-                AddTag(new ActivityTag(textBox2.Text, false) { DisplayName = textBox3.Text });
-                RenderTagsForConfig(true);
-                RenderTagsForTracking(true);
-                textBox2.Clear();
+                if (!CheckTagExists(textBox2.Text))
+                {
+                    AddTag(new ActivityTag(textBox2.Text, false) { DisplayName = textBox3.Text });
+                    RenderTagsForConfig(true);
+                    RenderTagsForTracking(true);
+                    textBox2.Clear();
+                }
+                else
+                {
+                    MessageBox.Show("Tag '" + textBox2.Text + "' already exists.");
+                }
             }
-            else
-            {
-                MessageBox.Show("Tag '" + textBox2.Text + "' already exists.");
-            }
-            
+           
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -3180,35 +3207,38 @@ namespace TraXile
         {
             int iIndex = GetTagIndex(s_id);
             ActivityTag tag;
-            if(iIndex < 0)
-            {
-                tag = new ActivityTag(s_id, false);
-                tag.BackColor = Color.White;
-                tag.ForeColor = Color.Black;
-                AddTag(tag);
-            }
-            else
-            {
-                tag = tags[iIndex];
-            }
 
-            if(!tag.IsDefault)
+            if(ValidateTagName(s_id))
             {
-                act.AddTag(tag.ID);
-
-                string sTags = "";
-                // Update tags in DB // TODO
-                for (int i = 0; i < act.Tags.Count; i++)
+                if (iIndex < 0)
                 {
-                    sTags += act.Tags[i];
-                    if (i < (act.Tags.Count - 1))
-                        sTags += "|";
+                    tag = new ActivityTag(s_id, false);
+                    tag.BackColor = Color.White;
+                    tag.ForeColor = Color.Black;
+                    AddTag(tag);
                 }
-                SqliteCommand cmd = dbconn.CreateCommand();
-                cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
-                cmd.ExecuteNonQuery();
+                else
+                {
+                    tag = tags[iIndex];
+                }
+
+                if (!tag.IsDefault)
+                {
+                    act.AddTag(tag.ID);
+
+                    string sTags = "";
+                    // Update tags in DB // TODO
+                    for (int i = 0; i < act.Tags.Count; i++)
+                    {
+                        sTags += act.Tags[i];
+                        if (i < (act.Tags.Count - 1))
+                            sTags += "|";
+                    }
+                    SqliteCommand cmd = dbconn.CreateCommand();
+                    cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
+                    cmd.ExecuteNonQuery();
+                }
             }
-           
         }
 
         public void RemoveTagFromActivity(string s_id, TrackedActivity act)

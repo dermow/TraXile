@@ -78,6 +78,7 @@ namespace TraXile
             {
                 lv.Items.Add(lvi);
             }
+            bIsFiltered = true;
         }
 
         public void Reset()
@@ -88,6 +89,7 @@ namespace TraXile
             {
                 lv.Items.Add(lvi);
             }
+            bIsFiltered = false;
         }
 
         public void ClearLvItems()

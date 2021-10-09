@@ -112,9 +112,12 @@ namespace TraXile
 
         private void button1_Click(object sender, EventArgs e)
         {
-            mainW.AddTagAutoCreate(comboBox1.Text, activity);
-            RenderTags(true);
-            mainW.ResetMapHistory();
+            if (mainW.ValidateTagName(comboBox1.Text, true))
+            {
+                mainW.AddTagAutoCreate(comboBox1.Text, activity);
+                RenderTags(true);
+                mainW.ResetMapHistory();
+            }
         }
 
         private void ActivityDetails_FormClosed(object sender, FormClosedEventArgs e)

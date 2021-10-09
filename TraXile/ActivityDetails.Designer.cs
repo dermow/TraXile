@@ -310,6 +310,7 @@ namespace TraXile
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "ActivityDetails";
+            this.ShowIcon = false;
             this.Text = "ActivityDetails";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ActivityDetails_FormClosed);
             this.panel1.ResumeLayout(false);
