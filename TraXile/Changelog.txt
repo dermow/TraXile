@@ -44,3 +44,14 @@
 - Save some Layouts (Window size, Listview columns)
 - TrayIcon added
 - Added Help window for Chat commands
+
+0.4.5
+- Added Activity Type "Labyrinth"
+- Added Activity Type "Delve"
+- Added Activity Type "Simulacrum"
+- Added some labyrinth specific stats
+- Optimized About Window Layout
+- Optimized File Select Screen Layout
+- Fulltext search implemented in stats list
+- Fulltext search implemented in activity list
+- Small search syntax added for activity log (e.g 'tags=zana,blight')
