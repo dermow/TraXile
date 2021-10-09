@@ -36,9 +36,17 @@ namespace TraXile.Updater
 
         private string ReadCurrentVerison()
         {
-            StreamReader rd = new StreamReader("version");
-            string s = rd.ReadToEnd();
-            return s;
+            try
+            {
+                StreamReader rd = new StreamReader("version");
+                string s = rd.ReadToEnd();
+                return s;
+            }
+            catch
+            {
+                return "0.0.0";
+            }
+           
         }
 
         private string GetLatestRelease()
