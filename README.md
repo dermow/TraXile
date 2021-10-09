@@ -29,7 +29,7 @@ I am working on an auto update function, but till this is implemented, just down
 the newer ones :) Make sure too keep "stats.cache", "TraXile.exe.config" and "data.db" as these files are holding your data!
 
 ## Virus Warnings
-As I am not using a Code signing certificate, some virus scanners (e.g. Windows defender) will trigger an alert. YOu can start it anyway. This is not a virus :-)
+As I am not using a Code signing certificate, some virus scanners (e.g. Windows defender) will trigger an alert. You can start it anyway. This is not a virus :-)
 
 ## Bug or feature request?
 Please submit an issue here on GitHub!
