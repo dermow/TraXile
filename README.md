@@ -26,7 +26,7 @@ Just download the latest release from the GitHub releases page, extract it and s
 
 ## How to update
 I am working on an auto update function, but till this is implemented, just download the latest zip and replace the files in your install directory with 
-the newer ones :) Make sure too keep "stats.cache", "Traxile.exe.config" and "data.db" as these files are holing your data!
+the newer ones :) Make sure too keep "stats.cache", "TraXile.exe.config" and "data.db" as these files are holding your data!
 
 ## Bug or feature request?
 Please submit an issue here on GitHub!
