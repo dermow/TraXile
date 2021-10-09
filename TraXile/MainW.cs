@@ -141,6 +141,22 @@ namespace TraXile
                 int iIndex = releases.IndexOf("tag_name");
                 string sVersion =  releases.Substring(iIndex + 11, 5);
 
+                // Check if Updater needs an update
+                if(File.Exists("TraXile.Updater.exe.Update"))
+                {
+                    try
+                    {
+                        File.Delete("Traxile.Updater.exe");
+                        File.Move("TraXile.Updater.exe.Update", "TraXile.Updater.exe");
+                        log.Info("TraXile.Updater updated successfully.");
+                    }
+                    catch(Exception ex)
+                    {
+                        log.Error("Error updating TraXile.Updater: " + ex.Message);
+                    }
+                    
+                }
+
                 if(Convert.ToInt32(sVersion.Replace(".", "")) > Convert.ToInt32(APPINFO.VERSION.Replace(".", "")))
                 {
                     if(MessageBox.Show("There is a new version available for TraXile (current=" + APPINFO.VERSION + ", new=" + sVersion + ")"

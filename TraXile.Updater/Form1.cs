@@ -114,7 +114,13 @@ namespace TraXile.Updater
             foreach(ZipArchiveEntry file in zip.Entries)
             {
                 string completeFileName = Path.GetFullPath(Path.Combine(Application.StartupPath, file.FullName));
+
+                // Do not try to update myself
+                if (file.FullName == "TraXile.Updater.exe")
+                    completeFileName += ".Update";
+
                 Log("Extract:" + completeFileName);
+                
 
                 if (!completeFileName.StartsWith(Application.StartupPath, StringComparison.OrdinalIgnoreCase))
                 {
