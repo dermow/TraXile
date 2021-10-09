@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -127,11 +128,53 @@ namespace TraXile
             Init();
         }
 
+        private void CheckForUpdate(bool b_notify_ok = false)
+        {
+            try
+            {
+                const string GITHUB_API = "https://api.github.com/repos/{0}/{1}/releases/latest";
+                WebClient webClient = new WebClient();
+                // Added user agent
+                webClient.Headers.Add("User-Agent", "Unity web player");
+                Uri uri = new Uri(string.Format(GITHUB_API, "dermow", "TraXile"));
+                string releases = webClient.DownloadString(uri);
+                int iIndex = releases.IndexOf("tag_name");
+                string sVersion =  releases.Substring(iIndex + 11, 5);
+
+                if(Convert.ToInt32(sVersion.Replace(".", "")) > Convert.ToInt32(APPINFO.VERSION.Replace(".", "")))
+                {
+                    if(MessageBox.Show("There is a new version available for TraXile (current=" + APPINFO.VERSION + ", new=" + sVersion + ")"
+                        + Environment.NewLine + Environment.NewLine + "Start Update now?", "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        if(File.Exists("TraXile.Updater.exe"))
+                        {
+                            Process.Start("TraXile.Updater.exe");
+                            Application.Exit();
+                        }
+                    }
+                }
+                else
+                {
+                    if(b_notify_ok)
+                        MessageBox.Show("Your version: " + APPINFO.VERSION 
+                            + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine + Environment.NewLine 
+                            + "Your version is already up to date :)");
+                }
+            }
+            catch(Exception ex)
+            {
+                log.Error("Could not check for Update: " + ex.Message);
+            }
+        }
+
         private void Init()
         {
             this.Opacity = 0;
 
             log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            log.Info("Application started");
+            SaveVersion();
+            CheckForUpdate();
             ReadSettings();
             DoBackupRestoreIfPrepared();
 
@@ -182,8 +225,7 @@ namespace TraXile
             tags = new List<ActivityTag>();
             campList = new List<string>();
 
-            log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            log.Info("Application started");
+           
 
             this.Text = APPINFO.NAME + " " + APPINFO.VERSION;
             dtInitStart = DateTime.Now;
@@ -2102,6 +2144,13 @@ namespace TraXile
             wrt.Close();
         }
 
+        private void SaveVersion()
+        {
+            StreamWriter wrt = new StreamWriter("version");
+            wrt.WriteLine(APPINFO.VERSION);
+            wrt.Close();
+        }
+
         private void LogEvent(TrackedEvent ev)
         {
             log.Info(ev.ToString());
@@ -3465,6 +3514,11 @@ namespace TraXile
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CheckForUpdate(true);
         }
 
         private void infoToolStripMenuItem1_Click(object sender, EventArgs e)
