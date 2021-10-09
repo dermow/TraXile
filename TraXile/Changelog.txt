@@ -55,3 +55,4 @@
 - Fulltext search implemented in stats list
 - Fulltext search implemented in activity list
 - Small search syntax added for activity log (e.g 'tags=zana,blight')
+- Added Auto Update feature

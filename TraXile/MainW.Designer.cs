@@ -67,6 +67,7 @@ namespace TraXile
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel3 = new System.Windows.Forms.Panel();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.label66 = new System.Windows.Forms.Label();
@@ -76,6 +77,9 @@ namespace TraXile
             this.button3 = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.listViewStats = new TraXile.ListViewNF();
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
@@ -84,6 +88,7 @@ namespace TraXile
             this.label38 = new System.Windows.Forms.Label();
             this.label46 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.label65 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
@@ -252,11 +257,7 @@ namespace TraXile
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.chatCommandsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
-            this.listViewStats = new TraXile.ListViewNF();
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             tabControl1 = new System.Windows.Forms.TabControl();
             tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -706,6 +707,19 @@ namespace TraXile
             this.panel3.Size = new System.Drawing.Size(514, 76);
             this.panel3.TabIndex = 5;
             // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.ForeColor = System.Drawing.Color.Red;
+            this.linkLabel2.LinkColor = System.Drawing.Color.Red;
+            this.linkLabel2.Location = new System.Drawing.Point(342, 20);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(31, 13);
+            this.linkLabel2.TabIndex = 7;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "Clear";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
@@ -815,6 +829,34 @@ namespace TraXile
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(969, 706);
             this.tableLayoutPanel1.TabIndex = 1;
+            // 
+            // listViewStats
+            // 
+            this.listViewStats.BackColor = System.Drawing.SystemColors.InfoText;
+            this.listViewStats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6});
+            this.listViewStats.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.listViewStats.ForeColor = System.Drawing.Color.Gold;
+            this.listViewStats.FullRowSelect = true;
+            this.listViewStats.HideSelection = false;
+            this.listViewStats.Location = new System.Drawing.Point(3, 34);
+            this.listViewStats.Name = "listViewStats";
+            this.listViewStats.Size = new System.Drawing.Size(963, 410);
+            this.listViewStats.TabIndex = 0;
+            this.listViewStats.UseCompatibleStateImageBehavior = false;
+            this.listViewStats.View = System.Windows.Forms.View.Details;
+            this.listViewStats.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView2_ColumnClick);
+            this.listViewStats.SelectedIndexChanged += new System.EventHandler(this.listView2_SelectedIndexChanged);
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Stat";
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Value";
             // 
             // chart1
             // 
@@ -938,6 +980,19 @@ namespace TraXile
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(963, 25);
             this.panel6.TabIndex = 10;
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.ForeColor = System.Drawing.Color.Red;
+            this.linkLabel3.LinkColor = System.Drawing.Color.Red;
+            this.linkLabel3.Location = new System.Drawing.Point(329, 4);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(31, 13);
+            this.linkLabel3.TabIndex = 8;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "Clear";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
             // textBox7
             // 
@@ -2473,7 +2528,8 @@ namespace TraXile
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.chatCommandsToolStripMenuItem,
-            this.infoToolStripMenuItem1});
+            this.infoToolStripMenuItem1,
+            this.checkForUpdateToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -2481,14 +2537,14 @@ namespace TraXile
             // chatCommandsToolStripMenuItem
             // 
             this.chatCommandsToolStripMenuItem.Name = "chatCommandsToolStripMenuItem";
-            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.chatCommandsToolStripMenuItem.Text = "Chat Commands";
             this.chatCommandsToolStripMenuItem.Click += new System.EventHandler(this.chatCommandsToolStripMenuItem_Click);
             // 
             // infoToolStripMenuItem1
             // 
             this.infoToolStripMenuItem1.Name = "infoToolStripMenuItem1";
-            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(164, 22);
+            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.infoToolStripMenuItem1.Text = "Info";
             this.infoToolStripMenuItem1.Click += new System.EventHandler(this.infoToolStripMenuItem1_Click);
             // 
@@ -2760,59 +2816,12 @@ namespace TraXile
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
-            // linkLabel2
+            // checkForUpdateToolStripMenuItem
             // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.ForeColor = System.Drawing.Color.Red;
-            this.linkLabel2.LinkColor = System.Drawing.Color.Red;
-            this.linkLabel2.Location = new System.Drawing.Point(342, 20);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(31, 13);
-            this.linkLabel2.TabIndex = 7;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "Clear";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
-            // 
-            // linkLabel3
-            // 
-            this.linkLabel3.AutoSize = true;
-            this.linkLabel3.ForeColor = System.Drawing.Color.Red;
-            this.linkLabel3.LinkColor = System.Drawing.Color.Red;
-            this.linkLabel3.Location = new System.Drawing.Point(329, 4);
-            this.linkLabel3.Name = "linkLabel3";
-            this.linkLabel3.Size = new System.Drawing.Size(31, 13);
-            this.linkLabel3.TabIndex = 8;
-            this.linkLabel3.TabStop = true;
-            this.linkLabel3.Text = "Clear";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
-            // 
-            // listViewStats
-            // 
-            this.listViewStats.BackColor = System.Drawing.SystemColors.InfoText;
-            this.listViewStats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader5,
-            this.columnHeader6});
-            this.listViewStats.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewStats.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.listViewStats.ForeColor = System.Drawing.Color.Gold;
-            this.listViewStats.FullRowSelect = true;
-            this.listViewStats.HideSelection = false;
-            this.listViewStats.Location = new System.Drawing.Point(3, 34);
-            this.listViewStats.Name = "listViewStats";
-            this.listViewStats.Size = new System.Drawing.Size(963, 410);
-            this.listViewStats.TabIndex = 0;
-            this.listViewStats.UseCompatibleStateImageBehavior = false;
-            this.listViewStats.View = System.Windows.Forms.View.Details;
-            this.listViewStats.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView2_ColumnClick);
-            this.listViewStats.SelectedIndexChanged += new System.EventHandler(this.listView2_SelectedIndexChanged);
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Stat";
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Value";
+            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdateToolStripMenuItem.Text = "Check for Update";
+            this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
             // 
             // MainW
             // 
@@ -3131,6 +3140,7 @@ namespace TraXile
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
     }
 }
 
