@@ -173,6 +173,10 @@ namespace TraXile
 
             log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             log.Info("Application started");
+
+            lvmStats = new ListViewManager(listViewStats);
+            lvmActLog = new ListViewManager(listViewActLog);
+
             SaveVersion();
             CheckForUpdate();
             ReadSettings();
@@ -204,8 +208,7 @@ namespace TraXile
             textBox1.Enabled = false;
         
 
-            lvmStats = new ListViewManager(listViewStats);
-            lvmActLog = new ListViewManager(listViewActLog);
+            
 
             comboBox1.SelectedIndex = 1;
 
@@ -262,7 +265,6 @@ namespace TraXile
             LoadCustomTags();
             ResetMapHistory();
             LoadLayout();
-           
 
             // Thread for Log Parsing and Enqueuing
             thParseLog = new Thread(new ThreadStart(LogParsing))
@@ -283,7 +285,10 @@ namespace TraXile
         {
             foreach(ColumnHeader ch in listViewActLog.Columns)
             {
-                AddUpdateAppSettings("layout.listview.cols." + ch.Name + ".width", ch.Width.ToString());
+                if(ch.Width > 0)
+                {
+                    AddUpdateAppSettings("layout.listview.cols." + ch.Name + ".width", ch.Width.ToString());
+                }
             }
             if(this.Width > 50 && this.Height > 50)
             {
@@ -296,7 +301,11 @@ namespace TraXile
         {
             foreach (ColumnHeader ch in listViewActLog.Columns)
             {
-                ch.Width = Convert.ToInt32(ReadSetting("layout.listview.cols." + ch.Name + ".width"));
+                int w = Convert.ToInt32(ReadSetting("layout.listview.cols." + ch.Name + ".width"));
+                if(w > 0)
+                {
+                    ch.Width = w;
+                }
             }
 
             int iWidth = Convert.ToInt32(ReadSetting("layout.window.width"));
