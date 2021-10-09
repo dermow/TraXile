@@ -18,7 +18,6 @@ namespace TraXile.Updater
 {
     public partial class Form1 : Form
     {
-        private string sURL = "https://api.github.com/repos/dermow/TraXile/releases";
         string sTraXileVersion = "";
         bool bStarted, bExit;
 
@@ -148,7 +147,18 @@ namespace TraXile.Updater
             if(!bStarted)
             {
                 bStarted = true;
-                Check();
+
+                try
+                {
+                    Check();
+                }
+                catch(Exception ex)
+                {
+                    Log("ERROR: Could not check for update: " + ex.Message);
+                    Log(Environment.NewLine);
+                    Log(ex.ToString());
+                }
+                
             }
 
             if(bExit)
