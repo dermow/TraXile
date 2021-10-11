@@ -16,56 +16,6 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace TraXile
 {
-    enum EVENT_TYPES
-    {
-        APP_STARTED,
-        APP_READY,
-        ENTERED_AREA,
-        PLAYER_DIED,
-        DEATH_REASON_RECEIVED,
-        ELDER_KILLED,
-        SHAPER_KILLED,
-        SHAPER_FIGHT_STARTED,
-        INSTANCE_CONNECTED,
-        SIRUS_KILLED,
-        SIRUS_FIGHT_STARTED,
-        VERITANIA_FIGHT_STARTED,
-        VERITANIA_KILLED,
-        BARAN_FIGHT_STARTED,
-        BARAN_KILLED,
-        DROX_FIGHT_STARTED,
-        DROX_KILLED,
-        HUNTER_FIGHT_STARTED,
-        HUNTER_KILLED,
-        TRIALMASTER_STARTED,
-        TRIALMASTER_KILLED,
-        MAVEN_FIGHT_STARTED,
-        MAVEN_KILLED,
-        TRIALMASTER_SPEECH,
-        TRIALMASTER_ROUND_STARTED,
-        EINHAR_BEAST_CAPTURE,
-        TRIALMASTER_TOOK_REWARD,
-        TRIALMASTER_VICTORY,
-        UBER_ELDER_STARTED,
-        UBER_ELDER_KILLED,
-        PARTYMEMBER_ENTERED_AREA,
-        PARTYMEMBER_LEFT_AREA,
-        CATARINA_FIGHT_STARTED,
-        CATARINA_KILLED,
-        DELIRIUM_ENCOUNTER,
-        BLIGHT_ENCOUNTER,
-        INCURSION_ENCOUNTER,
-        NIKO_ENCOUNTER,
-        EINHAR_ENCOUNTER,
-        ZANA_ENCOUNTER,
-        SYNDICATE_ENCOUNTER,
-        LEVELUP,
-        SIMULACRUM_FULLCLEAR,
-        CHAT_CMD_RECEIVED,
-        LAB_FINISHED,
-        LAB_START_INFO_RECEIVED
-    }
-
     public enum ACTIVITY_TYPES
     {
         MAP,
@@ -103,18 +53,19 @@ namespace TraXile
         private int iShaperKillsInFight;
         private SqliteConnection dbconn;
         private bool bHistoryInitialized;
-        List<string> mapList, heistList, knownPlayers, simuList, campList;
+        List<string> knownPlayers;
         BindingList<string> backups;
-        Dictionary<string, EVENT_TYPES> eventMap;
         Dictionary<int, string> dict;
         Dictionary<string, int> numStats;
         Dictionary<string, string> statNamesLong;
         Dictionary<string, ListViewItem> statLvItems;
         LoadScreen loadScreen;
-        List<TrackedActivity> mapHistory;
+        List<TrackedActivity> eventHistory;
         ConcurrentQueue<TrackedEvent> eventQueue;
         public List<ActivityTag> tags;
         Dictionary<string, Label> tagLabels, tagLabelsConfig;
+        EventMapping evMap;
+        AreaMapping areaMap;
         ILog log;
         private bool bSettingStatsShowGrid;
         private string sLastSimuEndpoint;
@@ -134,7 +85,6 @@ namespace TraXile
             {
                 const string GITHUB_API = "https://api.github.com/repos/{0}/{1}/releases/latest";
                 WebClient webClient = new WebClient();
-                // Added user agent
                 webClient.Headers.Add("User-Agent", "Unity web player");
                 Uri uri = new Uri(string.Format(GITHUB_API, "dermow", "TraXile"));
                 string releases = webClient.DownloadString(uri);
@@ -193,6 +143,9 @@ namespace TraXile
             lvmStats = new ListViewManager(listViewStats);
             lvmActLog = new ListViewManager(listViewActLog);
 
+            evMap = new EventMapping();
+            areaMap = new AreaMapping();
+
             SaveVersion();
             CheckForUpdate();
             ReadSettings();
@@ -222,15 +175,12 @@ namespace TraXile
 
             textBox1.Text = ReadSetting("PoELogFilePath");
             textBox1.Enabled = false;
-        
-
-            
 
             comboBox1.SelectedIndex = 1;
 
             dict = new Dictionary<int, string>();
             eventQueue = new ConcurrentQueue<TrackedEvent>();
-            mapHistory = new List<TrackedActivity>();
+            eventHistory = new List<TrackedActivity>();
             knownPlayers = new List<string>();
             backups = new BindingList<string>();
             statLvItems = new Dictionary<string, ListViewItem>();
@@ -242,7 +192,6 @@ namespace TraXile
             tagLabelsConfig = new Dictionary<string, Label>();
             sLastSimuEndpoint = "";
             tags = new List<ActivityTag>();
-            campList = new List<string>();
 
            
 
@@ -260,7 +209,6 @@ namespace TraXile
             loadScreen = new LoadScreen();
             loadScreen.Show(this);
 
-            BuildmapList();
             InitDatabase();
             
             lastEvType = EVENT_TYPES.APP_STARTED;
@@ -276,7 +224,6 @@ namespace TraXile
             eventQueue.Enqueue(new TrackedEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
 
             ReadStatsCache();
-            BuildEventMap();
             ReadKnownPlayers();
             LoadCustomTags();
             ResetMapHistory();
@@ -677,13 +624,14 @@ namespace TraXile
             };
 
             List<string> labs = new List<string>();
+            labs.Add("Unknown");
             labs.Add("The Merciless Labyrinth");
             labs.Add("The Cruel Labyrinth");
             labs.Add("The Labyrinth");
             labs.Add("Uber-Lab");
             labs.Add("Advanced-Lab");
 
-            foreach (string s in heistList)
+            foreach (string s in areaMap.HEIST_AREAS)
             {
                 string sName = s.Replace("'", "");
                 if (!numStats.ContainsKey("HeistsFinished_" + sName))
@@ -701,7 +649,7 @@ namespace TraXile
                     statNamesLong.Add("LabsCompleted_" + sName, "Labs completed: " + sName);
             }
 
-            foreach (string s in mapList)
+            foreach (string s in areaMap.MAP_AREAS)
             {
                 string sName = s.Replace("'", "");
                 if (!numStats.ContainsKey("MapsFinished_" + sName))
@@ -709,7 +657,7 @@ namespace TraXile
                 if (!statNamesLong.ContainsKey("MapsFinished_" + sName))
                     statNamesLong.Add("MapsFinished_" + sName, "Maps done: " + sName);
             }
-            foreach (string s in simuList)
+            foreach (string s in areaMap.SIMU_AREAS)
             {
                 string sName = s.Replace("'", "");
                 if (!numStats.ContainsKey("SimulacrumFinished_" + sName))
@@ -772,7 +720,7 @@ namespace TraXile
         {
             SqliteCommand cmd;
 
-            mapHistory.Clear();
+            eventHistory.Clear();
             listViewActLog.Items.Clear();
 
             cmd = dbconn.CreateCommand();
@@ -954,7 +902,8 @@ namespace TraXile
 
         private void BuildEventMap()
         {
-            eventMap = new Dictionary<string, EVENT_TYPES>
+            /*
+            evMap.MAP = new Dictionary<string, EVENT_TYPES>
             {
                 // System Commands
                 { "trax::", EVENT_TYPES.CHAT_CMD_RECEIVED },
@@ -1234,7 +1183,7 @@ namespace TraXile
                 { "area \"Estate Crossing\" with seed", EVENT_TYPES.LAB_START_INFO_RECEIVED },
 
             };
-
+            */
         }
 
         private ACTIVITY_TYPES GetActTypeFromString(string s_type)
@@ -1301,7 +1250,7 @@ namespace TraXile
                 }
 
                 //mapHistory
-                mapHistory.Add(map);
+                eventHistory.Add(map);
             }
             bHistoryInitialized = true;
             ResetMapHistory();
@@ -1393,7 +1342,7 @@ namespace TraXile
 
                     iLastHash = lineHash;
 
-                    foreach (KeyValuePair<string,EVENT_TYPES> kv in eventMap)
+                    foreach (KeyValuePair<string,EVENT_TYPES> kv in evMap.MAP)
                     {
                         if (line.Contains(kv.Key))
                         {
@@ -1460,7 +1409,7 @@ namespace TraXile
                 }
             }
 
-            foreach (string s in mapList)
+            foreach (string s in areaMap.MAP_AREAS)
             {
                if (s.Trim().Equals(sArea.Trim()))
                     return true;
@@ -1482,7 +1431,7 @@ namespace TraXile
                 }
             }
 
-            foreach (string s in heistList)
+            foreach (string s in areaMap.HEIST_AREAS)
             {
                 if (s.Trim().Equals(sArea.Trim()))
                     return true;
@@ -1595,7 +1544,7 @@ namespace TraXile
                     IncrementStat("AreaChanges", ev.EventTime, 1);
 
                     //Simu?
-                    if(simuList.Contains(sAreaName))
+                    if(areaMap.SIMU_AREAS.Contains(sAreaName))
                     {
                         bTargetAreaIsSimu = true;
                         if(sCurrentInstanceEndpoint != sLastSimuEndpoint)
@@ -1642,7 +1591,7 @@ namespace TraXile
                     {
                         currentActivity = new TrackedActivity
                         {
-                            Area = sNextLabType,
+                            Area = sNextLabType != null ? sNextLabType : "Unknown",
                             Type = actType,
                             Started = DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]),
                             InstanceEndpoint = sCurrentInstanceEndpoint
@@ -1652,7 +1601,7 @@ namespace TraXile
                     //Lab cancelled?
                     if(currentActivity != null && currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
                     {
-                        if(sTargetArea.Contains("Hideout") || campList.Contains(sTargetArea))
+                        if(sTargetArea.Contains("Hideout") || areaMap.CAMP_AREAS.Contains(sTargetArea))
                         {
                             FinishMap(currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
                         }
@@ -2090,7 +2039,7 @@ namespace TraXile
 
             if(bEventQInitialized)
             {
-                mapHistory.Insert(0, currentActivity);
+                eventHistory.Insert(0, currentActivity);
                 TextLog("Map finished (" + map.Area + "): " + currentActivity.StopWatchValue.ToString());
                 AddMapLvItem(map);
                 SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.Area, Convert.ToInt32(map.StopWatchTimeSpan.TotalSeconds), map.DeathCounter, map.TrialMasterCount, false, map.Tags);
@@ -2229,7 +2178,7 @@ namespace TraXile
                 lvmActLog.Columns.Add(ch);
             }
 
-            foreach (TrackedActivity act in mapHistory)
+            foreach (TrackedActivity act in eventHistory)
             {
                 AddMapLvItem(act, act.IsZana, -1);
             }
@@ -2270,7 +2219,7 @@ namespace TraXile
 
         private TrackedActivity GetActivityFromListItemName(string s_name)
         {
-            foreach(TrackedActivity ta in mapHistory)
+            foreach(TrackedActivity ta in eventHistory)
             {
                 if (ta.TimeStamp + "_" + ta.Area == s_name)
                     return ta;
@@ -2578,203 +2527,6 @@ namespace TraXile
             }
         }
 
-        private void BuildmapList()
-        {
-            mapList = new List<string>
-            {
-                "Academy",
-                "Acid Caverns",
-                "Alleyways",
-                "Ancient City",
-                "Arachnid Nest",
-                "Arachnid Tomb",
-                "Arcade",
-                "Arena",
-                "Arid Lake",
-                "Armoury",
-                "Arsenal",
-                "Ashen Wood",
-                "Atoll",
-                "Barrows",
-                "Basilica",
-                "Bazaar",
-                "Beach",
-                "Belfry",
-                "Bog",
-                "Bone Crypt",
-                "Bramble Valley",
-                "Burial Chambers",
-                "Cage",
-                "Caldera",
-                "Canyon",
-                "Carcass",
-                "Castle Ruins",
-                "Cells",
-                "Cemetery",
-                "Channel",
-                "Chateau",
-                "City Square",
-                "Cold River",
-                "Colonnade",
-                "Colosseum",
-                "Conservatory",
-                "Coral Ruins",
-                "Core",
-                "Courthouse",
-                "Courtyard",
-                "Coves",
-                "Crater",
-                "Crimson Temple",
-                "Crimson Township",
-                "Crystal Ore",
-                "Cursed Crypt",
-                "Dark Forest",
-                "Defiled Cathedral",
-                "Desert Spring",
-                "Desert",
-                "Dig",
-                "Dry Sea",
-                "Dunes",
-                "Dungeon",
-                "Estuary",
-                "Excavation",
-                "Factory",
-                "Fields",
-                "Flooded Mine",
-                "Forbidden Woods",
-                "Forge of the Phoenix",
-                "Forking River",
-                "Foundry",
-                "Frozen Cabins",
-                "Fungal Hollow",
-                "Gardens",
-                "Geode",
-                "Ghetto",
-                "Glacier",
-                "Grave Trough",
-                "Graveyard",
-                "Grotto",
-                "Haunted Mansion",
-                "Iceberg",
-                "Infested Valley",
-                "Ivory Temple",
-                "Jungle Valley",
-                "Laboratory",
-                "Lair of the Hydra",
-                "Lair",
-                "Lava Chamber",
-                "Lava Lake",
-                "Leyline",
-                "Lighthouse",
-                "Lookout",
-                "Malformation",
-                "Marshes",
-                "Mausoleum",
-                "Maze of the Minotaur",
-                "Maze",
-                "Mesa",
-                "Mineral Pools",
-                "Moon Temple",
-                "Mud Geyser",
-                "Museum",
-                "Necropolis",
-                "Orchard",
-                "Overgrown Ruin",
-                "Overgrown Shrine",
-                "Palace",
-                "Park",
-                "Pen",
-                "Peninsula",
-                "Phantasmagoria",
-                "Pier",
-                "Pit of the Chimera",
-                "Pit",
-                "Plateau",
-                "Plaza",
-                "Port",
-                "Precinct",
-                "Primordial Blocks",
-                "Primordial Pool",
-                "Promenade",
-                "Racecourse",
-                "Ramparts",
-                "Reef",
-                "Relic Chambers",
-                "Residence",
-                "Scriptorium",
-                "Sepulchre",
-                "Shipyard",
-                "Shore",
-                "Shrine",
-                "Siege",
-                "Silo",
-                "Spider Forest",
-                "Spider Lair",
-                "Stagnation",
-                "Strand",
-                "Sulphur Vents",
-                "Summit",
-                "Sunken City",
-                "Temple",
-                "Terrace",
-                "The Beachhead",
-                "The Beachhead",
-                "The Beachhead",
-                "The Temple of Atzoatl",
-                "Thicket",
-                "Tower",
-                "Toxic Sewer",
-                "Tropical Island",
-                "Underground River",
-                "Underground Sea",
-                "Vaal Pyramid",
-                "Vaal Temple",
-                "Vault",
-                "Villa",
-                "Volcano",
-                "Waste Pool",
-                "Wasteland",
-                "Waterways",
-                "Wharf",
-            };
-
-            heistList = new List<string>
-            {
-                "Bunker",
-                "Laboratory",
-                "Mansion",
-                "Prohibited Library",
-                "Records Office",
-                "Repository",
-                "Smuggler's Den",
-                "Tunnels",
-                "Underbelly",
-            };
-
-            simuList = new List<string>
-            {
-               "Lunacy's Watch", 
-               "The Bridge Enraptured",
-               "The Syndrome Encampment",
-               "Hysteriagate",
-               "Oriath Delusion"
-            };
-
-            campList = new List<string>
-            {
-               "Lioneye's Watch",
-               "The Forest Encampment",
-               "The Sarn Encampment",
-               "Highgate",
-               "Overseer's Tower",
-               "The Bridge Encampment",
-               "Oriath",
-               "Oriath Docks",
-               "Karui Shores"
-            };
-
-        }
-
         public ActivityTag GetTagByID(string s_id)
         {
             foreach(ActivityTag tag in tags)
@@ -2825,9 +2577,9 @@ namespace TraXile
             string sLine = "time;type;area;stopwatch;death_counter";
             wrt.WriteLine(sLine);
 
-            for(int i = 0; i < mapHistory.Count; i++)
+            for(int i = 0; i < eventHistory.Count; i++)
             {
-                tm = mapHistory[i];
+                tm = eventHistory[i];
                 sLine = "";
                 sLine += tm.Started;
                 sLine += ";" + tm.Type;
@@ -2964,7 +2716,7 @@ namespace TraXile
             if(listViewActLog.SelectedItems.Count == 1)
             {
                 int iIndex = listViewActLog.SelectedIndices[0];
-                long lTimestamp = mapHistory[iIndex].TimeStamp;
+                long lTimestamp = eventHistory[iIndex].TimeStamp;
                 string sType = listViewActLog.Items[iIndex].SubItems[1].Text;
                 string sArea = listViewActLog.Items[iIndex].SubItems[2].Text;
 
@@ -2975,7 +2727,7 @@ namespace TraXile
                     + "Time: " + listViewActLog.Items[iIndex].SubItems[0].Text, "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     listViewActLog.Items.Remove(listViewActLog.SelectedItems[0]);
-                    mapHistory.RemoveAt(iIndex);
+                    eventHistory.RemoveAt(iIndex);
                     DeleteActLogEntry(lTimestamp);
                 }
             }
@@ -3463,7 +3215,7 @@ namespace TraXile
                 {
                     string[] sTagFilter = textBox8.Text.Split(new string[] { "==" }, StringSplitOptions.None)[1].Split(',');
                     int iMatched = 0;
-                    foreach (TrackedActivity ta in mapHistory)
+                    foreach (TrackedActivity ta in eventHistory)
                     {
                         iMatched = 0;
                         foreach (string tag in sTagFilter)
@@ -3494,7 +3246,7 @@ namespace TraXile
                 {
                     string[] sTagFilter = textBox8.Text.Split('=')[1].Split(',');
                     int iMatched = 0;
-                    foreach(TrackedActivity ta in mapHistory)
+                    foreach(TrackedActivity ta in eventHistory)
                     {
                         iMatched = 0;
                         foreach(string tag in sTagFilter)
