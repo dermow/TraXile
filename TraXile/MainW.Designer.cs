@@ -227,6 +227,7 @@ namespace TraXile
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chatCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -257,7 +258,6 @@ namespace TraXile
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.chatCommandsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             tabControl1 = new System.Windows.Forms.TabControl();
             tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -426,22 +426,22 @@ namespace TraXile
             // labelTrackingType
             // 
             this.labelTrackingType.AutoSize = true;
-            this.labelTrackingType.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTrackingType.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTrackingType.ForeColor = System.Drawing.Color.Gold;
-            this.labelTrackingType.Location = new System.Drawing.Point(24, 147);
+            this.labelTrackingType.Location = new System.Drawing.Point(3, 147);
             this.labelTrackingType.Name = "labelTrackingType";
-            this.labelTrackingType.Size = new System.Drawing.Size(54, 25);
+            this.labelTrackingType.Size = new System.Drawing.Size(47, 24);
             this.labelTrackingType.TabIndex = 6;
             this.labelTrackingType.Text = "Map";
             // 
             // labelTrackingArea
             // 
             this.labelTrackingArea.AutoSize = true;
-            this.labelTrackingArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTrackingArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTrackingArea.ForeColor = System.Drawing.Color.Gold;
-            this.labelTrackingArea.Location = new System.Drawing.Point(23, 172);
+            this.labelTrackingArea.Location = new System.Drawing.Point(3, 172);
             this.labelTrackingArea.Name = "labelTrackingArea";
-            this.labelTrackingArea.Size = new System.Drawing.Size(374, 33);
+            this.labelTrackingArea.Size = new System.Drawing.Size(308, 29);
             this.labelTrackingArea.TabIndex = 5;
             this.labelTrackingArea.Text = "Rewritten Distant Memories";
             // 
@@ -2537,16 +2537,23 @@ namespace TraXile
             // chatCommandsToolStripMenuItem
             // 
             this.chatCommandsToolStripMenuItem.Name = "chatCommandsToolStripMenuItem";
-            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.chatCommandsToolStripMenuItem.Text = "Chat Commands";
             this.chatCommandsToolStripMenuItem.Click += new System.EventHandler(this.chatCommandsToolStripMenuItem_Click);
             // 
             // infoToolStripMenuItem1
             // 
             this.infoToolStripMenuItem1.Name = "infoToolStripMenuItem1";
-            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(166, 22);
             this.infoToolStripMenuItem1.Text = "Info";
             this.infoToolStripMenuItem1.Click += new System.EventHandler(this.infoToolStripMenuItem1_Click);
+            // 
+            // checkForUpdateToolStripMenuItem
+            // 
+            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.checkForUpdateToolStripMenuItem.Text = "Check for Update";
+            this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
             // 
             // timer1
             // 
@@ -2815,13 +2822,6 @@ namespace TraXile
             this.exitToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
-            // 
-            // checkForUpdateToolStripMenuItem
-            // 
-            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.checkForUpdateToolStripMenuItem.Text = "Check for Update";
-            this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
             // 
             // MainW
             // 

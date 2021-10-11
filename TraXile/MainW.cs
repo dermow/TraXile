@@ -2328,8 +2328,9 @@ namespace TraXile
                     else
                     {
                         labelTrackingDied.Text = "0";
-                        labelTrackingArea.Text = "Not tracking";
+                        labelTrackingArea.Text = "-";
                         labelStopWatch.Text = "00:00:00";
+                        labelTrackingType.Text = "Enter an ingame activity to auto. start tracking.";
                     }
 
                     labelElderStatus.ForeColor = numStats["ElderKilled"] > 0 ? Color.Green : Color.Red;
