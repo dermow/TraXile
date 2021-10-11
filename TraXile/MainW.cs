@@ -2320,7 +2320,6 @@ namespace TraXile
                         else
                         {
                             labelStopWatch.Text = currentActivity.StopWatchValue.ToString();
-                            if (currentActivity.Paused) labelStopWatch.Text += " (||)";
                             labelTrackingArea.Text = currentActivity.Area;
                             labelTrackingType.Text = GetStringFromActType(currentActivity.Type).ToUpper();
                             labelTrackingDied.Text = currentActivity.DeathCounter.ToString();
