@@ -10,23 +10,23 @@ namespace TraXile
 {
     class ListViewManager
     {
-        private ListView lv;
-        private bool bIsFiltered;
-        private List<ListViewItem> masterList, filteredList;
-        private Dictionary<string, ListViewItem> itemMap;
+        private ListView _listView;
+        private bool _isFiltered;
+        private List<ListViewItem> _masterList, _filteredList;
+        private Dictionary<string, ListViewItem> _itemMap;
 
         public ListViewManager(ListView lv_to_manage)
         {
-            lv = lv_to_manage;
-            masterList = new List<ListViewItem>();
-            filteredList = new List<ListViewItem>();
-            itemMap = new Dictionary<string, ListViewItem>();
+            _listView = lv_to_manage;
+            _masterList = new List<ListViewItem>();
+            _filteredList = new List<ListViewItem>();
+            _itemMap = new Dictionary<string, ListViewItem>();
 
-            foreach(ListViewItem lvi in lv.Items)
+            foreach(ListViewItem lvi in _listView.Items)
             {
-                masterList.Add(lvi);
-                filteredList.Add(lvi);
-                itemMap.Add(lvi.Name, lvi);
+                _masterList.Add(lvi);
+                _filteredList.Add(lvi);
+                _itemMap.Add(lvi.Name, lvi);
             }
         }
 
@@ -34,7 +34,7 @@ namespace TraXile
         {
             List<string> names = new List<string>();
 
-            foreach(ListViewItem lvi in masterList)
+            foreach(ListViewItem lvi in _masterList)
             {
                 if(lvi.Text.ToLower().Contains(s_filter.ToLower()))
                 {
@@ -63,83 +63,83 @@ namespace TraXile
 
         public void FilterByNameList(List<string> item_names)
         {
-            filteredList.Clear();
+            _filteredList.Clear();
             foreach(string s in item_names)
             {
-                if(itemMap.ContainsKey(s))
+                if(_itemMap.ContainsKey(s))
                 {
-                    filteredList.Add(itemMap[s]);
+                    _filteredList.Add(_itemMap[s]);
                 }
             }
 
-            lv.Items.Clear();
+            _listView.Items.Clear();
 
-            foreach(ListViewItem lvi in filteredList)
+            foreach(ListViewItem lvi in _filteredList)
             {
-                lv.Items.Add(lvi);
+                _listView.Items.Add(lvi);
             }
-            bIsFiltered = true;
+            _isFiltered = true;
         }
 
         public void Reset()
         {
-            lv.Items.Clear();
+            _listView.Items.Clear();
 
-            foreach (ListViewItem lvi in masterList)
+            foreach (ListViewItem lvi in _masterList)
             {
-                lv.Items.Add(lvi);
+                _listView.Items.Add(lvi);
             }
-            bIsFiltered = false;
+            _isFiltered = false;
         }
 
         public void ClearLvItems()
         {
-            masterList.Clear();
-            itemMap.Clear();
-            lv.Items.Clear();
+            _masterList.Clear();
+            _itemMap.Clear();
+            _listView.Items.Clear();
         }
 
         public void AddLvItem(ListViewItem lvi, string s_name)
         {
-            if(!itemMap.ContainsKey(s_name))
+            if(!_itemMap.ContainsKey(s_name))
             {
                 lvi.Name = s_name;
-                masterList.Add(lvi);
-                itemMap.Add(s_name, lvi);
-                if (!bIsFiltered)
+                _masterList.Add(lvi);
+                _itemMap.Add(s_name, lvi);
+                if (!_isFiltered)
                 {
-                    lv.Items.Add(lvi);
+                    _listView.Items.Add(lvi);
                 }
             }
         }
 
         public void InsertLvItem(ListViewItem lvi, string s_name, int i_pos)
         {
-            if(!itemMap.ContainsKey(s_name))
+            if(!_itemMap.ContainsKey(s_name))
             {
                 lvi.Name = s_name;
-                masterList.Insert(i_pos, lvi);
-                itemMap.Add(s_name, lvi);
-                if (!bIsFiltered)
+                _masterList.Insert(i_pos, lvi);
+                _itemMap.Add(s_name, lvi);
+                if (!_isFiltered)
                 {
-                    lv.Items.Insert(i_pos, lvi);
+                    _listView.Items.Insert(i_pos, lvi);
                 }
             }
         }
 
         public ListView listView
         {
-            get { return lv; }
+            get { return _listView; }
         }
 
         public ListViewItem GetLvItem(string s_name)
         {
-            return itemMap[s_name];
+            return _itemMap[s_name];
         }
 
         public ListView.ColumnHeaderCollection Columns
         {
-            get { return lv.Columns; }
+            get { return _listView.Columns; }
         }
     }
 }

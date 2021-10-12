@@ -36,6 +36,7 @@ namespace TraXile
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label5 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
@@ -45,7 +46,6 @@ namespace TraXile
             this.label8 = new System.Windows.Forms.Label();
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
             this.label9 = new System.Windows.Forms.Label();
-            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -151,8 +151,22 @@ namespace TraXile
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 232F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(530, 690);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(530, 557);
             this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // linkLabel5
+            // 
+            this.linkLabel5.AutoSize = true;
+            this.linkLabel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.linkLabel5.LinkColor = System.Drawing.Color.Red;
+            this.linkLabel5.Location = new System.Drawing.Point(3, 441);
+            this.linkLabel5.Name = "linkLabel5";
+            this.linkLabel5.Size = new System.Drawing.Size(524, 232);
+            this.linkLabel5.TabIndex = 17;
+            this.linkLabel5.TabStop = true;
+            this.linkLabel5.Text = "https://www.twitch.tv/mr__khan";
+            this.linkLabel5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
             // 
             // linkLabel1
             // 
@@ -272,26 +286,12 @@ namespace TraXile
             this.label9.Text = "Mr__Khan for his input to labyrinth features and great testing support";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // linkLabel5
-            // 
-            this.linkLabel5.AutoSize = true;
-            this.linkLabel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.linkLabel5.LinkColor = System.Drawing.Color.Red;
-            this.linkLabel5.Location = new System.Drawing.Point(3, 441);
-            this.linkLabel5.Name = "linkLabel5";
-            this.linkLabel5.Size = new System.Drawing.Size(524, 249);
-            this.linkLabel5.TabIndex = 17;
-            this.linkLabel5.TabStop = true;
-            this.linkLabel5.Text = "https://www.twitch.tv/mr__khan";
-            this.linkLabel5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
-            // 
             // AboutW
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(530, 690);
+            this.ClientSize = new System.Drawing.Size(530, 557);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "AboutW";

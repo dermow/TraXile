@@ -12,12 +12,12 @@ namespace TraXile
 {
     public partial class ExportActvityList : Form
     {
-        MainW main;
+        private MainW _mainWindow;
 
         public ExportActvityList(MainW main)
         {
             InitializeComponent();
-            this.main = main;
+            this._mainWindow = main;
             this.comboBox1.SelectedIndex = 0;
             this.Text = "Export Activity Log";
         }
@@ -35,7 +35,7 @@ namespace TraXile
                     {
                         try
                         {
-                            main.WriteActivitiesToCSV(sfd.FileName);
+                            _mainWindow.WriteActivitiesToCSV(sfd.FileName);
                             MessageBox.Show("Export successful!");
                             this.Close();
                         }

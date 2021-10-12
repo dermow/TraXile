@@ -205,7 +205,7 @@
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="ActivityTag.cs" />
-    <Compile Include="TrackedEvent.cs" />
+    <Compile Include="TrackingEvent.cs" />
     <Compile Include="TrackedActivity.cs" />
     <EmbeddedResource Include="AboutW.resx">
       <DependentUpon>AboutW.cs</DependentUpon>

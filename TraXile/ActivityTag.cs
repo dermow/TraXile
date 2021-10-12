@@ -9,47 +9,47 @@ namespace TraXile
 {
     public class ActivityTag
     {
-        private string sID;
-        private string sDisplay;
-        private bool bIsDefault;
-        private Color backColor;
-        private Color foreColor;
+        private string _tagID;
+        private string _DisplayName;
+        private bool _isDefault;
+        private Color _backColor;
+        private Color _foreColor;
 
         public ActivityTag(string s_id, bool b_is_default = true)
         {
-            sID = s_id;
-            backColor = Color.White;
-            foreColor = Color.Black;
-            bIsDefault = b_is_default;
-            sDisplay = sID;
+            _tagID = s_id;
+            _backColor = Color.White;
+            _foreColor = Color.Black;
+            _isDefault = b_is_default;
+            _DisplayName = _tagID;
         }
 
         public string ID
         {
-            get { return sID; }
+            get { return _tagID; }
         }
 
         public string DisplayName
         {
-            get { return sDisplay; }
-            set { sDisplay = value; }
+            get { return _DisplayName; }
+            set { _DisplayName = value; }
         }
      
         public Color ForeColor
         {
-            get { return foreColor; }
-            set { foreColor = value; }
+            get { return _foreColor; }
+            set { _foreColor = value; }
         }
 
         public Color BackColor
         {
-            get { return backColor; }
-            set { backColor = value; }
+            get { return _backColor; }
+            set { _backColor = value; }
         }
 
         public bool IsDefault
         {
-            get { return bIsDefault; }
+            get { return _isDefault; }
         }
 
 
