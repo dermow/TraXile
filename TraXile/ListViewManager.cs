@@ -127,6 +127,11 @@ namespace TraXile
             }
         }
 
+        public ListView listView
+        {
+            get { return lv; }
+        }
+
         public ListViewItem GetLvItem(string s_name)
         {
             return itemMap[s_name];

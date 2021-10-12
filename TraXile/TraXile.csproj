@@ -144,6 +144,7 @@
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="APPINFO.cs" />
+    <Compile Include="AreaMapping.cs" />
     <Compile Include="ChatCommandHelp.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -153,6 +154,7 @@
     <Compile Include="CustomProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="EventMapping.cs" />
     <Compile Include="ExportActvityList.cs">
       <SubType>Form</SubType>
     </Compile>

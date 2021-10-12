@@ -56,3 +56,12 @@
 - Fulltext search implemented in activity list
 - Small search syntax added for activity log (e.g 'tags=zana,blight')
 - Added Auto Update feature
+- Map tiers and area levels are tracked for new activities now
+- Bugfix: chart was not loading for some statistics
+- Bugfix: custom map stop via ingame chat was not logged to Listview 
+- Bugfix: application crashes at specific log line 
+- Bugfix: Simulacrum not correctly tracked for Lunacay´s watch
+- Bugfix: EventMapping for The Maven was only working for the first fight
+- Added column area_level to CSV export
+- Hide button "manually stop" when in Zana map
+

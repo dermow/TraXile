@@ -35,6 +35,22 @@ namespace TraXile
             Text = ta.Type + " Details: " + ta.Area;
             label9.Text = ta.Type.ToString();
 
+            if(activity.AreaLevel > 0)
+            {
+                if(activity.Type == ACTIVITY_TYPES.MAP)
+                {
+                    label10.Text = "T" + activity.MapTier.ToString();
+                }
+                else
+                {
+                    label10.Text = "Lvl. " + activity.AreaLevel.ToString();
+                }
+            }
+            else
+            {
+                label10.Text = "unknown";
+            }
+
             foreach(ActivityTag tag in main.tags)
             {
                 if(!tag.IsDefault)

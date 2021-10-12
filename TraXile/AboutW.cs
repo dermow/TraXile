@@ -40,5 +40,10 @@ namespace TraXile
         {
             System.Diagnostics.Process.Start(linkLabel3.Text);
         }
+
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(linkLabel5.Text);
+        }
     }
 }
