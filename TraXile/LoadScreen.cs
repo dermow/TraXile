@@ -11,7 +11,6 @@ using System.Windows.Forms;
 
 namespace TraXile
 {
-
     public partial class LoadScreen : Form
     {
         public LoadScreen()

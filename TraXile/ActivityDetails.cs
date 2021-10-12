@@ -12,16 +12,16 @@ namespace TraXile
 {
     public partial class ActivityDetails : Form
     {
-        private TrackedActivity activity;
-        private MainW mainW;
-        private bool bDeleteMode;
+        private TrackedActivity _trackedActivity;
+        private MainW _mainWindow;
+        private bool _isDeleteMode;
 
         public ActivityDetails(TrackedActivity ta, MainW main)
         {
             InitializeComponent();
-            mainW = main;
-            activity = ta;
-            bDeleteMode = false;
+            _mainWindow = main;
+            _trackedActivity = ta;
+            _isDeleteMode = false;
 
             labelTime.Text = ta.Started.ToString();
             labelType.Text = ta.Type.ToString();
@@ -35,15 +35,15 @@ namespace TraXile
             Text = ta.Type + " Details: " + ta.Area;
             label9.Text = ta.Type.ToString();
 
-            if(activity.AreaLevel > 0)
+            if(_trackedActivity.AreaLevel > 0)
             {
-                if(activity.Type == ACTIVITY_TYPES.MAP)
+                if(_trackedActivity.Type == ACTIVITY_TYPES.MAP)
                 {
-                    label10.Text = "T" + activity.MapTier.ToString();
+                    label10.Text = "T" + _trackedActivity.MapTier.ToString();
                 }
                 else
                 {
-                    label10.Text = "Lvl. " + activity.AreaLevel.ToString();
+                    label10.Text = "Lvl. " + _trackedActivity.AreaLevel.ToString();
                 }
             }
             else
@@ -76,9 +76,9 @@ namespace TraXile
             int iCols = 3;
             int iCurrCols = 0;
 
-            for(int i = 0; i < activity.Tags.Count; i++)
+            for(int i = 0; i < _trackedActivity.Tags.Count; i++)
             {
-                ActivityTag tag = mainW.GetTagByID(activity.Tags[i]);
+                ActivityTag tag = _mainWindow.GetTagByID(_trackedActivity.Tags[i]);
 
                 if (tag == null)
                     continue;
@@ -108,19 +108,19 @@ namespace TraXile
 
         private void Lbl_MouseClick(object sender, MouseEventArgs e)
         {
-            if(bDeleteMode)
+            if(_isDeleteMode)
             {
-                ActivityTag tag = mainW.GetTagByDisplayName(((Label)sender).Text);
+                ActivityTag tag = _mainWindow.GetTagByDisplayName(((Label)sender).Text);
                 if(tag.IsDefault)
                 {
                     MessageBox.Show("Sorry. You cannot remove auto tags.");
                 }
                 else
                 {
-                    mainW.RemoveTagFromActivity(tag.ID, activity);
-                    activity.RemoveTag(tag.ID);
+                    _mainWindow.RemoveTagFromActivity(tag.ID, _trackedActivity);
+                    _trackedActivity.RemoveTag(tag.ID);
                     RenderTags(true);
-                    mainW.ResetMapHistory();
+                    _mainWindow.ResetMapHistory();
                 }
                
             }
@@ -128,11 +128,11 @@ namespace TraXile
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (mainW.ValidateTagName(comboBox1.Text, true))
+            if (_mainWindow.ValidateTagName(comboBox1.Text, true))
             {
-                mainW.AddTagAutoCreate(comboBox1.Text, activity);
+                _mainWindow.AddTagAutoCreate(comboBox1.Text, _trackedActivity);
                 RenderTags(true);
-                mainW.ResetMapHistory();
+                _mainWindow.ResetMapHistory();
             }
         }
 
@@ -143,14 +143,14 @@ namespace TraXile
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(!bDeleteMode)
+            if(!_isDeleteMode)
             {
-                bDeleteMode = true;
+                _isDeleteMode = true;
                 label8.ForeColor = Color.Red;
             }
             else
             {
-                bDeleteMode = false;
+                _isDeleteMode = false;
                 label8.ForeColor = Color.Black;
             }
         }

@@ -9,33 +9,33 @@ namespace TraXile
 {
     public class TrackedActivity
     {
-        private readonly Stopwatch stopWatch;
-        private TrackedActivity zanaMap;
-        private List<string> tags;
-        private DateTime dtStarted;
-        private string sInstanceEndpoint;
-        private string sArea;
-        private ACTIVITY_TYPES sType;
-        private bool bIsZana;
-        private bool bIsPaused;
-        private bool bTrialmasterSuccess;
-        private bool bTrialmasterFull;
-        private int iTrialMasterCount;
-        private int iDeathCounter;
-        private int iAreaLevel;
-        private long lTimestamp;
-        private string sCustomStopWatchVaule;
+        private readonly Stopwatch _stopWatch;
+        private TrackedActivity _zanaMap;
+        private List<string> _tagIDs;
+        private DateTime _startTime;
+        private string _instanceEndpoint;
+        private string _areaName;
+        private ACTIVITY_TYPES _activityType;
+        private bool _isZana;
+        private bool _isPaused;
+        private bool _trialMasterSuccess;
+        private bool _trialMasterFull;
+        private int _trialMasterCount;
+        private int _deathCounter;
+        private int _areaLevel;
+        private long _activityTimeStamp;
+        private string _customStopWatchValue;
 
         public TrackedActivity()
         {
-            stopWatch = new Stopwatch();
-            zanaMap = null;
-            tags = new List<string>();
+            _stopWatch = new Stopwatch();
+            _zanaMap = null;
+            _tagIDs = new List<string>();
         }
 
         public bool HasTag(string s_id)
         {
-            foreach(string tag in tags)
+            foreach(string tag in _tagIDs)
             {
                 if (tag == s_id)
                     return true;
@@ -46,51 +46,51 @@ namespace TraXile
         public void RemoveTag(string s_id)
         {
             if(HasTag(s_id))
-               tags.Remove(s_id);
+               _tagIDs.Remove(s_id);
         }
 
         public void AddTag(string s_id)
         {
-            if(!tags.Contains(s_id))
+            if(!_tagIDs.Contains(s_id))
             {
-                tags.Add(s_id);
+                _tagIDs.Add(s_id);
             }
         }
 
         public void Pause()
         {
-              bIsPaused = true;
-              if(stopWatch.IsRunning)
-                stopWatch.Stop();
+              _isPaused = true;
+              if(_stopWatch.IsRunning)
+                _stopWatch.Stop();
         }
 
         public void Resume()
         {
-            bIsPaused = false;
-            if(!stopWatch.IsRunning)
-                 stopWatch.Start();
+            _isPaused = false;
+            if(!_stopWatch.IsRunning)
+                 _stopWatch.Start();
         }
 
         public void StartStopWatch()
         {
-            stopWatch.Start();
+            _stopWatch.Start();
         }
 
         public void StopStopWatch()
         {
-            stopWatch.Stop();
+            _stopWatch.Stop();
         }
 
 
         public TimeSpan StopWatchTimeSpan
         {
-            get { return stopWatch.Elapsed; }
+            get { return _stopWatch.Elapsed; }
         }
 
         public string CustomStopWatchValue
         {
-            get { return sCustomStopWatchVaule; }
-            set { sCustomStopWatchVaule = value; }
+            get { return _customStopWatchValue; }
+            set { _customStopWatchValue = value; }
         }
 
         public string StopWatchValue
@@ -99,11 +99,11 @@ namespace TraXile
             {
                 if(CustomStopWatchValue != null)
                 {
-                    return sCustomStopWatchVaule;
+                    return _customStopWatchValue;
                 }
                 else
                 {
-                    TimeSpan ts = stopWatch.Elapsed;
+                    TimeSpan ts = _stopWatch.Elapsed;
                     return String.Format("{0:00}:{1:00}:{2:00}",
                         ts.Hours, ts.Minutes, ts.Seconds);
                 }
@@ -112,38 +112,38 @@ namespace TraXile
 
         public ACTIVITY_TYPES Type
         {
-            get { return sType; }
-            set { sType = value; }
+            get { return _activityType; }
+            set { _activityType = value; }
         }
         public string Area
         {
-            get { return sArea.Replace("'", ""); }
-            set { sArea = value; }
+            get { return _areaName.Replace("'", ""); }
+            set { _areaName = value; }
         }
 
         public bool IsZana
         {
-            get { return bIsZana; }
-            set { bIsZana = value; }
+            get { return _isZana; }
+            set { _isZana = value; }
         }
 
         public int DeathCounter
         {
-            get { return iDeathCounter; }
-            set { iDeathCounter = value; }
+            get { return _deathCounter; }
+            set { _deathCounter = value; }
         }
 
         public int AreaLevel
         {
-            get { return iAreaLevel; }
-            set { iAreaLevel = value; }
+            get { return _areaLevel; }
+            set { _areaLevel = value; }
         }
 
         public int MapTier
         {
             get
             {
-                switch(iAreaLevel)
+                switch(_areaLevel)
                 {
                     case 68:
                         return 1;
@@ -185,58 +185,58 @@ namespace TraXile
 
         public TrackedActivity ZanaMap
         {
-            get { return zanaMap; }
-            set { zanaMap = value; }
+            get { return _zanaMap; }
+            set { _zanaMap = value; }
         }
 
         public bool Paused
         {
-            get { return bIsPaused; }
+            get { return _isPaused; }
         }
 
         public string InstanceEndpoint
         {
-            get { return sInstanceEndpoint; }
-            set { sInstanceEndpoint = value; }
+            get { return _instanceEndpoint; }
+            set { _instanceEndpoint = value; }
         }
 
         public DateTime Started
         {
-            get { return dtStarted; }
-            set { dtStarted = value; }
+            get { return _startTime; }
+            set { _startTime = value; }
         }
 
         public int TrialMasterCount
         {
             get
             {
-                return iTrialMasterCount;
+                return _trialMasterCount;
             }
 
-            set { iTrialMasterCount = value; }
+            set { _trialMasterCount = value; }
         }
 
         public bool TrialMasterSuccess
         {
-            get { return bTrialmasterSuccess; }
-            set { bTrialmasterSuccess = value; }
+            get { return _trialMasterSuccess; }
+            set { _trialMasterSuccess = value; }
         }
 
         public bool TrialMasterFullFinished
         {
-            get { return bTrialmasterFull; }
-            set { bTrialmasterFull = value; }
+            get { return _trialMasterFull; }
+            set { _trialMasterFull = value; }
         }
 
         public long TimeStamp
         {
-            get { return lTimestamp; }
-            set { lTimestamp = value; }
+            get { return _activityTimeStamp; }
+            set { _activityTimeStamp = value; }
         }
 
         public List<string> Tags
         {
-            get { return tags; }
+            get { return _tagIDs; }
         }
 
     }

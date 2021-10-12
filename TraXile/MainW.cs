@@ -60,7 +60,7 @@ namespace TraXile
         private Dictionary<string, string> _statNamesLong;
         private LoadScreen _loadScreenWindow;
         private List<TrackedActivity> _eventHistory;
-        private ConcurrentQueue<TrackedEvent> _eventQueue;
+        private ConcurrentQueue<TrackingEvent> _eventQueue;
         private List<ActivityTag> _tags;
         private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
         private EventMapping _eventMapping;
@@ -204,7 +204,7 @@ namespace TraXile
             comboBox1.SelectedIndex = 1;
 
             _dict = new Dictionary<int, string>();
-            _eventQueue = new ConcurrentQueue<TrackedEvent>();
+            _eventQueue = new ConcurrentQueue<TrackingEvent>();
             _eventHistory = new List<TrackedActivity>();
             _knownPlayerNames = new List<string>();
             _backups = new BindingList<string>();
@@ -244,7 +244,7 @@ namespace TraXile
                 _lvmStats.AddLvItem(lvi, "stats_" + kvp.Key);
             }
 
-            _eventQueue.Enqueue(new TrackedEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
+            _eventQueue.Enqueue(new TrackingEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
 
             ReadStatsCache();
             ReadKnownPlayers();
@@ -1071,7 +1071,7 @@ namespace TraXile
                             _isMapZana = false;
                             _initEndTime = DateTime.Now;
                             TimeSpan tsInitDuration = (_initEndTime - _initStartTime);
-                            _eventQueue.Enqueue(new TrackedEvent(EVENT_TYPES.APP_READY) 
+                            _eventQueue.Enqueue(new TrackingEvent(EVENT_TYPES.APP_READY) 
                             { 
                                 EventTime = DateTime.Now, 
                                 LogLine = "Application initialized in " 
@@ -1109,7 +1109,7 @@ namespace TraXile
                         {
                             if (!_dict.ContainsKey(lineHash))
                             {
-                                TrackedEvent ev = new TrackedEvent(kv.Value)
+                                TrackingEvent ev = new TrackingEvent(kv.Value)
                                 {
                                     LogLine = line
                                 };
@@ -1148,7 +1148,7 @@ namespace TraXile
 
                 if (_eventQueueInitizalized)
                 {
-                    while (_eventQueue.TryDequeue(out TrackedEvent deqEvent))
+                    while (_eventQueue.TryDequeue(out TrackingEvent deqEvent))
                     {
                         HandleSingleEvent(deqEvent);
                     }
@@ -1301,7 +1301,7 @@ namespace TraXile
             }
         }
 
-        private void HandleSingleEvent(TrackedEvent ev, bool bInit = false)
+        private void HandleSingleEvent(TrackingEvent ev, bool bInit = false)
         {
             try
             {
@@ -1854,7 +1854,7 @@ namespace TraXile
             cmd.ExecuteNonQuery();
         }
 
-        private string GetEndpointFromInstanceEvent(TrackedEvent ev)
+        private string GetEndpointFromInstanceEvent(TrackingEvent ev)
         {
             return ev.LogLine.Split(new String[] { "Connecting to instance server at "}, StringSplitOptions.None)[1];
         }
@@ -1960,12 +1960,12 @@ namespace TraXile
             wrt.Close();
         }
 
-        private void LogEvent(TrackedEvent ev)
+        private void LogEvent(TrackingEvent ev)
         {
             _log.Info(ev.ToString());
         }
 
-        private void TextLogEvent(TrackedEvent ev)
+        private void TextLogEvent(TrackingEvent ev)
         {
             this.Invoke((MethodInvoker)delegate
             {
@@ -2085,14 +2085,14 @@ namespace TraXile
             return a_type.ToString().ToLower();
         }
 
-        private string GetAreaNameFromEvent(TrackedEvent ev)
+        private string GetAreaNameFromEvent(TrackingEvent ev)
         {
             string sArea = ev.LogLine.Split(new string[] { "You have entered" }, StringSplitOptions.None)[1]
                 .Replace(".", "").Trim();
             return sArea.Replace("'", "");
         }
 
-        private string GetDeathReasonromEvent(TrackedEvent ev)
+        private string GetDeathReasonromEvent(TrackingEvent ev)
         {
             try
             {
