@@ -28,7 +28,7 @@ namespace TraXile
 
     public partial class MainW : Form
     {
-        public string sPoELogFilePath;
+        private string sPoELogFilePath;
         private string sCurrentArea;
         private string sCurrentInstanceEndpoint;
         private int iLastHash = 0;
@@ -42,8 +42,6 @@ namespace TraXile
         private DateTime dtInitEnd;
         private EVENT_TYPES lastEvType;
         private TrackedActivity currentActivity;
-        private string sLastDeathReason;
-        private string sNextLabType;
         private bool bEventQInitialized;
         private bool bIsMapZana;
         private bool bExit;
@@ -202,7 +200,6 @@ namespace TraXile
             statLvItems = new Dictionary<string, ListViewItem>();
             sCurrentArea = "-";
             dtInAreaSince = DateTime.Now;
-            sLastDeathReason = "-";
             bEventQInitialized = false;
             tagLabels = new Dictionary<string, Label>();
             tagLabelsConfig = new Dictionary<string, Label>();
@@ -1539,7 +1536,6 @@ namespace TraXile
                         {
                             IncrementStat("TotalKilledCount", ev.EventTime, 1);
                             dtLastDeath = DateTime.Now;
-                            sLastDeathReason = GetDeathReasonromEvent(ev);
                             if (currentActivity != null)
                             {
                                 if (bIsMapZana)
@@ -1563,9 +1559,6 @@ namespace TraXile
                             }
                         }
 
-                        break;
-                    case EVENT_TYPES.DEATH_REASON_RECEIVED:
-                        sLastDeathReason = GetDeathReasonromEvent(ev);
                         break;
                     case EVENT_TYPES.ELDER_KILLED:
                         IncrementStat("ElderKilled", ev.EventTime, 1);
