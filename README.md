@@ -30,7 +30,7 @@ the newer ones :) Make sure too keep "stats.cache", "TraXile.exe.config" and "da
 
 ## Special thanks goes to:
 * [Esturnat](https://de.pathofexile.com/account/view-profile/Esturnat2) for the name "TraXile", great testing and ideas.
-* [Mr__Khan](https://www.twitch.tv/mr__khan) for great support in testing, labyrint-features and feedback
+* [Mr__Khan](https://www.twitch.tv/mr__khan) for great support in testing, labyrinth-features and feedback
 * [seibmich](https://github.com/seibmich) for the logo design
 
 
