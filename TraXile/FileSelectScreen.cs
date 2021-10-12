@@ -30,7 +30,7 @@ namespace TraXile
             OpenFileDialog ofd = new OpenFileDialog();
             if(ofd.ShowDialog() == DialogResult.OK)
             {
-                this.parent.sPoELogFilePath = ofd.FileName;
+                this.parent.LogFilePath = ofd.FileName;
                 this.parent.AddUpdateAppSettings("PoELogFilePath", ofd.FileName);
                 this.Close();
             }
