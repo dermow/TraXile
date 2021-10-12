@@ -181,14 +181,14 @@ namespace TraXile
                 "Prohibited Library",
                 "Records Office",
                 "Repository",
-                "Smuggler's Den",
+                "Smugglers Den",
                 "Tunnels",
                 "Underbelly",
             };
 
             SIMU_AREAS = new List<string>
             {
-               "Lunacy's Watch",
+               "Lunacys Watch",
                "The Bridge Enraptured",
                "The Syndrome Encampment",
                "Hysteriagate",
@@ -197,11 +197,11 @@ namespace TraXile
 
             CAMP_AREAS = new List<string>
             {
-               "Lioneye's Watch",
+               "Lioneyes Watch",
                "The Forest Encampment",
                "The Sarn Encampment",
                "Highgate",
-               "Overseer's Tower",
+               "Overseers Tower",
                "The Bridge Encampment",
                "Oriath",
                "Oriath Docks",

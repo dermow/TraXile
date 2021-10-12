@@ -22,6 +22,7 @@ namespace TraXile
         private bool bTrialmasterFull;
         private int iTrialMasterCount;
         private int iDeathCounter;
+        private int iAreaLevel;
         private long lTimestamp;
         private string sCustomStopWatchVaule;
 
@@ -130,6 +131,56 @@ namespace TraXile
         {
             get { return iDeathCounter; }
             set { iDeathCounter = value; }
+        }
+
+        public int AreaLevel
+        {
+            get { return iAreaLevel; }
+            set { iAreaLevel = value; }
+        }
+
+        public int MapTier
+        {
+            get
+            {
+                switch(iAreaLevel)
+                {
+                    case 68:
+                        return 1;
+                    case 69:
+                        return 2;
+                    case 70:
+                        return 3;
+                    case 71:
+                        return 4;
+                    case 72:
+                        return 5;
+                    case 73:
+                        return 6;
+                    case 74:
+                        return 7;
+                    case 75:
+                        return 8;
+                    case 76:
+                        return 9;
+                    case 77:
+                        return 10;
+                    case 78:
+                        return 11;
+                    case 79:
+                        return 12;
+                    case 80:
+                        return 13;
+                    case 81:
+                        return 14;
+                    case 82:
+                        return 15;
+                    case 83:
+                        return 16;
+                    default:
+                        return 0;
+                }
+            }
         }
 
         public TrackedActivity ZanaMap

@@ -51,6 +51,8 @@ namespace TraXile
             this.button1 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -80,9 +82,9 @@ namespace TraXile
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 171F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 274F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 199F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 251F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(449, 530);
             this.tableLayoutPanel1.TabIndex = 1;
@@ -102,6 +104,8 @@ namespace TraXile
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.label10);
+            this.panel2.Controls.Add(this.label11);
             this.panel2.Controls.Add(this.labelDeaths);
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.labelStopWatch);
@@ -116,14 +120,14 @@ namespace TraXile
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 45);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(443, 165);
+            this.panel2.Size = new System.Drawing.Size(443, 193);
             this.panel2.TabIndex = 0;
             // 
             // labelDeaths
             // 
             this.labelDeaths.AutoSize = true;
             this.labelDeaths.ForeColor = System.Drawing.Color.Gold;
-            this.labelDeaths.Location = new System.Drawing.Point(111, 127);
+            this.labelDeaths.Location = new System.Drawing.Point(111, 147);
             this.labelDeaths.Name = "labelDeaths";
             this.labelDeaths.Size = new System.Drawing.Size(13, 13);
             this.labelDeaths.TabIndex = 10;
@@ -133,7 +137,7 @@ namespace TraXile
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.Color.Gold;
-            this.label6.Location = new System.Drawing.Point(14, 127);
+            this.label6.Location = new System.Drawing.Point(14, 147);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(44, 13);
             this.label6.TabIndex = 9;
@@ -143,7 +147,7 @@ namespace TraXile
             // 
             this.labelStopWatch.AutoSize = true;
             this.labelStopWatch.ForeColor = System.Drawing.Color.Gold;
-            this.labelStopWatch.Location = new System.Drawing.Point(111, 107);
+            this.labelStopWatch.Location = new System.Drawing.Point(111, 127);
             this.labelStopWatch.Name = "labelStopWatch";
             this.labelStopWatch.Size = new System.Drawing.Size(49, 13);
             this.labelStopWatch.TabIndex = 8;
@@ -153,7 +157,7 @@ namespace TraXile
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.Gold;
-            this.label5.Location = new System.Drawing.Point(14, 107);
+            this.label5.Location = new System.Drawing.Point(14, 127);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(61, 13);
             this.label5.TabIndex = 7;
@@ -163,7 +167,7 @@ namespace TraXile
             // 
             this.labelArea.AutoSize = true;
             this.labelArea.ForeColor = System.Drawing.Color.Gold;
-            this.labelArea.Location = new System.Drawing.Point(111, 87);
+            this.labelArea.Location = new System.Drawing.Point(111, 107);
             this.labelArea.Name = "labelArea";
             this.labelArea.Size = new System.Drawing.Size(38, 13);
             this.labelArea.TabIndex = 6;
@@ -173,7 +177,7 @@ namespace TraXile
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.Color.Gold;
-            this.label4.Location = new System.Drawing.Point(14, 87);
+            this.label4.Location = new System.Drawing.Point(14, 107);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(32, 13);
             this.label4.TabIndex = 5;
@@ -233,9 +237,9 @@ namespace TraXile
             // panelTags
             // 
             this.panelTags.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelTags.Location = new System.Drawing.Point(3, 254);
+            this.panelTags.Location = new System.Drawing.Point(3, 277);
             this.panelTags.Name = "panelTags";
-            this.panelTags.Size = new System.Drawing.Size(443, 268);
+            this.panelTags.Size = new System.Drawing.Size(443, 245);
             this.panelTags.TabIndex = 1;
             // 
             // panel3
@@ -246,9 +250,9 @@ namespace TraXile
             this.panel3.Controls.Add(this.comboBox1);
             this.panel3.Controls.Add(this.label7);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(3, 216);
+            this.panel3.Location = new System.Drawing.Point(3, 244);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(443, 32);
+            this.panel3.Size = new System.Drawing.Size(443, 27);
             this.panel3.TabIndex = 2;
             // 
             // button2
@@ -301,6 +305,26 @@ namespace TraXile
             this.label7.TabIndex = 12;
             this.label7.Text = "Tags:";
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.ForeColor = System.Drawing.Color.Gold;
+            this.label10.Location = new System.Drawing.Point(111, 87);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(20, 13);
+            this.label10.TabIndex = 12;
+            this.label10.Text = "T1";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.Color.Gold;
+            this.label11.Location = new System.Drawing.Point(14, 87);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(28, 13);
+            this.label11.TabIndex = 11;
+            this.label11.Text = "Tier:";
+            // 
             // ActivityDetails
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -348,5 +372,7 @@ namespace TraXile
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
     }
 }

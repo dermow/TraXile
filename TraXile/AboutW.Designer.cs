@@ -44,6 +44,8 @@ namespace TraXile
             this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.label8 = new System.Windows.Forms.Label();
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -112,7 +114,8 @@ namespace TraXile
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 530F));
+            this.tableLayoutPanel1.Controls.Add(this.linkLabel5, 0, 16);
             this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 2);
@@ -126,10 +129,11 @@ namespace TraXile
             this.tableLayoutPanel1.Controls.Add(this.linkLabel3, 0, 12);
             this.tableLayoutPanel1.Controls.Add(this.label8, 0, 13);
             this.tableLayoutPanel1.Controls.Add(this.linkLabel4, 0, 14);
+            this.tableLayoutPanel1.Controls.Add(this.label9, 0, 15);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 16;
+            this.tableLayoutPanel1.RowCount = 17;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 132F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
@@ -145,8 +149,9 @@ namespace TraXile
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 255F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(530, 405);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 232F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(530, 690);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // linkLabel1
@@ -212,7 +217,7 @@ namespace TraXile
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(524, 24);
             this.label7.TabIndex = 12;
-            this.label7.Text = "Esturnat for the Name and great testing";
+            this.label7.Text = "Esturnat who found the name TraXile, and is doing excellent testing";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // linkLabel3
@@ -238,7 +243,7 @@ namespace TraXile
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(524, 30);
             this.label8.TabIndex = 14;
-            this.label8.Text = "Michi for the logo Design";
+            this.label8.Text = "Michi for the logo design";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // linkLabel4
@@ -255,12 +260,38 @@ namespace TraXile
             this.linkLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label9.ForeColor = System.Drawing.Color.Gold;
+            this.label9.Location = new System.Drawing.Point(3, 398);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(524, 43);
+            this.label9.TabIndex = 16;
+            this.label9.Text = "Mr__Khan for his input to labyrinth features and great testing support";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // linkLabel5
+            // 
+            this.linkLabel5.AutoSize = true;
+            this.linkLabel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.linkLabel5.LinkColor = System.Drawing.Color.Red;
+            this.linkLabel5.Location = new System.Drawing.Point(3, 441);
+            this.linkLabel5.Name = "linkLabel5";
+            this.linkLabel5.Size = new System.Drawing.Size(524, 249);
+            this.linkLabel5.TabIndex = 17;
+            this.linkLabel5.TabStop = true;
+            this.linkLabel5.Text = "https://www.twitch.tv/mr__khan";
+            this.linkLabel5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+            // 
             // AboutW
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(530, 405);
+            this.ClientSize = new System.Drawing.Size(530, 690);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "AboutW";
@@ -289,5 +320,7 @@ namespace TraXile
         private System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.LinkLabel linkLabel4;
+        private System.Windows.Forms.LinkLabel linkLabel5;
+        private System.Windows.Forms.Label label9;
     }
 }

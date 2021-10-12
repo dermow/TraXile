@@ -53,7 +53,8 @@ namespace TraXile
         SIMULACRUM_FULLCLEAR,
         CHAT_CMD_RECEIVED,
         LAB_FINISHED,
-        LAB_START_INFO_RECEIVED
+        LAB_START_INFO_RECEIVED,
+        NEXT_AREA_LEVEL_RECEIVED
     }
 
     public class EventMapping
@@ -153,9 +154,10 @@ namespace TraXile
                 // Maven
                 { "The Maven: ...my collection.", EVENT_TYPES.MAVEN_FIGHT_STARTED },
                 { "The Maven: I apologize to the toy. I did not realise... you... were like me...", EVENT_TYPES.MAVEN_KILLED },
+                { "The Maven: The living toy must enjoy our contests, for it continues to play.", EVENT_TYPES.MAVEN_KILLED },
 
                 //Einhar
-                { "Great job, Exile! Einhar will take the captured beast to the Menagerie.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
+            { "Great job, Exile! Einhar will take the captured beast to the Menagerie.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
                 { "The First Ones look upon this capture with pride, Exile. You hunt well.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
                 { "Survivor! You are well prepared for the end. This is a fine capture.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
                 { "Haha! You are captured, stupid beast.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
@@ -337,9 +339,7 @@ namespace TraXile
                 { "Izaro: The trap of tyranny is inescapable.", EVENT_TYPES.LAB_FINISHED },
                 { "Izaro: Delight in your gilded dungeon, ascendant.", EVENT_TYPES.LAB_FINISHED },
                 { "Izaro: Your destination is more dangerous than the journey, ascendant.", EVENT_TYPES.LAB_FINISHED },
-                { "area \"Estate Path\" with seed", EVENT_TYPES.LAB_START_INFO_RECEIVED },
-                { "area \"Estate Walkways\" with seed", EVENT_TYPES.LAB_START_INFO_RECEIVED },
-                { "area \"Estate Crossing\" with seed", EVENT_TYPES.LAB_START_INFO_RECEIVED },
+                { "] Generating level ", EVENT_TYPES.NEXT_AREA_LEVEL_RECEIVED },
 
             };
         }
