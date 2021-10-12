@@ -65,7 +65,7 @@ namespace TraXile
         private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
         private EventMapping _eventMapping;
         private AreaMapping _areaMapping;
-        ILog _log;
+        private ILog _log;
         private bool _showGGridInStats;
         private string _lastSimuEndpoint;
 
