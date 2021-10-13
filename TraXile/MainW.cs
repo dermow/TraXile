@@ -65,7 +65,7 @@ namespace TraXile
         private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
         private EventMapping _eventMapping;
         private AreaMapping _areaMapping;
-        ILog _log;
+        private ILog _log;
         private bool _showGGridInStats;
         private string _lastSimuEndpoint;
 
@@ -864,7 +864,7 @@ namespace TraXile
             try
             {
                 cmd = _dbConnection.CreateCommand();
-                cmd.CommandText = "alter table tx_activity_log add column act_area_level int";
+                cmd.CommandText = "alter table tx_activity_log add column act_area_level int default 0";
                 cmd.ExecuteNonQuery();
                 _log.Info("PatchDatabase 0.4.5 -> " + cmd.CommandText);
             }
