@@ -257,6 +257,12 @@ namespace TraXile
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.chatCommandsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.button21 = new System.Windows.Forms.Button();
+            this.label68 = new System.Windows.Forms.Label();
+            this.label69 = new System.Windows.Forms.Label();
+            this.label70 = new System.Windows.Forms.Label();
+            this.label71 = new System.Windows.Forms.Label();
+            this.label72 = new System.Windows.Forms.Label();
             this.listViewStats = new TraXile.ListViewNF();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -1999,7 +2005,7 @@ namespace TraXile
             this.groupBox6.Controls.Add(this.button17);
             this.groupBox6.Controls.Add(this.listBox1);
             this.groupBox6.ForeColor = System.Drawing.Color.Red;
-            this.groupBox6.Location = new System.Drawing.Point(491, 133);
+            this.groupBox6.Location = new System.Drawing.Point(223, 333);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(432, 268);
             this.groupBox6.TabIndex = 7;
@@ -2040,7 +2046,7 @@ namespace TraXile
             this.groupBox5.Controls.Add(this.textBox6);
             this.groupBox5.Controls.Add(this.button16);
             this.groupBox5.ForeColor = System.Drawing.Color.Red;
-            this.groupBox5.Location = new System.Drawing.Point(271, 133);
+            this.groupBox5.Location = new System.Drawing.Point(6, 329);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(214, 268);
             this.groupBox5.TabIndex = 4;
@@ -2150,6 +2156,12 @@ namespace TraXile
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label72);
+            this.groupBox1.Controls.Add(this.label71);
+            this.groupBox1.Controls.Add(this.label70);
+            this.groupBox1.Controls.Add(this.label69);
+            this.groupBox1.Controls.Add(this.label68);
+            this.groupBox1.Controls.Add(this.button21);
             this.groupBox1.Controls.Add(this.button15);
             this.groupBox1.Controls.Add(this.button6);
             this.groupBox1.Controls.Add(this.button7);
@@ -2157,14 +2169,14 @@ namespace TraXile
             this.groupBox1.ForeColor = System.Drawing.Color.Red;
             this.groupBox1.Location = new System.Drawing.Point(6, 133);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(259, 268);
+            this.groupBox1.Size = new System.Drawing.Size(917, 190);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Advanced";
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(45, 120);
+            this.button15.Location = new System.Drawing.Point(6, 115);
             this.button15.Name = "button15";
             this.button15.Size = new System.Drawing.Size(172, 23);
             this.button15.TabIndex = 3;
@@ -2174,7 +2186,7 @@ namespace TraXile
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(45, 91);
+            this.button6.Location = new System.Drawing.Point(6, 86);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(172, 23);
             this.button6.TabIndex = 2;
@@ -2184,7 +2196,7 @@ namespace TraXile
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(45, 62);
+            this.button7.Location = new System.Drawing.Point(6, 57);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(172, 23);
             this.button7.TabIndex = 1;
@@ -2194,7 +2206,7 @@ namespace TraXile
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(45, 33);
+            this.button8.Location = new System.Drawing.Point(6, 28);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(172, 23);
             this.button8.TabIndex = 0;
@@ -2534,21 +2546,21 @@ namespace TraXile
             // chatCommandsToolStripMenuItem
             // 
             this.chatCommandsToolStripMenuItem.Name = "chatCommandsToolStripMenuItem";
-            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.chatCommandsToolStripMenuItem.Text = "Chat Commands";
             this.chatCommandsToolStripMenuItem.Click += new System.EventHandler(this.chatCommandsToolStripMenuItem_Click);
             // 
             // infoToolStripMenuItem1
             // 
             this.infoToolStripMenuItem1.Name = "infoToolStripMenuItem1";
-            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(166, 22);
             this.infoToolStripMenuItem1.Text = "Info";
             this.infoToolStripMenuItem1.Click += new System.EventHandler(this.infoToolStripMenuItem1_Click);
             // 
             // checkForUpdateToolStripMenuItem
             // 
             this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.checkForUpdateToolStripMenuItem.Text = "Check for Update";
             this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
             // 
@@ -2820,6 +2832,68 @@ namespace TraXile
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
+            // button21
+            // 
+            this.button21.Location = new System.Drawing.Point(6, 144);
+            this.button21.Name = "button21";
+            this.button21.Size = new System.Drawing.Size(172, 23);
+            this.button21.TabIndex = 4;
+            this.button21.Text = "Roll client.txt";
+            this.button21.UseVisualStyleBackColor = true;
+            this.button21.Click += new System.EventHandler(this.button21_Click);
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.ForeColor = System.Drawing.Color.Gold;
+            this.label68.Location = new System.Drawing.Point(184, 33);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(246, 13);
+            this.label68.TabIndex = 5;
+            this.label68.Text = "<-- Set all statistics to 0 without reloading the logfile";
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.ForeColor = System.Drawing.Color.Gold;
+            this.label69.Location = new System.Drawing.Point(184, 62);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(323, 13);
+            this.label69.TabIndex = 6;
+            this.label69.Text = "<-- Reload the logfile and re-calculate all statistics (Restart required)";
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.ForeColor = System.Drawing.Color.Gold;
+            this.label70.Location = new System.Drawing.Point(184, 91);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(333, 13);
+            this.label70.TabIndex = 7;
+            this.label70.Text = "<-- change the path of the PoE Client.txt and reload (Restart required)";
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.ForeColor = System.Drawing.Color.Gold;
+            this.label71.Location = new System.Drawing.Point(184, 120);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(371, 13);
+            this.label71.TabIndex = 8;
+            this.label71.Text = "<- Clear your Client.txt, drop all data and start new database (Restart required)" +
+    "";
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.ForeColor = System.Drawing.Color.Gold;
+            this.label72.Location = new System.Drawing.Point(184, 149);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(484, 13);
+            this.label72.TabIndex = 9;
+            this.label72.Text = "<-- Safely clear your Client.txt (when it gets too big) without loosing your TraX" +
+    "ile data (Restart required)";
+            // 
             // listViewStats
             // 
             this.listViewStats.BackColor = System.Drawing.SystemColors.InfoText;
@@ -2918,6 +2992,7 @@ namespace TraXile
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabPage7.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
             this.panelEditTags.ResumeLayout(false);
@@ -3168,6 +3243,12 @@ namespace TraXile
         private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
         private System.Windows.Forms.Label label67;
         private System.Windows.Forms.Label labelCurrentAreaLvl;
+        private System.Windows.Forms.Button button21;
+        private System.Windows.Forms.Label label72;
+        private System.Windows.Forms.Label label71;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.Label label68;
     }
 }
 
