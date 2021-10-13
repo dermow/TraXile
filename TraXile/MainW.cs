@@ -123,13 +123,11 @@ namespace TraXile
                 if(Convert.ToInt32(sVersion.Replace(".", "")) > Convert.ToInt32(APPINFO.VERSION.Replace(".", "")))
                 {
                     if(MessageBox.Show("There is a new version available for TraXile (current=" + APPINFO.VERSION + ", new=" + sVersion + ")"
-                        + Environment.NewLine + Environment.NewLine + "You can download it on GitHub", "Update", MessageBoxButtons.OK) == DialogResult.Yes)
+                        + Environment.NewLine + Environment.NewLine + "You can download it on GitHub. Visit releases page now?"
+                        + Environment.NewLine + Environment.NewLine +
+                       APPINFO.RELEASE_URL, "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        if(File.Exists("TraXile.Updater.exe"))
-                        {
-                            Process.Start("TraXile.Updater.exe");
-                            Application.Exit();
-                        }
+                        System.Diagnostics.Process.Start(APPINFO.RELEASE_URL);
                     }
                 }
                 else
