@@ -1089,6 +1089,7 @@ namespace TraXile
                             _lastHash = lineHash;
                         }
                         _eventQueueInitizalized = true;
+                        bNewContent = true;
 
                         Thread.Sleep(100);
                         continue;
@@ -1099,7 +1100,7 @@ namespace TraXile
                     if (_dict.ContainsKey(lineHash))
                         continue;
 
-                    if(lineHash == _lastHash)
+                    if(lineHash == _lastHash || _lastHash == 0)
                     {
                         bNewContent = true;
                     }
@@ -3275,6 +3276,33 @@ namespace TraXile
         {
             Directory.Delete(s_path, true);
             _backups.Remove(listBox1.SelectedItem.ToString());
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("Your current Client.txt will be renamed and a new one will be created. " + Environment.NewLine
+                + "The renamed version can be deleted or backed up afterwards. Continue?", "Warning", MessageBoxButtons.YesNo);
+            if(dr == DialogResult.Yes)
+            {
+                try
+                {
+                    string sDt = DateTime.Now.ToString("yyyy-MM-dd-H-m-s");
+                    string sBaseDir = new FileInfo(_poeLogFilePath).DirectoryName;
+                    File.Copy(_poeLogFilePath, sBaseDir + @"\Client." + sDt + ".txt");
+                    FileStream fs1 = new FileStream(_poeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+
+                    _lastHash = 0;
+                    SaveStatsCache();
+
+                    MessageBox.Show("Client.txt rolled and cleared successful. The Application will be restarted now.");
+                    Application.Restart();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+               
+            }
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
