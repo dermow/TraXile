@@ -123,7 +123,7 @@ namespace TraXile
                 if(Convert.ToInt32(sVersion.Replace(".", "")) > Convert.ToInt32(APPINFO.VERSION.Replace(".", "")))
                 {
                     if(MessageBox.Show("There is a new version available for TraXile (current=" + APPINFO.VERSION + ", new=" + sVersion + ")"
-                        + Environment.NewLine + Environment.NewLine + "Start Update now?", "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        + Environment.NewLine + Environment.NewLine + "You can download it on GitHub", "Update", MessageBoxButtons.OK) == DialogResult.Yes)
                     {
                         if(File.Exists("TraXile.Updater.exe"))
                         {
@@ -983,6 +983,7 @@ namespace TraXile
                 ACTIVITY_TYPES aType = GetActTypeFromString(sType);
                
 
+
                 TrackedActivity map = new TrackedActivity
                 {
                     Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
@@ -991,9 +992,17 @@ namespace TraXile
                     Type = aType,
                     Area = sqlReader.GetString(2),
                     DeathCounter = sqlReader.GetInt32(4),
-                    TrialMasterCount = sqlReader.GetInt32(5),
-                    AreaLevel = sqlReader.GetInt32(8)
+                    TrialMasterCount = sqlReader.GetInt32(5)
                 };
+
+                try
+                {
+                    map.AreaLevel = sqlReader.GetInt32(8);
+                }
+                catch
+                {
+                    map.AreaLevel = 0;
+                }
 
                 try
                 {
