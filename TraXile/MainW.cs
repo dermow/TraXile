@@ -679,6 +679,15 @@ namespace TraXile
                 if (!_statNamesLong.ContainsKey("MapsFinished_" + sName))
                     _statNamesLong.Add("MapsFinished_" + sName, "Maps done: " + sName);
             }
+            for (int i = 0; i <= 16; i++)
+            {
+                string sShort = "MapTierFinished_T" + i.ToString();
+                string sLong = i > 0 ?  ("Maps done: T" + i.ToString()) : "Maps done: Tier unknown";
+                if (!_numericStats.ContainsKey(sShort))
+                    _numericStats.Add(sShort, 0);
+                if (!_statNamesLong.ContainsKey(sShort))
+                    _statNamesLong.Add(sShort, sLong);
+            }
             foreach (string s in _areaMapping.SIMU_AREAS)
             {
                 string sName = s.Replace("'", "");
@@ -687,6 +696,8 @@ namespace TraXile
                 if (!_statNamesLong.ContainsKey("SimulacrumFinished_" + sName))
                     _statNamesLong.Add("SimulacrumFinished_" + sName, "Simulacrum done: " + sName);
             }
+
+          
             
         }
 
@@ -1912,11 +1923,13 @@ namespace TraXile
             {
                 IncrementStat("TotalMapsDone", map.Started, 1);
                 IncrementStat("MapsFinished_" + map.Area, map.Started, 1);
+                IncrementStat("MapTierFinished_T" + map.MapTier.ToString(), map.Started, 1);
 
                 if(map.ZanaMap != null)
                 {
                     IncrementStat("TotalMapsDone", map.ZanaMap.Started, 1);
-                    IncrementStat("MapsFinished_" + map.ZanaMap.Area, map.Started, 1);
+                    IncrementStat("MapsFinished_" + map.ZanaMap.Area, map.ZanaMap.Started, 1);
+                    IncrementStat("MapTierFinished_T" + map.ZanaMap.MapTier.ToString(),map.ZanaMap.Started, 1);
                 }
             }
             else if (map.Type == ACTIVITY_TYPES.SIMULACRUM)
@@ -3301,6 +3314,16 @@ namespace TraXile
                 }
                
             }
+        }
+
+        private void chart2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(APPINFO.WIKI_URL);
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)

@@ -10,10 +10,11 @@ namespace TraXile
 {
     static class APPINFO
     {
-        public static string VERSION = "0.4.8";
+        public static string VERSION = "0.4.9";
         public static string NAME = "TraXile";
         public static string ISSUE_URL = "https://github.com/dermow/TraXile/issues";
         public static string RELEASE_URL = "https://github.com/dermow/TraXile/releases/latest";
+        public static string WIKI_URL = "https://github.com/dermow/TraXile/wiki";
 
         public static long BUILDTIME
         {
