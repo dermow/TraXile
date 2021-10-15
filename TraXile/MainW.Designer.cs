@@ -238,6 +238,7 @@ namespace TraXile
             this.chatCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wikiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -268,10 +269,11 @@ namespace TraXile
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.chatCommandsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.wikiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label74 = new System.Windows.Forms.Label();
             this.listViewStats = new TraXile.ListViewNF();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.button22 = new System.Windows.Forms.Button();
             tabControl1 = new System.Windows.Forms.TabControl();
             tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -733,6 +735,8 @@ namespace TraXile
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel3.Controls.Add(this.button22);
+            this.panel3.Controls.Add(this.label74);
             this.panel3.Controls.Add(this.label73);
             this.panel3.Controls.Add(this.linkLabel2);
             this.panel3.Controls.Add(this.linkLabel1);
@@ -763,7 +767,7 @@ namespace TraXile
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.ForeColor = System.Drawing.Color.Red;
             this.linkLabel2.LinkColor = System.Drawing.Color.Red;
-            this.linkLabel2.Location = new System.Drawing.Point(342, 20);
+            this.linkLabel2.Location = new System.Drawing.Point(343, 50);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(31, 13);
             this.linkLabel2.TabIndex = 7;
@@ -776,7 +780,7 @@ namespace TraXile
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.ForeColor = System.Drawing.Color.Red;
             this.linkLabel1.LinkColor = System.Drawing.Color.Red;
-            this.linkLabel1.Location = new System.Drawing.Point(379, 20);
+            this.linkLabel1.Location = new System.Drawing.Point(380, 50);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(74, 13);
             this.linkLabel1.TabIndex = 6;
@@ -788,7 +792,7 @@ namespace TraXile
             // 
             this.textBox8.Location = new System.Drawing.Point(55, 17);
             this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(281, 20);
+            this.textBox8.Size = new System.Drawing.Size(329, 20);
             this.textBox8.TabIndex = 5;
             this.textBox8.TextChanged += new System.EventHandler(this.textBox8_TextChanged);
             // 
@@ -2671,23 +2675,30 @@ namespace TraXile
             // chatCommandsToolStripMenuItem
             // 
             this.chatCommandsToolStripMenuItem.Name = "chatCommandsToolStripMenuItem";
-            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.chatCommandsToolStripMenuItem.Text = "Chat Commands";
             this.chatCommandsToolStripMenuItem.Click += new System.EventHandler(this.chatCommandsToolStripMenuItem_Click);
             // 
             // infoToolStripMenuItem1
             // 
             this.infoToolStripMenuItem1.Name = "infoToolStripMenuItem1";
-            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(166, 22);
             this.infoToolStripMenuItem1.Text = "Info";
             this.infoToolStripMenuItem1.Click += new System.EventHandler(this.infoToolStripMenuItem1_Click);
             // 
             // checkForUpdateToolStripMenuItem
             // 
             this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.checkForUpdateToolStripMenuItem.Text = "Check for Update";
             this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
+            // 
+            // wikiToolStripMenuItem
+            // 
+            this.wikiToolStripMenuItem.Name = "wikiToolStripMenuItem";
+            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.wikiToolStripMenuItem.Text = "Wiki";
+            this.wikiToolStripMenuItem.Click += new System.EventHandler(this.wikiToolStripMenuItem_Click);
             // 
             // timer1
             // 
@@ -2957,12 +2968,15 @@ namespace TraXile
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
-            // wikiToolStripMenuItem
+            // label74
             // 
-            this.wikiToolStripMenuItem.Name = "wikiToolStripMenuItem";
-            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.wikiToolStripMenuItem.Text = "Wiki";
-            this.wikiToolStripMenuItem.Click += new System.EventHandler(this.wikiToolStripMenuItem_Click);
+            this.label74.AutoSize = true;
+            this.label74.ForeColor = System.Drawing.Color.Gold;
+            this.label74.Location = new System.Drawing.Point(410, 77);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(43, 13);
+            this.label74.TabIndex = 9;
+            this.label74.Text = "items: 0";
             // 
             // listViewStats
             // 
@@ -2991,6 +3005,16 @@ namespace TraXile
             // columnHeader6
             // 
             this.columnHeader6.Text = "Value";
+            // 
+            // button22
+            // 
+            this.button22.Location = new System.Drawing.Point(392, 15);
+            this.button22.Name = "button22";
+            this.button22.Size = new System.Drawing.Size(62, 23);
+            this.button22.TabIndex = 10;
+            this.button22.Text = "search";
+            this.button22.UseVisualStyleBackColor = true;
+            this.button22.Click += new System.EventHandler(this.button22_Click);
             // 
             // MainW
             // 
@@ -3327,6 +3351,8 @@ namespace TraXile
         private System.Windows.Forms.TabPage tabPage10;
         private System.Windows.Forms.Label label73;
         private System.Windows.Forms.ToolStripMenuItem wikiToolStripMenuItem;
+        private System.Windows.Forms.Label label74;
+        private System.Windows.Forms.Button button22;
     }
 }
 

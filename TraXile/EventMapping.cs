@@ -54,7 +54,8 @@ namespace TraXile
         CHAT_CMD_RECEIVED,
         LAB_FINISHED,
         LAB_START_INFO_RECEIVED,
-        NEXT_AREA_LEVEL_RECEIVED
+        NEXT_AREA_LEVEL_RECEIVED,
+        POE_CLIENT_START
     }
 
     public class EventMapping
@@ -65,6 +66,9 @@ namespace TraXile
         {
             MAP = new Dictionary<string, EVENT_TYPES>
             {
+                // Startup
+                {"***** LOG FILE OPENING *****", EVENT_TYPES.POE_CLIENT_START },
+
                 // System Commands
                 { "trax::", EVENT_TYPES.CHAT_CMD_RECEIVED },
 

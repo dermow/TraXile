@@ -65,6 +65,7 @@ namespace TraXile
         private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
         private EventMapping _eventMapping;
         private AreaMapping _areaMapping;
+        private List<string> _parsedActivities;
         private ILog _log;
         private bool _showGGridInStats;
         private string _lastSimuEndpoint;
@@ -156,6 +157,8 @@ namespace TraXile
 
             _eventMapping = new EventMapping();
             _areaMapping = new AreaMapping();
+            _parsedActivities = new List<string>();
+
 
             SaveVersion();
             CheckForUpdate();
@@ -953,6 +956,8 @@ namespace TraXile
                  + ", '" + sTags + "')";
 
             cmd.ExecuteNonQuery();
+
+            _parsedActivities.Add(i_ts.ToString() + "_" + s_area);
         }
 
         private ACTIVITY_TYPES GetActTypeFromString(string s_type)
@@ -1326,6 +1331,18 @@ namespace TraXile
             {
                 switch (ev.EventType)
                 {
+                    case EVENT_TYPES.POE_CLIENT_START:
+                        if(_currentActivity != null)
+                        {
+                            _currentActivity.IsFinished = true;
+                            if(_currentActivity.ZanaMap != null)
+                            {
+                                _currentActivity.ZanaMap.IsFinished = true;
+                            }
+                            FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                        }
+                        break;
+
                     case EVENT_TYPES.CHAT_CMD_RECEIVED:
                         string sCmd = ev.LogLine.Split(new string[] { "::" }, StringSplitOptions.None)[1];
 
@@ -1351,6 +1368,16 @@ namespace TraXile
                         _inAreaSince = ev.EventTime;
 
                         IncrementStat("AreaChanges", ev.EventTime, 1);
+
+                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+                        {
+                            _currentActivity.LastEnded = ev.EventTime;
+                        }
+
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE)
+                        {
+                            _currentActivity.LastEnded = ev.EventTime;
+                        }
 
                         //Simu?
                         if (_areaMapping.SIMU_AREAS.Contains(sAreaName))
@@ -1501,6 +1528,13 @@ namespace TraXile
                                 };
                                 _nextAreaLevel = 0;
                             }
+                            else
+                            {
+                                if(bTargetAreaIsSimu || bTargetAreaIsMap)
+                                {
+                                    _currentActivity.PortalsUsed++;
+                                }
+                            }
                             if (!_currentActivity.Paused)
                                 _currentActivity.StartStopWatch();
 
@@ -1534,6 +1568,7 @@ namespace TraXile
                                     {
                                         _isMapZana = false;
                                         _currentActivity.ZanaMap.StopStopWatch();
+                                        _currentActivity.ZanaMap.LastEnded = ev.EventTime;
                                         if (!_currentActivity.Paused)
                                             _currentActivity.StartStopWatch();
                                     }
@@ -1554,7 +1589,33 @@ namespace TraXile
                         else
                         {
                             if (_currentActivity != null && _currentActivity.Type != ACTIVITY_TYPES.LABYRINTH)
+                            {
                                 _currentActivity.StopStopWatch();
+                                _currentActivity.LastEnded = ev.EventTime;
+
+                                if (_currentActivity.ZanaMap != null)
+                                {
+                                    _currentActivity.ZanaMap.StopStopWatch();
+                                    _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                                }
+
+                                if (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.SIMULACRUM)
+                                {
+                                    // max portals used and left activity?
+                                    if(_currentActivity.PortalsUsed >= 6)
+                                    {
+                                        _currentActivity.IsFinished = true;
+                                        if(_currentActivity.ZanaMap != null)
+                                        {
+                                            _currentActivity.ZanaMap.IsFinished = true;
+                                            _currentActivity.ZanaMap.StopStopWatch();
+                                            _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                                        }
+
+                                        FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                                    }
+                                }
+                            }
                         }
 
                         _currentArea = sAreaName;
@@ -1882,21 +1943,68 @@ namespace TraXile
         {
             _currentActivity.StopStopWatch();
 
-            if(_eventQueueInitizalized)
+            TimeSpan ts;
+            TimeSpan tsZana;
+            int iSeconds = 0;
+            int iSecondsZana = 0;
+
+            if(!_eventQueueInitizalized)
             {
-                _eventHistory.Insert(0, _currentActivity);
-                AddMapLvItem(map);
-                SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.Area, map.AreaLevel, Convert.ToInt32(map.StopWatchTimeSpan.TotalSeconds), map.DeathCounter, map.TrialMasterCount, false, map.Tags);
+                ts = (map.LastEnded - map.Started);
+                try
+                {
+                    iSeconds = Convert.ToInt32(ts.TotalSeconds);
+                }
+                catch
+                {
+                    iSeconds = 0;
+                }
+                
                 if (map.ZanaMap != null)
                 {
-                    _eventHistory.Insert(0, _currentActivity.ZanaMap);
+                    tsZana = (map.ZanaMap.LastEnded - map.ZanaMap.Started);
+                    iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
+                }
+            }
+            else
+            {
+                ts = map.StopWatchTimeSpan;
+                iSeconds = Convert.ToInt32(ts.TotalSeconds);
+                if (map.ZanaMap != null)
+                {
+                    tsZana = map.ZanaMap.StopWatchTimeSpan;
+                    iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
+                }
+            }
+
+            _eventHistory.Insert(0, _currentActivity);
+            TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
+            map.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                      tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
+
+            if(!_parsedActivities.Contains(map.TimeStamp.ToString() + "_" + map.Area))
+            {
+                AddMapLvItem(map);
+                SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.Area, map.AreaLevel, iSeconds, map.DeathCounter, map.TrialMasterCount, false, map.Tags);
+            }
+            
+          
+            if (map.ZanaMap != null)
+            {
+                TimeSpan tsZanaMap = TimeSpan.FromSeconds(iSecondsZana);
+                map.ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                       tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
+                _eventHistory.Insert(0, _currentActivity.ZanaMap);
+
+                if (!_parsedActivities.Contains(map.ZanaMap.TimeStamp.ToString() + "_" + map.ZanaMap.Area))
+                {
                     AddMapLvItem(map.ZanaMap, true);
-                    SaveToActivityLog(((DateTimeOffset)map.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.ZanaMap.Area, map.ZanaMap.AreaLevel, Convert.ToInt32(map.ZanaMap.StopWatchTimeSpan.TotalSeconds), map.ZanaMap.DeathCounter, map.ZanaMap.TrialMasterCount, true, map.ZanaMap
+                    SaveToActivityLog(((DateTimeOffset)map.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.ZanaMap.Area, map.ZanaMap.AreaLevel, iSecondsZana, map.ZanaMap.DeathCounter, map.ZanaMap.TrialMasterCount, true, map.ZanaMap
                         .Tags);
                 }
             }
-           
-            if(sNextMap != null)
+
+            if (sNextMap != null)
             {
                 _currentActivity = new TrackedActivity
                 {
@@ -2160,6 +2268,8 @@ namespace TraXile
 
                     RenderTagsForTracking();
                     RenderTagsForConfig();
+
+                    label74.Text = "items: " + _lvmActlog.listView.Items.Count.ToString();
 
                     if(listViewStats.Items.Count > 0)
                     {
@@ -3149,71 +3259,7 @@ namespace TraXile
 
         private void textBox8_TextChanged(object sender, EventArgs e)
         {
-            if (textBox8.Text == String.Empty)
-            {
-                _lvmActlog.Reset();
-            }
-            else if (textBox8.Text.Contains("tags=="))
-            {
-                List<string> itemNames = new List<string>();
-                try
-                {
-                    string[] sTagFilter = textBox8.Text.Split(new string[] { "==" }, StringSplitOptions.None)[1].Split(',');
-                    int iMatched = 0;
-                    foreach (TrackedActivity ta in _eventHistory)
-                    {
-                        iMatched = 0;
-                        foreach (string tag in sTagFilter)
-                        {
-                            if (ta.HasTag(tag))
-                            {
-                                iMatched++;
-                            }
-                            else
-                            {
-                                iMatched = 0;
-                                break;
-                            }
-                        }
-                        if (iMatched > 0)
-                        {
-                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
-                        }
-                    }
-                    _lvmActlog.FilterByNameList(itemNames);
-                }
-                catch { }
-            }
-            else if(textBox8.Text.Contains("tags="))
-            {
-                List<string> itemNames = new List<string>();
-                try
-                {
-                    string[] sTagFilter = textBox8.Text.Split('=')[1].Split(',');
-                    int iMatched = 0;
-                    foreach(TrackedActivity ta in _eventHistory)
-                    {
-                        iMatched = 0;
-                        foreach(string tag in sTagFilter)
-                        {
-                            if(ta.HasTag(tag))
-                            {
-                                iMatched++;
-                            }
-                        }
-                        if(iMatched > 0)
-                        {
-                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);    
-                        }
-                    }
-                    _lvmActlog.FilterByNameList(itemNames);
-                }
-                catch { }
-            }
-            else
-            {
-                _lvmActlog.ApplyFullTextFilter(textBox8.Text);
-            }
+          
             
         }
 
@@ -3226,6 +3272,7 @@ namespace TraXile
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             textBox8.Text = "";
+            DoSearch();
         }
 
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -3324,6 +3371,80 @@ namespace TraXile
         private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(APPINFO.WIKI_URL);
+        }
+
+        private void DoSearch()
+        {
+            if (textBox8.Text == String.Empty)
+            {
+                _lvmActlog.Reset();
+            }
+            else if (textBox8.Text.Contains("tags=="))
+            {
+                List<string> itemNames = new List<string>();
+                try
+                {
+                    string[] sTagFilter = textBox8.Text.Split(new string[] { "==" }, StringSplitOptions.None)[1].Split(',');
+                    int iMatched = 0;
+                    foreach (TrackedActivity ta in _eventHistory)
+                    {
+                        iMatched = 0;
+                        foreach (string tag in sTagFilter)
+                        {
+                            if (ta.HasTag(tag))
+                            {
+                                iMatched++;
+                            }
+                            else
+                            {
+                                iMatched = 0;
+                                break;
+                            }
+                        }
+                        if (iMatched > 0)
+                        {
+                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
+                        }
+                    }
+                    _lvmActlog.FilterByNameList(itemNames);
+                }
+                catch { }
+            }
+            else if (textBox8.Text.Contains("tags="))
+            {
+                List<string> itemNames = new List<string>();
+                try
+                {
+                    string[] sTagFilter = textBox8.Text.Split('=')[1].Split(',');
+                    int iMatched = 0;
+                    foreach (TrackedActivity ta in _eventHistory)
+                    {
+                        iMatched = 0;
+                        foreach (string tag in sTagFilter)
+                        {
+                            if (ta.HasTag(tag))
+                            {
+                                iMatched++;
+                            }
+                        }
+                        if (iMatched > 0)
+                        {
+                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
+                        }
+                    }
+                    _lvmActlog.FilterByNameList(itemNames);
+                }
+                catch { }
+            }
+            else
+            {
+                _lvmActlog.ApplyFullTextFilter(textBox8.Text);
+            }
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            DoSearch();
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)

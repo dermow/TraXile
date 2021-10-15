@@ -12,7 +12,7 @@ namespace TraXile
         private readonly Stopwatch _stopWatch;
         private TrackedActivity _zanaMap;
         private List<string> _tagIDs;
-        private DateTime _startTime;
+        private DateTime _startTime, _lastEndTime;
         private string _instanceEndpoint;
         private string _areaName;
         private ACTIVITY_TYPES _activityType;
@@ -20,9 +20,11 @@ namespace TraXile
         private bool _isPaused;
         private bool _trialMasterSuccess;
         private bool _trialMasterFull;
+        private bool _finished;
         private int _trialMasterCount;
         private int _deathCounter;
         private int _areaLevel;
+        private int _portalsUsed;
         private long _activityTimeStamp;
         private string _customStopWatchValue;
 
@@ -121,6 +123,12 @@ namespace TraXile
             set { _areaName = value; }
         }
 
+        public bool IsFinished
+        {
+            get { return _finished; }
+            set { _finished = value; }
+        }
+
         public bool IsZana
         {
             get { return _isZana; }
@@ -138,6 +146,13 @@ namespace TraXile
             get { return _areaLevel; }
             set { _areaLevel = value; }
         }
+
+        public int PortalsUsed
+        {
+            get { return _portalsUsed; }
+            set { _portalsUsed = value; }
+        }
+
 
         public int MapTier
         {
@@ -204,6 +219,12 @@ namespace TraXile
         {
             get { return _startTime; }
             set { _startTime = value; }
+        }
+
+        public DateTime LastEnded
+        {
+            get { return _lastEndTime; }
+            set { _lastEndTime = value; }
         }
 
         public int TrialMasterCount
