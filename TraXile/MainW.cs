@@ -23,7 +23,8 @@ namespace TraXile
         LABYRINTH,
         SIMULACRUM,
         BLIGHTED_MAP,
-        DELVE
+        DELVE,
+        TEMPLE
     }
 
     public partial class MainW : Form
@@ -73,6 +74,12 @@ namespace TraXile
         private ListViewManager _lvmStats, _lvmActlog;
         private bool _restoreOk = true;
         private string _failedRestoreReason = "";
+
+        // History parsing helpers
+        private DateTime _histParsePauseStart,
+            _histParsePauseEnd;
+      
+
 
         public string LogFilePath
         {
@@ -219,7 +226,7 @@ namespace TraXile
 
            
 
-            this.Text = APPINFO.NAME + " " + APPINFO.VERSION;
+            this.Text = APPINFO.NAME;
             _initStartTime = DateTime.Now;
 
            
@@ -603,6 +610,7 @@ namespace TraXile
                 { "SimulacrumStarted", 0 },
                 { "SirusStarted", 0 },
                 { "SirusKilled", 0 },
+                { "TemplesDone", 0 },
                 { "TrialMasterStarted", 0 },
                 { "TrialMasterKilled", 0 },
                 { "TrialMasterTookReward", 0 },
@@ -646,6 +654,7 @@ namespace TraXile
                 { "SimulacrumStarted", "Simulacrum started" },
                 { "SimulacrumCleared", "Simulacrum 100% done" },
                 { "LabsFinished", "Finished labs" },
+                { "TemplesDone", "Temples done" },
             };
 
             List<string> labs = new List<string>();
@@ -976,6 +985,8 @@ namespace TraXile
                     return ACTIVITY_TYPES.LABYRINTH;
                 case "delve":
                     return ACTIVITY_TYPES.DELVE;
+                case "temple":
+                    return ACTIVITY_TYPES.TEMPLE;
             }
             return ACTIVITY_TYPES.MAP;
         }
@@ -1224,6 +1235,16 @@ namespace TraXile
             return false;
         }
 
+        private bool CheckIfAreaIsSimu(string sArea)
+        {
+            foreach (string s in _areaMapping.SIMU_AREAS)
+            {
+                if (s.Trim().Equals(sArea.Trim()))
+                    return true;
+            }
+            return false;
+        }
+
         private void HandleChatCommand(string s_command)
         {
             _log.Info("ChatCommand -> " + s_command);
@@ -1362,6 +1383,7 @@ namespace TraXile
                         bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
                         bool bTargetAreaIsSimu = false;
                         bool bTargetAreaMine = sTargetArea == "Azurite Mine";
+                        bool bTargetAreaTemple = sTargetArea == "The Temple of Atzoatl";
                         bool bTargetAreaIsLab = sTargetArea == "Estate Path" || sTargetArea == "Estate Walkways" || sTargetArea == "Estate Crossing";
                         long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1431,6 +1453,10 @@ namespace TraXile
                         else if (bTargetAreaMine)
                         {
                             actType = ACTIVITY_TYPES.DELVE;
+                        }
+                        else if (bTargetAreaTemple)
+                        {
+                            actType = ACTIVITY_TYPES.TEMPLE;
                         }
 
                         //Lab started?
@@ -1510,7 +1536,7 @@ namespace TraXile
                             FinishMap(_currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
                         }
 
-                        if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsLab || bTargetAreaMine)
+                        if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsLab || bTargetAreaMine || bTargetAreaTemple)
                         {
                             _elderFightActive = false;
                             _shaperKillsInFight = 0;
@@ -1563,6 +1589,8 @@ namespace TraXile
                                 }
                                 else
                                 {
+                                    _isMapZana = false;
+
                                     // leave Zana Map
                                     if (_currentActivity.ZanaMap != null)
                                     {
@@ -1576,6 +1604,8 @@ namespace TraXile
                             }
                             else
                             {
+                                _isMapZana = false; //TMP_DEBUG
+
                                 // Do not track Lab-Trials
                                 if ((!sSourceArea.Contains("Trial of")) && (_currentActivity.Type != ACTIVITY_TYPES.LABYRINTH) && (_currentActivity.Type != ACTIVITY_TYPES.DELVE))
                                 {
@@ -1592,6 +1622,9 @@ namespace TraXile
                             {
                                 _currentActivity.StopStopWatch();
                                 _currentActivity.LastEnded = ev.EventTime;
+                                
+                                //Paused
+                                _histParsePauseStart = ev.EventTime;
 
                                 if (_currentActivity.ZanaMap != null)
                                 {
@@ -1601,19 +1634,19 @@ namespace TraXile
 
                                 if (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.SIMULACRUM)
                                 {
-                                    // max portals used and left activity?
-                                    if(_currentActivity.PortalsUsed >= 6)
-                                    {
-                                        _currentActivity.IsFinished = true;
-                                        if(_currentActivity.ZanaMap != null)
-                                        {
-                                            _currentActivity.ZanaMap.IsFinished = true;
-                                            _currentActivity.ZanaMap.StopStopWatch();
-                                            _currentActivity.ZanaMap.LastEnded = ev.EventTime;
-                                        }
+                                   // // max portals used and left activity?
+                                   // if(_currentActivity.PortalsUsed >= 6)
+                                   // {
+                                   ////     _currentActivity.IsFinished = true;
+                                   //     if(_currentActivity.ZanaMap != null)
+                                   //     {
+                                   //         _currentActivity.ZanaMap.IsFinished = true;
+                                   //         _currentActivity.ZanaMap.StopStopWatch();
+                                   //         _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                                   //     }
 
-                                        FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
-                                    }
+                                   //  //   FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                                   // }
                                 }
                             }
                         }
@@ -1621,11 +1654,21 @@ namespace TraXile
                         _currentArea = sAreaName;
                         break;
                     case EVENT_TYPES.PLAYER_DIED:
+                        
                         string sPlayerName = ev.LogLine.Split(' ')[8];
                         if (!_knownPlayerNames.Contains(sPlayerName))
                         {
                             IncrementStat("TotalKilledCount", ev.EventTime, 1);
                             _lastDeathTime = DateTime.Now;
+                            
+                            // do not count deaths outsite activities to them
+                            if(CheckIfAreaIsMap(_currentArea) == false 
+                                && CheckIfAreaIsHeist(_currentArea) == false 
+                                && CheckIfAreaIsSimu(_currentArea) == false)
+                            {
+                                break;
+                            }
+                            
                             if (_currentActivity != null)
                             {
                                 if (_isMapZana)
@@ -1634,7 +1677,6 @@ namespace TraXile
                                     {
                                         _currentActivity.ZanaMap.DeathCounter++;
                                     }
-
                                 }
                                 else
                                 {
@@ -1986,6 +2028,8 @@ namespace TraXile
             {
                 AddMapLvItem(map);
                 SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.Area, map.AreaLevel, iSeconds, map.DeathCounter, map.TrialMasterCount, false, map.Tags);
+                // Refresh ListView
+                if (_eventQueueInitizalized) DoSearch();
             }
             
           
@@ -2001,6 +2045,13 @@ namespace TraXile
                     AddMapLvItem(map.ZanaMap, true);
                     SaveToActivityLog(((DateTimeOffset)map.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.ZanaMap.Area, map.ZanaMap.AreaLevel, iSecondsZana, map.ZanaMap.DeathCounter, map.ZanaMap.TrialMasterCount, true, map.ZanaMap
                         .Tags);
+
+                    // Refresh ListView
+                    if (_eventQueueInitizalized) DoSearch();
+                }
+                else
+                {
+                    MessageBox.Show("DoubleZana");
                 }
             }
 
@@ -2044,6 +2095,10 @@ namespace TraXile
             {
                 IncrementStat("SimulacrumFinished_" + map.Area, map.Started, 1);
             }
+            else if (map.Type == ACTIVITY_TYPES.TEMPLE)
+            {
+                IncrementStat("TemplesDone", map.Started, 1);
+            }
         }
 
         //TODO: replace with DB table
@@ -2053,6 +2108,8 @@ namespace TraXile
             {
                 StreamReader r = new StreamReader("stats.cache");
                 string line;
+                string statID = "";
+                int statValue = 0;
                 int iLine = 0;
                 while ((line = r.ReadLine()) != null)
                 {
@@ -2062,7 +2119,18 @@ namespace TraXile
                     }
                     else
                     {
-                        _numericStats[line.Split(';')[0]] = Convert.ToInt32(line.Split(';')[1]);
+                        statID = line.Split(';')[0];
+                        statValue = Convert.ToInt32(line.Split(';')[1]);
+                        if(_numericStats.ContainsKey(statID))
+                        {
+                            _numericStats[line.Split(';')[0]] = statValue;
+                            _log.Info("StatsCacheRead -> " + statID  + "=" + statValue.ToString());
+                        }
+                        else
+                        {
+                            _log.Warn("StatsCacheRead -> Unknown stat '" + statID + "' in stats.cache, maybe from an older version.");
+                        }
+                        
                     }
 
                     iLine++;
@@ -2144,14 +2212,19 @@ namespace TraXile
                 _lvmActlog.Columns.Add(ch);
             }
 
-            foreach (TrackedActivity act in _eventHistory)
-            {
-                AddMapLvItem(act, act.IsZana, -1);
-            }
+            AddActivityLvItems();
 
         }
-                
-        private void AddMapLvItem(TrackedActivity map, bool bZana = false, int iPos = 0)
+        private void AddActivityLvItems()
+        {
+            foreach (TrackedActivity act in _eventHistory)
+            {
+                AddMapLvItem(act, act.IsZana, -1, false);
+            }
+            _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
+        }
+
+        private void AddMapLvItem(TrackedActivity map, bool bZana = false, int iPos = 0, bool b_display = true)
         {
             this.Invoke((MethodInvoker)delegate
             {
@@ -2188,12 +2261,12 @@ namespace TraXile
                 if(iPos == -1)
                 {
                     //listViewActLog.Items.Add(lvi);
-                    _lvmActlog.AddLvItem(lvi, map.TimeStamp + "_" + map.Area);
+                    _lvmActlog.AddLvItem(lvi, map.TimeStamp + "_" + map.Area, b_display);
                 }
                 else
                 {
                     //listViewActLog.Items.Insert(iPos, lvi);
-                    _lvmActlog.InsertLvItem(lvi, map.TimeStamp + "_" + map.Area, iPos);
+                    _lvmActlog.InsertLvItem(lvi, map.TimeStamp + "_" + map.Area, iPos, b_display);
                 }
                 
             });
@@ -2270,6 +2343,8 @@ namespace TraXile
                     RenderTagsForConfig();
 
                     label74.Text = "items: " + _lvmActlog.listView.Items.Count.ToString();
+
+                    comboBox2.SelectedItem = ReadSetting("actlog.maxitems", "500");
 
                     if(listViewStats.Items.Count > 0)
                     {
@@ -3378,6 +3453,8 @@ namespace TraXile
             if (textBox8.Text == String.Empty)
             {
                 _lvmActlog.Reset();
+                _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
+                
             }
             else if (textBox8.Text.Contains("tags=="))
             {
@@ -3444,6 +3521,26 @@ namespace TraXile
 
         private void button22_Click(object sender, EventArgs e)
         {
+            DoSearch();
+        }
+
+        private void listViewActLog_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        {
+            SaveLayout();
+        }
+
+        private void label74_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void comboBox2_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("actlog.maxitems", comboBox2.SelectedItem.ToString());
             DoSearch();
         }
 

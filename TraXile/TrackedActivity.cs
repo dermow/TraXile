@@ -25,6 +25,7 @@ namespace TraXile
         private int _deathCounter;
         private int _areaLevel;
         private int _portalsUsed;
+        private double _pausedTime;
         private long _activityTimeStamp;
         private string _customStopWatchValue;
 
@@ -57,6 +58,12 @@ namespace TraXile
             {
                 _tagIDs.Add(s_id);
             }
+        }
+
+        public double PauseTime
+        {
+            get { return _pausedTime; }
+            set { _pausedTime = value; }
         }
 
         public void Pause()

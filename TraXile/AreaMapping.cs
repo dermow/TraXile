@@ -155,7 +155,7 @@ namespace TraXile
                 "The Beachhead",
                 "The Beachhead",
                 "The Beachhead",
-                "The Temple of Atzoatl",
+                //"The Temple of Atzoatl",
                 "Thicket",
                 "Tower",
                 "Toxic Sewer",

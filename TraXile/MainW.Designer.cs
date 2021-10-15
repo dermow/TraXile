@@ -69,7 +69,6 @@ namespace TraXile
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel3 = new System.Windows.Forms.Panel();
-            this.label73 = new System.Windows.Forms.Label();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.textBox8 = new System.Windows.Forms.TextBox();
@@ -270,10 +269,12 @@ namespace TraXile
             this.chatCommandsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.label74 = new System.Windows.Forms.Label();
+            this.button22 = new System.Windows.Forms.Button();
+            this.label73 = new System.Windows.Forms.Label();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.listViewStats = new TraXile.ListViewNF();
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.button22 = new System.Windows.Forms.Button();
             tabControl1 = new System.Windows.Forms.TabControl();
             tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -680,7 +681,7 @@ namespace TraXile
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 99F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 108F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.Size = new System.Drawing.Size(520, 706);
             this.tableLayoutPanel5.TabIndex = 5;
@@ -702,13 +703,14 @@ namespace TraXile
             this.listViewActLog.GridLines = true;
             this.listViewActLog.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewActLog.HideSelection = false;
-            this.listViewActLog.Location = new System.Drawing.Point(3, 102);
+            this.listViewActLog.Location = new System.Drawing.Point(3, 111);
             this.listViewActLog.MultiSelect = false;
             this.listViewActLog.Name = "listViewActLog";
-            this.listViewActLog.Size = new System.Drawing.Size(514, 601);
+            this.listViewActLog.Size = new System.Drawing.Size(514, 592);
             this.listViewActLog.TabIndex = 4;
             this.listViewActLog.UseCompatibleStateImageBehavior = false;
             this.listViewActLog.View = System.Windows.Forms.View.Details;
+            this.listViewActLog.ColumnWidthChanged += new System.Windows.Forms.ColumnWidthChangedEventHandler(this.listViewActLog_ColumnWidthChanged);
             this.listViewActLog.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
             // 
             // columnHeader1
@@ -735,9 +737,10 @@ namespace TraXile
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel3.Controls.Add(this.comboBox2);
+            this.panel3.Controls.Add(this.label73);
             this.panel3.Controls.Add(this.button22);
             this.panel3.Controls.Add(this.label74);
-            this.panel3.Controls.Add(this.label73);
             this.panel3.Controls.Add(this.linkLabel2);
             this.panel3.Controls.Add(this.linkLabel1);
             this.panel3.Controls.Add(this.textBox8);
@@ -749,18 +752,8 @@ namespace TraXile
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(514, 93);
+            this.panel3.Size = new System.Drawing.Size(514, 102);
             this.panel3.TabIndex = 5;
-            // 
-            // label73
-            // 
-            this.label73.AutoSize = true;
-            this.label73.ForeColor = System.Drawing.Color.Gold;
-            this.label73.Location = new System.Drawing.Point(5, 80);
-            this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(221, 13);
-            this.label73.TabIndex = 8;
-            this.label73.Text = "You live tracked activities will be shown here:";
             // 
             // linkLabel2
             // 
@@ -2972,11 +2965,50 @@ namespace TraXile
             // 
             this.label74.AutoSize = true;
             this.label74.ForeColor = System.Drawing.Color.Gold;
-            this.label74.Location = new System.Drawing.Point(410, 77);
+            this.label74.Location = new System.Drawing.Point(411, 77);
             this.label74.Name = "label74";
             this.label74.Size = new System.Drawing.Size(43, 13);
             this.label74.TabIndex = 9;
             this.label74.Text = "items: 0";
+            this.label74.Click += new System.EventHandler(this.label74_Click);
+            // 
+            // button22
+            // 
+            this.button22.Location = new System.Drawing.Point(392, 15);
+            this.button22.Name = "button22";
+            this.button22.Size = new System.Drawing.Size(62, 23);
+            this.button22.TabIndex = 10;
+            this.button22.Text = "search";
+            this.button22.UseVisualStyleBackColor = true;
+            this.button22.Click += new System.EventHandler(this.button22_Click);
+            // 
+            // label73
+            // 
+            this.label73.AutoSize = true;
+            this.label73.ForeColor = System.Drawing.Color.Gold;
+            this.label73.Location = new System.Drawing.Point(5, 81);
+            this.label73.Name = "label73";
+            this.label73.Size = new System.Drawing.Size(87, 13);
+            this.label73.TabIndex = 11;
+            this.label73.Text = "show max. items:";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "500",
+            "1000",
+            "1500",
+            "2000",
+            "3000",
+            "5000"});
+            this.comboBox2.Location = new System.Drawing.Point(98, 78);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(121, 21);
+            this.comboBox2.TabIndex = 12;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            this.comboBox2.SelectionChangeCommitted += new System.EventHandler(this.comboBox2_SelectionChangeCommitted);
             // 
             // listViewStats
             // 
@@ -3005,16 +3037,6 @@ namespace TraXile
             // columnHeader6
             // 
             this.columnHeader6.Text = "Value";
-            // 
-            // button22
-            // 
-            this.button22.Location = new System.Drawing.Point(392, 15);
-            this.button22.Name = "button22";
-            this.button22.Size = new System.Drawing.Size(62, 23);
-            this.button22.TabIndex = 10;
-            this.button22.Text = "search";
-            this.button22.UseVisualStyleBackColor = true;
-            this.button22.Click += new System.EventHandler(this.button22_Click);
             // 
             // MainW
             // 
@@ -3349,10 +3371,11 @@ namespace TraXile
         private System.Windows.Forms.TabControl tabControl3;
         private System.Windows.Forms.TabPage tabPage9;
         private System.Windows.Forms.TabPage tabPage10;
-        private System.Windows.Forms.Label label73;
         private System.Windows.Forms.ToolStripMenuItem wikiToolStripMenuItem;
         private System.Windows.Forms.Label label74;
         private System.Windows.Forms.Button button22;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label73;
     }
 }
 

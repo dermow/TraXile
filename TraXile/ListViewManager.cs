@@ -30,6 +30,29 @@ namespace TraXile
             }
         }
 
+        public void FilterByRange(int i_min, int i_max, List<ListViewItem> baseList = null)
+        {
+            if (baseList == null)
+                baseList = _masterList;
+
+            _listView.BeginUpdate();
+            int iMax = _masterList.Count > i_max ? i_max : _masterList.Count;
+            _filteredList.Clear();
+            foreach(ListViewItem lvi in _masterList.GetRange(i_min, iMax))
+            {
+                _filteredList.Add(lvi);
+            }
+
+            _listView.Items.Clear();
+
+            foreach (ListViewItem lvi in _filteredList)
+            {
+                _listView.Items.Add(lvi);
+            }
+            _isFiltered = true;
+            _listView.EndUpdate();
+        }
+
         public void ApplyFullTextFilter(string s_filter)
         {
             List<string> names = new List<string>();
@@ -99,7 +122,7 @@ namespace TraXile
             _listView.Items.Clear();
         }
 
-        public void AddLvItem(ListViewItem lvi, string s_name)
+        public void AddLvItem(ListViewItem lvi, string s_name, bool b_display = true)
         {
             if(!_itemMap.ContainsKey(s_name))
             {
@@ -108,12 +131,13 @@ namespace TraXile
                 _itemMap.Add(s_name, lvi);
                 if (!_isFiltered)
                 {
-                    _listView.Items.Add(lvi);
+                    if(b_display)
+                        _listView.Items.Add(lvi);
                 }
             }
         }
 
-        public void InsertLvItem(ListViewItem lvi, string s_name, int i_pos)
+        public void InsertLvItem(ListViewItem lvi, string s_name, int i_pos, bool b_display = true)
         {
             if(!_itemMap.ContainsKey(s_name))
             {
@@ -122,7 +146,8 @@ namespace TraXile
                 _itemMap.Add(s_name, lvi);
                 if (!_isFiltered)
                 {
-                    _listView.Items.Insert(i_pos, lvi);
+                    if (b_display)
+                        _listView.Items.Insert(i_pos, lvi);
                 }
             }
         }
