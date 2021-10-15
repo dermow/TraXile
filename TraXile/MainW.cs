@@ -75,12 +75,6 @@ namespace TraXile
         private bool _restoreOk = true;
         private string _failedRestoreReason = "";
 
-        // History parsing helpers
-        private DateTime _histParsePauseStart,
-            _histParsePauseEnd;
-      
-
-
         public string LogFilePath
         {
             get { return _poeLogFilePath; }
@@ -1300,14 +1294,14 @@ namespace TraXile
                     {
                         if (_isMapZana && _currentActivity.ZanaMap != null)
                         {
-                            if (!_currentActivity.ZanaMap.Paused)
+                            if (!_currentActivity.ZanaMap.ManuallyPaused)
                             {
                                 _currentActivity.ZanaMap.Pause();
                             }
                         }
                         else
                         {
-                            if (!_currentActivity.Paused)
+                            if (!_currentActivity.ManuallyPaused)
                             {
                                 _currentActivity.Pause();
                             }
@@ -1319,14 +1313,14 @@ namespace TraXile
                     {
                         if (_isMapZana && _currentActivity.ZanaMap != null)
                         {
-                            if (_currentActivity.ZanaMap.Paused)
+                            if (_currentActivity.ZanaMap.ManuallyPaused)
                             {
                                 _currentActivity.ZanaMap.Resume();
                             }
                         }
                         else
                         {
-                            if (_currentActivity.Paused)
+                            if (_currentActivity.ManuallyPaused)
                             {
                                 _currentActivity.Resume();
                             }
@@ -1536,6 +1530,21 @@ namespace TraXile
                             FinishMap(_currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
                         }
 
+                        // PAUSE RESUME Handling
+                        if(bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu)
+                        {
+                            if(_currentActivity != null)
+                            {
+                                if(_areaMapping.CAMP_AREAS.Contains(sSourceArea) || sSourceArea.Contains("Hideout"))
+                                {
+                                    if(sTargetArea == _currentActivity.Area && _currentInstanceEndpoint == _currentActivity.InstanceEndpoint)
+                                    {
+                                        _currentActivity.EndPauseTime(ev.EventTime);
+                                    }
+                                }
+                            }
+                        }
+
                         if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsLab || bTargetAreaMine || bTargetAreaTemple)
                         {
                             _elderFightActive = false;
@@ -1561,7 +1570,7 @@ namespace TraXile
                                     _currentActivity.PortalsUsed++;
                                 }
                             }
-                            if (!_currentActivity.Paused)
+                            if (!_currentActivity.ManuallyPaused)
                                 _currentActivity.StartStopWatch();
 
                             if (bSourceAreaIsMap && bTargetAreaIsMap)
@@ -1584,7 +1593,7 @@ namespace TraXile
                                         _currentActivity.ZanaMap.AddTag("zana-map");
                                         _nextAreaLevel = 0;
                                     }
-                                    if (!_currentActivity.ZanaMap.Paused)
+                                    if (!_currentActivity.ZanaMap.ManuallyPaused)
                                         _currentActivity.ZanaMap.StartStopWatch();
                                 }
                                 else
@@ -1597,7 +1606,7 @@ namespace TraXile
                                         _isMapZana = false;
                                         _currentActivity.ZanaMap.StopStopWatch();
                                         _currentActivity.ZanaMap.LastEnded = ev.EventTime;
-                                        if (!_currentActivity.Paused)
+                                        if (!_currentActivity.ManuallyPaused)
                                             _currentActivity.StartStopWatch();
                                     }
                                 }
@@ -1622,9 +1631,15 @@ namespace TraXile
                             {
                                 _currentActivity.StopStopWatch();
                                 _currentActivity.LastEnded = ev.EventTime;
-                                
-                                //Paused
-                                _histParsePauseStart = ev.EventTime;
+
+                                // PAUSE TIME
+                                if(new ACTIVITY_TYPES[] { ACTIVITY_TYPES.MAP, ACTIVITY_TYPES.HEIST, ACTIVITY_TYPES.SIMULACRUM }.Contains(_currentActivity.Type))
+                                {
+                                    if(_areaMapping.CAMP_AREAS.Contains(sTargetArea) || sTargetArea.Contains("Hideout"))
+                                    {
+                                        _currentActivity.StartPauseTime(ev.EventTime);
+                                    }
+                                }
 
                                 if (_currentActivity.ZanaMap != null)
                                 {
@@ -1996,6 +2011,7 @@ namespace TraXile
                 try
                 {
                     iSeconds = Convert.ToInt32(ts.TotalSeconds);
+                    iSeconds -= Convert.ToInt32(map.PausedTime);
                 }
                 catch
                 {
@@ -2028,6 +2044,7 @@ namespace TraXile
             {
                 AddMapLvItem(map);
                 SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.Area, map.AreaLevel, iSeconds, map.DeathCounter, map.TrialMasterCount, false, map.Tags);
+              
                 // Refresh ListView
                 if (_eventQueueInitizalized) DoSearch();
             }
@@ -2805,14 +2822,14 @@ namespace TraXile
             {
                 if (_isMapZana && _currentActivity.ZanaMap != null)
                 {
-                    if (_currentActivity.ZanaMap.Paused)
+                    if (_currentActivity.ZanaMap.ManuallyPaused)
                     {
                         _currentActivity.ZanaMap.Resume();
                     }
                 }
                 else
                 {
-                    if (_currentActivity.Paused)
+                    if (_currentActivity.ManuallyPaused)
                     {
                         _currentActivity.Resume();
                     }
@@ -2826,14 +2843,14 @@ namespace TraXile
             {
                 if(_isMapZana && _currentActivity.ZanaMap != null)
                 {
-                    if(!_currentActivity.ZanaMap.Paused)
+                    if(!_currentActivity.ZanaMap.ManuallyPaused)
                     {
                         _currentActivity.ZanaMap.Pause();
                     }
                 }
                 else
                 {
-                    if(!_currentActivity.Paused)
+                    if(!_currentActivity.ManuallyPaused)
                     {
                         _currentActivity.Pause();
                     }

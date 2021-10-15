@@ -12,12 +12,13 @@ namespace TraXile
         private readonly Stopwatch _stopWatch;
         private TrackedActivity _zanaMap;
         private List<string> _tagIDs;
-        private DateTime _startTime, _lastEndTime;
+        private DateTime _startTime, _lastEndTime, _pauseTimeStart, _pauseTimeEnd;
         private string _instanceEndpoint;
         private string _areaName;
         private ACTIVITY_TYPES _activityType;
         private bool _isZana;
-        private bool _isPaused;
+        private int _pauseCount;
+        private bool _isManuallyPaused;
         private bool _trialMasterSuccess;
         private bool _trialMasterFull;
         private bool _finished;
@@ -26,6 +27,7 @@ namespace TraXile
         private int _areaLevel;
         private int _portalsUsed;
         private double _pausedTime;
+        private bool _paused;
         private long _activityTimeStamp;
         private string _customStopWatchValue;
 
@@ -46,6 +48,27 @@ namespace TraXile
             return false;
         }
 
+        public void StartPauseTime(DateTime dt)
+        {
+            if(!_paused)
+            {
+                _paused = true;
+                _pauseTimeStart = dt;
+            }
+        }
+
+        public void EndPauseTime(DateTime dt)
+        {
+            if(_paused)
+            {
+                _paused = false;
+                _pauseTimeEnd = dt;
+                _pauseCount++;
+                _pausedTime += (dt - _pauseTimeStart).TotalSeconds;
+            }
+            _paused = false;
+        }
+
         public void RemoveTag(string s_id)
         {
             if(HasTag(s_id))
@@ -60,7 +83,12 @@ namespace TraXile
             }
         }
 
-        public double PauseTime
+        public int PauseCount
+        {
+            get { return _pauseCount; }
+        }
+
+        public double PausedTime
         {
             get { return _pausedTime; }
             set { _pausedTime = value; }
@@ -68,14 +96,14 @@ namespace TraXile
 
         public void Pause()
         {
-              _isPaused = true;
+              _isManuallyPaused = true;
               if(_stopWatch.IsRunning)
                 _stopWatch.Stop();
         }
 
         public void Resume()
         {
-            _isPaused = false;
+            _isManuallyPaused = false;
             if(!_stopWatch.IsRunning)
                  _stopWatch.Start();
         }
@@ -211,9 +239,10 @@ namespace TraXile
             set { _zanaMap = value; }
         }
 
-        public bool Paused
+        public bool ManuallyPaused
         {
-            get { return _isPaused; }
+            get { return _isManuallyPaused; }
+            set { _isManuallyPaused = value; }
         }
 
         public string InstanceEndpoint
