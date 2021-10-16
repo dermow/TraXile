@@ -67,10 +67,10 @@ namespace TraXile
         private AreaMapping _areaMapping;
         private List<string> _parsedActivities;
         private ILog _log;
-        private bool _showGGridInStats;
+        private bool _showGridInStats;
+        private bool _UpdateCheckDone;
         private string _lastSimuEndpoint;
         private TxSettingsManager _mySettings;
-
 
         private ListViewManager _lvmStats, _lvmActlog;
         private bool _restoreOk = true;
@@ -114,22 +114,46 @@ namespace TraXile
         {
             try
             {
-                const string GITHUB_API = "https://api.github.com/repos/{0}/{1}/releases/latest";
+                string GITHUB_API = "https://api.github.com/repos/{0}/{1}/releases/latest";
                 WebClient webClient = new WebClient();
                 webClient.Headers.Add("User-Agent", "Unity web player");
                 Uri uri = new Uri(string.Format(GITHUB_API, "dermow", "TraXile"));
                 string releases = webClient.DownloadString(uri);
                 int iIndex = releases.IndexOf("tag_name");
-                string sVersion =  releases.Substring(iIndex + 11, 5);
+                //string sVersion =  releases.Substring(iIndex + 11, 5);
+                string sVersion = "0.5.2";
 
-                if(Convert.ToInt32(sVersion.Replace(".", "")) > Convert.ToInt32(APPINFO.VERSION.Replace(".", "")))
+                int MyMajor = Convert.ToInt32(APPINFO.VERSION.Split('.')[0]);
+                int MyMinor = Convert.ToInt32(APPINFO.VERSION.Split('.')[1]);
+                int MyPatch = Convert.ToInt32(APPINFO.VERSION.Split('.')[2]);
+
+                int RemoteMajor = Convert.ToInt32(sVersion.Split('.')[0]);
+                int RemoteMinor = Convert.ToInt32(sVersion.Split('.')[1]);
+                int RemotePatch = Convert.ToInt32(sVersion.Split('.')[2]);
+
+                bool bUpdate = false;
+                if(RemoteMajor > MyMajor)
+                {
+                    bUpdate = true;
+                }
+                else if(RemoteMajor == MyMajor && RemoteMinor > MyMinor)
+                {
+                    bUpdate = true;
+                }
+                else if(RemoteMajor == MyMajor && RemoteMinor == MyMinor && RemotePatch > MyPatch)
+                {
+                    bUpdate = true;
+                }
+
+                if (bUpdate)
                 {
                     if(MessageBox.Show("There is a new version available for TraXile (current=" + APPINFO.VERSION + ", new=" + sVersion + ")"
-                        + Environment.NewLine + Environment.NewLine + "You can download it on GitHub. Visit releases page now?"
-                        + Environment.NewLine + Environment.NewLine +
-                       APPINFO.RELEASE_URL, "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        + Environment.NewLine + Environment.NewLine + "Update now?", "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        System.Diagnostics.Process.Start(Application.StartupPath + @"\TraXile.Updater.exe");
+                        ProcessStartInfo psi = new ProcessStartInfo();
+                        psi.Arguments = sVersion;
+                        psi.FileName = Application.StartupPath + @"\TraXile.Updater.exe";
+                        Process.Start(psi);
                     }
                 }
                 else
@@ -165,6 +189,7 @@ namespace TraXile
 
             SaveVersion();
             CheckForUpdate();
+            _UpdateCheckDone = true;
             ReadSettings();
             
             try
@@ -594,6 +619,7 @@ namespace TraXile
                 { "HunterKilled", 0 },
                 { "HunterStarted", 0 },
                 { "LabsFinished", 0 },
+                { "LabsStarted", 0 },
                 { "LevelUps", 0 },
                 { "MavenStarted", 0 },
                 { "MavenKilled", 0 },
@@ -650,15 +676,18 @@ namespace TraXile
                 { "SimulacrumCleared", "Simulacrum 100% done" },
                 { "LabsFinished", "Finished labs" },
                 { "TemplesDone", "Temples done" },
+                { "LabsStarted", "Labs started" },
             };
 
-            List<string> labs = new List<string>();
-            labs.Add("Unknown");
-            labs.Add("The Merciless Labyrinth");
-            labs.Add("The Cruel Labyrinth");
-            labs.Add("The Labyrinth");
-            labs.Add("Uber-Lab");
-            labs.Add("Advanced Uber-Lab");
+            List<string> labs = new List<string>
+            {
+                "Unknown",
+                "The Merciless Labyrinth",
+                "The Cruel Labyrinth",
+                "The Labyrinth",
+                "Uber-Lab",
+                "Advanced Uber-Lab"
+            };
 
             foreach (string s in _areaMapping.HEIST_AREAS)
             {
@@ -686,6 +715,7 @@ namespace TraXile
                 if (!_statNamesLong.ContainsKey("MapsFinished_" + sName))
                     _statNamesLong.Add("MapsFinished_" + sName, "Maps done: " + sName);
             }
+
             for (int i = 0; i <= 16; i++)
             {
                 string sShort = "MapTierFinished_T" + i.ToString();
@@ -695,6 +725,7 @@ namespace TraXile
                 if (!_statNamesLong.ContainsKey(sShort))
                     _statNamesLong.Add(sShort, sLong);
             }
+
             foreach (string s in _areaMapping.SIMU_AREAS)
             {
                 string sName = s.Replace("'", "");
@@ -703,9 +734,6 @@ namespace TraXile
                 if (!_statNamesLong.ContainsKey("SimulacrumFinished_" + sName))
                     _statNamesLong.Add("SimulacrumFinished_" + sName, "Simulacrum done: " + sName);
             }
-
-          
-            
         }
 
         private string GetStatShortName(string s_key)
@@ -1493,6 +1521,8 @@ namespace TraXile
                                 TimeStamp = lTS,
                                 InstanceEndpoint = _currentInstanceEndpoint
                             };
+
+                            IncrementStat("LabsStarted", ev.EventTime, 1);
                            
                         }
 
@@ -1678,9 +1708,16 @@ namespace TraXile
                         {
                             IncrementStat("TotalKilledCount", ev.EventTime, 1);
                             _lastDeathTime = DateTime.Now;
-                            
+
+                            // Lab?
+                            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+                            {
+                                _currentActivity.DeathCounter = 1;
+                                FinishMap(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
+                            }
+
                             // do not count deaths outsite activities to them
-                            if(CheckIfAreaIsMap(_currentArea) == false 
+                            if (CheckIfAreaIsMap(_currentArea) == false 
                                 && CheckIfAreaIsHeist(_currentArea) == false 
                                 && CheckIfAreaIsSimu(_currentArea) == false)
                             {
@@ -1702,11 +1739,7 @@ namespace TraXile
                                 }
                             }
 
-                            // Lab?
-                            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
-                            {
-                                FinishMap(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
-                            }
+                           
                         }
 
                         break;
@@ -2331,7 +2364,7 @@ namespace TraXile
         {
             TimeSpan tsAreaTime = (DateTime.Now - this._inAreaSince);
             checkBox1.Checked = _showGridInActLog;
-            checkBox2.Checked = _showGGridInStats;
+            checkBox2.Checked = _showGridInStats;
             ReadBackupList();
             listBox1.DataSource = _backups;
 
@@ -2361,6 +2394,7 @@ namespace TraXile
 
                     RenderTagsForTracking();
                     RenderTagsForConfig();
+                    textBox1.Text = ReadSetting("poe_logfile_path");
 
                     label74.Text = "items: " + _lvmActlog.listView.Items.Count.ToString();
 
@@ -2504,10 +2538,10 @@ namespace TraXile
         {
             //this.LogFilePath = ReadSetting("PoELogFilePath");
             this._showGridInActLog = Convert.ToBoolean(ReadSetting("ActivityLogShowGrid"));
-            this._showGGridInStats = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
+            this._showGridInStats = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
 
             listViewActLog.GridLines = _showGridInActLog;
-            listViewStats.GridLines = _showGGridInStats;
+            listViewStats.GridLines = _showGridInStats;
         }
 
         public string ReadSetting(string key, string s_default = null)
@@ -2687,7 +2721,7 @@ namespace TraXile
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(SettingPoeLogFilePath))
+            if (String.IsNullOrEmpty(SettingPoeLogFilePath) || !_UpdateCheckDone)
             {
             }
             else
@@ -2700,7 +2734,7 @@ namespace TraXile
                         dProgress = (_logLinesRead / _logLinesTotal) * 100;
                     _loadScreenWindow.progressBar.Value = Convert.ToInt32(dProgress);
                     _loadScreenWindow.progressLabel.Text = "Parsing logfile. This could take a while the first time.";
-                    _loadScreenWindow.progressLabel2.Text = Convert.ToInt32(dProgress) + "%";
+                    _loadScreenWindow.progressLabel2.Text = Math.Round(dProgress, 2).ToString() + "%";
                 }
                 else
                 {
@@ -2921,7 +2955,7 @@ namespace TraXile
                 DialogResult dr2 = ofd.ShowDialog();
                 if (dr2 == DialogResult.OK)
                 {
-                    AddUpdateAppSettings("PoELogFilePath", ofd.FileName, false);
+                    AddUpdateAppSettings("poe_logfile_path", ofd.FileName, false);
                     ReloadLogFile();
                 }
             }
@@ -2941,9 +2975,9 @@ namespace TraXile
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            _showGGridInStats = checkBox2.Checked;
+            _showGridInStats = checkBox2.Checked;
             AddUpdateAppSettings("StatsShowGrid", checkBox2.Checked.ToString());
-            listViewStats.GridLines = _showGGridInStats;
+            listViewStats.GridLines = _showGridInStats;
         }
 
         private void button15_Click(object sender, EventArgs e)
