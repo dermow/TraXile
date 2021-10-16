@@ -20,32 +20,27 @@ namespace TraXile.Updater
     {
         string sTraXileVersion = "";
         bool bStarted, bExit;
+        string _myAppData;
 
         public Form1()
         {
             InitializeComponent();
             timer1.Interval = 2000;
             timer1.Start();
+
+            //TEST: Create folder in userdata
+            _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TraXile";
+
+            if (!Directory.Exists(_myAppData))
+            {
+                Directory.CreateDirectory(_myAppData);
+            }
+
         }
 
         private void Log(string text)
         {
             textBox1.Text += text + Environment.NewLine;
-        }
-
-        private string ReadCurrentVerison()
-        {
-            try
-            {
-                StreamReader rd = new StreamReader("version");
-                string s = rd.ReadToEnd();
-                return s;
-            }
-            catch
-            {
-                return "0.0.0";
-            }
-           
         }
 
         private string GetLatestRelease()
@@ -62,35 +57,16 @@ namespace TraXile.Updater
 
         private void Check()
         {
-            Log("Checking for Updates...");
-            sTraXileVersion = ReadCurrentVerison();
-            string sNewVersion = GetLatestRelease();
-
-            int iCurrent = Convert.ToInt32(sTraXileVersion.Replace(".", ""));
-            int iNewest = Convert.ToInt32(sNewVersion.Replace(".", ""));
-
-            if (iNewest > iCurrent)
-            {
-                StartUpdate(sNewVersion);
-                Log("New release available: " + sNewVersion + ". Current = " + sTraXileVersion);
-            }
-            else
-            {
-                Log("TraXile is up to date :)");
-                bExit = true;
-            }
-
-            bExit = true;
+            StartUpdate(GetLatestRelease());
         }
 
         private void StartUpdate(string s_version)
         {
-            Log("Downloading https://github.com/dermow/TraXile/releases/download/" + s_version + @"/" + s_version + ".zip");
+            Log("Downloading https://github.com/dermow/TraXile/releases/download/" + s_version + @"/Setup.msi");
             WebClient wc = new WebClient();
-            Uri uri = new Uri("https://github.com/dermow/TraXile/releases/download/" + s_version + @"/" + s_version + ".zip");
-            wc.DownloadFile(uri, s_version + ".zip");
+            Uri uri = new Uri("https://github.com/dermow/TraXile/releases/download/" + s_version + @"/Setup.msi");
+            wc.DownloadFile(uri, _myAppData + @"\Setup_" + s_version + ".msi");
             Process[] p = Process.GetProcessesByName("TraXile");
-            Log(s_version + ".zip downloaded successfully");
 
             if (p.Length > 0)
             {
@@ -103,49 +79,9 @@ namespace TraXile.Updater
                 Log("TraXile closed successfully");
             }
 
-            // Preserve config
-            if(File.Exists("TraXile.exe.config"))
-            {
-                File.Copy("TraXile.exe.config", "TraXile.exe.config.backup", true);
-            }
-
-            ZipArchive zip = ZipFile.OpenRead(s_version + ".zip");
-            
-            foreach(ZipArchiveEntry file in zip.Entries)
-            {
-                string completeFileName = Path.GetFullPath(Path.Combine(Application.StartupPath, file.FullName));
-
-                // Do not try to update myself
-                if (file.FullName == "TraXile.Updater.exe")
-                    completeFileName += ".Update";
-
-                Log("Extract:" + completeFileName);
-                
-
-                if (!completeFileName.StartsWith(Application.StartupPath, StringComparison.OrdinalIgnoreCase))
-                {
-                    throw new IOException("Trying to extract file outside of destination directory. See this link for more info: https://snyk.io/research/zip-slip-vulnerability");
-                }
-
-                if (file.Name == "")
-                {// Assuming Empty for Directory
-                    Directory.CreateDirectory(Path.GetDirectoryName(completeFileName));
-                    continue;
-                }
-                file.ExtractToFile(completeFileName, true);
-            }
-
-            // Preserve config
-            if (File.Exists("TraXile.exe.config.backup"))
-            {
-                File.Copy("TraXile.exe.config.backup", "TraXile.exe.config", true);
-            }
-
-            DialogResult dr = MessageBox.Show("Update successful. Should TraXile be restarted now?", "Success", MessageBoxButtons.YesNo);
-            if(dr == DialogResult.Yes)
-            {
-                Process.Start("TraXile.exe");
-            }
+            // Run setup
+            Process.Start(_myAppData + @"\Setup_" + s_version + ".msi");
+            bExit = true;
          }
 
         private void timer1_Tick(object sender, EventArgs e)
