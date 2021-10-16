@@ -4,7 +4,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -23,7 +22,8 @@ namespace TraXile
         LABYRINTH,
         SIMULACRUM,
         BLIGHTED_MAP,
-        DELVE
+        DELVE,
+        TEMPLE
     }
 
     public partial class MainW : Form
@@ -65,18 +65,24 @@ namespace TraXile
         private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
         private EventMapping _eventMapping;
         private AreaMapping _areaMapping;
+        private List<string> _parsedActivities;
         private ILog _log;
         private bool _showGGridInStats;
         private string _lastSimuEndpoint;
+        private TxSettingsManager _mySettings;
+
 
         private ListViewManager _lvmStats, _lvmActlog;
         private bool _restoreOk = true;
         private string _failedRestoreReason = "";
+        private string _dbPath;
+        private string _cachePath;
+        private string _myAppData;
 
-        public string LogFilePath
+        public string SettingPoeLogFilePath
         {
-            get { return _poeLogFilePath; }
-            set { _poeLogFilePath = value; }
+            get {return Properties.Settings.Default.PoeLogFilePath; }
+            set { Properties.Settings.Default.PoeLogFilePath = value;  Properties.Settings.Default.Save(); }
         }
 
         public List<ActivityTag> Tags
@@ -87,6 +93,18 @@ namespace TraXile
 
         public MainW()
         {
+            //TEST: Create folder in userdata
+            _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
+            _dbPath = _myAppData + @"\data.db";
+            _cachePath = _myAppData + @"\stats.cache";
+            _mySettings = new TxSettingsManager(_myAppData + @"\config.xml");
+
+            if(!Directory.Exists(_myAppData))
+            {
+                Directory.CreateDirectory(_myAppData);
+            }
+
+           
             this.Visible = false;
             InitializeComponent();
             Init();
@@ -151,11 +169,15 @@ namespace TraXile
             _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             _log.Info("Application started");
 
+            _mySettings.LoadFromXml();
+
             _lvmStats = new ListViewManager(listViewStats);
             _lvmActlog = new ListViewManager(listViewActLog);
 
             _eventMapping = new EventMapping();
             _areaMapping = new AreaMapping();
+            _parsedActivities = new List<string>();
+
 
             SaveVersion();
             CheckForUpdate();
@@ -216,12 +238,11 @@ namespace TraXile
 
            
 
-            this.Text = APPINFO.NAME + " " + APPINFO.VERSION;
+            this.Text = APPINFO.NAME;
             _initStartTime = DateTime.Now;
 
-           
 
-            if(_poeLogFilePath == null)
+            if(String.IsNullOrEmpty(Properties.Settings.Default.PoeLogFilePath))
             {
                 FileSelectScreen fs = new FileSelectScreen(this);
                 fs.ShowDialog();
@@ -600,6 +621,7 @@ namespace TraXile
                 { "SimulacrumStarted", 0 },
                 { "SirusStarted", 0 },
                 { "SirusKilled", 0 },
+                { "TemplesDone", 0 },
                 { "TrialMasterStarted", 0 },
                 { "TrialMasterKilled", 0 },
                 { "TrialMasterTookReward", 0 },
@@ -643,6 +665,7 @@ namespace TraXile
                 { "SimulacrumStarted", "Simulacrum started" },
                 { "SimulacrumCleared", "Simulacrum 100% done" },
                 { "LabsFinished", "Finished labs" },
+                { "TemplesDone", "Temples done" },
             };
 
             List<string> labs = new List<string>();
@@ -780,14 +803,16 @@ namespace TraXile
 
         private void ReadBackupList()
         {
-            if(Directory.Exists("backups"))
+            if(Directory.Exists(_myAppData + @"\backups"))
             {
-                foreach(string s in Directory.GetDirectories("backups"))
+                foreach(string s in Directory.GetDirectories(_myAppData + @"\backups"))
                 {
                     foreach(string s2 in Directory.GetDirectories(s))
                     {
-                        if(!_backups.Contains(s2))
-                            _backups.Add(s2);
+                        string s_name = s2.Replace(_myAppData, "");
+                        
+                        if(!_backups.Contains(s_name))
+                            _backups.Add(s_name);
                     }
                 }
             }
@@ -795,7 +820,7 @@ namespace TraXile
 
         private void InitDatabase()
         {
-            _dbConnection = new SqliteConnection("Data Source=data.db");
+            _dbConnection = new SqliteConnection("Data Source=" + _dbPath);
             _dbConnection.Open();
 
             //Create Tables
@@ -953,6 +978,8 @@ namespace TraXile
                  + ", '" + sTags + "')";
 
             cmd.ExecuteNonQuery();
+
+            _parsedActivities.Add(i_ts.ToString() + "_" + s_area);
         }
 
         private ACTIVITY_TYPES GetActTypeFromString(string s_type)
@@ -971,6 +998,8 @@ namespace TraXile
                     return ACTIVITY_TYPES.LABYRINTH;
                 case "delve":
                     return ACTIVITY_TYPES.DELVE;
+                case "temple":
+                    return ACTIVITY_TYPES.TEMPLE;
             }
             return ACTIVITY_TYPES.MAP;
         }
@@ -1040,7 +1069,7 @@ namespace TraXile
             while(true)
             {
                 Thread.Sleep(1000);
-                if(_poeLogFilePath != null)
+                if(SettingPoeLogFilePath != null)
                 {
                     ParseLogFile();
                   
@@ -1051,7 +1080,7 @@ namespace TraXile
         private int GetLogFileLineCount()
         {
             int iCount = 0;
-            FileStream fs1 = new FileStream(_poeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             TextReader reader1 = new StreamReader(fs1);
             while ((reader1.ReadLine()) != null)
             {
@@ -1067,7 +1096,7 @@ namespace TraXile
 
             _logLinesTotal = Convert.ToDouble(GetLogFileLineCount());
 
-            var fs = new FileStream(_poeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var fs = new FileStream(SettingPoeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             bool bNewContent = _lastHash == 0;
 
             using (StreamReader reader = new StreamReader(fs))
@@ -1219,6 +1248,16 @@ namespace TraXile
             return false;
         }
 
+        private bool CheckIfAreaIsSimu(string sArea)
+        {
+            foreach (string s in _areaMapping.SIMU_AREAS)
+            {
+                if (s.Trim().Equals(sArea.Trim()))
+                    return true;
+            }
+            return false;
+        }
+
         private void HandleChatCommand(string s_command)
         {
             _log.Info("ChatCommand -> " + s_command);
@@ -1274,14 +1313,14 @@ namespace TraXile
                     {
                         if (_isMapZana && _currentActivity.ZanaMap != null)
                         {
-                            if (!_currentActivity.ZanaMap.Paused)
+                            if (!_currentActivity.ZanaMap.ManuallyPaused)
                             {
                                 _currentActivity.ZanaMap.Pause();
                             }
                         }
                         else
                         {
-                            if (!_currentActivity.Paused)
+                            if (!_currentActivity.ManuallyPaused)
                             {
                                 _currentActivity.Pause();
                             }
@@ -1293,14 +1332,14 @@ namespace TraXile
                     {
                         if (_isMapZana && _currentActivity.ZanaMap != null)
                         {
-                            if (_currentActivity.ZanaMap.Paused)
+                            if (_currentActivity.ZanaMap.ManuallyPaused)
                             {
                                 _currentActivity.ZanaMap.Resume();
                             }
                         }
                         else
                         {
-                            if (_currentActivity.Paused)
+                            if (_currentActivity.ManuallyPaused)
                             {
                                 _currentActivity.Resume();
                             }
@@ -1326,6 +1365,18 @@ namespace TraXile
             {
                 switch (ev.EventType)
                 {
+                    case EVENT_TYPES.POE_CLIENT_START:
+                        if(_currentActivity != null)
+                        {
+                            _currentActivity.IsFinished = true;
+                            if(_currentActivity.ZanaMap != null)
+                            {
+                                _currentActivity.ZanaMap.IsFinished = true;
+                            }
+                            FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                        }
+                        break;
+
                     case EVENT_TYPES.CHAT_CMD_RECEIVED:
                         string sCmd = ev.LogLine.Split(new string[] { "::" }, StringSplitOptions.None)[1];
 
@@ -1345,12 +1396,23 @@ namespace TraXile
                         bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
                         bool bTargetAreaIsSimu = false;
                         bool bTargetAreaMine = sTargetArea == "Azurite Mine";
+                        bool bTargetAreaTemple = sTargetArea == "The Temple of Atzoatl";
                         bool bTargetAreaIsLab = sTargetArea == "Estate Path" || sTargetArea == "Estate Walkways" || sTargetArea == "Estate Crossing";
                         long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
                         _inAreaSince = ev.EventTime;
 
                         IncrementStat("AreaChanges", ev.EventTime, 1);
+
+                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+                        {
+                            _currentActivity.LastEnded = ev.EventTime;
+                        }
+
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE)
+                        {
+                            _currentActivity.LastEnded = ev.EventTime;
+                        }
 
                         //Simu?
                         if (_areaMapping.SIMU_AREAS.Contains(sAreaName))
@@ -1404,6 +1466,10 @@ namespace TraXile
                         else if (bTargetAreaMine)
                         {
                             actType = ACTIVITY_TYPES.DELVE;
+                        }
+                        else if (bTargetAreaTemple)
+                        {
+                            actType = ACTIVITY_TYPES.TEMPLE;
                         }
 
                         //Lab started?
@@ -1483,7 +1549,22 @@ namespace TraXile
                             FinishMap(_currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
                         }
 
-                        if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsLab || bTargetAreaMine)
+                        // PAUSE RESUME Handling
+                        if(bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu)
+                        {
+                            if(_currentActivity != null)
+                            {
+                                if(_areaMapping.CAMP_AREAS.Contains(sSourceArea) || sSourceArea.Contains("Hideout"))
+                                {
+                                    if(sTargetArea == _currentActivity.Area && _currentInstanceEndpoint == _currentActivity.InstanceEndpoint)
+                                    {
+                                        _currentActivity.EndPauseTime(ev.EventTime);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsLab || bTargetAreaMine || bTargetAreaTemple)
                         {
                             _elderFightActive = false;
                             _shaperKillsInFight = 0;
@@ -1501,7 +1582,14 @@ namespace TraXile
                                 };
                                 _nextAreaLevel = 0;
                             }
-                            if (!_currentActivity.Paused)
+                            else
+                            {
+                                if(bTargetAreaIsSimu || bTargetAreaIsMap)
+                                {
+                                    _currentActivity.PortalsUsed++;
+                                }
+                            }
+                            if (!_currentActivity.ManuallyPaused)
                                 _currentActivity.StartStopWatch();
 
                             if (bSourceAreaIsMap && bTargetAreaIsMap)
@@ -1524,23 +1612,28 @@ namespace TraXile
                                         _currentActivity.ZanaMap.AddTag("zana-map");
                                         _nextAreaLevel = 0;
                                     }
-                                    if (!_currentActivity.ZanaMap.Paused)
+                                    if (!_currentActivity.ZanaMap.ManuallyPaused)
                                         _currentActivity.ZanaMap.StartStopWatch();
                                 }
                                 else
                                 {
+                                    _isMapZana = false;
+
                                     // leave Zana Map
                                     if (_currentActivity.ZanaMap != null)
                                     {
                                         _isMapZana = false;
                                         _currentActivity.ZanaMap.StopStopWatch();
-                                        if (!_currentActivity.Paused)
+                                        _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                                        if (!_currentActivity.ManuallyPaused)
                                             _currentActivity.StartStopWatch();
                                     }
                                 }
                             }
                             else
                             {
+                                _isMapZana = false; //TMP_DEBUG
+
                                 // Do not track Lab-Trials
                                 if ((!sSourceArea.Contains("Trial of")) && (_currentActivity.Type != ACTIVITY_TYPES.LABYRINTH) && (_currentActivity.Type != ACTIVITY_TYPES.DELVE))
                                 {
@@ -1554,17 +1647,62 @@ namespace TraXile
                         else
                         {
                             if (_currentActivity != null && _currentActivity.Type != ACTIVITY_TYPES.LABYRINTH)
+                            {
                                 _currentActivity.StopStopWatch();
+                                _currentActivity.LastEnded = ev.EventTime;
+
+                                // PAUSE TIME
+                                if(new ACTIVITY_TYPES[] { ACTIVITY_TYPES.MAP, ACTIVITY_TYPES.HEIST, ACTIVITY_TYPES.SIMULACRUM }.Contains(_currentActivity.Type))
+                                {
+                                    if(_areaMapping.CAMP_AREAS.Contains(sTargetArea) || sTargetArea.Contains("Hideout"))
+                                    {
+                                        _currentActivity.StartPauseTime(ev.EventTime);
+                                    }
+                                }
+
+                                if (_currentActivity.ZanaMap != null)
+                                {
+                                    _currentActivity.ZanaMap.StopStopWatch();
+                                    _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                                }
+
+                                if (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.SIMULACRUM)
+                                {
+                                   // // max portals used and left activity?
+                                   // if(_currentActivity.PortalsUsed >= 6)
+                                   // {
+                                   ////     _currentActivity.IsFinished = true;
+                                   //     if(_currentActivity.ZanaMap != null)
+                                   //     {
+                                   //         _currentActivity.ZanaMap.IsFinished = true;
+                                   //         _currentActivity.ZanaMap.StopStopWatch();
+                                   //         _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                                   //     }
+
+                                   //  //   FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                                   // }
+                                }
+                            }
                         }
 
                         _currentArea = sAreaName;
                         break;
                     case EVENT_TYPES.PLAYER_DIED:
+                        
                         string sPlayerName = ev.LogLine.Split(' ')[8];
                         if (!_knownPlayerNames.Contains(sPlayerName))
                         {
                             IncrementStat("TotalKilledCount", ev.EventTime, 1);
                             _lastDeathTime = DateTime.Now;
+                            
+                            // do not count deaths outsite activities to them
+                            if(CheckIfAreaIsMap(_currentArea) == false 
+                                && CheckIfAreaIsHeist(_currentArea) == false 
+                                && CheckIfAreaIsSimu(_currentArea) == false)
+                            {
+                                break;
+                            }
+                            
                             if (_currentActivity != null)
                             {
                                 if (_isMapZana)
@@ -1573,7 +1711,6 @@ namespace TraXile
                                     {
                                         _currentActivity.ZanaMap.DeathCounter++;
                                     }
-
                                 }
                                 else
                                 {
@@ -1882,21 +2019,79 @@ namespace TraXile
         {
             _currentActivity.StopStopWatch();
 
-            if(_eventQueueInitizalized)
+            TimeSpan ts;
+            TimeSpan tsZana;
+            int iSeconds = 0;
+            int iSecondsZana = 0;
+
+            if(!_eventQueueInitizalized)
             {
-                _eventHistory.Insert(0, _currentActivity);
-                AddMapLvItem(map);
-                SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.Area, map.AreaLevel, Convert.ToInt32(map.StopWatchTimeSpan.TotalSeconds), map.DeathCounter, map.TrialMasterCount, false, map.Tags);
+                ts = (map.LastEnded - map.Started);
+                try
+                {
+                    iSeconds = Convert.ToInt32(ts.TotalSeconds);
+                    iSeconds -= Convert.ToInt32(map.PausedTime);
+                }
+                catch
+                {
+                    iSeconds = 0;
+                }
+                
                 if (map.ZanaMap != null)
                 {
-                    _eventHistory.Insert(0, _currentActivity.ZanaMap);
-                    AddMapLvItem(map.ZanaMap, true);
-                    SaveToActivityLog(((DateTimeOffset)map.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.ZanaMap.Area, map.ZanaMap.AreaLevel, Convert.ToInt32(map.ZanaMap.StopWatchTimeSpan.TotalSeconds), map.ZanaMap.DeathCounter, map.ZanaMap.TrialMasterCount, true, map.ZanaMap
-                        .Tags);
+                    tsZana = (map.ZanaMap.LastEnded - map.ZanaMap.Started);
+                    iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
                 }
             }
-           
-            if(sNextMap != null)
+            else
+            {
+                ts = map.StopWatchTimeSpan;
+                iSeconds = Convert.ToInt32(ts.TotalSeconds);
+                if (map.ZanaMap != null)
+                {
+                    tsZana = map.ZanaMap.StopWatchTimeSpan;
+                    iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
+                }
+            }
+
+            _eventHistory.Insert(0, _currentActivity);
+            TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
+            map.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                      tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
+
+            if(!_parsedActivities.Contains(map.TimeStamp.ToString() + "_" + map.Area))
+            {
+                AddMapLvItem(map);
+                SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.Area, map.AreaLevel, iSeconds, map.DeathCounter, map.TrialMasterCount, false, map.Tags);
+              
+                // Refresh ListView
+                if (_eventQueueInitizalized) DoSearch();
+            }
+            
+          
+            if (map.ZanaMap != null)
+            {
+                TimeSpan tsZanaMap = TimeSpan.FromSeconds(iSecondsZana);
+                map.ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                       tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
+                _eventHistory.Insert(0, _currentActivity.ZanaMap);
+
+                if (!_parsedActivities.Contains(map.ZanaMap.TimeStamp.ToString() + "_" + map.ZanaMap.Area))
+                {
+                    AddMapLvItem(map.ZanaMap, true);
+                    SaveToActivityLog(((DateTimeOffset)map.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.ZanaMap.Area, map.ZanaMap.AreaLevel, iSecondsZana, map.ZanaMap.DeathCounter, map.ZanaMap.TrialMasterCount, true, map.ZanaMap
+                        .Tags);
+
+                    // Refresh ListView
+                    if (_eventQueueInitizalized) DoSearch();
+                }
+                else
+                {
+                    MessageBox.Show("DoubleZana");
+                }
+            }
+
+            if (sNextMap != null)
             {
                 _currentActivity = new TrackedActivity
                 {
@@ -1936,15 +2131,21 @@ namespace TraXile
             {
                 IncrementStat("SimulacrumFinished_" + map.Area, map.Started, 1);
             }
+            else if (map.Type == ACTIVITY_TYPES.TEMPLE)
+            {
+                IncrementStat("TemplesDone", map.Started, 1);
+            }
         }
 
         //TODO: replace with DB table
         private void ReadStatsCache()
         {
-            if(File.Exists("stats.cache"))
+            if(File.Exists(_cachePath))
             {
-                StreamReader r = new StreamReader("stats.cache");
+                StreamReader r = new StreamReader(_cachePath);
                 string line;
+                string statID = "";
+                int statValue = 0;
                 int iLine = 0;
                 while ((line = r.ReadLine()) != null)
                 {
@@ -1954,7 +2155,18 @@ namespace TraXile
                     }
                     else
                     {
-                        _numericStats[line.Split(';')[0]] = Convert.ToInt32(line.Split(';')[1]);
+                        statID = line.Split(';')[0];
+                        statValue = Convert.ToInt32(line.Split(';')[1]);
+                        if(_numericStats.ContainsKey(statID))
+                        {
+                            _numericStats[line.Split(';')[0]] = statValue;
+                            _log.Info("StatsCacheRead -> " + statID  + "=" + statValue.ToString());
+                        }
+                        else
+                        {
+                            _log.Warn("StatsCacheRead -> Unknown stat '" + statID + "' in stats.cache, maybe from an older version.");
+                        }
+                        
                     }
 
                     iLine++;
@@ -1965,7 +2177,7 @@ namespace TraXile
 
         private void SaveStatsCache()
         {
-            StreamWriter wrt = new StreamWriter("stats.cache");
+            StreamWriter wrt = new StreamWriter(_cachePath);
             wrt.WriteLine("last;" + _lastHash.ToString());
             foreach(KeyValuePair<string, int> kvp in _numericStats)
             {
@@ -1976,7 +2188,7 @@ namespace TraXile
 
         private void SaveVersion()
         {
-            StreamWriter wrt = new StreamWriter("version");
+            StreamWriter wrt = new StreamWriter(_myAppData + @"\VERSION.txt");
             wrt.WriteLine(APPINFO.VERSION);
             wrt.Close();
         }
@@ -2036,14 +2248,19 @@ namespace TraXile
                 _lvmActlog.Columns.Add(ch);
             }
 
-            foreach (TrackedActivity act in _eventHistory)
-            {
-                AddMapLvItem(act, act.IsZana, -1);
-            }
+            AddActivityLvItems();
 
         }
-                
-        private void AddMapLvItem(TrackedActivity map, bool bZana = false, int iPos = 0)
+        private void AddActivityLvItems()
+        {
+            foreach (TrackedActivity act in _eventHistory)
+            {
+                AddMapLvItem(act, act.IsZana, -1, false);
+            }
+            _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
+        }
+
+        private void AddMapLvItem(TrackedActivity map, bool bZana = false, int iPos = 0, bool b_display = true)
         {
             this.Invoke((MethodInvoker)delegate
             {
@@ -2080,12 +2297,12 @@ namespace TraXile
                 if(iPos == -1)
                 {
                     //listViewActLog.Items.Add(lvi);
-                    _lvmActlog.AddLvItem(lvi, map.TimeStamp + "_" + map.Area);
+                    _lvmActlog.AddLvItem(lvi, map.TimeStamp + "_" + map.Area, b_display);
                 }
                 else
                 {
                     //listViewActLog.Items.Insert(iPos, lvi);
-                    _lvmActlog.InsertLvItem(lvi, map.TimeStamp + "_" + map.Area, iPos);
+                    _lvmActlog.InsertLvItem(lvi, map.TimeStamp + "_" + map.Area, iPos, b_display);
                 }
                 
             });
@@ -2160,6 +2377,10 @@ namespace TraXile
 
                     RenderTagsForTracking();
                     RenderTagsForConfig();
+
+                    label74.Text = "items: " + _lvmActlog.listView.Items.Count.ToString();
+
+                    comboBox2.SelectedItem = ReadSetting("actlog.maxitems", "500");
 
                     if(listViewStats.Items.Count > 0)
                     {
@@ -2297,7 +2518,7 @@ namespace TraXile
 
         private void ReadSettings()
         {
-            this._poeLogFilePath = ReadSetting("PoELogFilePath");
+            //this.LogFilePath = ReadSetting("PoELogFilePath");
             this._showGridInActLog = Convert.ToBoolean(ReadSetting("ActivityLogShowGrid"));
             this._showGGridInStats = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
 
@@ -2307,14 +2528,7 @@ namespace TraXile
 
         public string ReadSetting(string key, string s_default = null)
         {
-            try
-            {
-                return ConfigurationManager.AppSettings[key] ?? s_default;
-            }
-            catch (ConfigurationErrorsException)
-            {
-                return s_default;
-            }
+            return _mySettings.ReadSetting(key, s_default);
         }
 
         private void Exit()
@@ -2328,27 +2542,8 @@ namespace TraXile
 
         public void AddUpdateAppSettings(string key, string value, bool b_log = false)
         {
-            try
-            {
-                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                var settings = configFile.AppSettings.Settings;
-                if (settings[key] == null)
-                {
-                    settings.Add(key, value);
-                }
-                else
-                {
-                    settings[key].Value = value;
-                }
-                configFile.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
-                if(b_log)
-                    _log.Info("Updated setting: " + key + "=" + value);
-            }
-            catch (ConfigurationErrorsException)
-            {
-                Console.WriteLine("Error writing app settings");
-            }
+            _mySettings.AddOrUpdateSetting(key, value);
+            _mySettings.WriteToXml();
         }
 
         private void RefreshChart()
@@ -2453,15 +2648,15 @@ namespace TraXile
 
         private void CreateBackup(string s_name)
         {
-            string sBackupDir = "backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+            string sBackupDir = _myAppData + @"/backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
             System.IO.Directory.CreateDirectory(sBackupDir);
             
-            if(System.IO.File.Exists(_poeLogFilePath))
-                System.IO.File.Copy(_poeLogFilePath, sBackupDir + @"/Client.txt");
-            if(System.IO.File.Exists("stats.cache"))
-                System.IO.File.Copy("stats.cache", sBackupDir + @"/stats.cache");
-            if(System.IO.File.Exists("data.db"))
-                System.IO.File.Copy("data.db", sBackupDir + @"/data.db");
+            if(System.IO.File.Exists(SettingPoeLogFilePath))
+                System.IO.File.Copy(SettingPoeLogFilePath, sBackupDir + @"/Client.txt");
+            if(System.IO.File.Exists(_cachePath))
+                System.IO.File.Copy(_cachePath, sBackupDir + @"/stats.cache");
+            if(System.IO.File.Exists(_dbPath))
+                System.IO.File.Copy(_dbPath, sBackupDir + @"/data.db");
             if(System.IO.File.Exists("TraXile.exe.config"))
                 System.IO.File.Copy("TraXile.exe.config", sBackupDir + @"/TraXile.exe.config");
         }
@@ -2469,11 +2664,11 @@ namespace TraXile
         private void DoFullReset()
         {
             // Make logfile empty
-            FileStream fs1 = new FileStream(_poeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             ResetStats();
             ClearActivityLog();
             _lastHash = 0;
-            File.Delete("stats.cache");
+            File.Delete(_cachePath);
         }
 
         private void OpenActivityDetails(TrackedActivity ta)
@@ -2508,7 +2703,7 @@ namespace TraXile
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (_poeLogFilePath == null)
+            if (String.IsNullOrEmpty(Properties.Settings.Default.PoeLogFilePath))
             {
             }
             else
@@ -2620,14 +2815,14 @@ namespace TraXile
             {
                 if (_isMapZana && _currentActivity.ZanaMap != null)
                 {
-                    if (_currentActivity.ZanaMap.Paused)
+                    if (_currentActivity.ZanaMap.ManuallyPaused)
                     {
                         _currentActivity.ZanaMap.Resume();
                     }
                 }
                 else
                 {
-                    if (_currentActivity.Paused)
+                    if (_currentActivity.ManuallyPaused)
                     {
                         _currentActivity.Resume();
                     }
@@ -2641,14 +2836,14 @@ namespace TraXile
             {
                 if(_isMapZana && _currentActivity.ZanaMap != null)
                 {
-                    if(!_currentActivity.ZanaMap.Paused)
+                    if(!_currentActivity.ZanaMap.ManuallyPaused)
                     {
                         _currentActivity.ZanaMap.Pause();
                     }
                 }
                 else
                 {
-                    if(!_currentActivity.Paused)
+                    if(!_currentActivity.ManuallyPaused)
                     {
                         _currentActivity.Pause();
                     }
@@ -2812,39 +3007,39 @@ namespace TraXile
 
         private void PrepareBackupRestore(string sPath)
         {
-            File.Copy(sPath + @"/stats.cache", "_stats.cache.restore");
-            File.Copy(sPath + @"/data.db", "_data.db.restore");
-            File.Copy(sPath + @"/Client.txt", Directory.GetParent(_poeLogFilePath) + @"/_Client.txt.restore");
+            File.Copy(sPath + @"/stats.cache", _cachePath + ".restore");
+            File.Copy(sPath + @"/data.db", _dbPath + ".restore");
+            File.Copy(sPath + @"/Client.txt", Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore");
             _log.Info("Backup restore successfully prepared! Restarting Application");
             Application.Restart();
         }
 
         private void DoBackupRestoreIfPrepared()
         {
-            if (File.Exists("_stats.cache.restore"))
+            if (File.Exists(_cachePath + ".restore"))
             {
-                File.Delete("stats.cache");
-                File.Move("_stats.cache.restore", "stats.cache");
-                _log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: stats.cache");
+                File.Delete(_cachePath);
+                File.Move(_cachePath + ".restore", _cachePath);
+                _log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: " + _cachePath);
                 _restoreMode = true;
             }
 
-            if (File.Exists("_data.db.restore"))
+            if (File.Exists(_dbPath + ".restore"))
             {
-                File.Delete("data.db");
-                File.Move("_data.db.restore", "data.db");
+                File.Delete(_dbPath);
+                File.Move(_dbPath + ".restore", _dbPath);
                 _log.Info("BackupRestored -> Source: _data.db.restore, Destination: data.db");
                 _restoreMode = true;
             }
 
             try
             {
-                if (File.Exists(Directory.GetParent(_poeLogFilePath) + @"/_Client.txt.restore"))
+                if (File.Exists(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore"))
                 {
-                    File.Delete(_poeLogFilePath);
-                    File.Move(Directory.GetParent(_poeLogFilePath) + @"/_Client.txt.restore", _poeLogFilePath);
-                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(_poeLogFilePath) + @"/_Client.txt.restore" +
-                        ", Destination: " + Directory.GetParent(_poeLogFilePath) + @"/_Client.txt");
+                    File.Delete(SettingPoeLogFilePath);
+                    File.Move(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore", SettingPoeLogFilePath);
+                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore" +
+                        ", Destination: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt");
                     _restoreMode = true;
                 }
 
@@ -2897,7 +3092,7 @@ namespace TraXile
                 dr = MessageBox.Show("Do you really want to restore the selected Backup? The Application will be restarted. Please make sure that your PathOfExile Client is not running.", "Warning", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.Yes)
                 {
-                    PrepareBackupRestore(listBox1.SelectedItem.ToString());
+                    PrepareBackupRestore(_myAppData + listBox1.SelectedItem.ToString());
                 }
             }
         }
@@ -3149,71 +3344,7 @@ namespace TraXile
 
         private void textBox8_TextChanged(object sender, EventArgs e)
         {
-            if (textBox8.Text == String.Empty)
-            {
-                _lvmActlog.Reset();
-            }
-            else if (textBox8.Text.Contains("tags=="))
-            {
-                List<string> itemNames = new List<string>();
-                try
-                {
-                    string[] sTagFilter = textBox8.Text.Split(new string[] { "==" }, StringSplitOptions.None)[1].Split(',');
-                    int iMatched = 0;
-                    foreach (TrackedActivity ta in _eventHistory)
-                    {
-                        iMatched = 0;
-                        foreach (string tag in sTagFilter)
-                        {
-                            if (ta.HasTag(tag))
-                            {
-                                iMatched++;
-                            }
-                            else
-                            {
-                                iMatched = 0;
-                                break;
-                            }
-                        }
-                        if (iMatched > 0)
-                        {
-                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
-                        }
-                    }
-                    _lvmActlog.FilterByNameList(itemNames);
-                }
-                catch { }
-            }
-            else if(textBox8.Text.Contains("tags="))
-            {
-                List<string> itemNames = new List<string>();
-                try
-                {
-                    string[] sTagFilter = textBox8.Text.Split('=')[1].Split(',');
-                    int iMatched = 0;
-                    foreach(TrackedActivity ta in _eventHistory)
-                    {
-                        iMatched = 0;
-                        foreach(string tag in sTagFilter)
-                        {
-                            if(ta.HasTag(tag))
-                            {
-                                iMatched++;
-                            }
-                        }
-                        if(iMatched > 0)
-                        {
-                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);    
-                        }
-                    }
-                    _lvmActlog.FilterByNameList(itemNames);
-                }
-                catch { }
-            }
-            else
-            {
-                _lvmActlog.ApplyFullTextFilter(textBox8.Text);
-            }
+          
             
         }
 
@@ -3226,6 +3357,7 @@ namespace TraXile
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             textBox8.Text = "";
+            DoSearch();
         }
 
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -3298,9 +3430,9 @@ namespace TraXile
                 try
                 {
                     string sDt = DateTime.Now.ToString("yyyy-MM-dd-H-m-s");
-                    string sBaseDir = new FileInfo(_poeLogFilePath).DirectoryName;
-                    File.Copy(_poeLogFilePath, sBaseDir + @"\Client." + sDt + ".txt");
-                    FileStream fs1 = new FileStream(_poeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                    string sBaseDir = new FileInfo(SettingPoeLogFilePath).DirectoryName;
+                    File.Copy(SettingPoeLogFilePath, sBaseDir + @"\Client." + sDt + ".txt");
+                    FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
 
                     _lastHash = 0;
                     SaveStatsCache();
@@ -3324,6 +3456,102 @@ namespace TraXile
         private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(APPINFO.WIKI_URL);
+        }
+
+        private void DoSearch()
+        {
+            if (textBox8.Text == String.Empty)
+            {
+                _lvmActlog.Reset();
+                _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
+                
+            }
+            else if (textBox8.Text.Contains("tags=="))
+            {
+                List<string> itemNames = new List<string>();
+                try
+                {
+                    string[] sTagFilter = textBox8.Text.Split(new string[] { "==" }, StringSplitOptions.None)[1].Split(',');
+                    int iMatched = 0;
+                    foreach (TrackedActivity ta in _eventHistory)
+                    {
+                        iMatched = 0;
+                        foreach (string tag in sTagFilter)
+                        {
+                            if (ta.HasTag(tag))
+                            {
+                                iMatched++;
+                            }
+                            else
+                            {
+                                iMatched = 0;
+                                break;
+                            }
+                        }
+                        if (iMatched > 0)
+                        {
+                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
+                        }
+                    }
+                    _lvmActlog.FilterByNameList(itemNames);
+                }
+                catch { }
+            }
+            else if (textBox8.Text.Contains("tags="))
+            {
+                List<string> itemNames = new List<string>();
+                try
+                {
+                    string[] sTagFilter = textBox8.Text.Split('=')[1].Split(',');
+                    int iMatched = 0;
+                    foreach (TrackedActivity ta in _eventHistory)
+                    {
+                        iMatched = 0;
+                        foreach (string tag in sTagFilter)
+                        {
+                            if (ta.HasTag(tag))
+                            {
+                                iMatched++;
+                            }
+                        }
+                        if (iMatched > 0)
+                        {
+                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
+                        }
+                    }
+                    _lvmActlog.FilterByNameList(itemNames);
+                }
+                catch { }
+            }
+            else
+            {
+                _lvmActlog.ApplyFullTextFilter(textBox8.Text);
+            }
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            DoSearch();
+        }
+
+        private void listViewActLog_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        {
+            SaveLayout();
+        }
+
+        private void label74_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void comboBox2_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("actlog.maxitems", comboBox2.SelectedItem.ToString());
+            DoSearch();
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)

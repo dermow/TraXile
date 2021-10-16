@@ -207,6 +207,7 @@
     <Compile Include="ActivityTag.cs" />
     <Compile Include="TrackingEvent.cs" />
     <Compile Include="TrackedActivity.cs" />
+    <Compile Include="TxSettingsManager.cs" />
     <EmbeddedResource Include="AboutW.resx">
       <DependentUpon>AboutW.cs</DependentUpon>
     </EmbeddedResource>

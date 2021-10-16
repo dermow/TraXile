@@ -22,5 +22,17 @@ namespace TraXile.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PoeLogFilePath {
+            get {
+                return ((string)(this["PoeLogFilePath"]));
+            }
+            set {
+                this["PoeLogFilePath"] = value;
+            }
+        }
     }
 }

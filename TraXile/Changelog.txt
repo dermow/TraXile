@@ -70,7 +70,16 @@
 - Bugfix: Log parsing stopped working when Client.txt deleted manually
 - Fixed some typos
 
-0.4.9
-- Added Wiki link to helb menue
+0.5.0
+* IMPORTANT: as there are a lot of changes in the logic of parsing the logfile coming with this version
+             it is recommendet to re-install it or trigger "Reload logfile" after update
+
+- Added Wiki link to help menue
 - Added Stats (Maps done: <Tier>) -> needs reload logfile for events in the past
-- Renamed Tab "Tracking" to "Live-Tracking"
+- CHANGE: activities can now be parsed historically from Client.txt (needs logfile reload)
+- Added new Activity Type "TEMPLE"
+- Removed "The Temple of Atzoatl" from Map list
+- Added Installer
+- Implemented own class for manage Settings
+- Moved data.db, stats.cache, VERSION.txt and logfile to users APPDATA/Roaming
+
