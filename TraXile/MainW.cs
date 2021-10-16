@@ -4,7 +4,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -70,15 +69,20 @@ namespace TraXile
         private ILog _log;
         private bool _showGGridInStats;
         private string _lastSimuEndpoint;
+        private TxSettingsManager _mySettings;
+
 
         private ListViewManager _lvmStats, _lvmActlog;
         private bool _restoreOk = true;
         private string _failedRestoreReason = "";
+        private string _dbPath;
+        private string _cachePath;
+        private string _myAppData;
 
-        public string LogFilePath
+        public string SettingPoeLogFilePath
         {
-            get { return _poeLogFilePath; }
-            set { _poeLogFilePath = value; }
+            get {return Properties.Settings.Default.PoeLogFilePath; }
+            set { Properties.Settings.Default.PoeLogFilePath = value;  Properties.Settings.Default.Save(); }
         }
 
         public List<ActivityTag> Tags
@@ -89,6 +93,18 @@ namespace TraXile
 
         public MainW()
         {
+            //TEST: Create folder in userdata
+            _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
+            _dbPath = _myAppData + @"\data.db";
+            _cachePath = _myAppData + @"\stats.cache";
+            _mySettings = new TxSettingsManager(_myAppData + @"\config.xml");
+
+            if(!Directory.Exists(_myAppData))
+            {
+                Directory.CreateDirectory(_myAppData);
+            }
+
+           
             this.Visible = false;
             InitializeComponent();
             Init();
@@ -152,6 +168,8 @@ namespace TraXile
 
             _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             _log.Info("Application started");
+
+            _mySettings.LoadFromXml();
 
             _lvmStats = new ListViewManager(listViewStats);
             _lvmActlog = new ListViewManager(listViewActLog);
@@ -223,9 +241,8 @@ namespace TraXile
             this.Text = APPINFO.NAME;
             _initStartTime = DateTime.Now;
 
-           
 
-            if(_poeLogFilePath == null)
+            if(String.IsNullOrEmpty(Properties.Settings.Default.PoeLogFilePath))
             {
                 FileSelectScreen fs = new FileSelectScreen(this);
                 fs.ShowDialog();
@@ -786,14 +803,16 @@ namespace TraXile
 
         private void ReadBackupList()
         {
-            if(Directory.Exists("backups"))
+            if(Directory.Exists(_myAppData + @"\backups"))
             {
-                foreach(string s in Directory.GetDirectories("backups"))
+                foreach(string s in Directory.GetDirectories(_myAppData + @"\backups"))
                 {
                     foreach(string s2 in Directory.GetDirectories(s))
                     {
-                        if(!_backups.Contains(s2))
-                            _backups.Add(s2);
+                        string s_name = s2.Replace(_myAppData, "");
+                        
+                        if(!_backups.Contains(s_name))
+                            _backups.Add(s_name);
                     }
                 }
             }
@@ -801,7 +820,7 @@ namespace TraXile
 
         private void InitDatabase()
         {
-            _dbConnection = new SqliteConnection("Data Source=data.db");
+            _dbConnection = new SqliteConnection("Data Source=" + _dbPath);
             _dbConnection.Open();
 
             //Create Tables
@@ -1050,7 +1069,7 @@ namespace TraXile
             while(true)
             {
                 Thread.Sleep(1000);
-                if(_poeLogFilePath != null)
+                if(SettingPoeLogFilePath != null)
                 {
                     ParseLogFile();
                   
@@ -1061,7 +1080,7 @@ namespace TraXile
         private int GetLogFileLineCount()
         {
             int iCount = 0;
-            FileStream fs1 = new FileStream(_poeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             TextReader reader1 = new StreamReader(fs1);
             while ((reader1.ReadLine()) != null)
             {
@@ -1077,7 +1096,7 @@ namespace TraXile
 
             _logLinesTotal = Convert.ToDouble(GetLogFileLineCount());
 
-            var fs = new FileStream(_poeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var fs = new FileStream(SettingPoeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             bool bNewContent = _lastHash == 0;
 
             using (StreamReader reader = new StreamReader(fs))
@@ -2121,9 +2140,9 @@ namespace TraXile
         //TODO: replace with DB table
         private void ReadStatsCache()
         {
-            if(File.Exists("stats.cache"))
+            if(File.Exists(_cachePath))
             {
-                StreamReader r = new StreamReader("stats.cache");
+                StreamReader r = new StreamReader(_cachePath);
                 string line;
                 string statID = "";
                 int statValue = 0;
@@ -2158,7 +2177,7 @@ namespace TraXile
 
         private void SaveStatsCache()
         {
-            StreamWriter wrt = new StreamWriter("stats.cache");
+            StreamWriter wrt = new StreamWriter(_cachePath);
             wrt.WriteLine("last;" + _lastHash.ToString());
             foreach(KeyValuePair<string, int> kvp in _numericStats)
             {
@@ -2169,7 +2188,7 @@ namespace TraXile
 
         private void SaveVersion()
         {
-            StreamWriter wrt = new StreamWriter("version");
+            StreamWriter wrt = new StreamWriter(_myAppData + @"\VERSION.txt");
             wrt.WriteLine(APPINFO.VERSION);
             wrt.Close();
         }
@@ -2499,7 +2518,7 @@ namespace TraXile
 
         private void ReadSettings()
         {
-            this._poeLogFilePath = ReadSetting("PoELogFilePath");
+            //this.LogFilePath = ReadSetting("PoELogFilePath");
             this._showGridInActLog = Convert.ToBoolean(ReadSetting("ActivityLogShowGrid"));
             this._showGGridInStats = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
 
@@ -2509,14 +2528,7 @@ namespace TraXile
 
         public string ReadSetting(string key, string s_default = null)
         {
-            try
-            {
-                return ConfigurationManager.AppSettings[key] ?? s_default;
-            }
-            catch (ConfigurationErrorsException)
-            {
-                return s_default;
-            }
+            return _mySettings.ReadSetting(key, s_default);
         }
 
         private void Exit()
@@ -2530,27 +2542,8 @@ namespace TraXile
 
         public void AddUpdateAppSettings(string key, string value, bool b_log = false)
         {
-            try
-            {
-                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                var settings = configFile.AppSettings.Settings;
-                if (settings[key] == null)
-                {
-                    settings.Add(key, value);
-                }
-                else
-                {
-                    settings[key].Value = value;
-                }
-                configFile.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
-                if(b_log)
-                    _log.Info("Updated setting: " + key + "=" + value);
-            }
-            catch (ConfigurationErrorsException)
-            {
-                Console.WriteLine("Error writing app settings");
-            }
+            _mySettings.AddOrUpdateSetting(key, value);
+            _mySettings.WriteToXml();
         }
 
         private void RefreshChart()
@@ -2655,15 +2648,15 @@ namespace TraXile
 
         private void CreateBackup(string s_name)
         {
-            string sBackupDir = "backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+            string sBackupDir = _myAppData + @"/backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
             System.IO.Directory.CreateDirectory(sBackupDir);
             
-            if(System.IO.File.Exists(_poeLogFilePath))
-                System.IO.File.Copy(_poeLogFilePath, sBackupDir + @"/Client.txt");
-            if(System.IO.File.Exists("stats.cache"))
-                System.IO.File.Copy("stats.cache", sBackupDir + @"/stats.cache");
-            if(System.IO.File.Exists("data.db"))
-                System.IO.File.Copy("data.db", sBackupDir + @"/data.db");
+            if(System.IO.File.Exists(SettingPoeLogFilePath))
+                System.IO.File.Copy(SettingPoeLogFilePath, sBackupDir + @"/Client.txt");
+            if(System.IO.File.Exists(_cachePath))
+                System.IO.File.Copy(_cachePath, sBackupDir + @"/stats.cache");
+            if(System.IO.File.Exists(_dbPath))
+                System.IO.File.Copy(_dbPath, sBackupDir + @"/data.db");
             if(System.IO.File.Exists("TraXile.exe.config"))
                 System.IO.File.Copy("TraXile.exe.config", sBackupDir + @"/TraXile.exe.config");
         }
@@ -2671,11 +2664,11 @@ namespace TraXile
         private void DoFullReset()
         {
             // Make logfile empty
-            FileStream fs1 = new FileStream(_poeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             ResetStats();
             ClearActivityLog();
             _lastHash = 0;
-            File.Delete("stats.cache");
+            File.Delete(_cachePath);
         }
 
         private void OpenActivityDetails(TrackedActivity ta)
@@ -2710,7 +2703,7 @@ namespace TraXile
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (_poeLogFilePath == null)
+            if (String.IsNullOrEmpty(Properties.Settings.Default.PoeLogFilePath))
             {
             }
             else
@@ -3014,39 +3007,39 @@ namespace TraXile
 
         private void PrepareBackupRestore(string sPath)
         {
-            File.Copy(sPath + @"/stats.cache", "_stats.cache.restore");
-            File.Copy(sPath + @"/data.db", "_data.db.restore");
-            File.Copy(sPath + @"/Client.txt", Directory.GetParent(_poeLogFilePath) + @"/_Client.txt.restore");
+            File.Copy(sPath + @"/stats.cache", _cachePath + ".restore");
+            File.Copy(sPath + @"/data.db", _dbPath + ".restore");
+            File.Copy(sPath + @"/Client.txt", Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore");
             _log.Info("Backup restore successfully prepared! Restarting Application");
             Application.Restart();
         }
 
         private void DoBackupRestoreIfPrepared()
         {
-            if (File.Exists("_stats.cache.restore"))
+            if (File.Exists(_cachePath + ".restore"))
             {
-                File.Delete("stats.cache");
-                File.Move("_stats.cache.restore", "stats.cache");
-                _log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: stats.cache");
+                File.Delete(_cachePath);
+                File.Move(_cachePath + ".restore", _cachePath);
+                _log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: " + _cachePath);
                 _restoreMode = true;
             }
 
-            if (File.Exists("_data.db.restore"))
+            if (File.Exists(_dbPath + ".restore"))
             {
-                File.Delete("data.db");
-                File.Move("_data.db.restore", "data.db");
+                File.Delete(_dbPath);
+                File.Move(_dbPath + ".restore", _dbPath);
                 _log.Info("BackupRestored -> Source: _data.db.restore, Destination: data.db");
                 _restoreMode = true;
             }
 
             try
             {
-                if (File.Exists(Directory.GetParent(_poeLogFilePath) + @"/_Client.txt.restore"))
+                if (File.Exists(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore"))
                 {
-                    File.Delete(_poeLogFilePath);
-                    File.Move(Directory.GetParent(_poeLogFilePath) + @"/_Client.txt.restore", _poeLogFilePath);
-                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(_poeLogFilePath) + @"/_Client.txt.restore" +
-                        ", Destination: " + Directory.GetParent(_poeLogFilePath) + @"/_Client.txt");
+                    File.Delete(SettingPoeLogFilePath);
+                    File.Move(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore", SettingPoeLogFilePath);
+                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore" +
+                        ", Destination: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt");
                     _restoreMode = true;
                 }
 
@@ -3099,7 +3092,7 @@ namespace TraXile
                 dr = MessageBox.Show("Do you really want to restore the selected Backup? The Application will be restarted. Please make sure that your PathOfExile Client is not running.", "Warning", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.Yes)
                 {
-                    PrepareBackupRestore(listBox1.SelectedItem.ToString());
+                    PrepareBackupRestore(_myAppData + listBox1.SelectedItem.ToString());
                 }
             }
         }
@@ -3437,9 +3430,9 @@ namespace TraXile
                 try
                 {
                     string sDt = DateTime.Now.ToString("yyyy-MM-dd-H-m-s");
-                    string sBaseDir = new FileInfo(_poeLogFilePath).DirectoryName;
-                    File.Copy(_poeLogFilePath, sBaseDir + @"\Client." + sDt + ".txt");
-                    FileStream fs1 = new FileStream(_poeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                    string sBaseDir = new FileInfo(SettingPoeLogFilePath).DirectoryName;
+                    File.Copy(SettingPoeLogFilePath, sBaseDir + @"\Client." + sDt + ".txt");
+                    FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
 
                     _lastHash = 0;
                     SaveStatsCache();

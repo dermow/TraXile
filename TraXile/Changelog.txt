@@ -79,3 +79,7 @@
 - CHANGE: activities can now be parsed historically from Client.txt (needs logfile reload)
 - Added new Activity Type "TEMPLE"
 - Removed "The Temple of Atzoatl" from Map list
+- Added Installer
+- Implemented own class for manage Settings
+- Moved data.db, stats.cache, VERSION.txt and logfile to users APPDATA/Roaming
+
