@@ -3,10 +3,10 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:Setup"
-"LanguageId" = "3:1033"
+"ProjectName" = "8:TraXile.Setup"
+"LanguageId" = "3:0"
 "CodePage" = "3:1252"
-"UILanguageId" = "3:1033"
+"UILanguageId" = "3:0"
 "SccProjectName" = "8:"
 "SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
@@ -489,6 +489,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_84ABA4594B2B498DB34A2479E0E6952D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_89079DD401A2A226666849379E9AF8F5"
         "OwnerKey" = "8:_70A8E5F21F07426CB9C2F141D47232D2"
         "MsmSig" = "8:_UNDEFINED"
@@ -521,6 +527,12 @@
         {
         "MsmKey" = "8:_941CE2A540D90841EE13E3928DF62B17"
         "OwnerKey" = "8:_D8B5655F5A024771F5B561D56A2F633E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_947A46C6906140A4A6907805EC7C98A7"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -688,12 +700,6 @@
         "Entry"
         {
         "MsmKey" = "8:_BF14A45D779E96ED84DB50B4F7E036C3"
-        "OwnerKey" = "8:_BBB19EDE64E956B1BF29B71ABE044B4F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BF14A45D779E96ED84DB50B4F7E036C3"
         "OwnerKey" = "8:_A821A7161BC04BF890A508F78ED8FCDC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -701,6 +707,12 @@
         {
         "MsmKey" = "8:_BF14A45D779E96ED84DB50B4F7E036C3"
         "OwnerKey" = "8:_732D16FEA2974F28AC5CFA5A271AEFE0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BF14A45D779E96ED84DB50B4F7E036C3"
+        "OwnerKey" = "8:_BBB19EDE64E956B1BF29B71ABE044B4F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -909,6 +921,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_ECD710BC418A479CB5F90A936D21A192"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_ED1D0E4E4B5E90DEAC9F04274EB404D7"
         "OwnerKey" = "8:_70A8E5F21F07426CB9C2F141D47232D2"
         "MsmSig" = "8:_UNDEFINED"
@@ -983,6 +1001,18 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_70A8E5F21F07426CB9C2F141D47232D2"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_BF14A45D779E96ED84DB50B4F7E036C3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_596399555B8BE9073A19D55287364BA4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1702,18 +1732,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BF14A45D779E96ED84DB50B4F7E036C3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_596399555B8BE9073A19D55287364BA4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_F111037D25623648B8F8A7D2817310D1"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1754,6 +1772,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -3955,6 +3981,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_84ABA4594B2B498DB34A2479E0E6952D"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\Google Drive\\TraXile\\Logo\\mstile-310x310.png"
+            "TargetName" = "8:mstile-310x310.png"
+            "Tag" = "8:"
+            "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_89079DD401A2A226666849379E9AF8F5"
             {
             "AssemblyRegister" = "3:1"
@@ -4108,6 +4154,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_947A46C6906140A4A6907805EC7C98A7"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\Google Drive\\TraXile\\Logo\\black.jpg"
+            "TargetName" = "8:black.jpg"
+            "Tag" = "8:"
+            "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_95EDCC1CB71B526C61513187A9D80EC2"
@@ -5505,6 +5571,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ECD710BC418A479CB5F90A936D21A192"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\Google Drive\\TraXile\\Logo\\favicon-32x32.ico"
+            "TargetName" = "8:favicon-32x32.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ED1D0E4E4B5E90DEAC9F04274EB404D7"
             {
             "AssemblyRegister" = "3:1"
@@ -5926,7 +6012,7 @@
         }
         "MsiBootstrapper"
         {
-        "LangId" = "3:1033"
+        "LangId" = "3:0"
         "RequiresElevation" = "11:FALSE"
         }
         "Product"
@@ -5934,11 +6020,11 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TraXile"
         "ProductCode" = "8:{3F1AB55C-BD8F-4611-9C59-BCC296B8EADD}"
-        "PackageCode" = "8:{EE27BA4C-DFDE-467C-AD7D-FB407778BDF2}"
+        "PackageCode" = "8:{914F7EBF-0D9E-4FA2-ABE8-D2E4CBE4765C}"
         "UpgradeCode" = "8:{C811751D-FFAF-470F-8AA3-11A3FEEE6981}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:0.5.2"
@@ -6054,6 +6140,34 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_273A7CCBF8614095999CD9C7FD05752D"
+            {
+            "Name" = "8:TraXile"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_70A8E5F21F07426CB9C2F141D47232D2"
+            "Folder" = "8:_3D9C709500344800BF9C8FB9C4DC8CDE"
+            "WorkingFolder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
+            "Icon" = "8:_ECD710BC418A479CB5F90A936D21A192"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_7982C33E79684C009164743406F132C9"
+            {
+            "Name" = "8:TraXile"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_70A8E5F21F07426CB9C2F141D47232D2"
+            "Folder" = "8:_1A941B2FF89C4B268AB9A3DB88FC49FA"
+            "WorkingFolder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
+            "Icon" = "8:_ECD710BC418A479CB5F90A936D21A192"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
@@ -6217,8 +6331,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -6276,7 +6390,7 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:0"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "InstallAllUsersVisible"
@@ -6353,8 +6467,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:"
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
