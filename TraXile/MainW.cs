@@ -81,8 +81,8 @@ namespace TraXile
 
         public string SettingPoeLogFilePath
         {
-            get {return Properties.Settings.Default.PoeLogFilePath; }
-            set { Properties.Settings.Default.PoeLogFilePath = value;  Properties.Settings.Default.Save(); }
+            get { return ReadSetting("poe_logfile_path", null); }
+            set {AddUpdateAppSettings("poe_logfile_path", value); }
         }
 
         public List<ActivityTag> Tags
@@ -98,13 +98,13 @@ namespace TraXile
             _dbPath = _myAppData + @"\data.db";
             _cachePath = _myAppData + @"\stats.cache";
             _mySettings = new TxSettingsManager(_myAppData + @"\config.xml");
+            _poeLogFilePath = _mySettings.ReadSetting("poe_logfile_path", null);
 
             if(!Directory.Exists(_myAppData))
             {
                 Directory.CreateDirectory(_myAppData);
             }
-
-           
+                       
             this.Visible = false;
             InitializeComponent();
             Init();
@@ -122,22 +122,6 @@ namespace TraXile
                 int iIndex = releases.IndexOf("tag_name");
                 string sVersion =  releases.Substring(iIndex + 11, 5);
 
-                // Check if Updater needs an update
-                if(File.Exists("TraXile.Updater.exe.Update"))
-                {
-                    try
-                    {
-                        File.Delete("Traxile.Updater.exe");
-                        File.Move("TraXile.Updater.exe.Update", "TraXile.Updater.exe");
-                        _log.Info("TraXile.Updater updated successfully.");
-                    }
-                    catch(Exception ex)
-                    {
-                        _log.Error("Error updating TraXile.Updater: " + ex.Message);
-                    }
-                    
-                }
-
                 if(Convert.ToInt32(sVersion.Replace(".", "")) > Convert.ToInt32(APPINFO.VERSION.Replace(".", "")))
                 {
                     if(MessageBox.Show("There is a new version available for TraXile (current=" + APPINFO.VERSION + ", new=" + sVersion + ")"
@@ -145,7 +129,7 @@ namespace TraXile
                         + Environment.NewLine + Environment.NewLine +
                        APPINFO.RELEASE_URL, "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        System.Diagnostics.Process.Start(APPINFO.RELEASE_URL);
+                        System.Diagnostics.Process.Start(Application.StartupPath + @"\TraXile.Updater.exe");
                     }
                 }
                 else
@@ -242,7 +226,7 @@ namespace TraXile
             _initStartTime = DateTime.Now;
 
 
-            if(String.IsNullOrEmpty(Properties.Settings.Default.PoeLogFilePath))
+            if(String.IsNullOrEmpty(SettingPoeLogFilePath))
             {
                 FileSelectScreen fs = new FileSelectScreen(this);
                 fs.ShowDialog();
@@ -2703,7 +2687,7 @@ namespace TraXile
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(Properties.Settings.Default.PoeLogFilePath))
+            if (String.IsNullOrEmpty(SettingPoeLogFilePath))
             {
             }
             else

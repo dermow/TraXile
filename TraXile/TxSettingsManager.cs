@@ -45,14 +45,16 @@ namespace TraXile
 
         public void LoadFromXml()
         {
-            XmlDocument xml = new XmlDocument();
-            xml.Load(_xmlPath);
-
-            foreach(XmlNode n in xml.SelectNodes(@"root/setting"))
+            if(File.Exists(_xmlPath))
             {
-                kvStore.Add(n.Attributes["key"].Value, n.Attributes["value"].Value);
+                XmlDocument xml = new XmlDocument();
+                xml.Load(_xmlPath);
+
+                foreach (XmlNode n in xml.SelectNodes(@"root/setting"))
+                {
+                    kvStore.Add(n.Attributes["key"].Value, n.Attributes["value"].Value);
+                }
             }
-            
         }
 
         public void WriteToXml()
