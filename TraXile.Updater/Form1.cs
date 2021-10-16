@@ -21,13 +21,12 @@ namespace TraXile.Updater
         string sTraXileVersion = "";
         bool bStarted, bExit;
         string _myAppData;
+        string _targetVersion;
 
         public Form1()
         {
             InitializeComponent();
-            timer1.Interval = 2000;
-            timer1.Start();
-
+           
             //TEST: Create folder in userdata
             _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TraXile";
 
@@ -36,6 +35,19 @@ namespace TraXile.Updater
                 Directory.CreateDirectory(_myAppData);
             }
 
+            try
+            {
+                _targetVersion = Environment.GetCommandLineArgs()[1];
+
+                timer1.Interval = 2000;
+                timer1.Start();
+            }
+            catch
+            {
+                Log("No target release specified!");
+            }
+            
+
         }
 
         private void Log(string text)
@@ -43,21 +55,9 @@ namespace TraXile.Updater
             textBox1.Text += text + Environment.NewLine;
         }
 
-        private string GetLatestRelease()
-        {
-            const string GITHUB_API = "https://api.github.com/repos/{0}/{1}/releases/latest";
-            WebClient webClient = new WebClient();
-            // Added user agent
-            webClient.Headers.Add("User-Agent", "Unity web player");
-            Uri uri = new Uri(string.Format(GITHUB_API, "dermow", "TraXile"));
-            string releases = webClient.DownloadString(uri);
-            int iIndex = releases.IndexOf("tag_name");
-            return releases.Substring(iIndex+11, 5);
-        }
-
         private void Check()
         {
-            StartUpdate(GetLatestRelease());
+            StartUpdate(_targetVersion);
         }
 
         private void StartUpdate(string s_version)
@@ -66,6 +66,8 @@ namespace TraXile.Updater
             WebClient wc = new WebClient();
             Uri uri = new Uri("https://github.com/dermow/TraXile/releases/download/" + s_version + @"/Setup.msi");
             wc.DownloadFile(uri, _myAppData + @"\Setup_" + s_version + ".msi");
+            Log("Download successful. Saved installer to: " + _myAppData);
+
             Process[] p = Process.GetProcessesByName("TraXile");
 
             if (p.Length > 0)

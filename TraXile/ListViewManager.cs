@@ -32,6 +32,8 @@ namespace TraXile
 
         public void FilterByRange(int i_min, int i_max, List<ListViewItem> baseList = null)
         {
+            _listView.SuspendLayout();
+
             if (baseList == null)
                 baseList = _masterList;
 
@@ -51,6 +53,8 @@ namespace TraXile
             }
             _isFiltered = true;
             _listView.EndUpdate();
+
+            _listView.ResumeLayout();
         }
 
         public void ApplyFullTextFilter(string s_filter)
@@ -86,6 +90,8 @@ namespace TraXile
 
         public void FilterByNameList(List<string> item_names)
         {
+            _listView.SuspendLayout();
+
             _filteredList.Clear();
             foreach(string s in item_names)
             {
@@ -102,6 +108,8 @@ namespace TraXile
                 _listView.Items.Add(lvi);
             }
             _isFiltered = true;
+
+            _listView.ResumeLayout();
         }
 
         public void Reset()
