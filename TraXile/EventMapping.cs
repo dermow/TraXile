@@ -55,7 +55,12 @@ namespace TraXile
         LAB_FINISHED,
         LAB_START_INFO_RECEIVED,
         NEXT_AREA_LEVEL_RECEIVED,
-        POE_CLIENT_START
+        POE_CLIENT_START,
+        TUJEN_ENCOUNTER,
+        EXP_TUJEN_ENCOUNTER,
+        EXP_ROG_ENCOUNTER,
+        EXP_GWENNEN_ENCOUNTER,
+        EXP_DANNIG_ENCOUNTER
     }
 
     public class EventMapping
@@ -161,7 +166,7 @@ namespace TraXile
                 { "The Maven: The living toy must enjoy our contests, for it continues to play.", EVENT_TYPES.MAVEN_KILLED },
 
                 //Einhar
-            { "Great job, Exile! Einhar will take the captured beast to the Menagerie.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
+                { "Great job, Exile! Einhar will take the captured beast to the Menagerie.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
                 { "The First Ones look upon this capture with pride, Exile. You hunt well.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
                 { "Survivor! You are well prepared for the end. This is a fine capture.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
                 { "Haha! You are captured, stupid beast.", EVENT_TYPES.EINHAR_BEAST_CAPTURE },
@@ -344,6 +349,12 @@ namespace TraXile
                 { "Izaro: Delight in your gilded dungeon, ascendant.", EVENT_TYPES.LAB_FINISHED },
                 { "Izaro: Your destination is more dangerous than the journey, ascendant.", EVENT_TYPES.LAB_FINISHED },
                 { "] Generating level ", EVENT_TYPES.NEXT_AREA_LEVEL_RECEIVED },
+
+                // Expedition
+                { "] Tujen, the Haggler:", EVENT_TYPES.EXP_TUJEN_ENCOUNTER },
+                { "] Gwennen, the Gambler:", EVENT_TYPES.EXP_GWENNEN_ENCOUNTER },
+                { "] Rog:", EVENT_TYPES.EXP_ROG_ENCOUNTER },
+                { "] Dannig, Warrior Skald:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
 
             };
         }

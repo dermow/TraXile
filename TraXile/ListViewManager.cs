@@ -40,9 +40,14 @@ namespace TraXile
             _listView.BeginUpdate();
             int iMax = _masterList.Count > i_max ? i_max : _masterList.Count;
             _filteredList.Clear();
+
             foreach(ListViewItem lvi in _masterList.GetRange(i_min, iMax))
             {
-                _filteredList.Add(lvi);
+                if(!_filteredList.Contains(lvi))
+                {
+                    _filteredList.Add(lvi);
+                }
+                
             }
 
             _listView.Items.Clear();
