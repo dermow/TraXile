@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Windows.Media;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -48,7 +49,7 @@ namespace TraXile
         private bool _elderFightActive;
         private bool _showGridInActLog;
         private bool _restoreMode;
-        private bool _mapDashboardUpdateRequested;
+        private bool _labDashboardUpdateRequested;
         private int _shaperKillsInFight;
         private int _nextAreaLevel;
         private int _currentAreaLevel;
@@ -59,6 +60,7 @@ namespace TraXile
         private Dictionary<int, string> _dict;
         private Dictionary<string, int> _numericStats;
         private Dictionary<string, string> _statNamesLong;
+        private List<string> labs;
         private LoadScreen _loadScreenWindow;
         private List<TrackedActivity> _eventHistory;
         private ConcurrentQueue<TrackingEvent> _eventQueue;
@@ -79,7 +81,11 @@ namespace TraXile
         private string _dbPath;
         private string _cachePath;
         private string _myAppData;
-        
+        private bool _mapDashboardUpdateRequested;
+        private bool _heistDashboardHideUnknown;
+        private bool _labDashboardHideUnknown;
+        private bool _heistDashboardUpdateRequested;
+
         /// <summary>
         /// Setting Property for LogFilePath
         /// </summary>
@@ -118,6 +124,7 @@ namespace TraXile
             this.Visible = false;
             InitializeComponent();
             Init();
+
         }
 
         /// <summary>
@@ -241,7 +248,6 @@ namespace TraXile
             chart1.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Days;
             chart1.ChartAreas[0].AxisX.IntervalOffset = 1;
             chart1.Series[0].XValueType = ChartValueType.DateTime;
-            chart1.Series[0].IsValueShownAsLabel = true;
             chart1.Series[0].LabelForeColor = Color.White;
             chart1.Series[0].LabelBackColor = Color.Black;
             chart1.Series[0].LabelBorderColor = Color.Black;
@@ -278,6 +284,66 @@ namespace TraXile
             chart3.Series[0].IsValueShownAsLabel = true;
             chart3.Series[0].LabelForeColor = Color.White;
             chart3.Series[0].Color = Color.White;
+
+            chart4.BackColor = Color.Black;
+            chart4.ChartAreas[0].BackColor = Color.Black;
+            chart4.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart4.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart4.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart4.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart4.ChartAreas[0].AxisX.Interval = 1;
+            chart4.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart4.Series[0].XValueType = ChartValueType.String;
+            chart4.Series[0].YValueType = ChartValueType.Double;
+            chart4.Legends[0].Enabled = false;
+            chart4.Series[0].IsValueShownAsLabel = true;
+            chart4.Series[0].LabelForeColor = Color.White;
+            chart4.Series[0].Color = Color.White;
+
+            chart5.BackColor = Color.Black;
+            chart5.ChartAreas[0].BackColor = Color.Black;
+            chart5.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart5.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart5.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart5.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart5.ChartAreas[0].AxisX.Interval = 1;
+            chart5.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart5.Series[0].XValueType = ChartValueType.String;
+            chart5.Series[0].YValueType = ChartValueType.Double;
+            chart5.Legends[0].Enabled = false;
+            chart5.Series[0].IsValueShownAsLabel = true;
+            chart5.Series[0].LabelForeColor = Color.White;
+            chart5.Series[0].Color = Color.White;
+
+            chart6.BackColor = Color.Black;
+            chart6.ChartAreas[0].BackColor = Color.Black;
+            chart6.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart6.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart6.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart6.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart6.ChartAreas[0].AxisX.Interval = 1;
+            chart6.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart6.Series[0].XValueType = ChartValueType.String;
+            chart6.Series[0].YValueType = ChartValueType.Double;
+            chart6.Legends[0].Enabled = false;
+            chart6.Series[0].IsValueShownAsLabel = true;
+            chart6.Series[0].LabelForeColor = Color.White;
+            chart6.Series[0].Color = Color.White;
+
+            chart7.BackColor = Color.Black;
+            chart7.ChartAreas[0].BackColor = Color.Black;
+            chart7.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart7.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart7.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart7.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart7.ChartAreas[0].AxisX.Interval = 1;
+            chart7.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart7.Series[0].XValueType = ChartValueType.String;
+            chart7.Series[0].YValueType = ChartValueType.Double;
+            chart7.Legends[0].Enabled = false;
+            chart7.Series[0].IsValueShownAsLabel = true;
+            chart7.Series[0].LabelForeColor = Color.White;
+            chart7.Series[0].Color = Color.White;
 
             var ca = chart1.ChartAreas["ChartArea1"].CursorX;
             ca.IsUserEnabled = true;
@@ -347,7 +413,10 @@ namespace TraXile
             };
             _eventThread.Start();
 
+            // Request initial Dashboard update
+            _labDashboardUpdateRequested = true;
             _mapDashboardUpdateRequested = true;
+            _heistDashboardUpdateRequested = true;
         }
 
         /// <summary>
@@ -404,16 +473,25 @@ namespace TraXile
             tmpTags.Add(new ActivityTag("blight") { BackColor = Color.LightGreen, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("delirium") { BackColor = Color.WhiteSmoke, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("einhar") { BackColor = Color.Red, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("incursion") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("incursion") { BackColor = Color.GreenYellow, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("syndicate") { BackColor = Color.Gold, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("zana") { BackColor = Color.Blue, ForeColor = Color.White });
             tmpTags.Add(new ActivityTag("niko") { BackColor = Color.OrangeRed, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("zana-map") { BackColor = Color.OrangeRed, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("expedition") { BackColor = Color.Bisque, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("rog") { BackColor = Color.Bisque, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("gwennen") { BackColor = Color.Bisque, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("dannig") { BackColor = Color.Bisque, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("tujen") { BackColor = Color.Bisque, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("zana-map") { BackColor = Color.Blue, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("expedition") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("rog") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("gwennen") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("dannig") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("tujen") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("karst") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("tibbs") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("isla") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("tullina") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("niles") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("nenet") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("vinderi") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("gianna") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("huck") { BackColor = Color.IndianRed, ForeColor = Color.Black });
 
             foreach (ActivityTag tag in tmpTags)
             {
@@ -805,12 +883,12 @@ namespace TraXile
                 { "ExpeditionEncounters_Dannig", "Expedition encounters: Dannig" },
             };
 
-            List<string> labs = new List<string>
+            labs = new List<string>
             {
                 "Unknown",
+                "The Labyrinth",
                 "The Merciless Labyrinth",
                 "The Cruel Labyrinth",
-                "The Labyrinth",
                 "Uber-Lab",
                 "Advanced Uber-Lab"
             };
@@ -2225,7 +2303,7 @@ namespace TraXile
                         _currentAreaLevel = _nextAreaLevel;
                         break;
                     case EVENT_TYPES.EXP_DANNIG_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("dannig"))
+                        if (_currentActivity != null && !_currentActivity.HasTag("dannig") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Dannig", ev.EventTime, 1);
@@ -2235,7 +2313,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_GWENNEN_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("gwennen"))
+                        if (_currentActivity != null && !_currentActivity.HasTag("gwennen") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Gwennen", ev.EventTime, 1);
@@ -2244,7 +2322,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_TUJEN_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("tujen"))
+                        if (_currentActivity != null && !_currentActivity.HasTag("tujen") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Tujen", ev.EventTime, 1);
@@ -2253,7 +2331,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_ROG_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("tujen"))
+                        if (_currentActivity != null && !_currentActivity.HasTag("rog") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Rog", ev.EventTime, 1);
@@ -2890,8 +2968,26 @@ namespace TraXile
 
                     // MAP Dashbaord
                     if(_mapDashboardUpdateRequested)
+                    {
                         RenderMappingDashboard();
-                        
+                        _mapDashboardUpdateRequested = false;
+                    }
+
+                    // LAB Dashbaord
+                    if (_labDashboardUpdateRequested)
+                    {
+                        RenderLabDashboard();
+                        _labDashboardUpdateRequested = false;
+                    }
+
+                    // HEIST Dashbaord
+                    if (_heistDashboardUpdateRequested)
+                    {
+                        RenderHeistDashboard();
+                        _heistDashboardUpdateRequested = false;
+                    }
+
+
                 });
             }
         }
@@ -2932,6 +3028,233 @@ namespace TraXile
             Application.Exit();
         }
 
+        public void RenderLabDashboard()
+        {
+            Dictionary<string, int> labCounts;
+            Dictionary<string, double> labAvgTimes;
+            Dictionary<string, TrackedActivity> labBestTimes;
+
+            labCounts = new Dictionary<string, int>();
+            labAvgTimes = new Dictionary<string, double>();
+            labBestTimes = new Dictionary<string, TrackedActivity>();
+
+            foreach(string s in labs)
+            {
+                if (_labDashboardHideUnknown && s == "Unknown")
+                    continue;
+
+                labCounts.Add(s, 0);
+                labAvgTimes.Add(s, 0);
+                labBestTimes.Add(s, null);
+            }
+
+            // Lab counts
+            foreach(TrackedActivity act in _eventHistory)
+            {
+                if(act.Type == ACTIVITY_TYPES.LABYRINTH && act.DeathCounter == 0)
+                {
+                    if(labCounts.ContainsKey(act.Area))
+                    {
+                        labCounts[act.Area]++;
+                    }
+                }
+            }
+
+            // Avg lab times
+            foreach(string s in labs)
+            {
+                if (!labs.Contains(s))
+                    continue;
+
+                if (_labDashboardHideUnknown && s == "Unknown")
+                    continue;
+
+                int iSum = 0;
+                int iCount = 0;
+
+                foreach(TrackedActivity act in _eventHistory)
+                {
+                    if(act.Type == ACTIVITY_TYPES.LABYRINTH && act.DeathCounter == 0)
+                    {
+                        if(act.Area == s)
+                        {
+                            // Average
+                            iCount++;
+                            iSum += act.TotalSeconds;
+
+                            // Top 
+                            if(labBestTimes[s] == null)
+                            {
+                                labBestTimes[s] = act;
+                            }
+                            else
+                            {
+                                if(labBestTimes[s].TotalSeconds > act.TotalSeconds)
+                                {
+                                    labBestTimes[s] = act;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(iSum > 0 && iCount > 0)
+                {
+                    labAvgTimes[s] = iSum / iCount;
+                }
+            }
+
+            // UPdate Lab chart
+            MethodInvoker mi = delegate
+            {
+                chart4.Series[0].Points.Clear();
+                chart5.Series[0].Points.Clear();
+                listView3.Items.Clear();
+                foreach (KeyValuePair<string,int> kvp in labCounts)
+                {
+                    string sName = kvp.Key;
+                    if(sName != "The Labyrinth")
+                    {
+                        sName = sName.Replace("The ", "").Replace(" Labyrinth", "");
+                    }
+                    if(sName == "Unknown")
+                    {
+                        sName += "*";
+                    }
+                    chart4.Series[0].Points.AddXY(sName, kvp.Value);
+                    chart5.Series[0].Points.AddXY(sName, Math.Round(labAvgTimes[kvp.Key] / 60, 2));
+
+                    ListViewItem lvi = new ListViewItem(kvp.Key);
+                    
+                    if(labBestTimes[kvp.Key] != null)
+                    {
+                        lvi.SubItems.Add(labBestTimes[kvp.Key].StopWatchValue);
+                        lvi.SubItems.Add(labBestTimes[kvp.Key].Started.ToString());
+                    }
+                    else
+                    {
+                        lvi.SubItems.Add("-");
+                        lvi.SubItems.Add("-");
+                    }
+                    listView3.Items.Add(lvi);
+
+
+                }
+            };
+            this.BeginInvoke(mi);
+            
+        }
+
+        public void RenderHeistDashboard()
+        {
+            List<KeyValuePair<string, int>> tmpList = new List<KeyValuePair<string, int>>();
+            List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
+            Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
+            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
+
+            foreach (string s in _defaultMappings.HEIST_AREAS)
+            {
+                tmpList.Add(new KeyValuePair<string, int>(s, _numericStats["HeistsFinished_" + s]));
+            }
+
+            tmpList.Sort(
+                delegate (KeyValuePair<string, int> pair1,
+                KeyValuePair<string, int> pair2)
+                {
+                    return pair1.Value.CompareTo(pair2.Value);
+                });
+            tmpList.Reverse();
+            top10.AddRange(tmpList);
+            listView4.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in top10)
+            {
+                ListViewItem lvi = new ListViewItem(kvp.Key);
+                lvi.SubItems.Add(kvp.Value.ToString());
+                listView4.Items.Add(lvi);
+            }
+
+            // TAG CALC
+            tmpList.Clear();
+            foreach (ActivityTag tg in Tags)
+            {
+                tmpListTags.Add(tg.ID, 0);
+            }
+
+            foreach (TrackedActivity act in _eventHistory)
+            {
+                if (act.Type == ACTIVITY_TYPES.HEIST)
+                {
+                    foreach (string s in act.Tags)
+                    {
+                        if (!String.IsNullOrEmpty(s))
+                        {
+                            int iVal = tmpListTags[s];
+
+                            tmpListTags[s]++;
+                        }
+                    }
+                }
+            }
+
+            foreach (KeyValuePair<string, int> kvp in tmpListTags)
+            {
+                tmpList.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+            }
+
+            tmpList.Sort(
+                delegate (KeyValuePair<string, int> pair1,
+                KeyValuePair<string, int> pair2)
+                {
+                    return pair1.Value.CompareTo(pair2.Value);
+                });
+            tmpList.Reverse();
+            top10Tags.AddRange(tmpList);
+            listView5.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in top10Tags)
+            {
+                if(kvp.Value > 0)
+                {
+                    ListViewItem lvi = new ListViewItem(kvp.Key);
+                    lvi.SubItems.Add(kvp.Value.ToString());
+                    listView5.Items.Add(lvi);
+                }
+               
+            }
+
+            Dictionary<int, double> levelAvgs = new Dictionary<int, double>();
+            Dictionary<int, int> levelCounts = new Dictionary<int, int>();
+            for (int i = 67; i <= 83; i++)
+            {
+                int iCount = 0;
+                int iSum = 0;
+
+                foreach(TrackedActivity act in _eventHistory)
+                {
+                    if (act.Type == ACTIVITY_TYPES.HEIST && act.AreaLevel == i)
+                    {
+                        iCount++;
+                        iSum += act.TotalSeconds;
+                    }
+                }
+
+                levelAvgs.Add(i, (iCount > 0 && iSum > 0) ? (iSum / iCount) : 0);
+                levelCounts.Add(i, iCount);
+            }
+
+            MethodInvoker mi = delegate
+            {
+                chart7.Series[0].Points.Clear();
+                chart6.Series[0].Points.Clear();
+
+                foreach (KeyValuePair<int, double> kvp in levelAvgs)
+                {
+                    chart7.Series[0].Points.AddXY(kvp.Key, Math.Round(kvp.Value / 60, 2));
+                    chart6.Series[0].Points.AddXY(kvp.Key, levelCounts[kvp.Key]);
+                }
+            };
+            this.Invoke(mi);
+        }
+
         public void RenderMappingDashboard()
         {
             List<KeyValuePair<string,int>> tmpList = new List<KeyValuePair<string, int>>();
@@ -2939,6 +3262,7 @@ namespace TraXile
             Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
             List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
 
+            // MAP AREAS
             foreach (string s in _defaultMappings.MAP_AREAS)
             {
                 tmpList.Add(new KeyValuePair<string, int>(s, _numericStats["MapsFinished_" + s]));
@@ -3048,7 +3372,6 @@ namespace TraXile
                 }
             };
             this.Invoke(mi);
-            _mapDashboardUpdateRequested = false;
         }
 
         /// <summary>
@@ -4192,6 +4515,12 @@ namespace TraXile
         private void tabPage1_Validated(object sender, EventArgs e)
         {
 
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            _labDashboardHideUnknown = ((CheckBox)sender).Checked;
+            RenderLabDashboard();
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
