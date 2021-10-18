@@ -144,7 +144,7 @@
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="APPINFO.cs" />
-    <Compile Include="AreaMapping.cs" />
+    <Compile Include="DefaultMappings.cs" />
     <Compile Include="ChatCommandHelp.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -198,12 +198,6 @@
     <Compile Include="SearchHelp.Designer.cs">
       <DependentUpon>SearchHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="Settings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Settings.Designer.cs">
-      <DependentUpon>Settings.cs</DependentUpon>
-    </Compile>
     <Compile Include="ActivityTag.cs" />
     <Compile Include="TrackingEvent.cs" />
     <Compile Include="TrackedActivity.cs" />
@@ -244,9 +238,6 @@
     </Compile>
     <EmbeddedResource Include="SearchHelp.resx">
       <DependentUpon>SearchHelp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Settings.resx">
-      <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

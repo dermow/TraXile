@@ -19,10 +19,8 @@ namespace TraXile
             _mainWindow = fParent;
             this.Text = APPINFO.NAME + " " + APPINFO.VERSION;
             InitializeComponent();
-            label1.Text = "TraXile is tracking your Path of Exile lofgile (Client.txt) to keep track of your activities" + Environment.NewLine +
-                "Please select the path to your current Logfile (normally found in <PoE_Install_dir>/Logs/Client.txt)";
-            label2.Text = "*Note that very large logfiles can lead to heavy loading times. If you are not interested in " + Environment.NewLine +
-                " long time statistics you can rename your Client.txt or delete old lines out of it.";
+            label1.Text = "TraXile is reading your Path of Exile lofgile (Client.txt) to keep track of your activities" + Environment.NewLine +
+                "Please select the path to your current Logfile (normally found in <PoE_Install_Dir>/Logs/Client.txt)";
         }
 
         private void button1_Click(object sender, EventArgs e)
