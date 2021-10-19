@@ -60,25 +60,43 @@ namespace TraXile
         EXP_TUJEN_ENCOUNTER,
         EXP_ROG_ENCOUNTER,
         EXP_GWENNEN_ENCOUNTER,
-        EXP_DANNIG_ENCOUNTER
+        EXP_DANNIG_ENCOUNTER,
+        HEIST_TULLINA_SPEAK,
+        HEIST_TIBBS_SPEAK,
+        HEIST_ISLA_SPEAK,
+        HEIST_NILES_SPEAK,
+        HEIST_NENET_SPEAK,
+        HEIST_VINDERI_SPEAK,
+        HEIST_GIANNA_SPEAK,
+        HEIST_HUCK_SPEAK,
+        HEIST_KARST_SPEAK,
+        ABNORMAL_DISCONNECT
     }
 
     public class EventMapping
     {
+        public List<string> SKIP { get; set; }
+
         public Dictionary<string, EVENT_TYPES> MAP;
 
         public EventMapping()
         {
+            SKIP = new List<string>
+            {
+                "] [",
+            };
+
             MAP = new Dictionary<string, EVENT_TYPES>
             {
-                // Startup
+                { "You have entered", EVENT_TYPES.ENTERED_AREA },
+               
+               // Startup
                 {"***** LOG FILE OPENING *****", EVENT_TYPES.POE_CLIENT_START },
 
                 // System Commands
                 { "trax::", EVENT_TYPES.CHAT_CMD_RECEIVED },
 
                 // Generic events
-                { "You have entered", EVENT_TYPES.ENTERED_AREA },
                 { "has joined the area", EVENT_TYPES.PARTYMEMBER_ENTERED_AREA },
                 { "has left the area", EVENT_TYPES.PARTYMEMBER_LEFT_AREA },
                 { "Player died", EVENT_TYPES.DEATH_REASON_RECEIVED },
@@ -355,6 +373,20 @@ namespace TraXile
                 { "] Gwennen, the Gambler:", EVENT_TYPES.EXP_GWENNEN_ENCOUNTER },
                 { "] Rog:", EVENT_TYPES.EXP_ROG_ENCOUNTER },
                 { "] Dannig, Warrior Skald:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
+
+                // Heist
+                { "] Karst, the Lockpick: ", EVENT_TYPES.HEIST_KARST_SPEAK },
+                { "] Tullina, the Catburglar: ", EVENT_TYPES.HEIST_TULLINA_SPEAK },
+                { "] Tibbs, the Giant: ", EVENT_TYPES.HEIST_TIBBS_SPEAK },
+                { "] Isla, the Engineer: ", EVENT_TYPES.HEIST_ISLA_SPEAK },
+                { "] Niles, the Interrogator: ", EVENT_TYPES.HEIST_NILES_SPEAK },
+                { "] Nenet, the Scout: ", EVENT_TYPES.HEIST_NENET_SPEAK },
+                { "] Vinderi, the Dismantler: ", EVENT_TYPES.HEIST_VINDERI_SPEAK },
+                { "] Gianna, the Master of Disguise: ", EVENT_TYPES.HEIST_GIANNA_SPEAK },
+                { "] Huck, the Soldier: ", EVENT_TYPES.HEIST_HUCK_SPEAK },
+
+                // Disconnect
+                { "Abnormal disconnect: An unexpected disconnection occurred.", EVENT_TYPES.ABNORMAL_DISCONNECT },
 
             };
         }

@@ -46,6 +46,7 @@ namespace TraXile
         private bool _eventQueueInitizalized;
         private bool _isMapZana;
         private bool _exit;
+        private bool _listViewInitielaized;
         private bool _elderFightActive;
         private bool _showGridInActLog;
         private bool _restoreMode;
@@ -82,8 +83,8 @@ namespace TraXile
         private string _cachePath;
         private string _myAppData;
         private bool _mapDashboardUpdateRequested;
-        private bool _heistDashboardHideUnknown;
         private bool _labDashboardHideUnknown;
+        private bool _globalDashboardUpdateRequested;
         private bool _heistDashboardUpdateRequested;
 
         /// <summary>
@@ -210,7 +211,6 @@ namespace TraXile
             _eventMapping = new EventMapping();
             _defaultMappings = new DefaultMappings();
             _parsedActivities = new List<string>();
-
 
             SaveVersion();
             CheckForUpdate();
@@ -345,6 +345,21 @@ namespace TraXile
             chart7.Series[0].LabelForeColor = Color.White;
             chart7.Series[0].Color = Color.White;
 
+            chart8.BackColor = Color.Black;
+            chart8.ChartAreas[0].BackColor = Color.Black;
+            chart8.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart8.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart8.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart8.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart8.ChartAreas[0].AxisX.Interval = 1;
+            chart8.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart8.Series[0].XValueType = ChartValueType.String;
+            chart8.Series[0].YValueType = ChartValueType.Double;
+            chart8.Legends[0].Enabled = true;
+            chart8.Series[0].IsValueShownAsLabel = true;
+            chart8.Series[0].LabelForeColor = Color.White;
+            chart8.Series[0].Color = Color.White;
+
             var ca = chart1.ChartAreas["ChartArea1"].CursorX;
             ca.IsUserEnabled = true;
             ca.IsUserSelectionEnabled = true;
@@ -399,6 +414,11 @@ namespace TraXile
             ResetMapHistory();
             LoadLayout();
 
+            if (!_historyInitialized)
+            {
+                ReadActivityLogFromSQLite();
+            }
+
             // Thread for Log Parsing and Enqueuing
             _logParseThread = new Thread(new ThreadStart(LogParsing))
             {
@@ -417,6 +437,7 @@ namespace TraXile
             _labDashboardUpdateRequested = true;
             _mapDashboardUpdateRequested = true;
             _heistDashboardUpdateRequested = true;
+            _globalDashboardUpdateRequested = true;
         }
 
         /// <summary>
@@ -1403,7 +1424,6 @@ namespace TraXile
             {
                 string line;
                 int lineHash = 0;
-               
 
                 // Keep file open
                 while (!_exit)
@@ -2042,6 +2062,14 @@ namespace TraXile
             {
                 switch (ev.EventType)
                 {
+                   case EVENT_TYPES.ABNORMAL_DISCONNECT:
+                        if (_currentActivity != null)
+                        {
+                            _log.Info("Abnormal disconnect found in log. Finishing Map.");
+                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                        }
+                        break;
+
                     case EVENT_TYPES.POE_CLIENT_START:
                         if(_currentActivity != null)
                         {
@@ -2339,6 +2367,60 @@ namespace TraXile
                             _currentActivity.Tags.Add("rog");
                         }
                         break;
+                    case EVENT_TYPES.HEIST_GIANNA_SPEAK:
+                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("gianna");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_HUCK_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("huck");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_ISLA_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("isla");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_NENET_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("nenet");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_NILES_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("niles");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_TIBBS_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("tibbs");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_TULLINA_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("tullina");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_VINDERI_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("vinderi");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_KARST_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("karst");
+                        }
+                        break;
 
                 }
 
@@ -2479,7 +2561,15 @@ namespace TraXile
             }
 
             _currentActivity.TotalSeconds = iSeconds;
-            _eventHistory.Insert(0, _currentActivity);
+            if(!_eventHistory.Contains(_currentActivity))
+            {
+                _eventHistory.Insert(0, _currentActivity);
+            }
+            else
+            {
+                _log.Debug("TEST");
+            }
+            
             TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
             activity.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                       tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
@@ -2844,9 +2934,10 @@ namespace TraXile
                         }
                     }
 
-                    if (!_historyInitialized)
+                    if(!_listViewInitielaized)
                     {
-                        ReadActivityLogFromSQLite();
+                        DoSearch();
+                        _listViewInitielaized = true;
                     }
                     
                     labelCurrArea.Text = _currentArea;
@@ -2985,6 +3076,13 @@ namespace TraXile
                     {
                         RenderHeistDashboard();
                         _heistDashboardUpdateRequested = false;
+                    }
+
+                    // Global Dashbaord
+                    if (_globalDashboardUpdateRequested)
+                    {
+                        RenderGlobalDashboard();
+                        _globalDashboardUpdateRequested = false;
                     }
 
 
@@ -3143,6 +3241,50 @@ namespace TraXile
             };
             this.BeginInvoke(mi);
             
+        }
+
+        public void RenderGlobalDashboard()
+        {
+            Dictionary<ACTIVITY_TYPES, double> typeList = new Dictionary<ACTIVITY_TYPES, double>
+            {
+                { ACTIVITY_TYPES.MAP, 0 },
+                { ACTIVITY_TYPES.HEIST, 0 },
+                { ACTIVITY_TYPES.DELVE, 0 },
+                { ACTIVITY_TYPES.LABYRINTH, 0 },
+                { ACTIVITY_TYPES.SIMULACRUM, 0 },
+                { ACTIVITY_TYPES.TEMPLE, 0 },
+            };
+
+            Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
+            {
+                { ACTIVITY_TYPES.MAP, Color.Green },
+                { ACTIVITY_TYPES.HEIST, Color.Red },
+                { ACTIVITY_TYPES.DELVE, Color.Orange },
+                { ACTIVITY_TYPES.LABYRINTH, Color.DarkTurquoise },
+                { ACTIVITY_TYPES.SIMULACRUM, Color.Gray },
+                { ACTIVITY_TYPES.TEMPLE, Color.GreenYellow },
+            };
+
+            foreach (TrackedActivity act in _eventHistory)
+            {
+                // Filter out
+                if(act.TotalSeconds < 3600)
+                {
+                    typeList[act.Type] += act.TotalSeconds;
+                }
+                else
+                {
+                    typeList[act.Type] += 3600;
+                }
+            }
+
+            chart8.Series[0].Points.Clear();
+            foreach(KeyValuePair<ACTIVITY_TYPES,double> kvp in typeList)
+            {
+                chart8.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
+                chart8.Series[0].Points.Last().Color = colorList[kvp.Key];
+
+            }
         }
 
         public void RenderHeistDashboard()
@@ -3323,9 +3465,12 @@ namespace TraXile
             listView2.Items.Clear();
             foreach (KeyValuePair<string, int> kvp in top10Tags)
             {
-                ListViewItem lvi = new ListViewItem(kvp.Key);
-                lvi.SubItems.Add(kvp.Value.ToString());
-                listView2.Items.Add(lvi);
+                if(kvp.Value > 0)
+                {
+                    ListViewItem lvi = new ListViewItem(kvp.Key);
+                    lvi.SubItems.Add(kvp.Value.ToString());
+                    listView2.Items.Add(lvi);
+                }
             }
 
             double[] tierAverages = new double[]
