@@ -2565,10 +2565,6 @@ namespace TraXile
             {
                 _eventHistory.Insert(0, _currentActivity);
             }
-            else
-            {
-                _log.Debug("TEST");
-            }
             
             TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
             activity.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
@@ -2599,10 +2595,6 @@ namespace TraXile
 
                     // Refresh ListView
                     if (_eventQueueInitizalized) DoSearch();
-                }
-                else
-                {
-                    MessageBox.Show("DoubleZana");
                 }
             }
 
