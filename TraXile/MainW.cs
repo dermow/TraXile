@@ -216,7 +216,9 @@ namespace TraXile
             CheckForUpdate();
             _UpdateCheckDone = true;
             ReadSettings();
-            
+
+            comboBox2.SelectedItem = ReadSetting("actlog.maxitems", "500");
+
             try
             {
                 DoBackupRestoreIfPrepared();        
@@ -519,8 +521,8 @@ namespace TraXile
                 try
                 {
                     SqliteCommand cmd = _dbConnection.CreateCommand();
-                    cmd.CommandText = "insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type) values " +
-                                  "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default')";
+                    cmd.CommandText = "insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) values " +
+                                  "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default', " + (tag.ShowInListView ? "1" : "0") + ")";
                     cmd.ExecuteNonQuery();
                     _log.Info("Default tag '" + tag.ID + "' added to database");
                 }
@@ -559,6 +561,7 @@ namespace TraXile
                 tag.DisplayName = sqlReader.GetString(1);
                 tag.BackColor = Color.FromArgb(Convert.ToInt32(sqlReader.GetString(2)));
                 tag.ForeColor = Color.FromArgb(Convert.ToInt32(sqlReader.GetString(3)));
+                tag.ShowInListView = sqlReader.GetInt32(5) == 1;
                 _tags.Add(tag);
             }
         }
@@ -630,6 +633,7 @@ namespace TraXile
             ActivityTag tag = GetTagByDisplayName(((Label)sender).Text);
             textBox4.Text = tag.ID;
             textBox5.Text = tag.DisplayName;
+            checkBox4.Checked = tag.ShowInListView;
             label63.ForeColor = tag.ForeColor;
             label63.BackColor = tag.BackColor;
             label63.Text = tag.DisplayName;
@@ -1107,15 +1111,13 @@ namespace TraXile
                 "tag_display text," +
                 "tag_bgcolor text, " +
                 "tag_forecolor text," +
-                "tag_type text)";
+                "tag_type text," +
+                "tag_show_in_lv int default 0)";
             cmd.ExecuteNonQuery();
 
             cmd = _dbConnection.CreateCommand();
             cmd.CommandText = "create unique index if not exists tx_tag_id on tx_tags(tag_id)";
             cmd.ExecuteNonQuery();
-
-           
-
 
             cmd = _dbConnection.CreateCommand();
             cmd.CommandText = "create table if not exists tx_stats " +
@@ -1178,6 +1180,18 @@ namespace TraXile
             {
                 cmd = _dbConnection.CreateCommand();
                 cmd.CommandText = "alter table tx_activity_log add column act_success int default 0";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 0.5.2 -> " + cmd.CommandText);
+            }
+            catch
+            {
+            }
+
+            // Update 0.5.2
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "alter table tx_tags add column tag_show_in_lv int default 0";
                 cmd.ExecuteNonQuery();
                 _log.Info("PatchDatabase 0.5.2 -> " + cmd.CommandText);
             }
@@ -1822,6 +1836,12 @@ namespace TraXile
                         break;
                 }
 
+                // Finish activity
+                if(_currentActivity != null)
+                {
+                    FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                }
+
                 _currentActivity = new TrackedActivity
                 {
                     Area = sLabName,
@@ -1857,6 +1877,12 @@ namespace TraXile
             // Delving?
             if ((_currentActivity == null || _currentActivity.Type != ACTIVITY_TYPES.DELVE) && actType == ACTIVITY_TYPES.DELVE)
             {
+                // Finish activity
+                if (_currentActivity != null)
+                {
+                    FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                }
+
                 _currentActivity = new TrackedActivity
                 {
                     Area = "Azurite Mine",
@@ -2590,7 +2616,7 @@ namespace TraXile
                 if (!_parsedActivities.Contains(activity.ZanaMap.TimeStamp.ToString() + "_" + activity.ZanaMap.Area))
                 {
                     AddMapLvItem(activity.ZanaMap, true);
-                    SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
+                    SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.ZanaMap.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
                         .Tags, activity.ZanaMap.Success);
 
                     // Refresh ListView
@@ -2641,6 +2667,14 @@ namespace TraXile
             else if (activity.Type == ACTIVITY_TYPES.TEMPLE)
             {
                 IncrementStat("TemplesDone", activity.Started, 1);
+            }
+
+            if(_eventQueueInitizalized)
+            {
+                RenderGlobalDashboard();
+                RenderHeistDashboard();
+                RenderLabDashboard();
+                RenderMappingDashboard();
             }
         }
 
@@ -2756,13 +2790,16 @@ namespace TraXile
 
             foreach (ActivityTag tag in _tags)
             {
-                ColumnHeader ch = new ColumnHeader() 
-                { 
-                    Name = "actlog_tag_" + tag.ID, 
-                    Text = tag.DisplayName, 
-                    Width =  Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_tag_" + tag.ID + ".width", "60"))
-                };
-                _lvmActlog.Columns.Add(ch);
+                if(tag.ShowInListView)
+                {
+                    ColumnHeader ch = new ColumnHeader()
+                    {
+                        Name = "actlog_tag_" + tag.ID,
+                        Text = tag.DisplayName,
+                        Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_tag_" + tag.ID + ".width", "60"))
+                    };
+                    _lvmActlog.Columns.Add(ch);
+                }
             }
 
             AddActivityLvItems();
@@ -2820,7 +2857,10 @@ namespace TraXile
 
                 foreach(ActivityTag t in _tags)
                 {
-                    lvi.SubItems.Add(map.Tags.Contains(t.ID) ? "X" : "");
+                    if(t.ShowInListView)
+                    {
+                        lvi.SubItems.Add(map.Tags.Contains(t.ID) ? "X" : "");
+                    }
                 }
 
                 if(iPos == -1)
@@ -2884,6 +2924,7 @@ namespace TraXile
             checkBox2.Checked = _showGridInStats;
             ReadBackupList();
             listBox1.DataSource = _backups;
+            
 
             if (_eventQueueInitizalized)
             {
@@ -2915,7 +2956,8 @@ namespace TraXile
 
                     label74.Text = "items: " + _lvmActlog.listView.Items.Count.ToString();
 
-                    comboBox2.SelectedItem = ReadSetting("actlog.maxitems", "500");
+                  
+                   
 
                     if(listViewStats.Items.Count > 0)
                     {
@@ -2982,6 +3024,7 @@ namespace TraXile
                             labelStopWatch.Text = _currentActivity.ZanaMap.StopWatchValue.ToString();
                             labelTrackingArea.Text = _currentActivity.ZanaMap.Area + " (" + sTier + ", Zana)";
                             labelTrackingDied.Text = _currentActivity.ZanaMap.DeathCounter.ToString();
+                            labelTrackingType.Text = GetStringFromActType(_currentActivity.Type).ToUpper();
                             pictureBox19.Hide();
                         }
                         else
@@ -3004,10 +3047,12 @@ namespace TraXile
                     labelElderStatus.ForeColor = _numericStats["ElderKilled"] > 0 ? Color.Green : Color.Red;
                     labelElderStatus.Text = _numericStats["ElderKilled"] > 0 ? "Yes" : "No";
                     labelElderKillCount.Text = _numericStats["ElderKilled"].ToString() + "x";
+                    labelElderTried.Text = _numericStats["ElderTried"].ToString() + "x";
 
                     labelShaperStatus.ForeColor = _numericStats["ShaperKilled"] > 0 ? Color.Green : Color.Red;
                     labelShaperStatus.Text = _numericStats["ShaperKilled"] > 0 ? "Yes" : "No";
-                    labelShaperKillCount.Text = _numericStats["ShaperKilled"].ToString() + "x"; ;
+                    labelShaperKillCount.Text = _numericStats["ShaperKilled"].ToString() + "x";
+                    labelShaperTried.Text = _numericStats["ShaperTried"].ToString() + "x";
 
                     labelSirusStatus.ForeColor = _numericStats["SirusKilled"] > 0 ? Color.Green : Color.Red;
                     labelSirusStatus.Text = _numericStats["SirusKilled"] > 0 ? "Yes" : "No";
@@ -3048,9 +3093,10 @@ namespace TraXile
                     labelMavenStatus.Text = _numericStats["MavenKilled"] > 0 ? "Yes" : "No";
                     labelMavenKilled.Text = _numericStats["MavenKilled"].ToString() + "x";
                     labelMavenTried.Text = _numericStats["MavenStarted"].ToString() + "x";
+                   
 
                     // MAP Dashbaord
-                    if(_mapDashboardUpdateRequested)
+                    if (_mapDashboardUpdateRequested)
                     {
                         RenderMappingDashboard();
                         _mapDashboardUpdateRequested = false;
@@ -3322,9 +3368,12 @@ namespace TraXile
                     {
                         if (!String.IsNullOrEmpty(s))
                         {
-                            int iVal = tmpListTags[s];
-
-                            tmpListTags[s]++;
+                            if(tmpListTags.ContainsKey(s))
+                            {
+                                int iVal = tmpListTags[s];
+                                tmpListTags[s]++;
+                            }
+                           
                         }
                     }
                 }
@@ -3433,9 +3482,11 @@ namespace TraXile
                     {
                         if(!String.IsNullOrEmpty(s))
                         {
-                            int iVal = tmpListTags[s];
-
-                            tmpListTags[s]++;
+                            if(tmpListTags.ContainsKey(s))
+                            {
+                                int iVal = tmpListTags[s];
+                                tmpListTags[s]++;
+                            }
                         }
                     }
                 }
@@ -3784,8 +3835,8 @@ namespace TraXile
             _tags.Add(tag);
 
             SqliteCommand cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type) VALUES "
-                + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom')";
+            cmd.CommandText = "INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) VALUES "
+                + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom', " + (tag.ShowInListView ? "1" : "0") + ")";
             cmd.ExecuteNonQuery();
 
             listViewActLog.Columns.Add(tag.DisplayName);
@@ -4253,7 +4304,7 @@ namespace TraXile
             }
         }
 
-        private void UpdateTag(string s_id, string s_display_name, string s_forecolor, string s_backcolor)
+        private void UpdateTag(string s_id, string s_display_name, string s_forecolor, string s_backcolor, bool b_show_in_hist)
         {
             int iTagIndex = GetTagIndex(s_id);
 
@@ -4262,10 +4313,11 @@ namespace TraXile
                 _tags[iTagIndex].DisplayName = s_display_name;
                 _tags[iTagIndex].ForeColor = Color.FromArgb(Convert.ToInt32(s_forecolor));
                 _tags[iTagIndex].BackColor = Color.FromArgb(Convert.ToInt32(s_backcolor));
+                _tags[iTagIndex].ShowInListView = b_show_in_hist;
 
                 SqliteCommand cmd = _dbConnection.CreateCommand();
-                cmd.CommandText = "UPDATE tx_tags SET tag_display = '" + s_display_name + "', tag_forecolor = '" + s_forecolor + "', tag_bgcolor = '" + s_backcolor + "'" +
-                    " WHERE tag_id = '" + s_id + "'";
+                cmd.CommandText = "UPDATE tx_tags SET tag_display = '" + s_display_name + "', tag_forecolor = '" + s_forecolor + "', tag_bgcolor = '" + s_backcolor + "', " +
+                    "tag_show_in_lv = " + (b_show_in_hist ? "1" : "0") + " WHERE tag_id = '" + s_id + "'";
                 cmd.ExecuteNonQuery();
             }
 
@@ -4288,7 +4340,7 @@ namespace TraXile
 
         private void button13_Click(object sender, EventArgs e)
         {
-            UpdateTag(textBox4.Text, textBox5.Text, label63.ForeColor.ToArgb().ToString(), label63.BackColor.ToArgb().ToString());
+            UpdateTag(textBox4.Text, textBox5.Text, label63.ForeColor.ToArgb().ToString(), label63.BackColor.ToArgb().ToString(), checkBox4.Checked);
         }
 
         private void button14_Click(object sender, EventArgs e)
@@ -4658,6 +4710,11 @@ namespace TraXile
         {
             _labDashboardHideUnknown = ((CheckBox)sender).Checked;
             RenderLabDashboard();
+        }
+
+        private void label90_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
