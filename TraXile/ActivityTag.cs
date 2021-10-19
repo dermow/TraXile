@@ -12,6 +12,7 @@ namespace TraXile
         private string _tagID;
         private string _DisplayName;
         private bool _isDefault;
+        private bool _showInList;
         private Color _backColor;
         private Color _foreColor;
 
@@ -22,6 +23,7 @@ namespace TraXile
             _foreColor = Color.Black;
             _isDefault = b_is_default;
             _DisplayName = _tagID;
+            _showInList = false;
         }
 
         public string ID
@@ -50,6 +52,12 @@ namespace TraXile
         public bool IsDefault
         {
             get { return _isDefault; }
+        }
+
+        public bool ShowInListView
+        {
+            get { return _showInList; }
+            set { _showInList = value; }
         }
 
 

@@ -332,7 +332,7 @@ namespace TraXile
                 { "The Trialmaster: This is insufferable...", EVENT_TYPES.TRIALMASTER_VICTORY },
                 { "The Trialmaster: Take your prize and go.", EVENT_TYPES.TRIALMASTER_VICTORY },
                 {"Catarina, Master of Undeath: You found me at last... Very resourceful, Jun. I too am resourceful. Witness.", EVENT_TYPES.CATARINA_FIGHT_STARTED },
-                {"Catarina, Master of Undeath: Don't do this, Exile. You can still join us. It's your chance to bring back anyone you've ever loved or cared about.", EVENT_TYPES.CATARINA_KILLED },
+                {"Catarina, Master of Undeath: Don't do this, Exile. You can still join us", EVENT_TYPES.CATARINA_KILLED },
                 {"Strange Voice: So be it.", EVENT_TYPES.SIMULACRUM_FULLCLEAR },
 
                 // Encounters
