@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Windows.Media;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -45,9 +46,11 @@ namespace TraXile
         private bool _eventQueueInitizalized;
         private bool _isMapZana;
         private bool _exit;
+        private bool _listViewInitielaized;
         private bool _elderFightActive;
         private bool _showGridInActLog;
         private bool _restoreMode;
+        private bool _labDashboardUpdateRequested;
         private int _shaperKillsInFight;
         private int _nextAreaLevel;
         private int _currentAreaLevel;
@@ -58,13 +61,14 @@ namespace TraXile
         private Dictionary<int, string> _dict;
         private Dictionary<string, int> _numericStats;
         private Dictionary<string, string> _statNamesLong;
+        private List<string> labs;
         private LoadScreen _loadScreenWindow;
         private List<TrackedActivity> _eventHistory;
         private ConcurrentQueue<TrackingEvent> _eventQueue;
         private List<ActivityTag> _tags;
         private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
         private EventMapping _eventMapping;
-        private AreaMapping _areaMapping;
+        private DefaultMappings _defaultMappings;
         private List<string> _parsedActivities;
         private ILog _log;
         private bool _showGridInStats;
@@ -78,19 +82,32 @@ namespace TraXile
         private string _dbPath;
         private string _cachePath;
         private string _myAppData;
+        private bool _mapDashboardUpdateRequested;
+        private bool _labDashboardHideUnknown;
+        private bool _globalDashboardUpdateRequested;
+        private bool _heistDashboardUpdateRequested;
 
+        /// <summary>
+        /// Setting Property for LogFilePath
+        /// </summary>
         public string SettingPoeLogFilePath
         {
             get { return ReadSetting("poe_logfile_path", null); }
             set {AddUpdateAppSettings("poe_logfile_path", value); }
         }
 
+        /// <summary>
+        /// Tag list property
+        /// </summary>
         public List<ActivityTag> Tags
         {
             get { return _tags; }
             set { _tags = value; }
         }
 
+        /// <summary>
+        /// Main Window Constructor
+        /// </summary>
         public MainW()
         {
             //TEST: Create folder in userdata
@@ -108,8 +125,13 @@ namespace TraXile
             this.Visible = false;
             InitializeComponent();
             Init();
+
         }
 
+        /// <summary>
+        /// Check if a new version is available on GitHub and ask for update.
+        /// </summary>
+        /// <param name="b_notify_ok"></param>
         private void CheckForUpdate(bool b_notify_ok = false)
         {
             try
@@ -170,6 +192,10 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Do main initialization
+        /// ONLY CALL ONCE! S
+        /// </summary>
         private void Init()
         {
             this.Opacity = 0;
@@ -183,9 +209,8 @@ namespace TraXile
             _lvmActlog = new ListViewManager(listViewActLog);
 
             _eventMapping = new EventMapping();
-            _areaMapping = new AreaMapping();
+            _defaultMappings = new DefaultMappings();
             _parsedActivities = new List<string>();
-
 
             SaveVersion();
             CheckForUpdate();
@@ -213,6 +238,8 @@ namespace TraXile
             listViewStats.Columns[0].Width = 500;
             listViewStats.Columns[1].Width = 300;
 
+            listView1.Columns[0].Width = 300;
+
             chart1.ChartAreas[0].AxisX.LineColor = Color.Red;
             chart1.ChartAreas[0].AxisY.LineColor = Color.Red;
             chart1.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
@@ -221,7 +248,117 @@ namespace TraXile
             chart1.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Days;
             chart1.ChartAreas[0].AxisX.IntervalOffset = 1;
             chart1.Series[0].XValueType = ChartValueType.DateTime;
+            chart1.Series[0].LabelForeColor = Color.White;
+            chart1.Series[0].LabelBackColor = Color.Black;
+            chart1.Series[0].LabelBorderColor = Color.Black;
+            chart1.Series[0].Color = Color.White;
             chart1.Legends[0].Enabled = false;
+
+            chart2.BackColor = Color.Black;
+            chart2.ChartAreas[0].BackColor = Color.Black;
+            chart2.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart2.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart2.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart2.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart2.ChartAreas[0].AxisX.Interval = 1;
+            chart2.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
+            chart2.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart2.Series[0].XValueType = ChartValueType.Int32;
+            chart2.Legends[0].Enabled = false;
+            chart2.Series[0].IsValueShownAsLabel = true;
+            chart2.Series[0].LabelForeColor = Color.White;
+            chart2.Series[0].Color = Color.White;
+
+            chart3.BackColor = Color.Black;
+            chart3.ChartAreas[0].BackColor = Color.Black;
+            chart3.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart3.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart3.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart3.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart3.ChartAreas[0].AxisX.Interval = 1;
+            chart3.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
+            chart3.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart3.Series[0].XValueType = ChartValueType.Int32;
+            chart3.Series[0].YValueType = ChartValueType.Double;
+            chart3.Legends[0].Enabled = false;
+            chart3.Series[0].IsValueShownAsLabel = true;
+            chart3.Series[0].LabelForeColor = Color.White;
+            chart3.Series[0].Color = Color.White;
+
+            chart4.BackColor = Color.Black;
+            chart4.ChartAreas[0].BackColor = Color.Black;
+            chart4.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart4.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart4.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart4.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart4.ChartAreas[0].AxisX.Interval = 1;
+            chart4.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart4.Series[0].XValueType = ChartValueType.String;
+            chart4.Series[0].YValueType = ChartValueType.Double;
+            chart4.Legends[0].Enabled = false;
+            chart4.Series[0].IsValueShownAsLabel = true;
+            chart4.Series[0].LabelForeColor = Color.White;
+            chart4.Series[0].Color = Color.White;
+
+            chart5.BackColor = Color.Black;
+            chart5.ChartAreas[0].BackColor = Color.Black;
+            chart5.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart5.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart5.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart5.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart5.ChartAreas[0].AxisX.Interval = 1;
+            chart5.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart5.Series[0].XValueType = ChartValueType.String;
+            chart5.Series[0].YValueType = ChartValueType.Double;
+            chart5.Legends[0].Enabled = false;
+            chart5.Series[0].IsValueShownAsLabel = true;
+            chart5.Series[0].LabelForeColor = Color.White;
+            chart5.Series[0].Color = Color.White;
+
+            chart6.BackColor = Color.Black;
+            chart6.ChartAreas[0].BackColor = Color.Black;
+            chart6.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart6.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart6.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart6.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart6.ChartAreas[0].AxisX.Interval = 1;
+            chart6.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart6.Series[0].XValueType = ChartValueType.String;
+            chart6.Series[0].YValueType = ChartValueType.Double;
+            chart6.Legends[0].Enabled = false;
+            chart6.Series[0].IsValueShownAsLabel = true;
+            chart6.Series[0].LabelForeColor = Color.White;
+            chart6.Series[0].Color = Color.White;
+
+            chart7.BackColor = Color.Black;
+            chart7.ChartAreas[0].BackColor = Color.Black;
+            chart7.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart7.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart7.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart7.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart7.ChartAreas[0].AxisX.Interval = 1;
+            chart7.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart7.Series[0].XValueType = ChartValueType.String;
+            chart7.Series[0].YValueType = ChartValueType.Double;
+            chart7.Legends[0].Enabled = false;
+            chart7.Series[0].IsValueShownAsLabel = true;
+            chart7.Series[0].LabelForeColor = Color.White;
+            chart7.Series[0].Color = Color.White;
+
+            chart8.BackColor = Color.Black;
+            chart8.ChartAreas[0].BackColor = Color.Black;
+            chart8.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chart8.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chart8.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chart8.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chart8.ChartAreas[0].AxisX.Interval = 1;
+            chart8.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chart8.Series[0].XValueType = ChartValueType.String;
+            chart8.Series[0].YValueType = ChartValueType.Double;
+            chart8.Legends[0].Enabled = true;
+            chart8.Series[0].IsValueShownAsLabel = true;
+            chart8.Series[0].LabelForeColor = Color.White;
+            chart8.Series[0].Color = Color.White;
 
             var ca = chart1.ChartAreas["ChartArea1"].CursorX;
             ca.IsUserEnabled = true;
@@ -245,11 +382,8 @@ namespace TraXile
             _lastSimuEndpoint = "";
             _tags = new List<ActivityTag>();
 
-           
-
             this.Text = APPINFO.NAME;
             _initStartTime = DateTime.Now;
-
 
             if(String.IsNullOrEmpty(SettingPoeLogFilePath))
             {
@@ -280,6 +414,11 @@ namespace TraXile
             ResetMapHistory();
             LoadLayout();
 
+            if (!_historyInitialized)
+            {
+                ReadActivityLogFromSQLite();
+            }
+
             // Thread for Log Parsing and Enqueuing
             _logParseThread = new Thread(new ThreadStart(LogParsing))
             {
@@ -293,8 +432,17 @@ namespace TraXile
                 IsBackground = true
             };
             _eventThread.Start();
+
+            // Request initial Dashboard update
+            _labDashboardUpdateRequested = true;
+            _mapDashboardUpdateRequested = true;
+            _heistDashboardUpdateRequested = true;
+            _globalDashboardUpdateRequested = true;
         }
 
+        /// <summary>
+        /// Save the current GUI Layout to config
+        /// </summary>
         private void SaveLayout()
         {
             foreach(ColumnHeader ch in listViewActLog.Columns)
@@ -311,6 +459,9 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Load GUI layout from config
+        /// </summary>
         private void LoadLayout()
         {
             foreach (ColumnHeader ch in listViewActLog.Columns)
@@ -333,6 +484,9 @@ namespace TraXile
             
         }
 
+        /// <summary>
+        ///  Initialize all default tags
+        /// </summary>
         private void InitDefaultTags()
         {
             List<ActivityTag> tmpTags;
@@ -340,11 +494,25 @@ namespace TraXile
             tmpTags.Add(new ActivityTag("blight") { BackColor = Color.LightGreen, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("delirium") { BackColor = Color.WhiteSmoke, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("einhar") { BackColor = Color.Red, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("incursion") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("incursion") { BackColor = Color.GreenYellow, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("syndicate") { BackColor = Color.Gold, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("zana") { BackColor = Color.Blue, ForeColor = Color.White });
             tmpTags.Add(new ActivityTag("niko") { BackColor = Color.OrangeRed, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("zana-map") { BackColor = Color.OrangeRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("zana-map") { BackColor = Color.Blue, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("expedition") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("rog") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("gwennen") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("dannig") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("tujen") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("karst") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("tibbs") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("isla") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("tullina") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("niles") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("nenet") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("vinderi") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("gianna") { BackColor = Color.IndianRed, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("huck") { BackColor = Color.IndianRed, ForeColor = Color.Black });
 
             foreach (ActivityTag tag in tmpTags)
             {
@@ -371,6 +539,9 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Load user created tags
+        /// </summary>
         private void LoadCustomTags()
         {
             SqliteDataReader sqlReader;
@@ -392,6 +563,10 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Render the taglist for Config Tab
+        /// </summary>
+        /// <param name="b_reinit"></param>
         private void RenderTagsForConfig(bool b_reinit = false)
         {
             if (b_reinit)
@@ -445,6 +620,11 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        ///  Tag label moouse click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Lbl_MouseClick1(object sender, MouseEventArgs e)
         {
             ActivityTag tag = GetTagByDisplayName(((Label)sender).Text);
@@ -455,16 +635,30 @@ namespace TraXile
             label63.Text = tag.DisplayName;
         }
 
+        /// <summary>
+        /// Tag label mouse leave
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tagLabel_MouseLeave(object sender, EventArgs e)
         {
             ((Label)sender).BorderStyle = BorderStyle.None;
         }
 
+        /// <summary>
+        /// Tag Label mouse over
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tagLabel_MouseOver(object sender, EventArgs e)
         {
             ((Label)sender).BorderStyle = BorderStyle.Fixed3D;
         }
 
+        /// <summary>
+        /// RenderTags in tracking tab
+        /// </summary>
+        /// <param name="b_reinit"></param>
         private void RenderTagsForTracking(bool b_reinit = false)
         {
             if (b_reinit)
@@ -541,6 +735,11 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Find matching tag for given display name
+        /// </summary>
+        /// <param name="s_display_name"></param>
+        /// <returns></returns>
         public ActivityTag GetTagByDisplayName(string s_display_name)
         {
             foreach(ActivityTag t in _tags)
@@ -552,6 +751,11 @@ namespace TraXile
             return null;
         }
 
+        /// <summary>
+        /// Mouse click handler for label
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Lbl_MouseClick(object sender, MouseEventArgs e)
         {
             ActivityTag tag = GetTagByDisplayName(((Label)sender).Text);
@@ -586,11 +790,19 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Mouse over handler for label
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Lbl_MouseHover(object sender, EventArgs e)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Reload the Poe Logfile
+        /// </summary>
         public void ReloadLogFile()
         {
             ResetStats();
@@ -600,6 +812,9 @@ namespace TraXile
             Application.Restart();
         }
 
+        /// <summary>
+        /// Initialize the stats
+        /// </summary>
         private void InitNumStats()
         {
             _numericStats = new Dictionary<string, int>
@@ -615,6 +830,11 @@ namespace TraXile
                 { "EinharCaptures", 0 },
                 { "ElderTried", 0 },
                 { "ElderKilled", 0 },
+                { "ExpeditionEncounters", 0 },
+                { "ExpeditionEncounters_Rog", 0 },
+                { "ExpeditionEncounters_Tujen", 0 },
+                { "ExpeditionEncounters_Gwennen", 0 },
+                { "ExpeditionEncounters_Dannig", 0 },
                 { "HighestLevel", 0 },
                 { "HunterKilled", 0 },
                 { "HunterStarted", 0 },
@@ -677,19 +897,24 @@ namespace TraXile
                 { "LabsFinished", "Finished labs" },
                 { "TemplesDone", "Temples done" },
                 { "LabsStarted", "Labs started" },
+                { "ExpeditionEncounters", "Expedition encounters" },
+                { "ExpeditionEncounters_Rog", "Expedition encounters: Rog" },
+                { "ExpeditionEncounters_Tujen", "Expedition encounters: Tujen" },
+                { "ExpeditionEncounters_Gwennen", "Expedition encounters: Gwennen" },
+                { "ExpeditionEncounters_Dannig", "Expedition encounters: Dannig" },
             };
 
-            List<string> labs = new List<string>
+            labs = new List<string>
             {
                 "Unknown",
+                "The Labyrinth",
                 "The Merciless Labyrinth",
                 "The Cruel Labyrinth",
-                "The Labyrinth",
                 "Uber-Lab",
                 "Advanced Uber-Lab"
             };
 
-            foreach (string s in _areaMapping.HEIST_AREAS)
+            foreach (string s in _defaultMappings.HEIST_AREAS)
             {
                 string sName = s.Replace("'", "");
                 if (!_numericStats.ContainsKey("HeistsFinished_" + sName))
@@ -707,7 +932,7 @@ namespace TraXile
                     _statNamesLong.Add("LabsCompleted_" + sName, "Labs completed: " + sName);
             }
 
-            foreach (string s in _areaMapping.MAP_AREAS)
+            foreach (string s in _defaultMappings.MAP_AREAS)
             {
                 string sName = s.Replace("'", "");
                 if (!_numericStats.ContainsKey("MapsFinished_" + sName))
@@ -726,7 +951,7 @@ namespace TraXile
                     _statNamesLong.Add(sShort, sLong);
             }
 
-            foreach (string s in _areaMapping.SIMU_AREAS)
+            foreach (string s in _defaultMappings.SIMU_AREAS)
             {
                 string sName = s.Replace("'", "");
                 if (!_numericStats.ContainsKey("SimulacrumFinished_" + sName))
@@ -736,6 +961,11 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Get shortname for stat
+        /// </summary>
+        /// <param name="s_key"></param>
+        /// <returns></returns>
         private string GetStatShortName(string s_key)
         {
             foreach(KeyValuePair<string,string> kvp in _statNamesLong)
@@ -746,6 +976,11 @@ namespace TraXile
             return null;
         }
 
+        /// <summary>
+        /// Get longname for a stat
+        /// </summary>
+        /// <param name="s_key"></param>
+        /// <returns></returns>
         private string GetStatLongName(string s_key)
         {
             if(_statNamesLong.ContainsKey(s_key))
@@ -758,11 +993,17 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Reset stats
+        /// </summary>
         public void ResetStats()
         {
             this.ClearStatsDB();
         }
 
+        /// <summary>
+        /// Empty stats DB
+        /// </summary>
         private void ClearStatsDB()
         {
             SqliteCommand cmd;
@@ -784,6 +1025,9 @@ namespace TraXile
             _log.Info("Stats cleared.");
         }
 
+        /// <summary>
+        /// Clear the activity log
+        /// </summary>
         private void ClearActivityLog()
         {
             SqliteCommand cmd;
@@ -813,6 +1057,9 @@ namespace TraXile
             _log.Info("Activity log cleared.");
         }
 
+        /// <summary>
+        /// Read existing backups to list in GUI
+        /// </summary>
         private void ReadBackupList()
         {
             if(Directory.Exists(_myAppData + @"\backups"))
@@ -830,6 +1077,10 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Initialize the databse
+        /// TODO: Move datbase handling to own class
+        /// </summary>
         private void InitDatabase()
         {
             _dbConnection = new SqliteConnection("Data Source=" + _dbPath);
@@ -891,6 +1142,10 @@ namespace TraXile
             _log.Info("Database initialized.");
         }
 
+        /// <summary>
+        /// Apply patches to database
+        /// TODO: Move datbase handling to own class
+        /// </summary>
         private void PatchDatabase()
         {
             SqliteCommand cmd;
@@ -917,7 +1172,25 @@ namespace TraXile
             catch
             {
             }
+
+            // Update 0.5.2
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "alter table tx_activity_log add column act_success int default 0";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 0.5.2 -> " + cmd.CommandText);
+            }
+            catch
+            {
+            }
         }
+
+        /// <summary>
+        /// Track known players. Needed to find out if death events are for your own 
+        /// char or not. If a player name enters your area, It could not be you :)
+        /// </summary>
+        /// <param name="s_name"></param>
         private void AddKnownPlayerIfNotExists(string s_name)
         {
             if(!_knownPlayerNames.Contains(s_name))
@@ -931,6 +1204,10 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Delete entry from activity log
+        /// </summary>
+        /// <param name="l_timestamp"></param>
         private void DeleteActLogEntry(long l_timestamp)
         {
             SqliteCommand cmd;
@@ -939,6 +1216,9 @@ namespace TraXile
             cmd.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Read list of known players
+        /// </summary>
         private void ReadKnownPlayers()
         {
             SqliteDataReader sqlReader;
@@ -954,7 +1234,19 @@ namespace TraXile
             }
         }
 
-        private void SaveToActivityLog(long i_ts, string s_type, string s_area, int i_area_level, int i_stopwatch, int i_death_counter, int i_ulti_rounds, bool b_zana, List<string> l_tags)
+        /// <summary>
+        /// Save activity to database
+        /// </summary>
+        /// <param name="i_ts"></param>
+        /// <param name="s_type"></param>
+        /// <param name="s_area"></param>
+        /// <param name="i_area_level"></param>
+        /// <param name="i_stopwatch"></param>
+        /// <param name="i_death_counter"></param>
+        /// <param name="i_ulti_rounds"></param>
+        /// <param name="b_zana"></param>
+        /// <param name="l_tags"></param>
+        private void SaveToActivityLog(long i_ts, string s_type, string s_area, int i_area_level, int i_stopwatch, int i_death_counter, int i_ulti_rounds, bool b_zana, List<string> l_tags, bool b_success)
         {
             //replace ' in area
             s_area = s_area.Replace("'", "");
@@ -978,7 +1270,8 @@ namespace TraXile
                "act_deathcounter, " +
                "act_ulti_rounds," +
                "act_is_zana," +
-               "act_tags) VALUES (" +
+               "act_tags," +
+               "act_success) VALUES (" +
                i_ts.ToString() 
                  + ", '" + s_type 
                  + "', '" + s_area
@@ -987,7 +1280,8 @@ namespace TraXile
                  + ", " + i_death_counter 
                  + ", " + i_ulti_rounds 
                  + ", " + (b_zana ? "1" : "0")
-                 + ", '" + sTags + "')";
+                 + ", '" + sTags + "'"
+                 + ", " + (b_success ? "1" : "0") + ")";
 
             cmd.ExecuteNonQuery();
 
@@ -1016,6 +1310,9 @@ namespace TraXile
             return ACTIVITY_TYPES.MAP;
         }
 
+        /// <summary>
+        /// Read the activity log from Database
+        /// </summary>
         private void ReadActivityLogFromSQLite()
         {
             SqliteDataReader sqlReader;
@@ -1039,6 +1336,7 @@ namespace TraXile
                     Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
                     TimeStamp = sqlReader.GetInt32(0),
                     CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds),
+                    TotalSeconds = Convert.ToInt32(ts.TotalSeconds),
                     Type = aType,
                     Area = sqlReader.GetString(2),
                     DeathCounter = sqlReader.GetInt32(4),
@@ -1076,6 +1374,9 @@ namespace TraXile
             ResetMapHistory();
         }
 
+        /// <summary>
+        /// Main method for log parsing thread
+        /// </summary>
         private void LogParsing()
         {
             while(true)
@@ -1089,6 +1390,10 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Get line count from Client.txt. Used for progress calculation
+        /// </summary>
+        /// <returns></returns>
         private int GetLogFileLineCount()
         {
             int iCount = 0;
@@ -1102,6 +1407,10 @@ namespace TraXile
             return iCount;
         }
 
+
+        /// <summary>
+        /// Parse the logfile
+        /// </summary>
         private void ParseLogFile()
         {
             _log.Info("Started logfile parsing. Last hash was " + _lastHash.ToString());
@@ -1115,7 +1424,6 @@ namespace TraXile
             {
                 string line;
                 int lineHash = 0;
-               
 
                 // Keep file open
                 while (!_exit)
@@ -1200,6 +1508,9 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Handle events - Read Queue
+        /// </summary>
         private void EventHandling()
         {
             while (true)
@@ -1216,8 +1527,15 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Check if a given area is a Map.
+        /// </summary>
+        /// <param name="sArea"></param>
+        /// <param name="sSourceArea"></param>
+        /// <returns></returns>
         private bool CheckIfAreaIsMap(string sArea, string sSourceArea = "")
         {
+            // Laboratory could be map or heist...
             if (sArea == "Laboratory")
             {
                 if (sSourceArea == "The Rogue Harbour")
@@ -1230,7 +1548,7 @@ namespace TraXile
                 }
             }
 
-            foreach (string s in _areaMapping.MAP_AREAS)
+            foreach (string s in _defaultMappings.MAP_AREAS)
             {
                if (s.Trim().Equals(sArea.Trim()))
                     return true;
@@ -1238,8 +1556,15 @@ namespace TraXile
             return false;
         }
 
+        /// <summary>
+        /// Check if a given area is a Heist
+        /// </summary>
+        /// <param name="sArea"></param>
+        /// <param name="sSourceArea"></param>
+        /// <returns></returns>
         private bool CheckIfAreaIsHeist(string sArea, string sSourceArea = "")
         {
+            // Laboratory could be map or heist...
             if (sArea == "Laboratory")
             {
                 if(sSourceArea == "The Rogue Harbour")
@@ -1252,7 +1577,7 @@ namespace TraXile
                 }
             }
 
-            foreach (string s in _areaMapping.HEIST_AREAS)
+            foreach (string s in _defaultMappings.HEIST_AREAS)
             {
                 if (s.Trim().Equals(sArea.Trim()))
                     return true;
@@ -1260,9 +1585,14 @@ namespace TraXile
             return false;
         }
 
+        /// <summary>
+        /// Check if a given area is simulacrum
+        /// </summary>
+        /// <param name="sArea"></param>
+        /// <returns></returns>
         private bool CheckIfAreaIsSimu(string sArea)
         {
-            foreach (string s in _areaMapping.SIMU_AREAS)
+            foreach (string s in _defaultMappings.SIMU_AREAS)
             {
                 if (s.Trim().Equals(sArea.Trim()))
                     return true;
@@ -1270,6 +1600,10 @@ namespace TraXile
             return false;
         }
 
+        /// <summary>
+        /// Process a command entered via ingame chat
+        /// </summary>
+        /// <param name="s_command"></param>
         private void HandleChatCommand(string s_command)
         {
             _log.Info("ChatCommand -> " + s_command);
@@ -1363,7 +1697,7 @@ namespace TraXile
                     {
                         MethodInvoker mi = delegate
                         {
-                            FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, DateTime.Now);
+                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, DateTime.Now);
                         };
                         this.Invoke(mi);
                     }
@@ -1371,12 +1705,371 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Handle area change. Core logic for nearly all tracking
+        /// </summary>
+        /// <param name="ev"></param>
+        private void HandleAreaChangeEvent(TrackingEvent ev)
+        {
+            string sSourceArea = _currentArea;
+            string sTargetArea = GetAreaNameFromEvent(ev);
+            string sAreaName = GetAreaNameFromEvent(ev);
+            bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea);
+            bool bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea);
+            bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
+            bool bTargetAreaIsSimu = false;
+            bool bTargetAreaMine = sTargetArea == "Azurite Mine";
+            bool bTargetAreaTemple = sTargetArea == "The Temple of Atzoatl";
+            bool bTargetAreaIsLab = sTargetArea == "Estate Path" || sTargetArea == "Estate Walkways" || sTargetArea == "Estate Crossing";
+            long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
+
+            _inAreaSince = ev.EventTime;
+
+            IncrementStat("AreaChanges", ev.EventTime, 1);
+
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+            {
+                _currentActivity.LastEnded = ev.EventTime;
+            }
+
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE)
+            {
+                _currentActivity.LastEnded = ev.EventTime;
+            }
+
+            //Simu?
+            if (_defaultMappings.SIMU_AREAS.Contains(sAreaName))
+            {
+                bTargetAreaIsSimu = true;
+                if (_currentInstanceEndpoint != _lastSimuEndpoint)
+                {
+                    IncrementStat("SimulacrumStarted", ev.EventTime, 1);
+                    _lastSimuEndpoint = _currentInstanceEndpoint;
+
+                    _currentActivity = new TrackedActivity
+                    {
+                        Area = sTargetArea,
+                        Type = ACTIVITY_TYPES.SIMULACRUM,
+                        AreaLevel = _nextAreaLevel,
+                        Started = ev.EventTime,
+                        TimeStamp = lTS,
+                        InstanceEndpoint = _currentInstanceEndpoint
+                    };
+                    _nextAreaLevel = 0;
+                }
+            }
+
+            // Special calculation for Elder fight - he has no start dialoge.
+            if (sAreaName == "Absence of Value and Meaning".Trim())
+            {
+                if (!_elderFightActive)
+                {
+                    IncrementStat("ElderTried", ev.EventTime, 1);
+                }
+                _elderFightActive = true;
+            }
+
+            ACTIVITY_TYPES actType = ACTIVITY_TYPES.MAP;
+            if (bTargetAreaIsMap)
+            {
+                actType = ACTIVITY_TYPES.MAP;
+            }
+            else if (bTargetAreaIsHeist)
+            {
+                actType = ACTIVITY_TYPES.HEIST;
+            }
+            else if (bTargetAreaIsSimu)
+            {
+                actType = ACTIVITY_TYPES.SIMULACRUM;
+            }
+            else if (bTargetAreaIsLab)
+            {
+                actType = ACTIVITY_TYPES.LABYRINTH;
+            }
+            else if (bTargetAreaMine)
+            {
+                actType = ACTIVITY_TYPES.DELVE;
+            }
+            else if (bTargetAreaTemple)
+            {
+                actType = ACTIVITY_TYPES.TEMPLE;
+            }
+
+            //Lab started?
+            if (actType == ACTIVITY_TYPES.LABYRINTH && sSourceArea == "Aspirants Plaza")
+            {
+                string sLabName = "Labyrinth";
+
+                switch (_nextAreaLevel)
+                {
+                    case 33:
+                        sLabName = "The Labyrinth";
+                        break;
+                    case 55:
+                        sLabName = "The Cruel Labyrinth";
+                        break;
+                    case 68:
+                        sLabName = "The Merciless Labyrinth";
+                        break;
+                    case 75:
+                        sLabName = "Uber-Lab";
+                        break;
+                    case 83:
+                        sLabName = "Advanced Uber-Lab";
+                        break;
+                    default:
+                        sLabName = "Unknown";
+                        break;
+                }
+
+                _currentActivity = new TrackedActivity
+                {
+                    Area = sLabName,
+                    AreaLevel = _nextAreaLevel,
+                    Type = actType,
+                    //Started = DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]),
+                    Started = ev.EventTime,
+                    TimeStamp = lTS,
+                    InstanceEndpoint = _currentInstanceEndpoint
+                };
+
+                IncrementStat("LabsStarted", ev.EventTime, 1);
+
+            }
+
+            //Lab Trial entered
+            {
+                if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH && sTargetArea == "Aspirants Trial")
+                {
+                    _currentActivity.TrialCount++;
+                }
+            }
+
+            //Lab cancelled?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+            {
+                if (sTargetArea.Contains("Hideout") || _defaultMappings.CAMP_AREAS.Contains(sTargetArea))
+                {
+                    FinishActivity(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
+                }
+            }
+
+            // Delving?
+            if ((_currentActivity == null || _currentActivity.Type != ACTIVITY_TYPES.DELVE) && actType == ACTIVITY_TYPES.DELVE)
+            {
+                _currentActivity = new TrackedActivity
+                {
+                    Area = "Azurite Mine",
+                    Type = actType,
+                    Started = ev.EventTime,
+                    TimeStamp = lTS,
+                    InstanceEndpoint = _currentInstanceEndpoint
+                };
+            }
+
+            // Update Delve level
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE && actType == ACTIVITY_TYPES.DELVE)
+            {
+                if (_nextAreaLevel > _currentActivity.AreaLevel)
+                {
+                    _currentActivity.AreaLevel = _nextAreaLevel;
+                }
+            }
+
+            // End Delving?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE && !bTargetAreaMine)
+            {
+                FinishActivity(_currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
+            }
+
+            // PAUSE RESUME Handling
+            if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu)
+            {
+                if (_currentActivity != null)
+                {
+                    if (_defaultMappings.CAMP_AREAS.Contains(sSourceArea) || sSourceArea.Contains("Hideout"))
+                    {
+                        if (sTargetArea == _currentActivity.Area && _currentInstanceEndpoint == _currentActivity.InstanceEndpoint)
+                        {
+                            _currentActivity.EndPauseTime(ev.EventTime);
+                        }
+                    }
+                }
+            }
+
+            if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsLab || bTargetAreaMine || bTargetAreaTemple)
+            {
+                _elderFightActive = false;
+                _shaperKillsInFight = 0;
+
+                if (_currentActivity == null)
+                {
+                    _currentActivity = new TrackedActivity
+                    {
+                        Area = sTargetArea,
+                        Type = actType,
+                        AreaLevel = _nextAreaLevel,
+                        Started = ev.EventTime,
+                        TimeStamp = lTS,
+                        InstanceEndpoint = _currentInstanceEndpoint
+                    };
+                    _nextAreaLevel = 0;
+                }
+                else
+                {
+                    if (bTargetAreaIsSimu || bTargetAreaIsMap)
+                    {
+                        _currentActivity.PortalsUsed++;
+                    }
+                }
+                if (!_currentActivity.ManuallyPaused)
+                    _currentActivity.StartStopWatch();
+
+                if (bSourceAreaIsMap && bTargetAreaIsMap)
+                {
+                    if (!_isMapZana)
+                    {
+                        // entered Zana Map
+                        _isMapZana = true;
+                        _currentActivity.StopStopWatch();
+                        if (_currentActivity.ZanaMap == null)
+                        {
+                            _currentActivity.ZanaMap = new TrackedActivity
+                            {
+                                Type = ACTIVITY_TYPES.MAP,
+                                Area = sTargetArea,
+                                AreaLevel = _nextAreaLevel,
+                                Started = ev.EventTime,
+                                TimeStamp = lTS,
+                            };
+                            _currentActivity.ZanaMap.AddTag("zana-map");
+                            _nextAreaLevel = 0;
+                        }
+                        if (!_currentActivity.ZanaMap.ManuallyPaused)
+                            _currentActivity.ZanaMap.StartStopWatch();
+                    }
+                    else
+                    {
+                        _isMapZana = false;
+
+                        // leave Zana Map
+                        if (_currentActivity.ZanaMap != null)
+                        {
+                            _isMapZana = false;
+                            _currentActivity.ZanaMap.StopStopWatch();
+                            _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                            if (!_currentActivity.ManuallyPaused)
+                                _currentActivity.StartStopWatch();
+                        }
+                    }
+                }
+                else
+                {
+                    _isMapZana = false; //TMP_DEBUG
+
+                    // Do not track Lab-Trials
+                    if ((!sSourceArea.Contains("Trial of")) && (_currentActivity.Type != ACTIVITY_TYPES.LABYRINTH) && (_currentActivity.Type != ACTIVITY_TYPES.DELVE))
+                    {
+                        if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
+                        {
+                            FinishActivity(_currentActivity, sTargetArea, actType, DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]));
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (_currentActivity != null && _currentActivity.Type != ACTIVITY_TYPES.LABYRINTH)
+                {
+                    _currentActivity.StopStopWatch();
+                    _currentActivity.LastEnded = ev.EventTime;
+
+                    // PAUSE TIME
+                    if (new ACTIVITY_TYPES[] { ACTIVITY_TYPES.MAP, ACTIVITY_TYPES.HEIST, ACTIVITY_TYPES.SIMULACRUM }.Contains(_currentActivity.Type))
+                    {
+                        if (_defaultMappings.CAMP_AREAS.Contains(sTargetArea) || sTargetArea.Contains("Hideout"))
+                        {
+                            _currentActivity.StartPauseTime(ev.EventTime);
+                        }
+                    }
+
+                    if (_currentActivity.ZanaMap != null)
+                    {
+                        _currentActivity.ZanaMap.StopStopWatch();
+                        _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                    }
+                }
+            }
+
+            _currentArea = sAreaName;
+        }
+
+        /// <summary>
+        /// Handle player died event
+        /// </summary>
+        /// <param name="ev"></param>
+        private void HandlePlayerDiedEvent(TrackingEvent ev)
+        {
+            string sPlayerName = ev.LogLine.Split(' ')[8];
+            if (!_knownPlayerNames.Contains(sPlayerName))
+            {
+                IncrementStat("TotalKilledCount", ev.EventTime, 1);
+                _lastDeathTime = DateTime.Now;
+
+                // Lab?
+                if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+                {
+                    _currentActivity.DeathCounter = 1;
+                    FinishActivity(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
+                }
+
+                // do not count deaths outsite activities to them
+                if (CheckIfAreaIsMap(_currentArea) == false
+                    && CheckIfAreaIsHeist(_currentArea) == false
+                    && CheckIfAreaIsSimu(_currentArea) == false)
+                {
+                    return;
+                }
+
+                if (_currentActivity != null)
+                {
+                    if (_isMapZana)
+                    {
+                        if (_currentActivity.ZanaMap != null)
+                        {
+                            _currentActivity.ZanaMap.DeathCounter++;
+                        }
+                    }
+                    else
+                    {
+                        _currentActivity.DeathCounter++;
+                    }
+                }
+
+
+            }
+
+        }
+
+        /// <summary>
+        /// Handle single event. Routes more complex calcs to dedicated methods.
+        /// </summary>
+        /// <param name="ev"></param>
+        /// <param name="bInit"></param>
         private void HandleSingleEvent(TrackingEvent ev, bool bInit = false)
         {
             try
             {
                 switch (ev.EventType)
                 {
+                   case EVENT_TYPES.ABNORMAL_DISCONNECT:
+                        if (_currentActivity != null)
+                        {
+                            _log.Info("Abnormal disconnect found in log. Finishing Map.");
+                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                        }
+                        break;
+
                     case EVENT_TYPES.POE_CLIENT_START:
                         if(_currentActivity != null)
                         {
@@ -1385,363 +2078,21 @@ namespace TraXile
                             {
                                 _currentActivity.ZanaMap.IsFinished = true;
                             }
-                            FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                         }
                         break;
-
                     case EVENT_TYPES.CHAT_CMD_RECEIVED:
                         string sCmd = ev.LogLine.Split(new string[] { "::" }, StringSplitOptions.None)[1];
-
                         if (_eventQueueInitizalized)
                         {
                             HandleChatCommand(sCmd);
                         }
                         break;
-
                     case EVENT_TYPES.ENTERED_AREA:
-
-                        string sSourceArea = _currentArea;
-                        string sTargetArea = GetAreaNameFromEvent(ev);
-                        string sAreaName = GetAreaNameFromEvent(ev);
-                        bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea);
-                        bool bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea);
-                        bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
-                        bool bTargetAreaIsSimu = false;
-                        bool bTargetAreaMine = sTargetArea == "Azurite Mine";
-                        bool bTargetAreaTemple = sTargetArea == "The Temple of Atzoatl";
-                        bool bTargetAreaIsLab = sTargetArea == "Estate Path" || sTargetArea == "Estate Walkways" || sTargetArea == "Estate Crossing";
-                        long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
-
-                        _inAreaSince = ev.EventTime;
-
-                        IncrementStat("AreaChanges", ev.EventTime, 1);
-
-                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
-                        {
-                            _currentActivity.LastEnded = ev.EventTime;
-                        }
-
-                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE)
-                        {
-                            _currentActivity.LastEnded = ev.EventTime;
-                        }
-
-                        //Simu?
-                        if (_areaMapping.SIMU_AREAS.Contains(sAreaName))
-                        {
-                            bTargetAreaIsSimu = true;
-                            if (_currentInstanceEndpoint != _lastSimuEndpoint)
-                            {
-                                IncrementStat("SimulacrumStarted", ev.EventTime, 1);
-                                _lastSimuEndpoint = _currentInstanceEndpoint;
-
-                                _currentActivity = new TrackedActivity
-                                {
-                                    Area = sTargetArea,
-                                    Type = ACTIVITY_TYPES.SIMULACRUM,
-                                    AreaLevel = _nextAreaLevel,
-                                    Started = ev.EventTime,
-                                    TimeStamp = lTS,
-                                    InstanceEndpoint = _currentInstanceEndpoint
-                                };
-                                _nextAreaLevel = 0;
-                            }
-                        }
-
-                        // Special calculation for Elder fight - he has no start dialoge.
-                        if (sAreaName == "Absence of Value and Meaning".Trim())
-                        {
-                            if (!_elderFightActive)
-                            {
-                                IncrementStat("ElderTried", ev.EventTime, 1);
-                            }
-                            _elderFightActive = true;
-                        }
-
-                        ACTIVITY_TYPES actType = ACTIVITY_TYPES.MAP;
-                        if (bTargetAreaIsMap)
-                        {
-                            actType = ACTIVITY_TYPES.MAP;
-                        }
-                        else if (bTargetAreaIsHeist)
-                        {
-                            actType = ACTIVITY_TYPES.HEIST;
-                        }
-                        else if (bTargetAreaIsSimu)
-                        {
-                            actType = ACTIVITY_TYPES.SIMULACRUM;
-                        }
-                        else if (bTargetAreaIsLab)
-                        {
-                            actType = ACTIVITY_TYPES.LABYRINTH;
-                        }
-                        else if (bTargetAreaMine)
-                        {
-                            actType = ACTIVITY_TYPES.DELVE;
-                        }
-                        else if (bTargetAreaTemple)
-                        {
-                            actType = ACTIVITY_TYPES.TEMPLE;
-                        }
-
-                        //Lab started?
-                        if (actType == ACTIVITY_TYPES.LABYRINTH && sSourceArea == "Aspirants Plaza")
-                        {
-                            string sLabName = "Labyrinth";
-
-                            switch (_nextAreaLevel)
-                            {
-                                case 33:
-                                    sLabName = "The Labyrinth";
-                                    break;
-                                case 55:
-                                    sLabName = "The Cruel Labyrinth";
-                                    break;
-                                case 68:
-                                    sLabName = "The Merciless Labyrinth";
-                                    break;
-                                case 75:
-                                    sLabName = "Uber-Lab";
-                                    break;
-                                case 83:
-                                    sLabName = "Advanced Uber-Lab";
-                                    break;
-                                default:
-                                    sLabName = "Unknown";
-                                    break;
-                            }
-
-                            _currentActivity = new TrackedActivity
-                            {
-                                Area = sLabName,
-                                AreaLevel = _nextAreaLevel,
-                                Type = actType,
-                                //Started = DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]),
-                                Started = ev.EventTime,
-                                TimeStamp = lTS,
-                                InstanceEndpoint = _currentInstanceEndpoint
-                            };
-
-                            IncrementStat("LabsStarted", ev.EventTime, 1);
-                           
-                        }
-
-                        //Lab cancelled?
-                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
-                        {
-                            if (sTargetArea.Contains("Hideout") || _areaMapping.CAMP_AREAS.Contains(sTargetArea))
-                            {
-                                FinishMap(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
-                            }
-                        }
-
-                        // Delving?
-                        if ((_currentActivity == null || _currentActivity.Type != ACTIVITY_TYPES.DELVE) && actType == ACTIVITY_TYPES.DELVE)
-                        {
-                            _currentActivity = new TrackedActivity
-                            {
-                                Area = "Azurite Mine",
-                                Type = actType,
-                                Started = ev.EventTime,
-                                TimeStamp = lTS,
-                                InstanceEndpoint = _currentInstanceEndpoint
-                            };
-                        }
-
-                        // Update Delve level
-                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE && actType == ACTIVITY_TYPES.DELVE)
-                        {
-                            if(_nextAreaLevel > _currentActivity.AreaLevel)
-                            {
-                                _currentActivity.AreaLevel = _nextAreaLevel;
-                            }
-                        }
-
-                        // End Delving?
-                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE && !bTargetAreaMine)
-                        {
-                            FinishMap(_currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
-                        }
-
-                        // PAUSE RESUME Handling
-                        if(bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu)
-                        {
-                            if(_currentActivity != null)
-                            {
-                                if(_areaMapping.CAMP_AREAS.Contains(sSourceArea) || sSourceArea.Contains("Hideout"))
-                                {
-                                    if(sTargetArea == _currentActivity.Area && _currentInstanceEndpoint == _currentActivity.InstanceEndpoint)
-                                    {
-                                        _currentActivity.EndPauseTime(ev.EventTime);
-                                    }
-                                }
-                            }
-                        }
-
-                        if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsLab || bTargetAreaMine || bTargetAreaTemple)
-                        {
-                            _elderFightActive = false;
-                            _shaperKillsInFight = 0;
-
-                            if (_currentActivity == null)
-                            {
-                                _currentActivity = new TrackedActivity
-                                {
-                                    Area = sTargetArea,
-                                    Type = actType,
-                                    AreaLevel = _nextAreaLevel,
-                                    Started = ev.EventTime,
-                                    TimeStamp = lTS,
-                                    InstanceEndpoint = _currentInstanceEndpoint
-                                };
-                                _nextAreaLevel = 0;
-                            }
-                            else
-                            {
-                                if(bTargetAreaIsSimu || bTargetAreaIsMap)
-                                {
-                                    _currentActivity.PortalsUsed++;
-                                }
-                            }
-                            if (!_currentActivity.ManuallyPaused)
-                                _currentActivity.StartStopWatch();
-
-                            if (bSourceAreaIsMap && bTargetAreaIsMap)
-                            {
-                                if (!_isMapZana)
-                                {
-                                    // entered Zana Map
-                                    _isMapZana = true;
-                                    _currentActivity.StopStopWatch();
-                                    if (_currentActivity.ZanaMap == null)
-                                    {
-                                        _currentActivity.ZanaMap = new TrackedActivity
-                                        {
-                                            Type = ACTIVITY_TYPES.MAP,
-                                            Area = sTargetArea,
-                                            AreaLevel = _nextAreaLevel,
-                                            Started = ev.EventTime,
-                                            TimeStamp = lTS,
-                                        };
-                                        _currentActivity.ZanaMap.AddTag("zana-map");
-                                        _nextAreaLevel = 0;
-                                    }
-                                    if (!_currentActivity.ZanaMap.ManuallyPaused)
-                                        _currentActivity.ZanaMap.StartStopWatch();
-                                }
-                                else
-                                {
-                                    _isMapZana = false;
-
-                                    // leave Zana Map
-                                    if (_currentActivity.ZanaMap != null)
-                                    {
-                                        _isMapZana = false;
-                                        _currentActivity.ZanaMap.StopStopWatch();
-                                        _currentActivity.ZanaMap.LastEnded = ev.EventTime;
-                                        if (!_currentActivity.ManuallyPaused)
-                                            _currentActivity.StartStopWatch();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                _isMapZana = false; //TMP_DEBUG
-
-                                // Do not track Lab-Trials
-                                if ((!sSourceArea.Contains("Trial of")) && (_currentActivity.Type != ACTIVITY_TYPES.LABYRINTH) && (_currentActivity.Type != ACTIVITY_TYPES.DELVE))
-                                {
-                                    if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
-                                    {
-                                        FinishMap(_currentActivity, sTargetArea, actType, DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]));
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (_currentActivity != null && _currentActivity.Type != ACTIVITY_TYPES.LABYRINTH)
-                            {
-                                _currentActivity.StopStopWatch();
-                                _currentActivity.LastEnded = ev.EventTime;
-
-                                // PAUSE TIME
-                                if(new ACTIVITY_TYPES[] { ACTIVITY_TYPES.MAP, ACTIVITY_TYPES.HEIST, ACTIVITY_TYPES.SIMULACRUM }.Contains(_currentActivity.Type))
-                                {
-                                    if(_areaMapping.CAMP_AREAS.Contains(sTargetArea) || sTargetArea.Contains("Hideout"))
-                                    {
-                                        _currentActivity.StartPauseTime(ev.EventTime);
-                                    }
-                                }
-
-                                if (_currentActivity.ZanaMap != null)
-                                {
-                                    _currentActivity.ZanaMap.StopStopWatch();
-                                    _currentActivity.ZanaMap.LastEnded = ev.EventTime;
-                                }
-
-                                if (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.SIMULACRUM)
-                                {
-                                   // // max portals used and left activity?
-                                   // if(_currentActivity.PortalsUsed >= 6)
-                                   // {
-                                   ////     _currentActivity.IsFinished = true;
-                                   //     if(_currentActivity.ZanaMap != null)
-                                   //     {
-                                   //         _currentActivity.ZanaMap.IsFinished = true;
-                                   //         _currentActivity.ZanaMap.StopStopWatch();
-                                   //         _currentActivity.ZanaMap.LastEnded = ev.EventTime;
-                                   //     }
-
-                                   //  //   FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
-                                   // }
-                                }
-                            }
-                        }
-
-                        _currentArea = sAreaName;
+                        HandleAreaChangeEvent(ev);
                         break;
                     case EVENT_TYPES.PLAYER_DIED:
-                        
-                        string sPlayerName = ev.LogLine.Split(' ')[8];
-                        if (!_knownPlayerNames.Contains(sPlayerName))
-                        {
-                            IncrementStat("TotalKilledCount", ev.EventTime, 1);
-                            _lastDeathTime = DateTime.Now;
-
-                            // Lab?
-                            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
-                            {
-                                _currentActivity.DeathCounter = 1;
-                                FinishMap(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
-                            }
-
-                            // do not count deaths outsite activities to them
-                            if (CheckIfAreaIsMap(_currentArea) == false 
-                                && CheckIfAreaIsHeist(_currentArea) == false 
-                                && CheckIfAreaIsSimu(_currentArea) == false)
-                            {
-                                break;
-                            }
-                            
-                            if (_currentActivity != null)
-                            {
-                                if (_isMapZana)
-                                {
-                                    if (_currentActivity.ZanaMap != null)
-                                    {
-                                        _currentActivity.ZanaMap.DeathCounter++;
-                                    }
-                                }
-                                else
-                                {
-                                    _currentActivity.DeathCounter++;
-                                }
-                            }
-
-                           
-                        }
-
+                        HandlePlayerDiedEvent(ev);
                         break;
                     case EVENT_TYPES.ELDER_KILLED:
                         IncrementStat("ElderKilled", ev.EventTime, 1);
@@ -1966,7 +2317,8 @@ namespace TraXile
                         {
                             IncrementStat("LabsFinished", ev.EventTime, 1);
                             IncrementStat("LabsCompleted_" + _currentActivity.Area, ev.EventTime, 1);
-                            FinishMap(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                            _currentActivity.Success = true;
+                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                         }
                         break;
                     case EVENT_TYPES.LAB_START_INFO_RECEIVED:
@@ -1977,6 +2329,97 @@ namespace TraXile
                             .Split(' ')[0];
                         _nextAreaLevel = Convert.ToInt32(sLvl);
                         _currentAreaLevel = _nextAreaLevel;
+                        break;
+                    case EVENT_TYPES.EXP_DANNIG_ENCOUNTER:
+                        if (_currentActivity != null && !_currentActivity.HasTag("dannig") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        {
+                            IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
+                            IncrementStat("ExpeditionEncounters_Dannig", ev.EventTime, 1);
+                            AddTagAutoCreate("expedition", _currentActivity);
+                            _currentActivity.Tags.Add("expedition");
+                            _currentActivity.Tags.Add("dannig");
+                        }
+                        break;
+                    case EVENT_TYPES.EXP_GWENNEN_ENCOUNTER:
+                        if (_currentActivity != null && !_currentActivity.HasTag("gwennen") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        {
+                            IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
+                            IncrementStat("ExpeditionEncounters_Gwennen", ev.EventTime, 1);
+                            _currentActivity.Tags.Add("expedition");
+                            _currentActivity.Tags.Add("gwennen");
+                        }
+                        break;
+                    case EVENT_TYPES.EXP_TUJEN_ENCOUNTER:
+                        if (_currentActivity != null && !_currentActivity.HasTag("tujen") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        {
+                            IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
+                            IncrementStat("ExpeditionEncounters_Tujen", ev.EventTime, 1);
+                            _currentActivity.Tags.Add("expedition");
+                            _currentActivity.Tags.Add("tujen");
+                        }
+                        break;
+                    case EVENT_TYPES.EXP_ROG_ENCOUNTER:
+                        if (_currentActivity != null && !_currentActivity.HasTag("rog") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        {
+                            IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
+                            IncrementStat("ExpeditionEncounters_Rog", ev.EventTime, 1);
+                            _currentActivity.Tags.Add("expedition");
+                            _currentActivity.Tags.Add("rog");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_GIANNA_SPEAK:
+                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("gianna");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_HUCK_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("huck");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_ISLA_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("isla");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_NENET_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("nenet");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_NILES_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("niles");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_TIBBS_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("tibbs");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_TULLINA_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("tullina");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_VINDERI_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("vinderi");
+                        }
+                        break;
+                    case EVENT_TYPES.HEIST_KARST_SPEAK:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            _currentActivity.AddTag("karst");
+                        }
                         break;
 
                 }
@@ -2009,6 +2452,13 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Increment a stat with an defined value. Updates the database.
+        /// 
+        /// </summary>
+        /// <param name="s_key"></param>
+        /// <param name="dt"></param>
+        /// <param name="i_value">default=1</param>
         private void IncrementStat(string s_key, DateTime dt, int i_value = 1)
         {
             _numericStats[s_key] += i_value;
@@ -2018,6 +2468,12 @@ namespace TraXile
             cmd.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Update a stat with a fixed value. Updates the database
+        /// </summary>
+        /// <param name="s_key"></param>
+        /// <param name="dt"></param>
+        /// <param name="i_value"></param>
         private void SetStat(string s_key, DateTime dt, int i_value)
         {
             _numericStats[s_key] = i_value;
@@ -2027,12 +2483,24 @@ namespace TraXile
             cmd.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Extract the instance endpoint from a log line.
+        /// </summary>
+        /// <param name="ev"></param>
+        /// <returns></returns>
         private string GetEndpointFromInstanceEvent(TrackingEvent ev)
         {
             return ev.LogLine.Split(new String[] { "Connecting to instance server at "}, StringSplitOptions.None)[1];
         }
 
-        private void FinishMap(TrackedActivity map, string sNextMap, ACTIVITY_TYPES sNextMapType, DateTime dtNextMapStarted)
+        /// <summary>
+        /// Finishs the current activity.
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <param name="sNextMap">next map to start. Set to null if there is none</param>
+        /// <param name="sNextMapType"></param>
+        /// <param name="dtNextMapStarted"></param>
+        private void FinishActivity(TrackedActivity activity, string sNextMap, ACTIVITY_TYPES sNextMapType, DateTime dtNextMapStarted)
         {
             _currentActivity.StopStopWatch();
 
@@ -2041,70 +2509,92 @@ namespace TraXile
             int iSeconds = 0;
             int iSecondsZana = 0;
 
+
+            // Filter out invalid labs (discnnect etc)
+            if(activity.Type == ACTIVITY_TYPES.LABYRINTH)
+            {
+                if(activity.Area == "Unknown")
+                {
+                    // no area changes logged for some old lab runs :/
+                    activity.Success = activity.DeathCounter == 0;
+                }
+
+                // Labs must be successfull or death counter 1
+                if (activity.Success != true && activity.DeathCounter == 0)
+                {
+                    _log.Info("Filtered out lab run [time=" + activity.Started + ", area: " + activity.Area + "]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
+                    _currentActivity = null;
+                    return;
+                }
+               
+            }
+
+
             if(!_eventQueueInitizalized)
             {
-                ts = (map.LastEnded - map.Started);
+                ts = (activity.LastEnded - activity.Started);
                 try
                 {
                     iSeconds = Convert.ToInt32(ts.TotalSeconds);
-                    iSeconds -= Convert.ToInt32(map.PausedTime);
+                    iSeconds -= Convert.ToInt32(activity.PausedTime);
                 }
                 catch
                 {
                     iSeconds = 0;
                 }
                 
-                if (map.ZanaMap != null)
+                if (activity.ZanaMap != null)
                 {
-                    tsZana = (map.ZanaMap.LastEnded - map.ZanaMap.Started);
+                    tsZana = (activity.ZanaMap.LastEnded - activity.ZanaMap.Started);
                     iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
                 }
             }
             else
             {
-                ts = map.StopWatchTimeSpan;
+                ts = activity.StopWatchTimeSpan;
                 iSeconds = Convert.ToInt32(ts.TotalSeconds);
-                if (map.ZanaMap != null)
+                if (activity.ZanaMap != null)
                 {
-                    tsZana = map.ZanaMap.StopWatchTimeSpan;
+                    tsZana = activity.ZanaMap.StopWatchTimeSpan;
                     iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
                 }
             }
 
-            _eventHistory.Insert(0, _currentActivity);
+            _currentActivity.TotalSeconds = iSeconds;
+            if(!_eventHistory.Contains(_currentActivity))
+            {
+                _eventHistory.Insert(0, _currentActivity);
+            }
+            
             TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
-            map.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+            activity.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                       tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
 
-            if(!_parsedActivities.Contains(map.TimeStamp.ToString() + "_" + map.Area))
+            if(!_parsedActivities.Contains(activity.TimeStamp.ToString() + "_" + activity.Area))
             {
-                AddMapLvItem(map);
-                SaveToActivityLog(((DateTimeOffset)map.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.Area, map.AreaLevel, iSeconds, map.DeathCounter, map.TrialMasterCount, false, map.Tags);
+                AddMapLvItem(activity);
+                SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success);
               
                 // Refresh ListView
                 if (_eventQueueInitizalized) DoSearch();
             }
             
           
-            if (map.ZanaMap != null)
+            if (activity.ZanaMap != null)
             {
                 TimeSpan tsZanaMap = TimeSpan.FromSeconds(iSecondsZana);
-                map.ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                activity.ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                        tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
                 _eventHistory.Insert(0, _currentActivity.ZanaMap);
 
-                if (!_parsedActivities.Contains(map.ZanaMap.TimeStamp.ToString() + "_" + map.ZanaMap.Area))
+                if (!_parsedActivities.Contains(activity.ZanaMap.TimeStamp.ToString() + "_" + activity.ZanaMap.Area))
                 {
-                    AddMapLvItem(map.ZanaMap, true);
-                    SaveToActivityLog(((DateTimeOffset)map.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(map.Type), map.ZanaMap.Area, map.ZanaMap.AreaLevel, iSecondsZana, map.ZanaMap.DeathCounter, map.ZanaMap.TrialMasterCount, true, map.ZanaMap
-                        .Tags);
+                    AddMapLvItem(activity.ZanaMap, true);
+                    SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
+                        .Tags, activity.ZanaMap.Success);
 
                     // Refresh ListView
                     if (_eventQueueInitizalized) DoSearch();
-                }
-                else
-                {
-                    MessageBox.Show("DoubleZana");
                 }
             }
 
@@ -2126,35 +2616,37 @@ namespace TraXile
                 _currentActivity = null;
             }
 
-            if(map.Type == ACTIVITY_TYPES.HEIST)
+            if(activity.Type == ACTIVITY_TYPES.HEIST)
             {
-                IncrementStat("TotalHeistsDone", map.Started, 1);
-                IncrementStat("HeistsFinished_" + map.Area, map.Started, 1);
+                IncrementStat("TotalHeistsDone", activity.Started, 1);
+                IncrementStat("HeistsFinished_" + activity.Area, activity.Started, 1);
             }
-            else if(map.Type == ACTIVITY_TYPES.MAP)
+            else if(activity.Type == ACTIVITY_TYPES.MAP)
             {
-                IncrementStat("TotalMapsDone", map.Started, 1);
-                IncrementStat("MapsFinished_" + map.Area, map.Started, 1);
-                IncrementStat("MapTierFinished_T" + map.MapTier.ToString(), map.Started, 1);
+                IncrementStat("TotalMapsDone", activity.Started, 1);
+                IncrementStat("MapsFinished_" + activity.Area, activity.Started, 1);
+                IncrementStat("MapTierFinished_T" + activity.MapTier.ToString(), activity.Started, 1);
 
-                if(map.ZanaMap != null)
+                if(activity.ZanaMap != null)
                 {
-                    IncrementStat("TotalMapsDone", map.ZanaMap.Started, 1);
-                    IncrementStat("MapsFinished_" + map.ZanaMap.Area, map.ZanaMap.Started, 1);
-                    IncrementStat("MapTierFinished_T" + map.ZanaMap.MapTier.ToString(),map.ZanaMap.Started, 1);
+                    IncrementStat("TotalMapsDone", activity.ZanaMap.Started, 1);
+                    IncrementStat("MapsFinished_" + activity.ZanaMap.Area, activity.ZanaMap.Started, 1);
+                    IncrementStat("MapTierFinished_T" + activity.ZanaMap.MapTier.ToString(),activity.ZanaMap.Started, 1);
                 }
             }
-            else if (map.Type == ACTIVITY_TYPES.SIMULACRUM)
+            else if (activity.Type == ACTIVITY_TYPES.SIMULACRUM)
             {
-                IncrementStat("SimulacrumFinished_" + map.Area, map.Started, 1);
+                IncrementStat("SimulacrumFinished_" + activity.Area, activity.Started, 1);
             }
-            else if (map.Type == ACTIVITY_TYPES.TEMPLE)
+            else if (activity.Type == ACTIVITY_TYPES.TEMPLE)
             {
-                IncrementStat("TemplesDone", map.Started, 1);
+                IncrementStat("TemplesDone", activity.Started, 1);
             }
         }
 
-        //TODO: replace with DB table
+        /// <summary>
+        /// Read the statistics cache
+        /// </summary>
         private void ReadStatsCache()
         {
             if(File.Exists(_cachePath))
@@ -2192,6 +2684,9 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Write the statistics cache
+        /// </summary>
         private void SaveStatsCache()
         {
             StreamWriter wrt = new StreamWriter(_cachePath);
@@ -2203,6 +2698,9 @@ namespace TraXile
             wrt.Close();
         }
 
+        /// <summary>
+        /// Simply save the current app version to VERSION.txt
+        /// </summary>
         private void SaveVersion()
         {
             StreamWriter wrt = new StreamWriter(_myAppData + @"\VERSION.txt");
@@ -2210,11 +2708,19 @@ namespace TraXile
             wrt.Close();
         }
 
+        /// <summary>
+        /// Dump an event to logfile
+        /// </summary>
+        /// <param name="ev"></param>
         private void LogEvent(TrackingEvent ev)
         {
             _log.Info(ev.ToString());
         }
 
+        /// <summary>
+        /// Add event to EventLog
+        /// </summary>
+        /// <param name="ev"></param>
         private void TextLogEvent(TrackingEvent ev)
         {
             this.Invoke((MethodInvoker)delegate
@@ -2223,15 +2729,9 @@ namespace TraXile
             });
         }
 
-        private void TextLog(string sTxt)
-        {
-            this.Invoke((MethodInvoker)delegate
-            {
-                textBoxLogView.Text += "[" + DateTime.Now.ToString() + "] " + sTxt + Environment.NewLine;
-            });
-            _log.Info(sTxt);
-        }
-
+        /// <summary>
+        /// Reset and reload the Activity-History ListView
+        /// </summary>
         public void ResetMapHistory()
         {
             _lvmActlog.ClearLvItems();
@@ -2268,6 +2768,11 @@ namespace TraXile
             AddActivityLvItems();
 
         }
+
+        /// <summary>
+        /// Add maximum numberof ListViewItems to Listview
+        /// TODO: filter before adding!!!
+        /// </summary>
         private void AddActivityLvItems()
         {
             foreach (TrackedActivity act in _eventHistory)
@@ -2277,6 +2782,13 @@ namespace TraXile
             _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
         }
 
+        /// <summary>
+        /// Add listview Item for single activity
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="bZana"></param>
+        /// <param name="iPos"></param>
+        /// <param name="b_display"></param>
         private void AddMapLvItem(TrackedActivity map, bool bZana = false, int iPos = 0, bool b_display = true)
         {
             this.Invoke((MethodInvoker)delegate
@@ -2325,6 +2837,11 @@ namespace TraXile
             });
         }
 
+        /// <summary>
+        /// Find matching activity to Item name
+        /// </summary>
+        /// <param name="s_name"></param>
+        /// <returns></returns>
         private TrackedActivity GetActivityFromListItemName(string s_name)
         {
             foreach(TrackedActivity ta in _eventHistory)
@@ -2335,31 +2852,31 @@ namespace TraXile
             return null;
         }
 
+        /// <summary>
+        /// Convert an activity type to string
+        /// </summary>
+        /// <param name="a_type"></param>
+        /// <returns></returns>
         private string GetStringFromActType(ACTIVITY_TYPES a_type)
         {
             return a_type.ToString().ToLower();
         }
 
+        /// <summary>
+        /// Extract an arae name out of a log line
+        /// </summary>
+        /// <param name="ev"></param>
+        /// <returns></returns>
         private string GetAreaNameFromEvent(TrackingEvent ev)
         {
             string sArea = ev.LogLine.Split(new string[] { "You have entered" }, StringSplitOptions.None)[1]
                 .Replace(".", "").Trim();
             return sArea.Replace("'", "");
         }
-
-        private string GetDeathReasonromEvent(TrackingEvent ev)
-        {
-            try
-            {
-                return ev.LogLine.Split(new string[] { "killer=" }, StringSplitOptions.None)[1].Split(' ')[0];
-            }
-            catch
-            {
-                return "unknown";
-            }
-            
-        }
-
+     
+        /// <summary>
+        /// Handle the GUI updates
+        /// </summary>
         private void UpdateGUI()
         {
             TimeSpan tsAreaTime = (DateTime.Now - this._inAreaSince);
@@ -2409,9 +2926,10 @@ namespace TraXile
                         }
                     }
 
-                    if (!_historyInitialized)
+                    if(!_listViewInitielaized)
                     {
-                        ReadActivityLogFromSQLite();
+                        DoSearch();
+                        _listViewInitielaized = true;
                     }
                     
                     labelCurrArea.Text = _currentArea;
@@ -2484,56 +3002,89 @@ namespace TraXile
                     }
 
                     labelElderStatus.ForeColor = _numericStats["ElderKilled"] > 0 ? Color.Green : Color.Red;
-                    labelElderStatus.Text = _numericStats["ElderKilled"] > 0 ? "killed" : "not yet killed";
+                    labelElderStatus.Text = _numericStats["ElderKilled"] > 0 ? "Yes" : "No";
                     labelElderKillCount.Text = _numericStats["ElderKilled"].ToString() + "x";
 
                     labelShaperStatus.ForeColor = _numericStats["ShaperKilled"] > 0 ? Color.Green : Color.Red;
-                    labelShaperStatus.Text = _numericStats["ShaperKilled"] > 0 ? "killed" : "not yet killed";
+                    labelShaperStatus.Text = _numericStats["ShaperKilled"] > 0 ? "Yes" : "No";
                     labelShaperKillCount.Text = _numericStats["ShaperKilled"].ToString() + "x"; ;
 
                     labelSirusStatus.ForeColor = _numericStats["SirusKilled"] > 0 ? Color.Green : Color.Red;
-                    labelSirusStatus.Text = _numericStats["SirusKilled"] > 0 ? "killed" : "not yet killed";
+                    labelSirusStatus.Text = _numericStats["SirusKilled"] > 0 ? "Yes" : "No";
                     labelSirusKillCount.Text = _numericStats["SirusKilled"].ToString() + "x";
                     labelSirusTries.Text = _numericStats["SirusStarted"].ToString() + "x";
 
-                    labelCataStatus.ForeColor = _numericStats["CatarinaKilled"] > 0 ? Color.Green : Color.Red;
-                    labelCataStatus.Text = _numericStats["CatarinaKilled"] > 0 ? "killed" : "not yet killed";
-                    labelCataKilled.Text = _numericStats["CatarinaKilled"].ToString() + "x";
-                    labelCataTried.Text = _numericStats["CatarinaTried"].ToString() + "x";
+                    label80.ForeColor = _numericStats["CatarinaKilled"] > 0 ? Color.Green : Color.Red;
+                    label80.Text = _numericStats["CatarinaKilled"] > 0 ? "Yes" : "No";
+                    label78.Text = _numericStats["CatarinaKilled"].ToString() + "x";
+                    label82.Text = _numericStats["CatarinaTried"].ToString() + "x";
 
                     labelVeritaniaStatus.ForeColor = _numericStats["VeritaniaKilled"] > 0 ? Color.Green : Color.Red;
                     labelVeritaniaKillCount.Text = _numericStats["VeritaniaKilled"].ToString() + "x";
-                    labelVeritaniaStatus.Text = _numericStats["VeritaniaKilled"] > 0 ? "killed" : "not yet killed";
+                    labelVeritaniaStatus.Text = _numericStats["VeritaniaKilled"] > 0 ? "Yes" : "No";
                     labelVeritaniaTries.Text = _numericStats["VeritaniaStarted"].ToString() + "x";
 
                     labelHunterStatus.ForeColor = _numericStats["HunterKilled"] > 0 ? Color.Green : Color.Red;
-                    labelHunterStatus.Text = _numericStats["HunterKilled"] > 0 ? "killed" : "not yet killed";
+                    labelHunterStatus.Text = _numericStats["HunterKilled"] > 0 ? "Yes" : "No";
                     labelHunterKillCount.Text = _numericStats["HunterKilled"].ToString() + "x";
                     labelHunterTries.Text = _numericStats["HunterStarted"].ToString() + "x";
 
                     labelDroxStatus.ForeColor = _numericStats["DroxKilled"] > 0 ? Color.Green : Color.Red;
-                    labelDroxStatus.Text = _numericStats["DroxKilled"] > 0 ? "killed" : "not yet killed";
+                    labelDroxStatus.Text = _numericStats["DroxKilled"] > 0 ? "Yes" : "No";
                     labelDroxKillCount.Text = _numericStats["DroxKilled"].ToString() + "x";
                     labelDroxTries.Text = _numericStats["DroxStarted"].ToString() + "x";
 
                     labelBaranStatus.ForeColor = _numericStats["BaranKilled"] > 0 ? Color.Green : Color.Red;
-                    labelBaranStatus.Text = _numericStats["BaranKilled"] > 0 ? "killed" : "not yet killed";
+                    labelBaranStatus.Text = _numericStats["BaranKilled"] > 0 ? "Yes" : "No";
                     labelBaranKillCount.Text = _numericStats["BaranKilled"].ToString() + "x";
                     labelBaranTries.Text = _numericStats["BaranStarted"].ToString() + "x";
 
                     labelTrialMasterStatus.ForeColor = _numericStats["TrialMasterKilled"] > 0 ? Color.Green : Color.Red;
-                    labelTrialMasterStatus.Text = _numericStats["TrialMasterKilled"] > 0 ? "killed" : "not yet killed";
+                    labelTrialMasterStatus.Text = _numericStats["TrialMasterKilled"] > 0 ? "Yes" : "No";
                     labelTrialMasterKilled.Text = _numericStats["TrialMasterKilled"].ToString() + "x";
                     labelTrialMasterTried.Text = _numericStats["TrialMasterStarted"].ToString() + "x";
 
                     labelMavenStatus.ForeColor = _numericStats["MavenKilled"] > 0 ? Color.Green : Color.Red;
-                    labelMavenStatus.Text = _numericStats["MavenKilled"] > 0 ? "killed" : "not yet killed";
+                    labelMavenStatus.Text = _numericStats["MavenKilled"] > 0 ? "Yes" : "No";
                     labelMavenKilled.Text = _numericStats["MavenKilled"].ToString() + "x";
                     labelMavenTried.Text = _numericStats["MavenStarted"].ToString() + "x";
+
+                    // MAP Dashbaord
+                    if(_mapDashboardUpdateRequested)
+                    {
+                        RenderMappingDashboard();
+                        _mapDashboardUpdateRequested = false;
+                    }
+
+                    // LAB Dashbaord
+                    if (_labDashboardUpdateRequested)
+                    {
+                        RenderLabDashboard();
+                        _labDashboardUpdateRequested = false;
+                    }
+
+                    // HEIST Dashbaord
+                    if (_heistDashboardUpdateRequested)
+                    {
+                        RenderHeistDashboard();
+                        _heistDashboardUpdateRequested = false;
+                    }
+
+                    // Global Dashbaord
+                    if (_globalDashboardUpdateRequested)
+                    {
+                        RenderGlobalDashboard();
+                        _globalDashboardUpdateRequested = false;
+                    }
+
+
                 });
             }
         }
 
+        /// <summary>
+        /// Read all settings
+        /// </summary>
         private void ReadSettings()
         {
             //this.LogFilePath = ReadSetting("PoELogFilePath");
@@ -2544,26 +3095,437 @@ namespace TraXile
             listViewStats.GridLines = _showGridInStats;
         }
 
+        /// <summary>
+        /// Read single setting
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="s_default"></param>
+        /// <returns></returns>
         public string ReadSetting(string key, string s_default = null)
         {
             return _mySettings.ReadSetting(key, s_default);
         }
 
+        /// <summary>
+        /// Exit
+        /// </summary>
         private void Exit()
         {
             _exit = true;
             if (_currentActivity != null)
-                FinishMap(_currentActivity, null, _currentActivity.Type, DateTime.Now);
+                FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
             _log.Info("Exitting.");
             Application.Exit();
         }
 
+        public void RenderLabDashboard()
+        {
+            Dictionary<string, int> labCounts;
+            Dictionary<string, double> labAvgTimes;
+            Dictionary<string, TrackedActivity> labBestTimes;
+
+            labCounts = new Dictionary<string, int>();
+            labAvgTimes = new Dictionary<string, double>();
+            labBestTimes = new Dictionary<string, TrackedActivity>();
+
+            foreach(string s in labs)
+            {
+                if (_labDashboardHideUnknown && s == "Unknown")
+                    continue;
+
+                labCounts.Add(s, 0);
+                labAvgTimes.Add(s, 0);
+                labBestTimes.Add(s, null);
+            }
+
+            // Lab counts
+            foreach(TrackedActivity act in _eventHistory)
+            {
+                if(act.Type == ACTIVITY_TYPES.LABYRINTH && act.DeathCounter == 0)
+                {
+                    if(labCounts.ContainsKey(act.Area))
+                    {
+                        labCounts[act.Area]++;
+                    }
+                }
+            }
+
+            // Avg lab times
+            foreach(string s in labs)
+            {
+                if (!labs.Contains(s))
+                    continue;
+
+                if (_labDashboardHideUnknown && s == "Unknown")
+                    continue;
+
+                int iSum = 0;
+                int iCount = 0;
+
+                foreach(TrackedActivity act in _eventHistory)
+                {
+                    if(act.Type == ACTIVITY_TYPES.LABYRINTH && act.DeathCounter == 0)
+                    {
+                        if(act.Area == s)
+                        {
+                            // Average
+                            iCount++;
+                            iSum += act.TotalSeconds;
+
+                            // Top 
+                            if(labBestTimes[s] == null)
+                            {
+                                labBestTimes[s] = act;
+                            }
+                            else
+                            {
+                                if(labBestTimes[s].TotalSeconds > act.TotalSeconds)
+                                {
+                                    labBestTimes[s] = act;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(iSum > 0 && iCount > 0)
+                {
+                    labAvgTimes[s] = iSum / iCount;
+                }
+            }
+
+            // UPdate Lab chart
+            MethodInvoker mi = delegate
+            {
+                chart4.Series[0].Points.Clear();
+                chart5.Series[0].Points.Clear();
+                listView3.Items.Clear();
+                foreach (KeyValuePair<string,int> kvp in labCounts)
+                {
+                    string sName = kvp.Key;
+                    if(sName != "The Labyrinth")
+                    {
+                        sName = sName.Replace("The ", "").Replace(" Labyrinth", "");
+                    }
+                    if(sName == "Unknown")
+                    {
+                        sName += "*";
+                    }
+                    chart4.Series[0].Points.AddXY(sName, kvp.Value);
+                    chart5.Series[0].Points.AddXY(sName, Math.Round(labAvgTimes[kvp.Key] / 60, 2));
+
+                    ListViewItem lvi = new ListViewItem(kvp.Key);
+                    
+                    if(labBestTimes[kvp.Key] != null)
+                    {
+                        lvi.SubItems.Add(labBestTimes[kvp.Key].StopWatchValue);
+                        lvi.SubItems.Add(labBestTimes[kvp.Key].Started.ToString());
+                    }
+                    else
+                    {
+                        lvi.SubItems.Add("-");
+                        lvi.SubItems.Add("-");
+                    }
+                    listView3.Items.Add(lvi);
+
+
+                }
+            };
+            this.BeginInvoke(mi);
+            
+        }
+
+        public void RenderGlobalDashboard()
+        {
+            Dictionary<ACTIVITY_TYPES, double> typeList = new Dictionary<ACTIVITY_TYPES, double>
+            {
+                { ACTIVITY_TYPES.MAP, 0 },
+                { ACTIVITY_TYPES.HEIST, 0 },
+                { ACTIVITY_TYPES.DELVE, 0 },
+                { ACTIVITY_TYPES.LABYRINTH, 0 },
+                { ACTIVITY_TYPES.SIMULACRUM, 0 },
+                { ACTIVITY_TYPES.TEMPLE, 0 },
+            };
+
+            Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
+            {
+                { ACTIVITY_TYPES.MAP, Color.Green },
+                { ACTIVITY_TYPES.HEIST, Color.Red },
+                { ACTIVITY_TYPES.DELVE, Color.Orange },
+                { ACTIVITY_TYPES.LABYRINTH, Color.DarkTurquoise },
+                { ACTIVITY_TYPES.SIMULACRUM, Color.Gray },
+                { ACTIVITY_TYPES.TEMPLE, Color.GreenYellow },
+            };
+
+            foreach (TrackedActivity act in _eventHistory)
+            {
+                // Filter out
+                if(act.TotalSeconds < 3600)
+                {
+                    typeList[act.Type] += act.TotalSeconds;
+                }
+                else
+                {
+                    typeList[act.Type] += 3600;
+                }
+            }
+
+            chart8.Series[0].Points.Clear();
+            foreach(KeyValuePair<ACTIVITY_TYPES,double> kvp in typeList)
+            {
+                chart8.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
+                chart8.Series[0].Points.Last().Color = colorList[kvp.Key];
+
+            }
+        }
+
+        public void RenderHeistDashboard()
+        {
+            List<KeyValuePair<string, int>> tmpList = new List<KeyValuePair<string, int>>();
+            List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
+            Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
+            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
+
+            foreach (string s in _defaultMappings.HEIST_AREAS)
+            {
+                tmpList.Add(new KeyValuePair<string, int>(s, _numericStats["HeistsFinished_" + s]));
+            }
+
+            tmpList.Sort(
+                delegate (KeyValuePair<string, int> pair1,
+                KeyValuePair<string, int> pair2)
+                {
+                    return pair1.Value.CompareTo(pair2.Value);
+                });
+            tmpList.Reverse();
+            top10.AddRange(tmpList);
+            listView4.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in top10)
+            {
+                ListViewItem lvi = new ListViewItem(kvp.Key);
+                lvi.SubItems.Add(kvp.Value.ToString());
+                listView4.Items.Add(lvi);
+            }
+
+            // TAG CALC
+            tmpList.Clear();
+            foreach (ActivityTag tg in Tags)
+            {
+                tmpListTags.Add(tg.ID, 0);
+            }
+
+            foreach (TrackedActivity act in _eventHistory)
+            {
+                if (act.Type == ACTIVITY_TYPES.HEIST)
+                {
+                    foreach (string s in act.Tags)
+                    {
+                        if (!String.IsNullOrEmpty(s))
+                        {
+                            int iVal = tmpListTags[s];
+
+                            tmpListTags[s]++;
+                        }
+                    }
+                }
+            }
+
+            foreach (KeyValuePair<string, int> kvp in tmpListTags)
+            {
+                tmpList.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+            }
+
+            tmpList.Sort(
+                delegate (KeyValuePair<string, int> pair1,
+                KeyValuePair<string, int> pair2)
+                {
+                    return pair1.Value.CompareTo(pair2.Value);
+                });
+            tmpList.Reverse();
+            top10Tags.AddRange(tmpList);
+            listView5.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in top10Tags)
+            {
+                if(kvp.Value > 0)
+                {
+                    ListViewItem lvi = new ListViewItem(kvp.Key);
+                    lvi.SubItems.Add(kvp.Value.ToString());
+                    listView5.Items.Add(lvi);
+                }
+               
+            }
+
+            Dictionary<int, double> levelAvgs = new Dictionary<int, double>();
+            Dictionary<int, int> levelCounts = new Dictionary<int, int>();
+            for (int i = 67; i <= 83; i++)
+            {
+                int iCount = 0;
+                int iSum = 0;
+
+                foreach(TrackedActivity act in _eventHistory)
+                {
+                    if (act.Type == ACTIVITY_TYPES.HEIST && act.AreaLevel == i)
+                    {
+                        iCount++;
+                        iSum += act.TotalSeconds;
+                    }
+                }
+
+                levelAvgs.Add(i, (iCount > 0 && iSum > 0) ? (iSum / iCount) : 0);
+                levelCounts.Add(i, iCount);
+            }
+
+            MethodInvoker mi = delegate
+            {
+                chart7.Series[0].Points.Clear();
+                chart6.Series[0].Points.Clear();
+
+                foreach (KeyValuePair<int, double> kvp in levelAvgs)
+                {
+                    chart7.Series[0].Points.AddXY(kvp.Key, Math.Round(kvp.Value / 60, 2));
+                    chart6.Series[0].Points.AddXY(kvp.Key, levelCounts[kvp.Key]);
+                }
+            };
+            this.Invoke(mi);
+        }
+
+        public void RenderMappingDashboard()
+        {
+            List<KeyValuePair<string,int>> tmpList = new List<KeyValuePair<string, int>>();
+            List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
+            Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
+            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
+
+            // MAP AREAS
+            foreach (string s in _defaultMappings.MAP_AREAS)
+            {
+                tmpList.Add(new KeyValuePair<string, int>(s, _numericStats["MapsFinished_" + s]));
+            }
+
+            tmpList.Sort(
+                delegate (KeyValuePair<string, int> pair1,
+                KeyValuePair<string, int> pair2)
+                {
+                    return pair1.Value.CompareTo(pair2.Value);
+                });
+            tmpList.Reverse();
+            top10.AddRange(tmpList.GetRange(0, 10));
+            listView1.Items.Clear();
+            foreach(KeyValuePair<string,int> kvp in top10)
+            {
+                ListViewItem lvi = new ListViewItem(kvp.Key);
+                lvi.SubItems.Add(kvp.Value.ToString());
+                listView1.Items.Add(lvi);
+            }
+
+            // TAG CALC
+            tmpList.Clear();
+            foreach (ActivityTag tg in Tags)
+            {
+                tmpListTags.Add(tg.ID, 0);
+            }
+
+            foreach(TrackedActivity act in _eventHistory)
+            {
+                if(act.Type == ACTIVITY_TYPES.MAP)
+                {
+                    foreach(string s in act.Tags)
+                    {
+                        if(!String.IsNullOrEmpty(s))
+                        {
+                            int iVal = tmpListTags[s];
+
+                            tmpListTags[s]++;
+                        }
+                    }
+                }
+            }
+
+            foreach(KeyValuePair<string,int> kvp in tmpListTags)
+            {
+                tmpList.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+            }
+
+            tmpList.Sort(
+                delegate (KeyValuePair<string, int> pair1,
+                KeyValuePair<string, int> pair2)
+                {
+                    return pair1.Value.CompareTo(pair2.Value);
+                });
+            tmpList.Reverse();
+            top10Tags.AddRange(tmpList);
+            listView2.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in top10Tags)
+            {
+                if(kvp.Value > 0)
+                {
+                    ListViewItem lvi = new ListViewItem(kvp.Key);
+                    lvi.SubItems.Add(kvp.Value.ToString());
+                    listView2.Items.Add(lvi);
+                }
+            }
+
+            double[] tierAverages = new double[]
+            {
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+            };
+
+            for(int i = 0; i < 16; i++)
+            {
+                int iSum = 0;
+                int iCount= 0;
+
+                foreach(TrackedActivity act in _eventHistory)
+                {
+                    if(act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i+1))
+                    {
+                        if (act.TotalSeconds > 3600)
+                            continue;
+
+                        iSum += act.TotalSeconds;
+                        iCount++;
+                    }
+                }
+
+                if(iSum > 0 && iCount > 0)
+                {
+                    tierAverages[i] = (iSum / iCount);
+                }
+                
+            }
+
+            MethodInvoker mi = delegate
+            {
+                chart2.Series[0].Points.Clear();
+                for (int i = 1; i <= 16; i++)
+                {
+                    chart2.Series[0].Points.AddXY(i, _numericStats["MapTierFinished_T" + i.ToString()]);
+                }
+
+                chart3.Series[0].Points.Clear();
+                for(int i = 0; i < tierAverages.Length; i++)
+                {
+                    chart3.Series[0].Points.AddXY(i+1, Math.Round(tierAverages[i] / 60, 2));
+                }
+            };
+            this.Invoke(mi);
+        }
+
+        /// <summary>
+        /// Add setting if not exists, otherwise update existing
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="b_log"></param>
         public void AddUpdateAppSettings(string key, string value, bool b_log = false)
         {
             _mySettings.AddOrUpdateSetting(key, value);
             _mySettings.WriteToXml();
         }
 
+        /// <summary>
+        /// Refresh the statistics chart
+        /// </summary>
         private void RefreshChart()
         {
             chart1.Series[0].Points.Clear();
@@ -2612,6 +3574,10 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Fill the sstatistics chart with data
+        /// </summary>
+        /// <param name="i_days_back"></param>
         private void FillChart(int i_days_back)
         {
             if(_lvmStats.listView.SelectedIndices.Count > 0)
@@ -2654,6 +3620,11 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Get activity tag object for ID
+        /// </summary>
+        /// <param name="s_id"></param>
+        /// <returns></returns>
         public ActivityTag GetTagByID(string s_id)
         {
             foreach(ActivityTag tag in _tags)
@@ -2664,6 +3635,10 @@ namespace TraXile
             return null;
         }
 
+        /// <summary>
+        /// Create a TraXile backup
+        /// </summary>
+        /// <param name="s_name"></param>
         private void CreateBackup(string s_name)
         {
             string sBackupDir = _myAppData + @"/backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
@@ -2679,6 +3654,9 @@ namespace TraXile
                 System.IO.File.Copy("TraXile.exe.config", sBackupDir + @"/TraXile.exe.config");
         }
 
+        /// <summary>
+        /// Fully reset the application
+        /// </summary>
         private void DoFullReset()
         {
             // Make logfile empty
@@ -2689,12 +3667,20 @@ namespace TraXile
             File.Delete(_cachePath);
         }
 
+        /// <summary>
+        /// Open details for tracked activity
+        /// </summary>
+        /// <param name="ta"></param>
         private void OpenActivityDetails(TrackedActivity ta)
         {
             ActivityDetails ad = new ActivityDetails(ta, this);
             ad.Show();
         }
 
+        /// <summary>
+        /// Export Activity log to CSV
+        /// </summary>
+        /// <param name="sPath"></param>
         public void WriteActivitiesToCSV(string sPath)
         {
             StreamWriter wrt = new StreamWriter(sPath);
@@ -2719,6 +3705,100 @@ namespace TraXile
             wrt.Close();
         }
 
+        /// <summary>
+        /// Prepare backup restore before app restarts
+        /// </summary>
+        /// <param name="sPath"></param>
+        private void PrepareBackupRestore(string sPath)
+        {
+            File.Copy(sPath + @"/stats.cache", _cachePath + ".restore");
+            File.Copy(sPath + @"/data.db", _dbPath + ".restore");
+            File.Copy(sPath + @"/Client.txt", Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore");
+            _log.Info("Backup restore successfully prepared! Restarting Application");
+            Application.Restart();
+        }
+
+        /// <summary>
+        /// Check if backup restore is prepared and restore
+        /// </summary>
+        private void DoBackupRestoreIfPrepared()
+        {
+            if (File.Exists(_cachePath + ".restore"))
+            {
+                File.Delete(_cachePath);
+                File.Move(_cachePath + ".restore", _cachePath);
+                _log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: " + _cachePath);
+                _restoreMode = true;
+            }
+
+            if (File.Exists(_dbPath + ".restore"))
+            {
+                File.Delete(_dbPath);
+                File.Move(_dbPath + ".restore", _dbPath);
+                _log.Info("BackupRestored -> Source: _data.db.restore, Destination: data.db");
+                _restoreMode = true;
+            }
+
+            try
+            {
+                if (File.Exists(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore"))
+                {
+                    File.Delete(SettingPoeLogFilePath);
+                    File.Move(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore", SettingPoeLogFilePath);
+                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore" +
+                        ", Destination: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt");
+                    _restoreMode = true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Could not restore Client.txt, please make sure that Path of Exile is not running.");
+                _log.Debug(ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Check if a tag with given ID exists
+        /// </summary>
+        /// <param name="s_id"></param>
+        /// <returns></returns>
+        private bool CheckTagExists(string s_id)
+        {
+            foreach (ActivityTag tag in _tags)
+            {
+                if (tag.ID == s_id)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Add a new tag
+        /// </summary>
+        /// <param name="tag"></param>
+        private void AddTag(ActivityTag tag)
+        {
+            _tags.Add(tag);
+
+            SqliteCommand cmd = _dbConnection.CreateCommand();
+            cmd.CommandText = "INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type) VALUES "
+                + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom')";
+            cmd.ExecuteNonQuery();
+
+            listViewActLog.Columns.Add(tag.DisplayName);
+            ResetMapHistory();
+            RenderTagsForConfig(true);
+            RenderTagsForTracking(true);
+        }
+
+        /// <summary>
+        /// Timer for GUI updates
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (String.IsNullOrEmpty(SettingPoeLogFilePath) || !_UpdateCheckDone)
@@ -2744,6 +3824,10 @@ namespace TraXile
              
             }
         }
+
+
+        // =========> EVENT HANDLERS FOR GUI COMPONENTS
+        // =======================================================
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -2891,12 +3975,6 @@ namespace TraXile
             }
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Settings stt = new Settings(this);
-            stt.ShowDialog();
-        }
-
         private void button4_Click(object sender, EventArgs e)
         {
             ExportActvityList exp = new ExportActvityList(this);
@@ -3023,78 +4101,7 @@ namespace TraXile
             
         }
 
-        private void PrepareBackupRestore(string sPath)
-        {
-            File.Copy(sPath + @"/stats.cache", _cachePath + ".restore");
-            File.Copy(sPath + @"/data.db", _dbPath + ".restore");
-            File.Copy(sPath + @"/Client.txt", Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore");
-            _log.Info("Backup restore successfully prepared! Restarting Application");
-            Application.Restart();
-        }
-
-        private void DoBackupRestoreIfPrepared()
-        {
-            if (File.Exists(_cachePath + ".restore"))
-            {
-                File.Delete(_cachePath);
-                File.Move(_cachePath + ".restore", _cachePath);
-                _log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: " + _cachePath);
-                _restoreMode = true;
-            }
-
-            if (File.Exists(_dbPath + ".restore"))
-            {
-                File.Delete(_dbPath);
-                File.Move(_dbPath + ".restore", _dbPath);
-                _log.Info("BackupRestored -> Source: _data.db.restore, Destination: data.db");
-                _restoreMode = true;
-            }
-
-            try
-            {
-                if (File.Exists(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore"))
-                {
-                    File.Delete(SettingPoeLogFilePath);
-                    File.Move(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore", SettingPoeLogFilePath);
-                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore" +
-                        ", Destination: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt");
-                    _restoreMode = true;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                _log.Error("Could not restore Client.txt, please make sure that Path of Exile is not running.");
-                _log.Debug(ex.ToString());
-            }
-        }
-
-        private bool CheckTagExists(string s_id)
-        {
-            foreach(ActivityTag tag in _tags)
-            {
-                if(tag.ID == s_id)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private void AddTag(ActivityTag tag)
-        {
-            _tags.Add(tag);
-
-            SqliteCommand cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type) VALUES "
-                + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom')";
-            cmd.ExecuteNonQuery();
-
-            listViewActLog.Columns.Add(tag.DisplayName);
-            ResetMapHistory();
-            RenderTagsForConfig(true);
-            RenderTagsForTracking(true);
-        }
+      
 
         private void button17_Click(object sender, EventArgs e)
         {
@@ -3313,7 +4320,7 @@ namespace TraXile
             DialogResult dr = MessageBox.Show("Do you really want to delete the selected Backup?", "Warning", MessageBoxButtons.YesNo);
             if (dr == DialogResult.Yes)
             {
-                DeleteBackup(listBox1.SelectedItem.ToString());
+                DeleteBackup(_myAppData + listBox1.SelectedItem.ToString());
             }
         }
 
@@ -3572,11 +4579,92 @@ namespace TraXile
             DoSearch();
         }
 
+        private void label13_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelElderKillCount_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label15_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelShaperKillCount_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label39_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label37_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label43_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelMavenTried_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void labelMavenKilled_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label44_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel10_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tabPage1_Enter(object sender, EventArgs e)
+        {
+            RenderMappingDashboard();
+        }
+
+        private void tabPage1_Validated(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            _labDashboardHideUnknown = ((CheckBox)sender).Checked;
+            RenderLabDashboard();
+        }
+
         private void pictureBox19_Click(object sender, EventArgs e)
         {
             if (_currentActivity != null)
             {
-               FinishMap(_currentActivity, null, _currentActivity.Type, DateTime.Now);
+               FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
             }
                
         }
@@ -3585,7 +4673,7 @@ namespace TraXile
         {
             if (_currentActivity != null)
             {
-                FinishMap(_currentActivity, null, _currentActivity.Type, DateTime.Now);
+                FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
             }
         }
        

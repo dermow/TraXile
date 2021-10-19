@@ -82,4 +82,4 @@
 - Added Installer
 - Implemented own class for manage Settings
 - Moved data.db, stats.cache, VERSION.txt and logfile to users APPDATA/Roaming
-
+- Tab "Bosses" moved to "Dashboards -> Bossing"

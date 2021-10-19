@@ -54,8 +54,8 @@ namespace TraXile
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.Gold;
+            this.label4.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(3, 177);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(524, 23);
@@ -78,8 +78,8 @@ namespace TraXile
             // 
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Gold;
+            this.label1.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(3, 151);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(524, 18);
@@ -91,8 +91,8 @@ namespace TraXile
             // 
             this.label2.AutoSize = true;
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.Gold;
+            this.label2.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(3, 132);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(524, 19);
@@ -149,8 +149,8 @@ namespace TraXile
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 232F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 221F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(530, 557);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -158,10 +158,11 @@ namespace TraXile
             // 
             this.linkLabel5.AutoSize = true;
             this.linkLabel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.linkLabel5.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabel5.LinkColor = System.Drawing.Color.Red;
-            this.linkLabel5.Location = new System.Drawing.Point(3, 441);
+            this.linkLabel5.Location = new System.Drawing.Point(3, 452);
             this.linkLabel5.Name = "linkLabel5";
-            this.linkLabel5.Size = new System.Drawing.Size(524, 232);
+            this.linkLabel5.Size = new System.Drawing.Size(524, 221);
             this.linkLabel5.TabIndex = 17;
             this.linkLabel5.TabStop = true;
             this.linkLabel5.Text = "https://www.twitch.tv/mr__khan";
@@ -172,6 +173,7 @@ namespace TraXile
             // 
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.linkLabel1.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabel1.LinkColor = System.Drawing.Color.Red;
             this.linkLabel1.Location = new System.Drawing.Point(3, 200);
             this.linkLabel1.Name = "linkLabel1";
@@ -186,8 +188,8 @@ namespace TraXile
             // 
             this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.Color.Gold;
+            this.label5.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.White;
             this.label5.Location = new System.Drawing.Point(3, 229);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(524, 26);
@@ -199,6 +201,7 @@ namespace TraXile
             // 
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.linkLabel2.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabel2.LinkColor = System.Drawing.Color.Red;
             this.linkLabel2.Location = new System.Drawing.Point(3, 255);
             this.linkLabel2.Name = "linkLabel2";
@@ -213,8 +216,8 @@ namespace TraXile
             // 
             this.label6.AutoSize = true;
             this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.Color.Gold;
+            this.label6.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.Color.White;
             this.label6.Location = new System.Drawing.Point(3, 280);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(524, 24);
@@ -226,7 +229,8 @@ namespace TraXile
             // 
             this.label7.AutoSize = true;
             this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.ForeColor = System.Drawing.Color.Gold;
+            this.label7.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.White;
             this.label7.Location = new System.Drawing.Point(3, 304);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(524, 24);
@@ -238,6 +242,7 @@ namespace TraXile
             // 
             this.linkLabel3.AutoSize = true;
             this.linkLabel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.linkLabel3.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabel3.LinkColor = System.Drawing.Color.Red;
             this.linkLabel3.Location = new System.Drawing.Point(3, 328);
             this.linkLabel3.Name = "linkLabel3";
@@ -252,7 +257,8 @@ namespace TraXile
             // 
             this.label8.AutoSize = true;
             this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label8.ForeColor = System.Drawing.Color.Gold;
+            this.label8.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.White;
             this.label8.Location = new System.Drawing.Point(3, 350);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(524, 30);
@@ -264,6 +270,7 @@ namespace TraXile
             // 
             this.linkLabel4.AutoSize = true;
             this.linkLabel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.linkLabel4.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabel4.LinkColor = System.Drawing.Color.Red;
             this.linkLabel4.Location = new System.Drawing.Point(3, 380);
             this.linkLabel4.Name = "linkLabel4";
@@ -278,10 +285,11 @@ namespace TraXile
             // 
             this.label9.AutoSize = true;
             this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label9.ForeColor = System.Drawing.Color.Gold;
+            this.label9.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.Color.White;
             this.label9.Location = new System.Drawing.Point(3, 398);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(524, 43);
+            this.label9.Size = new System.Drawing.Size(524, 54);
             this.label9.TabIndex = 16;
             this.label9.Text = "Mr__Khan for his input to labyrinth features and great testing support";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

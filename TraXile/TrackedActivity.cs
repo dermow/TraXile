@@ -22,12 +22,15 @@ namespace TraXile
         private bool _trialMasterSuccess;
         private bool _trialMasterFull;
         private bool _finished;
+        private bool _success;
         private int _trialMasterCount;
         private int _deathCounter;
         private int _areaLevel;
         private int _portalsUsed;
+        private int _trialCount;
         private double _pausedTime;
         private bool _paused;
+        private int _totalSeconds;
         private long _activityTimeStamp;
         private string _customStopWatchValue;
 
@@ -118,6 +121,12 @@ namespace TraXile
             _stopWatch.Stop();
         }
 
+        public bool Success
+        {
+            get { return _success; }
+            set { _success = value; }
+        }
+
 
         public TimeSpan StopWatchTimeSpan
         {
@@ -145,6 +154,18 @@ namespace TraXile
                         ts.Hours, ts.Minutes, ts.Seconds);
                 }
             }
+        }
+
+        public int TotalSeconds
+        {
+            get { return _totalSeconds; }
+            set { _totalSeconds = value; }
+        }
+
+        public int TrialCount
+        {
+            get { return _trialCount; }
+            set { _trialCount = value; }
         }
 
         public ACTIVITY_TYPES Type
