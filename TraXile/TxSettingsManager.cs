@@ -62,6 +62,8 @@ namespace TraXile
             XmlTextWriter wrt = new XmlTextWriter(_xmlPath, Encoding.UTF8);
             wrt.WriteStartDocument();
             wrt.WriteStartElement("root");
+            wrt.Formatting = Formatting.Indented;
+            wrt.Indentation = 4;
 
             // Write Settings
             foreach(KeyValuePair<string,string> kvp in kvStore)
