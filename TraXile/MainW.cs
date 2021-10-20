@@ -145,8 +145,7 @@ namespace TraXile
                 Uri uri = new Uri(string.Format(GITHUB_API, "dermow", "TraXile"));
                 string releases = webClient.DownloadString(uri);
                 int iIndex = releases.IndexOf("tag_name");
-                //string sVersion =  releases.Substring(iIndex + 11, 5);
-                string sVersion = "0.5.2";
+                string sVersion =  releases.Substring(iIndex + 11, 5);
 
                 int MyMajor = Convert.ToInt32(APPINFO.VERSION.Split('.')[0]);
                 int MyMinor = Convert.ToInt32(APPINFO.VERSION.Split('.')[1]);
@@ -1854,7 +1853,6 @@ namespace TraXile
                     Area = sLabName,
                     AreaLevel = _nextAreaLevel,
                     Type = actType,
-                    //Started = DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]),
                     Started = ev.EventTime,
                     TimeStamp = lTS,
                     InstanceEndpoint = _currentInstanceEndpoint
@@ -2872,12 +2870,10 @@ namespace TraXile
 
                 if(iPos == -1)
                 {
-                    //listViewActLog.Items.Add(lvi);
                     _lvmActlog.AddLvItem(lvi, map.TimeStamp + "_" + map.Area, b_display);
                 }
                 else
                 {
-                    //listViewActLog.Items.Insert(iPos, lvi);
                     _lvmActlog.InsertLvItem(lvi, map.TimeStamp + "_" + map.Area, iPos, b_display);
                 }
                 
@@ -3140,7 +3136,6 @@ namespace TraXile
         /// </summary>
         private void ReadSettings()
         {
-            //this.LogFilePath = ReadSetting("PoELogFilePath");
             this._showGridInActLog = Convert.ToBoolean(ReadSetting("ActivityLogShowGrid"));
             this._showGridInStats = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
             this._timeCapLab = Convert.ToInt32(ReadSetting("TimeCapLab", "3600"));
