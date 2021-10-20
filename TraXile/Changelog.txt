@@ -86,3 +86,4 @@
 - Implemented calculation settings for capping activity times
 - Reworked the UI: Fonts and Images
 - Added automated update feature
+- Added Unique maps
