@@ -37,6 +37,7 @@ namespace TraXile.Updater
             try
             {
                 _targetVersion = Environment.GetCommandLineArgs()[1];
+                //_targetVersion = "0.5.2";
                 timer1.Interval = 2000;
                 timer1.Start();
             }
@@ -82,21 +83,18 @@ namespace TraXile.Updater
             Log("Installing to: " + Application.StartupPath);
             
             try
-            { 
-                Process process = new Process();
-                process.StartInfo.FileName = "msiexec";
-                process.StartInfo.WorkingDirectory = _myAppData;
-                process.StartInfo.Arguments = " /quiet /i Setup_" + s_version + ".msi TARGETDIR='" + Application.StartupPath + "'";
-                process.Start();
-                process.WaitForExit(60000);
-
+            {
+                Process.Start(_myAppData + @"\Setup_" + s_version + ".msi");
                 Log("Update successful. Starting TraXile again.");
 
+
+                Process process;
                 process = new Process();
                 process.StartInfo.FileName = "TraXile.exe";
                 process.StartInfo.WorkingDirectory = Application.StartupPath;
                 process.Start();
-                process.WaitForExit(60000);
+
+                bExit = true;
 
             }
             catch(Exception ex)
