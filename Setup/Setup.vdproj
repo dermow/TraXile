@@ -489,6 +489,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_82A43AE02C0E40329868AD20729AF096"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_84ABA4594B2B498DB34A2479E0E6952D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -3981,6 +3987,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_82A43AE02C0E40329868AD20729AF096"
+            {
+            "SourcePath" = "8:..\\TraXile\\log4net.config"
+            "TargetName" = "8:log4net.config"
+            "Tag" = "8:"
+            "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_84ABA4594B2B498DB34A2479E0E6952D"
             {
             "SourcePath" = "8:..\\..\\..\\..\\Google Drive\\TraXile\\Logo\\mstile-310x310.png"
@@ -6020,7 +6046,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TraXile"
         "ProductCode" = "8:{D53712B3-3719-459D-A899-3FDAC23FE34B}"
-        "PackageCode" = "8:{FC4FCA09-0E0C-4EFE-98F4-EA1CF2765A27}"
+        "PackageCode" = "8:{0CDB2FEE-D3E2-4B11-AB33-CD6DCEBD51DC}"
         "UpgradeCode" = "8:{C811751D-FFAF-470F-8AA3-11A3FEEE6981}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -6653,7 +6679,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_70A8E5F21F07426CB9C2F141D47232D2"
             {
-            "SourcePath" = "8:..\\TraXile\\obj\\Release\\TraXile.exe"
+            "SourcePath" = "8:..\\TraXile\\obj\\Debug\\TraXile.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
@@ -6737,7 +6763,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A821A7161BC04BF890A508F78ED8FCDC"
             {
-            "SourcePath" = "8:..\\TraXile.Updater\\obj\\Release\\TraXile.Updater.exe"
+            "SourcePath" = "8:..\\TraXile.Updater\\obj\\Debug\\TraXile.Updater.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"

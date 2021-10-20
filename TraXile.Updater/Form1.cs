@@ -18,7 +18,6 @@ namespace TraXile.Updater
 {
     public partial class Form1 : Form
     {
-        string sTraXileVersion = "";
         bool bStarted, bExit;
         string _myAppData;
         string _targetVersion;
@@ -38,7 +37,6 @@ namespace TraXile.Updater
             try
             {
                 _targetVersion = Environment.GetCommandLineArgs()[1];
-
                 timer1.Interval = 2000;
                 timer1.Start();
             }
@@ -81,9 +79,31 @@ namespace TraXile.Updater
                 Log("TraXile closed successfully");
             }
 
-            // Run setup
-            Process.Start(_myAppData + @"\Setup_" + s_version + ".msi");
-            bExit = true;
+            Log("Installing to: " + Application.StartupPath);
+            
+            try
+            { 
+                Process process = new Process();
+                process.StartInfo.FileName = "msiexec";
+                process.StartInfo.WorkingDirectory = _myAppData;
+                process.StartInfo.Arguments = " /quiet /i Setup_" + s_version + ".msi TARGETDIR='" + Application.StartupPath + "'";
+                process.Start();
+                process.WaitForExit(60000);
+
+                Log("Update successful. Starting TraXile again.");
+
+                process = new Process();
+                process.StartInfo.FileName = "TraXile.exe";
+                process.StartInfo.WorkingDirectory = Application.StartupPath;
+                process.Start();
+                process.WaitForExit(60000);
+
+            }
+            catch(Exception ex)
+            {
+                Log("Update failed: " + ex.Message);
+            }
+           
          }
 
         private void timer1_Tick(object sender, EventArgs e)
