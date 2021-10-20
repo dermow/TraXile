@@ -462,6 +462,8 @@ namespace TraXile
                 AddUpdateAppSettings("layout.window.width", this.Width.ToString());
                 AddUpdateAppSettings("layout.window.height", this.Height.ToString());
             }
+
+            AddUpdateAppSettings("layout.splitpanel.width", splitContainer1.SplitterDistance.ToString());
         }
 
         /// <summary>
@@ -486,6 +488,8 @@ namespace TraXile
                 this.Width = iWidth;
                 this.Height = iHeight;
             }
+
+            this.splitContainer1.SplitterDistance = Convert.ToInt32(ReadSetting("layout.splitpanel.width", "600"));
             
         }
 
@@ -496,15 +500,15 @@ namespace TraXile
         {
             List<ActivityTag> tmpTags;
             tmpTags = new List<ActivityTag>();
-            tmpTags.Add(new ActivityTag("blight") { BackColor = Color.LightGreen, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("delirium") { BackColor = Color.WhiteSmoke, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("einhar") { BackColor = Color.Red, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("incursion") { BackColor = Color.GreenYellow, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("syndicate") { BackColor = Color.Gold, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("zana") { BackColor = Color.Blue, ForeColor = Color.White });
-            tmpTags.Add(new ActivityTag("niko") { BackColor = Color.OrangeRed, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("zana-map") { BackColor = Color.Blue, ForeColor = Color.Black });
-            tmpTags.Add(new ActivityTag("expedition") { BackColor = Color.Turquoise, ForeColor = Color.Black });
+            tmpTags.Add(new ActivityTag("blight") { BackColor = Color.LightGreen, ForeColor = Color.Black, ShowInListView = true });
+            tmpTags.Add(new ActivityTag("delirium") { BackColor = Color.WhiteSmoke, ForeColor = Color.Black, ShowInListView = true });
+            tmpTags.Add(new ActivityTag("einhar") { BackColor = Color.Red, ForeColor = Color.Black, ShowInListView = true });
+            tmpTags.Add(new ActivityTag("incursion") { BackColor = Color.GreenYellow, ForeColor = Color.Black, ShowInListView = true });
+            tmpTags.Add(new ActivityTag("syndicate") { BackColor = Color.Gold, ForeColor = Color.Black, ShowInListView = true });
+            tmpTags.Add(new ActivityTag("zana") { BackColor = Color.Blue, ForeColor = Color.White, ShowInListView = true });
+            tmpTags.Add(new ActivityTag("niko") { BackColor = Color.OrangeRed, ForeColor = Color.Black, ShowInListView = true });
+            tmpTags.Add(new ActivityTag("zana-map") { BackColor = Color.Blue, ForeColor = Color.Black, ShowInListView = true });
+            tmpTags.Add(new ActivityTag("expedition") { BackColor = Color.Turquoise, ForeColor = Color.Black, ShowInListView = true });
             tmpTags.Add(new ActivityTag("rog") { BackColor = Color.Turquoise, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("gwennen") { BackColor = Color.Turquoise, ForeColor = Color.Black });
             tmpTags.Add(new ActivityTag("dannig") { BackColor = Color.Turquoise, ForeColor = Color.Black });
