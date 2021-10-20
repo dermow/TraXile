@@ -54,6 +54,9 @@ namespace TraXile
         private int _shaperKillsInFight;
         private int _nextAreaLevel;
         private int _currentAreaLevel;
+        private int _timeCapLab = 3600;
+        private int _timeCapMap = 3600;
+        private int _timeCapHeist = 3600;
         private SqliteConnection _dbConnection;
         private bool _historyInitialized;
         private List<string> _knownPlayerNames;
@@ -3136,6 +3139,13 @@ namespace TraXile
             //this.LogFilePath = ReadSetting("PoELogFilePath");
             this._showGridInActLog = Convert.ToBoolean(ReadSetting("ActivityLogShowGrid"));
             this._showGridInStats = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
+            this._timeCapLab = Convert.ToInt32(ReadSetting("TimeCapLab", "3600"));
+            this._timeCapMap = Convert.ToInt32(ReadSetting("TimeCapMap", "3600"));
+            this._timeCapHeist = Convert.ToInt32(ReadSetting("TimeCapHeist", "3600"));
+
+            textBox9.Text = _timeCapMap.ToString();
+            textBox10.Text = _timeCapLab.ToString();
+            textBox11.Text = _timeCapHeist.ToString();
 
             listViewActLog.GridLines = _showGridInActLog;
             listViewStats.GridLines = _showGridInStats;
@@ -3216,7 +3226,15 @@ namespace TraXile
                         {
                             // Average
                             iCount++;
-                            iSum += act.TotalSeconds;
+
+                            if(act.TotalSeconds < _timeCapLab)
+                            {
+                                iSum += act.TotalSeconds;
+                            }
+                            else
+                            {
+                                iSum += _timeCapLab;
+                            }
 
                             // Top 
                             if(labBestTimes[s] == null)
@@ -3305,14 +3323,29 @@ namespace TraXile
 
             foreach (TrackedActivity act in _eventHistory)
             {
+                int iCap = 3600;
+
+                switch(act.Type)
+                {
+                    case ACTIVITY_TYPES.MAP:
+                        iCap = _timeCapMap;
+                        break;
+                    case ACTIVITY_TYPES.LABYRINTH:
+                        iCap = _timeCapLab;
+                        break;
+                    case ACTIVITY_TYPES.HEIST:
+                        iCap = _timeCapHeist;
+                        break;
+                }
+
                 // Filter out
-                if(act.TotalSeconds < 3600)
+                if(act.TotalSeconds < iCap)
                 {
                     typeList[act.Type] += act.TotalSeconds;
                 }
                 else
                 {
-                    typeList[act.Type] += 3600;
+                    typeList[act.Type] += iCap;
                 }
             }
 
@@ -3321,7 +3354,6 @@ namespace TraXile
             {
                 chart8.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
                 chart8.Series[0].Points.Last().Color = colorList[kvp.Key];
-
             }
         }
 
@@ -3416,7 +3448,16 @@ namespace TraXile
                     if (act.Type == ACTIVITY_TYPES.HEIST && act.AreaLevel == i)
                     {
                         iCount++;
-                        iSum += act.TotalSeconds;
+
+                        if(act.TotalSeconds < _timeCapHeist)
+                        {
+                            iSum += act.TotalSeconds;
+                        }
+                        else
+                        {
+                            iSum += _timeCapHeist;
+                        }
+                        
                     }
                 }
 
@@ -3530,10 +3571,15 @@ namespace TraXile
                 {
                     if(act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i+1))
                     {
-                        if (act.TotalSeconds > 3600)
-                            continue;
-
-                        iSum += act.TotalSeconds;
+                        if (act.TotalSeconds < _timeCapMap)
+                        {
+                            iSum += act.TotalSeconds;
+                        }
+                        else
+                        {
+                            iSum += _timeCapMap;
+                        }
+                        
                         iCount++;
                     }
                 }
@@ -4715,6 +4761,42 @@ namespace TraXile
         private void label90_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int iMap = Convert.ToInt32(textBox9.Text);
+                int iHeist = Convert.ToInt32(textBox11.Text);
+                int iLab = Convert.ToInt32(textBox10.Text);
+
+                if(iMap > 0 && iHeist > 0 && iLab > 0)
+                {
+                    _timeCapMap = iMap;
+                    _timeCapLab = iLab;
+                    _timeCapHeist = iHeist;
+
+                    AddUpdateAppSettings("TimeCapMap", _timeCapMap.ToString());
+                    AddUpdateAppSettings("TimeCapLab", _timeCapLab.ToString());
+                    AddUpdateAppSettings("TimeCapHeist", _timeCapHeist.ToString());
+
+                    RenderGlobalDashboard();
+                    RenderMappingDashboard();
+                    RenderHeistDashboard();
+                    RenderLabDashboard();
+                }
+                else
+                {
+                    MessageBox.Show("Time cap values must be greater than 0");
+                }
+               
+            }
+            catch(Exception ex)
+            {
+                _log.Error(ex.ToString());
+                MessageBox.Show("Invalid format for time cap. Only integers are supported");
+            }
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
