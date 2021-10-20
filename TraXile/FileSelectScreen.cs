@@ -29,7 +29,7 @@ namespace TraXile
             if(ofd.ShowDialog() == DialogResult.OK)
             {
                 this._mainWindow.SettingPoeLogFilePath = ofd.FileName;
-                this._mainWindow.AddUpdateAppSettings("PoELogFilePath", ofd.FileName);
+                this._mainWindow.AddUpdateAppSettings("poe_logfile_path", ofd.FileName);
                 this.Close();
             }
         }
