@@ -113,6 +113,11 @@ namespace TraXile
             _listView.ResumeLayout();
         }
 
+        public void Clear()
+        {
+            _listView.Items.Clear();
+        }
+
         public void Reset()
         {
             _listView.Items.Clear();
