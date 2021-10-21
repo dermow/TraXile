@@ -70,4 +70,21 @@
 - Bugfix: Log parsing stopped working when Client.txt deleted manually
 - Fixed some typos
 
-v
+0.5.7
+- Added Wiki link to help menu
+- Added Stats (Maps done: ) -> needs reload logfile for events in the past
+- CHANGE: activities can now be parsed historically from Client.txt (needs logfile reload)
+- Added new Activity Type "TEMPLE"
+- Removed "The Temple of Atzoatl" from Map list
+- Added Installer
+- Implemented own class for manage Settings
+- Moved data.db, stats.cache, VERSION.txt and logfile to users APPDATA/Roaming
+- Tab "Bosses" moved to "Dashboards -> Bossing"
+- Added auto update per MSI
+- Added Dashboards
+- Added unique maps
+- GUI improvements
+
+0.5.8
+- Added wiki link to settings page
+- Removed obsolete code lines

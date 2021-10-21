@@ -4724,6 +4724,11 @@ namespace TraXile
             }
         }
 
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Process.Start(APPINFO.WIKI_URL_SETTINGS);
+        }
+
         private void pictureBox19_Click(object sender, EventArgs e)
         {
             if (_currentActivity != null)
