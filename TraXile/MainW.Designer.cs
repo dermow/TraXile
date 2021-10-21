@@ -544,7 +544,7 @@ namespace TraXile
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel5);
             this.splitContainer1.Size = new System.Drawing.Size(1109, 868);
-            this.splitContainer1.SplitterDistance = 456;
+            this.splitContainer1.SplitterDistance = 538;
             this.splitContainer1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -565,7 +565,7 @@ namespace TraXile
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 172F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(456, 868);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(538, 868);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // panel2
@@ -583,7 +583,7 @@ namespace TraXile
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(450, 211);
+            this.panel2.Size = new System.Drawing.Size(532, 211);
             this.panel2.TabIndex = 0;
             // 
             // labelTrackingDied
@@ -704,7 +704,7 @@ namespace TraXile
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(450, 166);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(532, 166);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // labelCurrArea
@@ -712,7 +712,7 @@ namespace TraXile
             this.labelCurrArea.AutoSize = true;
             this.labelCurrArea.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCurrArea.ForeColor = System.Drawing.Color.White;
-            this.labelCurrArea.Location = new System.Drawing.Point(176, 24);
+            this.labelCurrArea.Location = new System.Drawing.Point(208, 24);
             this.labelCurrArea.Name = "labelCurrArea";
             this.labelCurrArea.Size = new System.Drawing.Size(15, 15);
             this.labelCurrArea.TabIndex = 5;
@@ -723,7 +723,7 @@ namespace TraXile
             this.labelCurrActivity.AutoSize = true;
             this.labelCurrActivity.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCurrActivity.ForeColor = System.Drawing.Color.White;
-            this.labelCurrActivity.Location = new System.Drawing.Point(176, 0);
+            this.labelCurrActivity.Location = new System.Drawing.Point(208, 0);
             this.labelCurrActivity.Name = "labelCurrActivity";
             this.labelCurrActivity.Size = new System.Drawing.Size(63, 15);
             this.labelCurrActivity.TabIndex = 4;
@@ -767,7 +767,7 @@ namespace TraXile
             this.labelLastDeath.AutoSize = true;
             this.labelLastDeath.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelLastDeath.ForeColor = System.Drawing.Color.White;
-            this.labelLastDeath.Location = new System.Drawing.Point(176, 72);
+            this.labelLastDeath.Location = new System.Drawing.Point(208, 72);
             this.labelLastDeath.Name = "labelLastDeath";
             this.labelLastDeath.Size = new System.Drawing.Size(15, 15);
             this.labelLastDeath.TabIndex = 6;
@@ -789,7 +789,7 @@ namespace TraXile
             this.labelCurrentAreaLvl.AutoSize = true;
             this.labelCurrentAreaLvl.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCurrentAreaLvl.ForeColor = System.Drawing.Color.White;
-            this.labelCurrentAreaLvl.Location = new System.Drawing.Point(176, 48);
+            this.labelCurrentAreaLvl.Location = new System.Drawing.Point(208, 48);
             this.labelCurrentAreaLvl.Name = "labelCurrentAreaLvl";
             this.labelCurrentAreaLvl.Size = new System.Drawing.Size(15, 15);
             this.labelCurrentAreaLvl.TabIndex = 8;
@@ -801,7 +801,7 @@ namespace TraXile
             this.panelTags.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelTags.Location = new System.Drawing.Point(3, 220);
             this.panelTags.Name = "panelTags";
-            this.panelTags.Size = new System.Drawing.Size(450, 269);
+            this.panelTags.Size = new System.Drawing.Size(532, 269);
             this.panelTags.TabIndex = 2;
             this.panelTags.SizeChanged += new System.EventHandler(this.panelTags_SizeChanged);
             // 
@@ -813,7 +813,7 @@ namespace TraXile
             this.groupBoxTrackingTags.ForeColor = System.Drawing.Color.Red;
             this.groupBoxTrackingTags.Location = new System.Drawing.Point(0, 0);
             this.groupBoxTrackingTags.Name = "groupBoxTrackingTags";
-            this.groupBoxTrackingTags.Size = new System.Drawing.Size(450, 269);
+            this.groupBoxTrackingTags.Size = new System.Drawing.Size(532, 269);
             this.groupBoxTrackingTags.TabIndex = 0;
             this.groupBoxTrackingTags.TabStop = false;
             this.groupBoxTrackingTags.Text = "Tags";
@@ -824,7 +824,7 @@ namespace TraXile
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(3, 495);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(450, 24);
+            this.panel7.Size = new System.Drawing.Size(532, 24);
             this.panel7.TabIndex = 3;
             // 
             // labelAddTagsNote
@@ -852,7 +852,7 @@ namespace TraXile
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 87F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(649, 868);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(567, 868);
             this.tableLayoutPanel5.TabIndex = 5;
             // 
             // listViewActLog
@@ -875,7 +875,7 @@ namespace TraXile
             this.listViewActLog.Location = new System.Drawing.Point(3, 90);
             this.listViewActLog.MultiSelect = false;
             this.listViewActLog.Name = "listViewActLog";
-            this.listViewActLog.Size = new System.Drawing.Size(643, 743);
+            this.listViewActLog.Size = new System.Drawing.Size(561, 743);
             this.listViewActLog.TabIndex = 4;
             this.listViewActLog.UseCompatibleStateImageBehavior = false;
             this.listViewActLog.View = System.Windows.Forms.View.Details;
@@ -918,7 +918,7 @@ namespace TraXile
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(643, 81);
+            this.panel3.Size = new System.Drawing.Size(561, 81);
             this.panel3.TabIndex = 5;
             // 
             // buttonStartSearch
@@ -1044,7 +1044,7 @@ namespace TraXile
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 1;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(643, 26);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(561, 26);
             this.tableLayoutPanel7.TabIndex = 6;
             // 
             // comboBoxShowMaxItems
@@ -1355,7 +1355,7 @@ namespace TraXile
             this.tableLayoutPanel24.ColumnCount = 3;
             this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 0.9259259F));
             this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 99.07407F));
-            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38F));
+            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 39F));
             this.tableLayoutPanel24.Controls.Add(this.chartGlobalDashboard, 1, 1);
             this.tableLayoutPanel24.Controls.Add(this.label89, 1, 0);
             this.tableLayoutPanel24.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1382,7 +1382,7 @@ namespace TraXile
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chartGlobalDashboard.Series.Add(series2);
-            this.chartGlobalDashboard.Size = new System.Drawing.Size(1041, 791);
+            this.chartGlobalDashboard.Size = new System.Drawing.Size(1040, 791);
             this.chartGlobalDashboard.TabIndex = 0;
             this.chartGlobalDashboard.Text = "chart8";
             // 
@@ -1394,7 +1394,7 @@ namespace TraXile
             this.label89.ForeColor = System.Drawing.Color.White;
             this.label89.Location = new System.Drawing.Point(12, 0);
             this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(1041, 30);
+            this.label89.Size = new System.Drawing.Size(1040, 30);
             this.label89.TabIndex = 1;
             this.label89.Text = "Activity Time (Hours)";
             this.label89.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
