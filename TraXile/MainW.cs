@@ -460,8 +460,6 @@ namespace TraXile
                 AddUpdateAppSettings("layout.window.width", this.Width.ToString());
                 AddUpdateAppSettings("layout.window.height", this.Height.ToString());
             }
-
-            AddUpdateAppSettings("layout.splitpanel.width", splitContainer1.SplitterDistance.ToString());
         }
 
         /// <summary>
@@ -486,9 +484,6 @@ namespace TraXile
                 this.Width = iWidth;
                 this.Height = iHeight;
             }
-
-            this.splitContainer1.SplitterDistance = Convert.ToInt32(ReadSetting("layout.splitpanel.width", "600"));
-            
         }
 
         /// <summary>
