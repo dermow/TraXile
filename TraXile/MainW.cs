@@ -77,6 +77,7 @@ namespace TraXile
         private bool _UpdateCheckDone;
         private string _lastSimuEndpoint;
         private TxSettingsManager _mySettings;
+        private TxTheme _myTheme;
 
         private ListViewManager _lvmStats, _lvmActlog;
         private bool _restoreOk = true;
@@ -126,7 +127,19 @@ namespace TraXile
                        
             this.Visible = false;
             InitializeComponent();
+
             Init();
+
+            if(ReadSetting("theme", "Dark") == "Light")
+            {
+                _myTheme = new TxThemeLight();
+                _myTheme.Apply(this);
+            }
+            else
+            {
+                _myTheme = new TxThemeDark();
+                _myTheme.Apply(this);
+            }
 
         }
 
@@ -3140,6 +3153,7 @@ namespace TraXile
             this._timeCapLab = Convert.ToInt32(ReadSetting("TimeCapLab", "3600"));
             this._timeCapMap = Convert.ToInt32(ReadSetting("TimeCapMap", "3600"));
             this._timeCapHeist = Convert.ToInt32(ReadSetting("TimeCapHeist", "3600"));
+            this.comboBoxTheme.SelectedItem = ReadSetting("theme", "Dark") == "Dark" ? "Dark" : "Light";
 
             textBoxMapCap.Text = _timeCapMap.ToString();
             textBoxLabCap.Text = _timeCapLab.ToString();
@@ -3781,6 +3795,7 @@ namespace TraXile
         private void OpenActivityDetails(TrackedActivity ta)
         {
             ActivityDetails ad = new ActivityDetails(ta, this);
+            _myTheme.Apply(ad);
             ad.Show();
         }
 
@@ -4312,6 +4327,7 @@ namespace TraXile
         private void button4_Click(object sender, EventArgs e)
         {
             ExportActvityList exp = new ExportActvityList(this);
+            _myTheme.Apply(exp);
             exp.Show();
         }
 
@@ -4555,6 +4571,7 @@ namespace TraXile
         private void chatCommandsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChatCommandHelp cmh = new ChatCommandHelp();
+            this._myTheme.Apply(cmh);
             cmh.ShowDialog();
         }
 
@@ -4589,6 +4606,7 @@ namespace TraXile
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             SearchHelp sh = new SearchHelp();
+            _myTheme.Apply(sh);
             sh.Show();
         }
 
@@ -4611,12 +4629,14 @@ namespace TraXile
         private void infoToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             AboutW ab = new AboutW();
+            _myTheme.Apply(ab);
             ab.ShowDialog();
         }
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             AboutW ab = new AboutW();
+            _myTheme.Apply(ab);
             ab.ShowDialog();
         }
 
@@ -4722,6 +4742,17 @@ namespace TraXile
         private void button1_Click_1(object sender, EventArgs e)
         {
             Process.Start(APPINFO.WIKI_URL_SETTINGS);
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("The application needs to be restarted to change theme. Restart now?", "Restart", MessageBoxButtons.YesNo);
+
+            if(dr == DialogResult.Yes)
+            {
+                AddUpdateAppSettings("theme", comboBoxTheme.SelectedItem.ToString());
+                Application.Restart();
+            }
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)

@@ -88,3 +88,6 @@
 0.5.8
 - Added wiki link to settings page
 - Removed obsolete code lines
+
+0.5.9
+- Light theme added
