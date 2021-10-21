@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Tracking Tool for Path of Exile")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("dermow")]
-[assembly: AssemblyProduct("PoE_Tracker")]
+[assembly: AssemblyProduct("TraXile")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
