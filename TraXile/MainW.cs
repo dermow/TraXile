@@ -9,7 +9,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Windows.Media;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -219,7 +218,7 @@ namespace TraXile
             _UpdateCheckDone = true;
             ReadSettings();
 
-            comboBox2.SelectedItem = ReadSetting("actlog.maxitems", "500");
+            comboBoxShowMaxItems.SelectedItem = ReadSetting("actlog.maxitems", "500");
 
             try
             {
@@ -242,136 +241,136 @@ namespace TraXile
             listViewStats.Columns[0].Width = 500;
             listViewStats.Columns[1].Width = 300;
 
-            listView1.Columns[0].Width = 300;
+            listViewTop10Maps.Columns[0].Width = 300;
 
-            chart1.ChartAreas[0].AxisX.LineColor = Color.Red;
-            chart1.ChartAreas[0].AxisY.LineColor = Color.Red;
-            chart1.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-            chart1.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
-            chart1.ChartAreas[0].AxisX.Interval = 1;
-            chart1.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Days;
-            chart1.ChartAreas[0].AxisX.IntervalOffset = 1;
-            chart1.Series[0].XValueType = ChartValueType.DateTime;
-            chart1.Series[0].LabelForeColor = Color.White;
-            chart1.Series[0].LabelBackColor = Color.Black;
-            chart1.Series[0].LabelBorderColor = Color.Black;
-            chart1.Series[0].Color = Color.White;
-            chart1.Legends[0].Enabled = false;
+            chartStats.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chartStats.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chartStats.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chartStats.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chartStats.ChartAreas[0].AxisX.Interval = 1;
+            chartStats.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Days;
+            chartStats.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chartStats.Series[0].XValueType = ChartValueType.DateTime;
+            chartStats.Series[0].LabelForeColor = Color.White;
+            chartStats.Series[0].LabelBackColor = Color.Black;
+            chartStats.Series[0].LabelBorderColor = Color.Black;
+            chartStats.Series[0].Color = Color.White;
+            chartStats.Legends[0].Enabled = false;
 
-            chart2.BackColor = Color.Black;
-            chart2.ChartAreas[0].BackColor = Color.Black;
-            chart2.ChartAreas[0].AxisX.LineColor = Color.Red;
-            chart2.ChartAreas[0].AxisY.LineColor = Color.Red;
-            chart2.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-            chart2.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
-            chart2.ChartAreas[0].AxisX.Interval = 1;
-            chart2.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
-            chart2.ChartAreas[0].AxisX.IntervalOffset = 1;
-            chart2.Series[0].XValueType = ChartValueType.Int32;
-            chart2.Legends[0].Enabled = false;
-            chart2.Series[0].IsValueShownAsLabel = true;
-            chart2.Series[0].LabelForeColor = Color.White;
-            chart2.Series[0].Color = Color.White;
+            chartMapTierCount.BackColor = Color.Black;
+            chartMapTierCount.ChartAreas[0].BackColor = Color.Black;
+            chartMapTierCount.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chartMapTierCount.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chartMapTierCount.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chartMapTierCount.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chartMapTierCount.ChartAreas[0].AxisX.Interval = 1;
+            chartMapTierCount.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
+            chartMapTierCount.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chartMapTierCount.Series[0].XValueType = ChartValueType.Int32;
+            chartMapTierCount.Legends[0].Enabled = false;
+            chartMapTierCount.Series[0].IsValueShownAsLabel = true;
+            chartMapTierCount.Series[0].LabelForeColor = Color.White;
+            chartMapTierCount.Series[0].Color = Color.White;
 
-            chart3.BackColor = Color.Black;
-            chart3.ChartAreas[0].BackColor = Color.Black;
-            chart3.ChartAreas[0].AxisX.LineColor = Color.Red;
-            chart3.ChartAreas[0].AxisY.LineColor = Color.Red;
-            chart3.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-            chart3.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
-            chart3.ChartAreas[0].AxisX.Interval = 1;
-            chart3.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
-            chart3.ChartAreas[0].AxisX.IntervalOffset = 1;
-            chart3.Series[0].XValueType = ChartValueType.Int32;
-            chart3.Series[0].YValueType = ChartValueType.Double;
-            chart3.Legends[0].Enabled = false;
-            chart3.Series[0].IsValueShownAsLabel = true;
-            chart3.Series[0].LabelForeColor = Color.White;
-            chart3.Series[0].Color = Color.White;
+            chartMapTierAvgTime.BackColor = Color.Black;
+            chartMapTierAvgTime.ChartAreas[0].BackColor = Color.Black;
+            chartMapTierAvgTime.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chartMapTierAvgTime.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chartMapTierAvgTime.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chartMapTierAvgTime.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chartMapTierAvgTime.ChartAreas[0].AxisX.Interval = 1;
+            chartMapTierAvgTime.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Number;
+            chartMapTierAvgTime.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chartMapTierAvgTime.Series[0].XValueType = ChartValueType.Int32;
+            chartMapTierAvgTime.Series[0].YValueType = ChartValueType.Double;
+            chartMapTierAvgTime.Legends[0].Enabled = false;
+            chartMapTierAvgTime.Series[0].IsValueShownAsLabel = true;
+            chartMapTierAvgTime.Series[0].LabelForeColor = Color.White;
+            chartMapTierAvgTime.Series[0].Color = Color.White;
 
-            chart4.BackColor = Color.Black;
-            chart4.ChartAreas[0].BackColor = Color.Black;
-            chart4.ChartAreas[0].AxisX.LineColor = Color.Red;
-            chart4.ChartAreas[0].AxisY.LineColor = Color.Red;
-            chart4.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-            chart4.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
-            chart4.ChartAreas[0].AxisX.Interval = 1;
-            chart4.ChartAreas[0].AxisX.IntervalOffset = 1;
-            chart4.Series[0].XValueType = ChartValueType.String;
-            chart4.Series[0].YValueType = ChartValueType.Double;
-            chart4.Legends[0].Enabled = false;
-            chart4.Series[0].IsValueShownAsLabel = true;
-            chart4.Series[0].LabelForeColor = Color.White;
-            chart4.Series[0].Color = Color.White;
+            chartLabsDone.BackColor = Color.Black;
+            chartLabsDone.ChartAreas[0].BackColor = Color.Black;
+            chartLabsDone.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chartLabsDone.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chartLabsDone.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chartLabsDone.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chartLabsDone.ChartAreas[0].AxisX.Interval = 1;
+            chartLabsDone.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chartLabsDone.Series[0].XValueType = ChartValueType.String;
+            chartLabsDone.Series[0].YValueType = ChartValueType.Double;
+            chartLabsDone.Legends[0].Enabled = false;
+            chartLabsDone.Series[0].IsValueShownAsLabel = true;
+            chartLabsDone.Series[0].LabelForeColor = Color.White;
+            chartLabsDone.Series[0].Color = Color.White;
 
-            chart5.BackColor = Color.Black;
-            chart5.ChartAreas[0].BackColor = Color.Black;
-            chart5.ChartAreas[0].AxisX.LineColor = Color.Red;
-            chart5.ChartAreas[0].AxisY.LineColor = Color.Red;
-            chart5.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-            chart5.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
-            chart5.ChartAreas[0].AxisX.Interval = 1;
-            chart5.ChartAreas[0].AxisX.IntervalOffset = 1;
-            chart5.Series[0].XValueType = ChartValueType.String;
-            chart5.Series[0].YValueType = ChartValueType.Double;
-            chart5.Legends[0].Enabled = false;
-            chart5.Series[0].IsValueShownAsLabel = true;
-            chart5.Series[0].LabelForeColor = Color.White;
-            chart5.Series[0].Color = Color.White;
+            chartLabsAvgTime.BackColor = Color.Black;
+            chartLabsAvgTime.ChartAreas[0].BackColor = Color.Black;
+            chartLabsAvgTime.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chartLabsAvgTime.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chartLabsAvgTime.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chartLabsAvgTime.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chartLabsAvgTime.ChartAreas[0].AxisX.Interval = 1;
+            chartLabsAvgTime.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chartLabsAvgTime.Series[0].XValueType = ChartValueType.String;
+            chartLabsAvgTime.Series[0].YValueType = ChartValueType.Double;
+            chartLabsAvgTime.Legends[0].Enabled = false;
+            chartLabsAvgTime.Series[0].IsValueShownAsLabel = true;
+            chartLabsAvgTime.Series[0].LabelForeColor = Color.White;
+            chartLabsAvgTime.Series[0].Color = Color.White;
 
-            chart6.BackColor = Color.Black;
-            chart6.ChartAreas[0].BackColor = Color.Black;
-            chart6.ChartAreas[0].AxisX.LineColor = Color.Red;
-            chart6.ChartAreas[0].AxisY.LineColor = Color.Red;
-            chart6.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-            chart6.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
-            chart6.ChartAreas[0].AxisX.Interval = 1;
-            chart6.ChartAreas[0].AxisX.IntervalOffset = 1;
-            chart6.Series[0].XValueType = ChartValueType.String;
-            chart6.Series[0].YValueType = ChartValueType.Double;
-            chart6.Legends[0].Enabled = false;
-            chart6.Series[0].IsValueShownAsLabel = true;
-            chart6.Series[0].LabelForeColor = Color.White;
-            chart6.Series[0].Color = Color.White;
+            chartHeistByLevel.BackColor = Color.Black;
+            chartHeistByLevel.ChartAreas[0].BackColor = Color.Black;
+            chartHeistByLevel.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chartHeistByLevel.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chartHeistByLevel.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chartHeistByLevel.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chartHeistByLevel.ChartAreas[0].AxisX.Interval = 1;
+            chartHeistByLevel.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chartHeistByLevel.Series[0].XValueType = ChartValueType.String;
+            chartHeistByLevel.Series[0].YValueType = ChartValueType.Double;
+            chartHeistByLevel.Legends[0].Enabled = false;
+            chartHeistByLevel.Series[0].IsValueShownAsLabel = true;
+            chartHeistByLevel.Series[0].LabelForeColor = Color.White;
+            chartHeistByLevel.Series[0].Color = Color.White;
 
-            chart7.BackColor = Color.Black;
-            chart7.ChartAreas[0].BackColor = Color.Black;
-            chart7.ChartAreas[0].AxisX.LineColor = Color.Red;
-            chart7.ChartAreas[0].AxisY.LineColor = Color.Red;
-            chart7.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-            chart7.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
-            chart7.ChartAreas[0].AxisX.Interval = 1;
-            chart7.ChartAreas[0].AxisX.IntervalOffset = 1;
-            chart7.Series[0].XValueType = ChartValueType.String;
-            chart7.Series[0].YValueType = ChartValueType.Double;
-            chart7.Legends[0].Enabled = false;
-            chart7.Series[0].IsValueShownAsLabel = true;
-            chart7.Series[0].LabelForeColor = Color.White;
-            chart7.Series[0].Color = Color.White;
+            chartHeistAvgTime.BackColor = Color.Black;
+            chartHeistAvgTime.ChartAreas[0].BackColor = Color.Black;
+            chartHeistAvgTime.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chartHeistAvgTime.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chartHeistAvgTime.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chartHeistAvgTime.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chartHeistAvgTime.ChartAreas[0].AxisX.Interval = 1;
+            chartHeistAvgTime.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chartHeistAvgTime.Series[0].XValueType = ChartValueType.String;
+            chartHeistAvgTime.Series[0].YValueType = ChartValueType.Double;
+            chartHeistAvgTime.Legends[0].Enabled = false;
+            chartHeistAvgTime.Series[0].IsValueShownAsLabel = true;
+            chartHeistAvgTime.Series[0].LabelForeColor = Color.White;
+            chartHeistAvgTime.Series[0].Color = Color.White;
 
-            chart8.BackColor = Color.Black;
-            chart8.ChartAreas[0].BackColor = Color.Black;
-            chart8.ChartAreas[0].AxisX.LineColor = Color.Red;
-            chart8.ChartAreas[0].AxisY.LineColor = Color.Red;
-            chart8.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-            chart8.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
-            chart8.ChartAreas[0].AxisX.Interval = 1;
-            chart8.ChartAreas[0].AxisX.IntervalOffset = 1;
-            chart8.Series[0].XValueType = ChartValueType.String;
-            chart8.Series[0].YValueType = ChartValueType.Double;
-            chart8.Legends[0].Enabled = true;
-            chart8.Series[0].IsValueShownAsLabel = true;
-            chart8.Series[0].LabelForeColor = Color.White;
-            chart8.Series[0].Color = Color.White;
+            chartGlobalDashboard.BackColor = Color.Black;
+            chartGlobalDashboard.ChartAreas[0].BackColor = Color.Black;
+            chartGlobalDashboard.ChartAreas[0].AxisX.LineColor = Color.Red;
+            chartGlobalDashboard.ChartAreas[0].AxisY.LineColor = Color.Red;
+            chartGlobalDashboard.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+            chartGlobalDashboard.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+            chartGlobalDashboard.ChartAreas[0].AxisX.Interval = 1;
+            chartGlobalDashboard.ChartAreas[0].AxisX.IntervalOffset = 1;
+            chartGlobalDashboard.Series[0].XValueType = ChartValueType.String;
+            chartGlobalDashboard.Series[0].YValueType = ChartValueType.Double;
+            chartGlobalDashboard.Legends[0].Enabled = true;
+            chartGlobalDashboard.Series[0].IsValueShownAsLabel = true;
+            chartGlobalDashboard.Series[0].LabelForeColor = Color.White;
+            chartGlobalDashboard.Series[0].Color = Color.White;
 
-            var ca = chart1.ChartAreas["ChartArea1"].CursorX;
+            var ca = chartStats.ChartAreas["ChartArea1"].CursorX;
             ca.IsUserEnabled = true;
             ca.IsUserSelectionEnabled = true;
 
-            textBox1.Text = ReadSetting("PoELogFilePath");
-            textBox1.Enabled = false;
+            textBoxLogFilePath.Text = ReadSetting("PoELogFilePath");
+            textBoxLogFilePath.Enabled = false;
 
-            comboBox1.SelectedIndex = 1;
+            comboBoxTimeRangeStats.SelectedIndex = 1;
 
             _dict = new Dictionary<int, string>();
             _eventQueue = new ConcurrentQueue<TrackingEvent>();
@@ -673,7 +672,7 @@ namespace TraXile
         {
             if (b_reinit)
             {
-                groupBox8.Controls.Clear();
+                groupBoxTrackingTags.Controls.Clear();
                 _tagLabels.Clear();
             }
 
@@ -685,7 +684,7 @@ namespace TraXile
             int iX = iOffsetX;
             int iY = ioffsetY;
 
-            int iCols = groupBox8.Width / iLabelWidth;
+            int iCols = groupBoxTrackingTags.Width / iLabelWidth;
             if (iCols > iMaxCols) iCols = iMaxCols;
             int iCurrCols = 0;
 
@@ -713,7 +712,7 @@ namespace TraXile
                     lbl.MouseLeave += tagLabel_MouseLeave;
                     lbl.MouseClick += Lbl_MouseClick;
                     
-                    groupBox8.Controls.Add(lbl);
+                    groupBoxTrackingTags.Controls.Add(lbl);
                     _tagLabels.Add(tag.ID, lbl);
                 }
                 else
@@ -1308,6 +1307,11 @@ namespace TraXile
             _parsedActivities.Add(i_ts.ToString() + "_" + s_area);
         }
 
+        /// <summary>
+        /// get activity type object from string
+        /// </summary>
+        /// <param name="s_type"></param>
+        /// <returns></returns>
         private ACTIVITY_TYPES GetActTypeFromString(string s_type)
         {
             switch (s_type)
@@ -2923,10 +2927,10 @@ namespace TraXile
         private void UpdateGUI()
         {
             TimeSpan tsAreaTime = (DateTime.Now - this._inAreaSince);
-            checkBox1.Checked = _showGridInActLog;
-            checkBox2.Checked = _showGridInStats;
+            checkBoxShowGridInAct.Checked = _showGridInActLog;
+            checkBoxShowGridInStats.Checked = _showGridInStats;
             ReadBackupList();
-            listBox1.DataSource = _backups;
+            listBoxRestoreBackup.DataSource = _backups;
             
 
             if (_eventQueueInitizalized)
@@ -2955,9 +2959,9 @@ namespace TraXile
 
                     RenderTagsForTracking();
                     RenderTagsForConfig();
-                    textBox1.Text = ReadSetting("poe_logfile_path");
+                    textBoxLogFilePath.Text = ReadSetting("poe_logfile_path");
 
-                    label74.Text = "items: " + _lvmActlog.listView.Items.Count.ToString();
+                    labelItemCount.Text = "items: " + _lvmActlog.listView.Items.Count.ToString();
 
                   
                    
@@ -3028,7 +3032,7 @@ namespace TraXile
                             labelTrackingArea.Text = _currentActivity.ZanaMap.Area + " (" + sTier + ", Zana)";
                             labelTrackingDied.Text = _currentActivity.ZanaMap.DeathCounter.ToString();
                             labelTrackingType.Text = GetStringFromActType(_currentActivity.Type).ToUpper();
-                            pictureBox19.Hide();
+                            pictureBoxStop.Hide();
                         }
                         else
                         {
@@ -3036,7 +3040,7 @@ namespace TraXile
                             labelTrackingArea.Text = _currentActivity.Area + " (" + sTier + ")"; ;
                             labelTrackingType.Text = GetStringFromActType(_currentActivity.Type).ToUpper();
                             labelTrackingDied.Text = _currentActivity.DeathCounter.ToString();
-                            pictureBox19.Show();
+                            pictureBoxStop.Show();
                         }
                     }
                     else
@@ -3142,9 +3146,9 @@ namespace TraXile
             this._timeCapMap = Convert.ToInt32(ReadSetting("TimeCapMap", "3600"));
             this._timeCapHeist = Convert.ToInt32(ReadSetting("TimeCapHeist", "3600"));
 
-            textBox9.Text = _timeCapMap.ToString();
-            textBox10.Text = _timeCapLab.ToString();
-            textBox11.Text = _timeCapHeist.ToString();
+            textBoxMapCap.Text = _timeCapMap.ToString();
+            textBoxLabCap.Text = _timeCapLab.ToString();
+            textBoxHeistCap.Text = _timeCapHeist.ToString();
 
             listViewActLog.GridLines = _showGridInActLog;
             listViewStats.GridLines = _showGridInStats;
@@ -3173,6 +3177,9 @@ namespace TraXile
             Application.Exit();
         }
 
+        /// <summary>
+        /// Render Lab Dashboard
+        /// </summary>
         public void RenderLabDashboard()
         {
             Dictionary<string, int> labCounts;
@@ -3260,9 +3267,9 @@ namespace TraXile
             // UPdate Lab chart
             MethodInvoker mi = delegate
             {
-                chart4.Series[0].Points.Clear();
-                chart5.Series[0].Points.Clear();
-                listView3.Items.Clear();
+                chartLabsDone.Series[0].Points.Clear();
+                chartLabsAvgTime.Series[0].Points.Clear();
+                listViewBestLabs.Items.Clear();
                 foreach (KeyValuePair<string,int> kvp in labCounts)
                 {
                     string sName = kvp.Key;
@@ -3274,8 +3281,8 @@ namespace TraXile
                     {
                         sName += "*";
                     }
-                    chart4.Series[0].Points.AddXY(sName, kvp.Value);
-                    chart5.Series[0].Points.AddXY(sName, Math.Round(labAvgTimes[kvp.Key] / 60, 2));
+                    chartLabsDone.Series[0].Points.AddXY(sName, kvp.Value);
+                    chartLabsAvgTime.Series[0].Points.AddXY(sName, Math.Round(labAvgTimes[kvp.Key] / 60, 2));
 
                     ListViewItem lvi = new ListViewItem(kvp.Key);
                     
@@ -3289,7 +3296,7 @@ namespace TraXile
                         lvi.SubItems.Add("-");
                         lvi.SubItems.Add("-");
                     }
-                    listView3.Items.Add(lvi);
+                    listViewBestLabs.Items.Add(lvi);
 
 
                 }
@@ -3298,6 +3305,9 @@ namespace TraXile
             
         }
 
+        /// <summary>
+        /// Render global dashboard
+        /// </summary>
         public void RenderGlobalDashboard()
         {
             Dictionary<ACTIVITY_TYPES, double> typeList = new Dictionary<ACTIVITY_TYPES, double>
@@ -3348,14 +3358,17 @@ namespace TraXile
                 }
             }
 
-            chart8.Series[0].Points.Clear();
+            chartGlobalDashboard.Series[0].Points.Clear();
             foreach(KeyValuePair<ACTIVITY_TYPES,double> kvp in typeList)
             {
-                chart8.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
-                chart8.Series[0].Points.Last().Color = colorList[kvp.Key];
+                chartGlobalDashboard.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
+                chartGlobalDashboard.Series[0].Points.Last().Color = colorList[kvp.Key];
             }
         }
 
+        /// <summary>
+        /// Render Heist Dashboard
+        /// </summary>
         public void RenderHeistDashboard()
         {
             List<KeyValuePair<string, int>> tmpList = new List<KeyValuePair<string, int>>();
@@ -3466,18 +3479,21 @@ namespace TraXile
 
             MethodInvoker mi = delegate
             {
-                chart7.Series[0].Points.Clear();
-                chart6.Series[0].Points.Clear();
+                chartHeistAvgTime.Series[0].Points.Clear();
+                chartHeistByLevel.Series[0].Points.Clear();
 
                 foreach (KeyValuePair<int, double> kvp in levelAvgs)
                 {
-                    chart7.Series[0].Points.AddXY(kvp.Key, Math.Round(kvp.Value / 60, 2));
-                    chart6.Series[0].Points.AddXY(kvp.Key, levelCounts[kvp.Key]);
+                    chartHeistAvgTime.Series[0].Points.AddXY(kvp.Key, Math.Round(kvp.Value / 60, 2));
+                    chartHeistByLevel.Series[0].Points.AddXY(kvp.Key, levelCounts[kvp.Key]);
                 }
             };
             this.Invoke(mi);
         }
 
+        /// <summary>
+        /// Render mapping dashboard
+        /// </summary>
         public void RenderMappingDashboard()
         {
             List<KeyValuePair<string,int>> tmpList = new List<KeyValuePair<string, int>>();
@@ -3499,12 +3515,12 @@ namespace TraXile
                 });
             tmpList.Reverse();
             top10.AddRange(tmpList.GetRange(0, 10));
-            listView1.Items.Clear();
+            listViewTop10Maps.Items.Clear();
             foreach(KeyValuePair<string,int> kvp in top10)
             {
                 ListViewItem lvi = new ListViewItem(kvp.Key);
                 lvi.SubItems.Add(kvp.Value.ToString());
-                listView1.Items.Add(lvi);
+                listViewTop10Maps.Items.Add(lvi);
             }
 
             // TAG CALC
@@ -3545,14 +3561,14 @@ namespace TraXile
                 });
             tmpList.Reverse();
             top10Tags.AddRange(tmpList);
-            listView2.Items.Clear();
+            listViewTaggingOverview.Items.Clear();
             foreach (KeyValuePair<string, int> kvp in top10Tags)
             {
                 if(kvp.Value > 0)
                 {
                     ListViewItem lvi = new ListViewItem(kvp.Key);
                     lvi.SubItems.Add(kvp.Value.ToString());
-                    listView2.Items.Add(lvi);
+                    listViewTaggingOverview.Items.Add(lvi);
                 }
             }
 
@@ -3592,16 +3608,16 @@ namespace TraXile
 
             MethodInvoker mi = delegate
             {
-                chart2.Series[0].Points.Clear();
+                chartMapTierCount.Series[0].Points.Clear();
                 for (int i = 1; i <= 16; i++)
                 {
-                    chart2.Series[0].Points.AddXY(i, _numericStats["MapTierFinished_T" + i.ToString()]);
+                    chartMapTierCount.Series[0].Points.AddXY(i, _numericStats["MapTierFinished_T" + i.ToString()]);
                 }
 
-                chart3.Series[0].Points.Clear();
+                chartMapTierAvgTime.Series[0].Points.Clear();
                 for(int i = 0; i < tierAverages.Length; i++)
                 {
-                    chart3.Series[0].Points.AddXY(i+1, Math.Round(tierAverages[i] / 60, 2));
+                    chartMapTierAvgTime.Series[0].Points.AddXY(i+1, Math.Round(tierAverages[i] / 60, 2));
                 }
             };
             this.Invoke(mi);
@@ -3624,47 +3640,47 @@ namespace TraXile
         /// </summary>
         private void RefreshChart()
         {
-            chart1.Series[0].Points.Clear();
-            switch (comboBox1.SelectedItem.ToString())
+            chartStats.Series[0].Points.Clear();
+            switch (comboBoxTimeRangeStats.SelectedItem.ToString())
             {
                 case "Last week":
-                    chart1.ChartAreas[0].AxisX.Interval = 1;
+                    chartStats.ChartAreas[0].AxisX.Interval = 1;
                     FillChart(7);
                     break;
                 case "Last 2 weeks":
-                    chart1.ChartAreas[0].AxisX.Interval = 1;
+                    chartStats.ChartAreas[0].AxisX.Interval = 1;
                     FillChart(14);
                     break;
                 case "Last 3 weeks":
-                    chart1.ChartAreas[0].AxisX.Interval = 2;
+                    chartStats.ChartAreas[0].AxisX.Interval = 2;
                     FillChart(21);
                     break;
                 case "Last month":
-                    chart1.ChartAreas[0].AxisX.Interval = 3;
+                    chartStats.ChartAreas[0].AxisX.Interval = 3;
                     FillChart(31);
                     break;
                 case "Last 2 month":
-                    chart1.ChartAreas[0].AxisX.Interval = 6;
+                    chartStats.ChartAreas[0].AxisX.Interval = 6;
                     FillChart(62);
                     break;
                 case "Last 3 month":
-                    chart1.ChartAreas[0].AxisX.Interval = 9;
+                    chartStats.ChartAreas[0].AxisX.Interval = 9;
                     FillChart(93);
                     break;
                 case "Last year":
-                    chart1.ChartAreas[0].AxisX.Interval = 30;
+                    chartStats.ChartAreas[0].AxisX.Interval = 30;
                     FillChart(365);
                     break;
                 case "Last 2 years":
-                    chart1.ChartAreas[0].AxisX.Interval = 60;
+                    chartStats.ChartAreas[0].AxisX.Interval = 60;
                     FillChart(365 * 2);
                     break;
                 case "Last 3 years":
-                    chart1.ChartAreas[0].AxisX.Interval = 90;
+                    chartStats.ChartAreas[0].AxisX.Interval = 90;
                     FillChart(365 * 3);
                     break;
                 case "All time":
-                    chart1.ChartAreas[0].AxisX.Interval = 90;
+                    chartStats.ChartAreas[0].AxisX.Interval = 90;
                     FillChart(365 * 15);
                     break;
             }
@@ -3678,7 +3694,7 @@ namespace TraXile
         {
             if(_lvmStats.listView.SelectedIndices.Count > 0)
             {
-                chart1.Series[0].Points.Clear();
+                chartStats.Series[0].Points.Clear();
                 DateTime dtStart = DateTime.Now.AddDays(i_days_back * -1);
                 string sStatName = _lvmStats.listView.SelectedItems[0].Name.Replace("stats_", "");
 
@@ -3710,7 +3726,7 @@ namespace TraXile
                     sqlReader = cmd.ExecuteReader();
                     while (sqlReader.Read())
                     {
-                        chart1.Series[0].Points.AddXY(dt1, sqlReader.GetInt32(0));
+                        chartStats.Series[0].Points.AddXY(dt1, sqlReader.GetInt32(0));
                     }
                 }
             }
@@ -3921,6 +3937,233 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Add tag. Create if not exists
+        /// </summary>
+        /// <param name="s_id"></param>
+        /// <param name="act"></param>
+        public void AddTagAutoCreate(string s_id, TrackedActivity act)
+        {
+            int iIndex = GetTagIndex(s_id);
+            ActivityTag tag;
+
+            if (ValidateTagName(s_id))
+            {
+                if (iIndex < 0)
+                {
+                    tag = new ActivityTag(s_id, false);
+                    tag.BackColor = Color.White;
+                    tag.ForeColor = Color.Black;
+                    AddTag(tag);
+                }
+                else
+                {
+                    tag = _tags[iIndex];
+                }
+
+                if (!tag.IsDefault)
+                {
+                    act.AddTag(tag.ID);
+
+                    string sTags = "";
+                    // Update tags in DB // TODO
+                    for (int i = 0; i < act.Tags.Count; i++)
+                    {
+                        sTags += act.Tags[i];
+                        if (i < (act.Tags.Count - 1))
+                            sTags += "|";
+                    }
+                    SqliteCommand cmd = _dbConnection.CreateCommand();
+                    cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void RemoveTagFromActivity(string s_id, TrackedActivity act)
+        {
+            ActivityTag tag = GetTagByID(s_id);
+            if (tag != null && !tag.IsDefault)
+            {
+                act.RemoveTag(s_id);
+                string sTags = "";
+
+                // Update tags in DB // TODO
+                for (int i = 0; i < act.Tags.Count; i++)
+                {
+                    sTags += act.Tags[i];
+                    if (i < (act.Tags.Count - 1))
+                        sTags += "|";
+                    SqliteCommand cmd = _dbConnection.CreateCommand();
+                    cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void UpdateTag(string s_id, string s_display_name, string s_forecolor, string s_backcolor, bool b_show_in_hist)
+        {
+            int iTagIndex = GetTagIndex(s_id);
+
+            if (iTagIndex >= 0)
+            {
+                _tags[iTagIndex].DisplayName = s_display_name;
+                _tags[iTagIndex].ForeColor = Color.FromArgb(Convert.ToInt32(s_forecolor));
+                _tags[iTagIndex].BackColor = Color.FromArgb(Convert.ToInt32(s_backcolor));
+                _tags[iTagIndex].ShowInListView = b_show_in_hist;
+
+                SqliteCommand cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "UPDATE tx_tags SET tag_display = '" + s_display_name + "', tag_forecolor = '" + s_forecolor + "', tag_bgcolor = '" + s_backcolor + "', " +
+                    "tag_show_in_lv = " + (b_show_in_hist ? "1" : "0") + " WHERE tag_id = '" + s_id + "'";
+                cmd.ExecuteNonQuery();
+            }
+
+            RenderTagsForConfig(true);
+            RenderTagsForTracking(true);
+            ResetMapHistory();
+        }
+
+        private int GetTagIndex(string s_id)
+        {
+            for (int i = 0; i < _tags.Count; i++)
+            {
+                if (_tags[i].ID == s_id)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public bool ValidateTagName(string s_name, bool b_showmessage = false)
+        {
+            bool bValid = true;
+            char[] invalid = new char[] { '=', ',', ';', ' ' };
+
+            if (String.IsNullOrEmpty(s_name))
+                bValid = false;
+
+            foreach (char c in invalid)
+            {
+                if (s_name.Contains(c))
+                {
+                    bValid = false;
+                }
+            }
+
+            if (bValid == false && b_showmessage)
+            {
+                MessageBox.Show("Sorry. this is not a valid tag ID!");
+            }
+
+            return bValid;
+        }
+
+        private void DeleteTag(string s_id)
+        {
+            int iIndex = GetTagIndex(s_id);
+            if (iIndex >= 0)
+            {
+                ActivityTag tag = _tags[iIndex];
+
+                if (tag.IsDefault)
+                {
+                    MessageBox.Show("Sorry. You cannot delete a default tag!");
+                }
+                else
+                {
+                    DialogResult dr = MessageBox.Show("Do you really want to delete the tag '" + s_id + "'?", "Warning", MessageBoxButtons.YesNo);
+                    if (dr == DialogResult.Yes)
+                    {
+                        _tags.RemoveAt(iIndex);
+                        SqliteCommand cmd = _dbConnection.CreateCommand();
+                        cmd.CommandText = "DELETE FROM tx_tags WHERE tag_id = '" + s_id + "' AND tag_type != 'default'";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                RenderTagsForConfig(true);
+                RenderTagsForTracking(true);
+                ResetMapHistory();
+            }
+        }
+
+        private void DeleteBackup(string s_path)
+        {
+            Directory.Delete(s_path, true);
+            _backups.Remove(listBoxRestoreBackup.SelectedItem.ToString());
+        }
+
+        private void DoSearch()
+        {
+            if (textBox8.Text == String.Empty)
+            {
+                _lvmActlog.Reset();
+                _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
+
+            }
+            else if (textBox8.Text.Contains("tags=="))
+            {
+                List<string> itemNames = new List<string>();
+                try
+                {
+                    string[] sTagFilter = textBox8.Text.Split(new string[] { "==" }, StringSplitOptions.None)[1].Split(',');
+                    int iMatched = 0;
+                    foreach (TrackedActivity ta in _eventHistory)
+                    {
+                        iMatched = 0;
+                        foreach (string tag in sTagFilter)
+                        {
+                            if (ta.HasTag(tag))
+                            {
+                                iMatched++;
+                            }
+                            else
+                            {
+                                iMatched = 0;
+                                break;
+                            }
+                        }
+                        if (iMatched > 0)
+                        {
+                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
+                        }
+                    }
+                    _lvmActlog.FilterByNameList(itemNames);
+                }
+                catch { }
+            }
+            else if (textBox8.Text.Contains("tags="))
+            {
+                List<string> itemNames = new List<string>();
+                try
+                {
+                    string[] sTagFilter = textBox8.Text.Split('=')[1].Split(',');
+                    int iMatched = 0;
+                    foreach (TrackedActivity ta in _eventHistory)
+                    {
+                        iMatched = 0;
+                        foreach (string tag in sTagFilter)
+                        {
+                            if (ta.HasTag(tag))
+                            {
+                                iMatched++;
+                            }
+                        }
+                        if (iMatched > 0)
+                        {
+                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
+                        }
+                    }
+                    _lvmActlog.FilterByNameList(itemNames);
+                }
+                catch { }
+            }
+            else
+            {
+                _lvmActlog.ApplyFullTextFilter(textBox8.Text);
+            }
+        }
+
 
         // =========> EVENT HANDLERS FOR GUI COMPONENTS
         // =======================================================
@@ -3980,8 +4223,8 @@ namespace TraXile
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
-            button2.Focus();
-            if(comboBox1.SelectedIndex > 5)
+            buttonRefreshChart.Focus();
+            if(comboBoxTimeRangeStats.SelectedIndex > 5)
             {
                 if (MessageBox.Show("Selecting more than 3 month could lead to high loading times. Continue?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -3990,7 +4233,7 @@ namespace TraXile
                 }
                 else
                 {
-                    comboBox1.SelectedIndex = 0;
+                    comboBoxTimeRangeStats.SelectedIndex = 0;
                 }
             }
             else
@@ -4142,15 +4385,15 @@ namespace TraXile
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            _showGridInActLog = checkBox1.Checked;
-            AddUpdateAppSettings("ActivityLogShowGrid", checkBox1.Checked.ToString());
+            _showGridInActLog = checkBoxShowGridInAct.Checked;
+            AddUpdateAppSettings("ActivityLogShowGrid", checkBoxShowGridInAct.Checked.ToString());
             listViewActLog.GridLines = _showGridInActLog;
         }
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            _showGridInStats = checkBox2.Checked;
-            AddUpdateAppSettings("StatsShowGrid", checkBox2.Checked.ToString());
+            _showGridInStats = checkBoxShowGridInStats.Checked;
+            AddUpdateAppSettings("StatsShowGrid", checkBoxShowGridInStats.Checked.ToString());
             listViewStats.GridLines = _showGridInStats;
         }
 
@@ -4174,18 +4417,18 @@ namespace TraXile
         {
             try
             {
-                if(textBox6.Text == "")
+                if(textBoxBackupName.Text == "")
                 {
-                    textBox6.Text = "Default";
+                    textBoxBackupName.Text = "Default";
                 }
 
-                if(textBox6.Text.Contains("/") || textBox6.Text.Contains("."))
+                if(textBoxBackupName.Text.Contains("/") || textBoxBackupName.Text.Contains("."))
                 {
                     MessageBox.Show("Please do not define a path in the field name");
                 }
                 else
                 {
-                    CreateBackup(textBox6.Text);
+                    CreateBackup(textBoxBackupName.Text);
                     MessageBox.Show("Backup successfully created!");
                 }
                
@@ -4213,7 +4456,7 @@ namespace TraXile
                 dr = MessageBox.Show("Do you really want to restore the selected Backup? The Application will be restarted. Please make sure that your PathOfExile Client is not running.", "Warning", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.Yes)
                 {
-                    PrepareBackupRestore(_myAppData + listBox1.SelectedItem.ToString());
+                    PrepareBackupRestore(_myAppData + listBoxRestoreBackup.SelectedItem.ToString());
                 }
             }
         }
@@ -4230,29 +4473,7 @@ namespace TraXile
                 RenderTagsForConfig(true);
         }
 
-        public bool ValidateTagName(string s_name, bool b_showmessage = false)
-        {
-            bool bValid = true;
-            char[] invalid = new char[] { '=', ',', ';', ' ' };
-
-            if (String.IsNullOrEmpty(s_name))
-                bValid = false;
-
-            foreach(char c in invalid)
-            {
-                if(s_name.Contains(c))
-                {
-                    bValid = false;
-                }
-            }
-
-            if(bValid == false && b_showmessage )
-            {
-                MessageBox.Show("Sorry. this is not a valid tag ID!");
-            }
-
-            return bValid;
-        }
+       
 
         private void button10_Click(object sender, EventArgs e)
         {
@@ -4290,98 +4511,7 @@ namespace TraXile
             label63.ForeColor = colorDialog1.Color;
         }
 
-        public void AddTagAutoCreate(string s_id, TrackedActivity act)
-        {
-            int iIndex = GetTagIndex(s_id);
-            ActivityTag tag;
-
-            if(ValidateTagName(s_id))
-            {
-                if (iIndex < 0)
-                {
-                    tag = new ActivityTag(s_id, false);
-                    tag.BackColor = Color.White;
-                    tag.ForeColor = Color.Black;
-                    AddTag(tag);
-                }
-                else
-                {
-                    tag = _tags[iIndex];
-                }
-
-                if (!tag.IsDefault)
-                {
-                    act.AddTag(tag.ID);
-
-                    string sTags = "";
-                    // Update tags in DB // TODO
-                    for (int i = 0; i < act.Tags.Count; i++)
-                    {
-                        sTags += act.Tags[i];
-                        if (i < (act.Tags.Count - 1))
-                            sTags += "|";
-                    }
-                    SqliteCommand cmd = _dbConnection.CreateCommand();
-                    cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        public void RemoveTagFromActivity(string s_id, TrackedActivity act)
-        {
-            ActivityTag tag = GetTagByID(s_id);
-            if(tag != null && !tag.IsDefault)
-            {
-                act.RemoveTag(s_id);
-                string sTags = "";
-
-                // Update tags in DB // TODO
-                for (int i = 0; i < act.Tags.Count; i++)
-                {
-                    sTags += act.Tags[i];
-                    if (i < (act.Tags.Count - 1))
-                        sTags += "|";
-                    SqliteCommand cmd = _dbConnection.CreateCommand();
-                    cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        private void UpdateTag(string s_id, string s_display_name, string s_forecolor, string s_backcolor, bool b_show_in_hist)
-        {
-            int iTagIndex = GetTagIndex(s_id);
-
-            if(iTagIndex >= 0)
-            {
-                _tags[iTagIndex].DisplayName = s_display_name;
-                _tags[iTagIndex].ForeColor = Color.FromArgb(Convert.ToInt32(s_forecolor));
-                _tags[iTagIndex].BackColor = Color.FromArgb(Convert.ToInt32(s_backcolor));
-                _tags[iTagIndex].ShowInListView = b_show_in_hist;
-
-                SqliteCommand cmd = _dbConnection.CreateCommand();
-                cmd.CommandText = "UPDATE tx_tags SET tag_display = '" + s_display_name + "', tag_forecolor = '" + s_forecolor + "', tag_bgcolor = '" + s_backcolor + "', " +
-                    "tag_show_in_lv = " + (b_show_in_hist ? "1" : "0") + " WHERE tag_id = '" + s_id + "'";
-                cmd.ExecuteNonQuery();
-            }
-
-            RenderTagsForConfig(true);
-            RenderTagsForTracking(true);
-            ResetMapHistory();
-        }
-
-        private int GetTagIndex(string s_id)
-        {
-            for(int i = 0; i < _tags.Count; i++)
-            {
-                if(_tags[i].ID == s_id)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
+     
 
         private void button13_Click(object sender, EventArgs e)
         {
@@ -4417,7 +4547,7 @@ namespace TraXile
             DialogResult dr = MessageBox.Show("Do you really want to delete the selected Backup?", "Warning", MessageBoxButtons.YesNo);
             if (dr == DialogResult.Yes)
             {
-                DeleteBackup(_myAppData + listBox1.SelectedItem.ToString());
+                DeleteBackup(_myAppData + listBoxRestoreBackup.SelectedItem.ToString());
             }
         }
 
@@ -4425,11 +4555,7 @@ namespace TraXile
         {
             textBox5.Text = textBox4.Text;
         }
-
-        private void MainW_FormClosed(object sender, FormClosedEventArgs e)
-        {
-
-        }
+       
 
         private void chatCommandsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -4457,18 +4583,13 @@ namespace TraXile
 
         private void textBox7_TextChanged(object sender, EventArgs e)
         {
-            if(textBox7.Text == String.Empty)
+            if(textBoxSearchStats.Text == String.Empty)
             {
                 _lvmStats.Reset();
             }
-            _lvmStats.ApplyFullTextFilter(textBox7.Text);
+            _lvmStats.ApplyFullTextFilter(textBoxSearchStats.Text);
         }
 
-        private void textBox8_TextChanged(object sender, EventArgs e)
-        {
-          
-            
-        }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -4484,12 +4605,7 @@ namespace TraXile
 
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            textBox7.Text = "";
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
+            textBoxSearchStats.Text = "";
         }
 
         private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -4509,39 +4625,7 @@ namespace TraXile
             ab.ShowDialog();
         }
 
-        private void DeleteTag(string s_id)
-        {
-            int iIndex = GetTagIndex(s_id);
-            if(iIndex >= 0)
-            {
-                ActivityTag tag = _tags[iIndex];
-
-                if(tag.IsDefault)
-                {
-                    MessageBox.Show("Sorry. You cannot delete a default tag!");
-                }
-                else
-                {
-                    DialogResult dr = MessageBox.Show("Do you really want to delete the tag '" + s_id + "'?", "Warning", MessageBoxButtons.YesNo);
-                    if(dr == DialogResult.Yes)
-                    {
-                        _tags.RemoveAt(iIndex);
-                        SqliteCommand cmd = _dbConnection.CreateCommand();
-                        cmd.CommandText = "DELETE FROM tx_tags WHERE tag_id = '" + s_id + "' AND tag_type != 'default'";
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                RenderTagsForConfig(true);
-                RenderTagsForTracking(true);
-                ResetMapHistory();
-            }
-        }
-
-        private void DeleteBackup(string s_path)
-        {
-            Directory.Delete(s_path, true);
-            _backups.Remove(listBox1.SelectedItem.ToString());
-        }
+       
 
         private void button21_Click(object sender, EventArgs e)
         {
@@ -4570,86 +4654,12 @@ namespace TraXile
             }
         }
 
-        private void chart2_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(APPINFO.WIKI_URL);
         }
 
-        private void DoSearch()
-        {
-            if (textBox8.Text == String.Empty)
-            {
-                _lvmActlog.Reset();
-                _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
-                
-            }
-            else if (textBox8.Text.Contains("tags=="))
-            {
-                List<string> itemNames = new List<string>();
-                try
-                {
-                    string[] sTagFilter = textBox8.Text.Split(new string[] { "==" }, StringSplitOptions.None)[1].Split(',');
-                    int iMatched = 0;
-                    foreach (TrackedActivity ta in _eventHistory)
-                    {
-                        iMatched = 0;
-                        foreach (string tag in sTagFilter)
-                        {
-                            if (ta.HasTag(tag))
-                            {
-                                iMatched++;
-                            }
-                            else
-                            {
-                                iMatched = 0;
-                                break;
-                            }
-                        }
-                        if (iMatched > 0)
-                        {
-                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
-                        }
-                    }
-                    _lvmActlog.FilterByNameList(itemNames);
-                }
-                catch { }
-            }
-            else if (textBox8.Text.Contains("tags="))
-            {
-                List<string> itemNames = new List<string>();
-                try
-                {
-                    string[] sTagFilter = textBox8.Text.Split('=')[1].Split(',');
-                    int iMatched = 0;
-                    foreach (TrackedActivity ta in _eventHistory)
-                    {
-                        iMatched = 0;
-                        foreach (string tag in sTagFilter)
-                        {
-                            if (ta.HasTag(tag))
-                            {
-                                iMatched++;
-                            }
-                        }
-                        if (iMatched > 0)
-                        {
-                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
-                        }
-                    }
-                    _lvmActlog.FilterByNameList(itemNames);
-                }
-                catch { }
-            }
-            else
-            {
-                _lvmActlog.ApplyFullTextFilter(textBox8.Text);
-            }
-        }
+       
 
         private void button22_Click(object sender, EventArgs e)
         {
@@ -4661,94 +4671,15 @@ namespace TraXile
             SaveLayout();
         }
 
-        private void label74_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
         private void comboBox2_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            AddUpdateAppSettings("actlog.maxitems", comboBox2.SelectedItem.ToString());
+            AddUpdateAppSettings("actlog.maxitems", comboBoxShowMaxItems.SelectedItem.ToString());
             DoSearch();
-        }
-
-        private void label13_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label8_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelElderKillCount_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label15_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelShaperKillCount_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label39_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label37_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label43_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelMavenTried_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelMavenKilled_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label44_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel10_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void tabPage1_Enter(object sender, EventArgs e)
         {
             RenderMappingDashboard();
-        }
-
-        private void tabPage1_Validated(object sender, EventArgs e)
-        {
-
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
@@ -4757,18 +4688,13 @@ namespace TraXile
             RenderLabDashboard();
         }
 
-        private void label90_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button23_Click(object sender, EventArgs e)
         {
             try
             {
-                int iMap = Convert.ToInt32(textBox9.Text);
-                int iHeist = Convert.ToInt32(textBox11.Text);
-                int iLab = Convert.ToInt32(textBox10.Text);
+                int iMap = Convert.ToInt32(textBoxMapCap.Text);
+                int iHeist = Convert.ToInt32(textBoxHeistCap.Text);
+                int iLab = Convert.ToInt32(textBoxLabCap.Text);
 
                 if(iMap > 0 && iHeist > 0 && iLab > 0)
                 {
