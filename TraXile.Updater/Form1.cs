@@ -75,7 +75,11 @@ namespace TraXile.Updater
             
             try
             {
-                Process.Start(_myAppData + @"\Setup_" + s_version + ".msi");
+
+                Process p1 = new Process();
+                p1.StartInfo.FileName = _myAppData + @"\Setup_" + s_version + ".msi";
+                p1.Start();
+                p1.WaitForExit(36000);
                 Log("Update successful. Starting TraXile again.");
 
 
