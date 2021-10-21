@@ -4097,7 +4097,7 @@ namespace TraXile
         {
             if (textBox8.Text == String.Empty)
             {
-                _lvmActlog.Reset();
+                _lvmActlog.Clear();
                 _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
 
             }
