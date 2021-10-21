@@ -8,13 +8,15 @@ For Installation and Update instructions, just check the Wiki here:
 ## Screenshots
 
 ### Map Tracking
-![Preview image](https://i.imgur.com/0oPA6nX.png)
+![Preview image](https://i.imgur.com/2hxd2Pt.png)
 
 ### Statistics
-![Preview image](https://i.imgur.com/878GMdo.png)
+![Preview image](https://i.imgur.com/j30r2Q3.png)
 
-### Bossing Info
-![Preview image](https://i.imgur.com/s36ZihO.png)
+### Dashboards
+![Preview image](https://i.imgur.com/9TbcMAj.png)
+
+![Preview image](https://i.imgur.com/Sg1QxK7.png)
 
 ## Features
 * Live tracking of your map runs and other activities
