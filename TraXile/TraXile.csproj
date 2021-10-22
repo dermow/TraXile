@@ -144,6 +144,7 @@
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="APPINFO.cs" />
+    <Compile Include="TrX_DBManager.cs" />
     <Compile Include="TrX_DefaultMappings.cs" />
     <Compile Include="ChatCommandHelp.cs">
       <SubType>Form</SubType>
