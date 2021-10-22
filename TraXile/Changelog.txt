@@ -92,3 +92,6 @@
 0.5.9
 - Light theme added
 - Some minor fixes
+
+0.5.10
+- No need to restart after changing theme

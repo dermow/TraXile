@@ -4174,6 +4174,25 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Change current theme
+        /// </summary>
+        /// <param name="theme"></param>
+        private void ChangeTheme(string theme)
+        {
+            if (theme == "Dark")
+            {
+                _myTheme = new TxThemeDark();
+            }
+            else
+            {
+                _myTheme = new TxThemeLight();
+            }
+
+            _myTheme.Apply(this);
+            AddUpdateAppSettings("theme", theme);
+        }
+
 
         // =========> EVENT HANDLERS FOR GUI COMPONENTS
         // =======================================================
@@ -4746,14 +4765,10 @@ namespace TraXile
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("The application needs to be restarted to change theme. Restart now?", "Restart", MessageBoxButtons.YesNo);
-
-            if(dr == DialogResult.Yes)
-            {
-                AddUpdateAppSettings("theme", comboBoxTheme.SelectedItem.ToString());
-                Application.Restart();
-            }
+            this.ChangeTheme(comboBoxTheme.SelectedItem.ToString());
         }
+
+       
 
         private void pictureBox19_Click(object sender, EventArgs e)
         {
