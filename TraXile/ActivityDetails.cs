@@ -7,10 +7,10 @@ namespace TraXile
     public partial class ActivityDetails : Form
     {
         private readonly TrX_TrackedActivity _trackedActivity;
-        private readonly MainW _mainWindow;
+        private readonly Main _mainWindow;
         private bool _isDeleteMode;
 
-        public ActivityDetails(TrX_TrackedActivity ta, MainW main)
+        public ActivityDetails(TrX_TrackedActivity ta, Main main)
         {
             InitializeComponent();
             _mainWindow = main;

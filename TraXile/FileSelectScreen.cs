@@ -5,9 +5,9 @@ namespace TraXile
 {
     public partial class FileSelectScreen : Form
     {
-        readonly MainW _mainWindow;
+        readonly Main _mainWindow;
 
-        public FileSelectScreen(MainW fParent)
+        public FileSelectScreen(Main fParent)
         {
             _mainWindow = fParent;
             this.Text = APPINFO.NAME + " " + APPINFO.VERSION;

@@ -5,9 +5,9 @@ namespace TraXile
 {
     public partial class ExportActvityList : Form
     {
-        private readonly MainW _mainWindow;
+        private readonly Main _mainWindow;
 
-        public ExportActvityList(MainW main)
+        public ExportActvityList(Main main)
         {
             InitializeComponent();
             this._mainWindow = main;

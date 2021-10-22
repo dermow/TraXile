@@ -26,20 +26,14 @@ namespace TraXile
         TEMPLE
     }
 
-    public partial class MainW : Form
+    public partial class Main : Form
     {
-        private string _currentArea;
-        private string _currentInstanceEndpoint;
-        private string _lastSimuEndpoint;
-        private string _failedRestoreReason = "";
+        // App parameters
         private readonly string _dbPath;
         private readonly string _cachePath;
         private readonly string _myAppData;
-        private bool _eventQueueInitizalized;
-        private bool _isMapZana;
         private bool _exit;
         private bool _listViewInitielaized;
-        private bool _elderFightActive;
         private bool _showGridInActLog;
         private bool _restoreMode;
         private bool _labDashboardUpdateRequested;
@@ -50,34 +44,35 @@ namespace TraXile
         private bool _globalDashboardUpdateRequested;
         private bool _heistDashboardUpdateRequested;
         private bool _restoreOk = true;
-        private int _shaperKillsInFight;
-        private int _nextAreaLevel;
-        private int _currentAreaLevel;
         private int _timeCapLab = 3600;
         private int _timeCapMap = 3600;
         private int _timeCapHeist = 3600;
+
+        // Core Logic variables
+        private string _currentArea;
+        private string _currentInstanceEndpoint;
+        private string _lastSimuEndpoint;
+        private string _failedRestoreReason = "";
+        private bool _eventQueueInitizalized;
+        private bool _isMapZana;
+        private bool _elderFightActive;
+        private int _shaperKillsInFight;
+        private int _nextAreaLevel;
+        private int _currentAreaLevel;
         private int _lastHash = 0;
         private double _logLinesTotal;
         private double _logLinesRead;
         private bool _historyInitialized;
-        private LoadScreen _loadScreenWindow;
-        private BindingList<string> _backups;
         private Dictionary<int, string> _dict;
         private Dictionary<string, int> _numericStats;
         private Dictionary<string, string> _statNamesLong;
-        private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
-        private List<string> _parsedActivities;
         private List<string> _knownPlayerNames;
         private List<string> labs;
         private List<TrX_ActivityTag> _tags;
         private List<TrX_TrackedActivity> _eventHistory;
-        private readonly TrX_SettingsManager _mySettings;
         private TrX_EventMapping _eventMapping;
         private TrX_DefaultMappings _defaultMappings;
-        private TrX_ListViewManager _lvmStats, _lvmActlog;
-        private TrX_Theme _myTheme;
         private TrX_DBManager _myDB;
-        private ILog _log;
         private ConcurrentQueue<TrX_TrackingEvent> _eventQueue;
         private TrX_TrackedActivity _currentActivity;
         private EVENT_TYPES _lastEventType;
@@ -87,6 +82,18 @@ namespace TraXile
         private DateTime _lastDeathTime;
         private DateTime _initStartTime;
         private DateTime _initEndTime;
+
+        // Other variables
+        private LoadScreen _loadScreenWindow;
+        private BindingList<string> _backups;
+        private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
+        private List<string> _parsedActivities;
+        private readonly TrX_SettingsManager _mySettings;
+        private TrX_ListViewManager _lvmStats, _lvmActlog;
+        private TrX_Theme _myTheme;
+        private ILog _log;
+        
+       
 
         /// <summary>
         /// Setting Property for LogFilePath
@@ -109,7 +116,7 @@ namespace TraXile
         /// <summary>
         /// Main Window Constructor
         /// </summary>
-        public MainW()
+        public Main()
         {
             _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
             _dbPath = _myAppData + @"\data.db";
@@ -1196,8 +1203,6 @@ namespace TraXile
                 TimeSpan ts = TimeSpan.FromSeconds(sqlReader.GetInt32(3));
                 string sType = sqlReader.GetString(1);
                 ACTIVITY_TYPES aType = GetActTypeFromString(sType);
-               
-
 
                 TrX_TrackedActivity map = new TrX_TrackedActivity
                 {

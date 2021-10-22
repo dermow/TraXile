@@ -24,7 +24,7 @@ namespace TraXile
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainW() { Visible = false }); ;
+            Application.Run(new Main() { Visible = false }); ;
 
             mutex.ReleaseMutex();
         }

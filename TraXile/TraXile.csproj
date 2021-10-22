@@ -185,11 +185,11 @@
     <Compile Include="ListViewNF.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MainW.cs">
+    <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainW.Designer.cs">
-      <DependentUpon>MainW.cs</DependentUpon>
+    <Compile Include="Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -226,8 +226,8 @@
     <EmbeddedResource Include="LoadScreen.resx">
       <DependentUpon>LoadScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainW.resx">
-      <DependentUpon>MainW.cs</DependentUpon>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
