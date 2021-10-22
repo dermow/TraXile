@@ -9,7 +9,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace TraXile
 {
-    public class TxTheme
+    public class TrX_Theme
     {
         private Color
             _mainBackgroundColor,
@@ -119,38 +119,38 @@ namespace TraXile
 
         public Color MainBackGroundColor
         {
-            get { return this._mainBackgroundColor; }
-            set { this._mainBackgroundColor = value; }
+            get { return _mainBackgroundColor; }
+            set { _mainBackgroundColor = value; }
         }
 
         public Color MainFontColor
         {
-            get { return this._mainFontColor; }
-            set { this._mainFontColor = value; }
+            get { return _mainFontColor; }
+            set { _mainFontColor = value; }
         }
 
         public Color ListBackColor
         {
-            get { return this._listBackColor; }
-            set { this._listBackColor = value; }
+            get { return _listBackColor; }
+            set { _listBackColor = value; }
         }
 
         public Color ChartSeriesColor
         {
-            get { return this._chartSeriesColor; }
-            set { this._chartSeriesColor = value; }
+            get { return _chartSeriesColor; }
+            set { _chartSeriesColor = value; }
         }
 
         public Color ChartLabelColor
         {
-            get { return this._chartValueLabelForeColor; }
-            set { this._chartValueLabelForeColor = value; }
+            get { return _chartValueLabelForeColor; }
+            set { _chartValueLabelForeColor = value; }
         }
 
         public Color ButtonForeColor
         {
-            get { return this._buttonForeColor; }
-            set { this._buttonForeColor = value; }
+            get { return _buttonForeColor; }
+            set { _buttonForeColor = value; }
         }
 
     }

@@ -4,12 +4,12 @@ using System.Diagnostics;
 
 namespace TraXile
 {
-    public class TrackedActivity
+    public class TrX_TrackedActivity
     {
         private readonly Stopwatch _stopWatch;
-        private TrackedActivity _zanaMap;
-        private List<string> _tagIDs;
-        private DateTime _startTime, _lastEndTime, _pauseTimeStart, _pauseTimeEnd;
+        private TrX_TrackedActivity _zanaMap;
+        private readonly List<string> _tagIDs;
+        private DateTime _startTime, _lastEndTime, _pauseTimeStart;
         private string _instanceEndpoint;
         private string _areaName;
         private ACTIVITY_TYPES _activityType;
@@ -31,7 +31,7 @@ namespace TraXile
         private long _activityTimeStamp;
         private string _customStopWatchValue;
 
-        public TrackedActivity()
+        public TrX_TrackedActivity()
         {
             _stopWatch = new Stopwatch();
             _zanaMap = null;
@@ -62,7 +62,6 @@ namespace TraXile
             if(_paused)
             {
                 _paused = false;
-                _pauseTimeEnd = dt;
                 _pauseCount++;
                 _pausedTime += (dt - _pauseTimeStart).TotalSeconds;
             }
@@ -251,7 +250,7 @@ namespace TraXile
             }
         }
 
-        public TrackedActivity ZanaMap
+        public TrX_TrackedActivity ZanaMap
         {
             get { return _zanaMap; }
             set { _zanaMap = value; }

@@ -5,12 +5,12 @@ using System.Xml;
 
 namespace TraXile
 {
-    class TxSettingsManager
+    class TrX_SettingsManager
     {
-        string _xmlPath;
-        Dictionary<string, string> kvStore;
+        readonly string _xmlPath;
+        readonly Dictionary<string, string> kvStore;
 
-        public TxSettingsManager(string file_path)
+        public TrX_SettingsManager(string file_path)
         {
             kvStore = new Dictionary<string, string>();
             _xmlPath = file_path;

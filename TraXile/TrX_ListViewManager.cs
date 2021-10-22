@@ -4,14 +4,15 @@ using static System.Windows.Forms.ListViewItem;
 
 namespace TraXile
 {
-    class ListViewManager
+    class TrX_ListViewManager
     {
-        private ListView _listView;
+        private readonly ListView _listView;
         private bool _isFiltered;
-        private List<ListViewItem> _masterList, _filteredList;
-        private Dictionary<string, ListViewItem> _itemMap;
+        private readonly List<ListViewItem> _masterList;
+        private readonly List<ListViewItem> _filteredList;
+        private readonly Dictionary<string, ListViewItem> _itemMap;
 
-        public ListViewManager(ListView lv_to_manage)
+        public TrX_ListViewManager(ListView lv_to_manage)
         {
             _listView = lv_to_manage;
             _masterList = new List<ListViewItem>();
@@ -26,12 +27,9 @@ namespace TraXile
             }
         }
 
-        public void FilterByRange(int i_min, int i_max, List<ListViewItem> baseList = null)
+        public void FilterByRange(int i_min, int i_max)
         {
             _listView.SuspendLayout();
-
-            if (baseList == null)
-                baseList = _masterList;
 
             _listView.BeginUpdate();
             int iMax = _masterList.Count > i_max ? i_max : _masterList.Count;

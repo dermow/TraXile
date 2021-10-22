@@ -69,13 +69,13 @@ namespace TraXile
         ABNORMAL_DISCONNECT
     }
 
-    public class EventMapping
+    public class TrX_EventMapping
     {
         public List<string> SKIP { get; set; }
 
         public Dictionary<string, EVENT_TYPES> MAP;
 
-        public EventMapping()
+        public TrX_EventMapping()
         {
             SKIP = new List<string>
             {
