@@ -144,7 +144,8 @@
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="APPINFO.cs" />
-    <Compile Include="DefaultMappings.cs" />
+    <Compile Include="TrX_DBManager.cs" />
+    <Compile Include="TrX_DefaultMappings.cs" />
     <Compile Include="ChatCommandHelp.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -154,7 +155,7 @@
     <Compile Include="CustomProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="EventMapping.cs" />
+    <Compile Include="TrX_EventMapping.cs" />
     <Compile Include="ExportActvityList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,7 +175,7 @@
       <DependentUpon>FilterScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="ListViewManager.cs" />
+    <Compile Include="TrX_ListViewManager.cs" />
     <Compile Include="LoadScreen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -198,12 +199,12 @@
     <Compile Include="SearchHelp.Designer.cs">
       <DependentUpon>SearchHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="ActivityTag.cs" />
-    <Compile Include="TrackingEvent.cs" />
-    <Compile Include="TrackedActivity.cs" />
-    <Compile Include="TxSettingsManager.cs" />
-    <Compile Include="TxTheme.cs" />
-    <Compile Include="TxThemeDefinitions.cs" />
+    <Compile Include="TrX_ActivityTag.cs" />
+    <Compile Include="TrX_TrackingEvent.cs" />
+    <Compile Include="TrX_TrackedActivity.cs" />
+    <Compile Include="TrX_SettingsManager.cs" />
+    <Compile Include="TrX_Theme.cs" />
+    <Compile Include="TrX_ThemeDefinitions.cs" />
     <EmbeddedResource Include="AboutW.resx">
       <DependentUpon>AboutW.cs</DependentUpon>
     </EmbeddedResource>

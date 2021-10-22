@@ -2,7 +2,7 @@
 
 namespace TraXile
 {
-    class DefaultMappings
+    class TrX_DefaultMappings
     {
         public List<string> MAP_AREAS,
             HEIST_AREAS,
@@ -11,7 +11,7 @@ namespace TraXile
 
         public Dictionary<string, string> WIKI_LINKS;
 
-        public DefaultMappings()
+        public TrX_DefaultMappings()
         {
             WIKI_LINKS = new Dictionary<string, string>
             {

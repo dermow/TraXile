@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace TraXile
 {
-    public class TxThemeLight : TxTheme
+    public class TrX_ThemeLight : TrX_Theme
     {
         /// <summary>
         /// Light Theme
         /// </summary>
-        public TxThemeLight()
+        public TrX_ThemeLight()
         {
             this.MainBackGroundColor = Color.LightGray;
             this.MainFontColor = Color.Black;
@@ -23,12 +23,12 @@ namespace TraXile
         }
     }
 
-    public class TxThemeDark : TxTheme
+    public class TrX_ThemeDark : TrX_Theme
     {
         /// <summary>
         /// Light Theme
         /// </summary>
-        public TxThemeDark()
+        public TrX_ThemeDark()
         {
             this.MainBackGroundColor = Color.Black;
             this.MainFontColor = Color.White;

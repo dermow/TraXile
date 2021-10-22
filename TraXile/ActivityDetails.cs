@@ -6,11 +6,11 @@ namespace TraXile
 {
     public partial class ActivityDetails : Form
     {
-        private TrackedActivity _trackedActivity;
-        private MainW _mainWindow;
+        private readonly TrX_TrackedActivity _trackedActivity;
+        private readonly MainW _mainWindow;
         private bool _isDeleteMode;
 
-        public ActivityDetails(TrackedActivity ta, MainW main)
+        public ActivityDetails(TrX_TrackedActivity ta, MainW main)
         {
             InitializeComponent();
             _mainWindow = main;
@@ -45,7 +45,7 @@ namespace TraXile
                 label10.Text = "unknown";
             }
 
-            foreach(ActivityTag tag in main.Tags)
+            foreach(TrX_ActivityTag tag in main.Tags)
             {
                 if(!tag.IsDefault)
                 {
@@ -72,7 +72,7 @@ namespace TraXile
 
             for(int i = 0; i < _trackedActivity.Tags.Count; i++)
             {
-                ActivityTag tag = _mainWindow.GetTagByID(_trackedActivity.Tags[i]);
+                TrX_ActivityTag tag = _mainWindow.GetTagByID(_trackedActivity.Tags[i]);
 
                 if (tag == null)
                     continue;
@@ -104,7 +104,7 @@ namespace TraXile
         {
             if(_isDeleteMode)
             {
-                ActivityTag tag = _mainWindow.GetTagByDisplayName(((Label)sender).Text);
+                TrX_ActivityTag tag = _mainWindow.GetTagByDisplayName(((Label)sender).Text);
                 if(tag.IsDefault)
                 {
                     MessageBox.Show("Sorry. You cannot remove auto tags.");

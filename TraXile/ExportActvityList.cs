@@ -5,7 +5,7 @@ namespace TraXile
 {
     public partial class ExportActvityList : Form
     {
-        private MainW _mainWindow;
+        private readonly MainW _mainWindow;
 
         public ExportActvityList(MainW main)
         {
@@ -20,9 +20,11 @@ namespace TraXile
             switch(comboBox1.SelectedItem.ToString())
             {
                 case "csv":
-                    SaveFileDialog sfd = new SaveFileDialog();
-                    sfd.Filter = "CSV-Files|*.csv";
-                    sfd.FileName = "TraXile_Activities_" + DateTime.Now.ToString("yyyy-MM-dd-H-m-s") + ".csv";
+                    SaveFileDialog sfd = new SaveFileDialog
+                    {
+                        Filter = "CSV-Files|*.csv",
+                        FileName = "TraXile_Activities_" + DateTime.Now.ToString("yyyy-MM-dd-H-m-s") + ".csv"
+                    };
                     DialogResult rs = sfd.ShowDialog();
                     if (rs == DialogResult.OK && sfd.FileName != null)
                     {

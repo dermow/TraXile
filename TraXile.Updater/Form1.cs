@@ -10,8 +10,8 @@ namespace TraXile.Updater
     public partial class Form1 : Form
     {
         bool bStarted, bExit;
-        string _myAppData;
-        string _targetVersion;
+        readonly string _myAppData;
+        readonly string _targetVersion;
 
         public Form1()
         {

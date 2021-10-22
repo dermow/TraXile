@@ -2,16 +2,16 @@
 
 namespace TraXile
 {
-    public class ActivityTag
+    public class TrX_ActivityTag
     {
-        private string _tagID;
+        private readonly string _tagID;
         private string _DisplayName;
-        private bool _isDefault;
+        private readonly bool _isDefault;
         private bool _showInList;
         private Color _backColor;
         private Color _foreColor;
 
-        public ActivityTag(string s_id, bool b_is_default = true)
+        public TrX_ActivityTag(string s_id, bool b_is_default = true)
         {
             _tagID = s_id;
             _backColor = Color.White;

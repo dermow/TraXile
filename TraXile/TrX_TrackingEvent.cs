@@ -2,13 +2,13 @@
 
 namespace TraXile
 {
-    class TrackingEvent
+    class TrX_TrackingEvent
     {
-        private EVENT_TYPES _eventType;
+        private readonly EVENT_TYPES _eventType;
         private string _logLine;
         private DateTime _eventStartTime;
 
-        public TrackingEvent(EVENT_TYPES evType)
+        public TrX_TrackingEvent(EVENT_TYPES evType)
         {
             this._eventType = evType;
         }
