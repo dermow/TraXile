@@ -30,17 +30,11 @@ namespace TraXile
     {
         private string _currentArea;
         private string _currentInstanceEndpoint;
-        private int _lastHash = 0;
-        private double _logLinesTotal;
-        private double _logLinesRead;
-        private Thread _logParseThread;
-        private Thread _eventThread;
-        private DateTime _inAreaSince;
-        private DateTime _lastDeathTime;
-        private DateTime _initStartTime;
-        private DateTime _initEndTime;
-        private EVENT_TYPES _lastEventType;
-        private TrX_TrackedActivity _currentActivity;
+        private string _lastSimuEndpoint;
+        private string _failedRestoreReason = "";
+        private readonly string _dbPath;
+        private readonly string _cachePath;
+        private readonly string _myAppData;
         private bool _eventQueueInitizalized;
         private bool _isMapZana;
         private bool _exit;
@@ -49,45 +43,51 @@ namespace TraXile
         private bool _showGridInActLog;
         private bool _restoreMode;
         private bool _labDashboardUpdateRequested;
+        private bool _showGridInStats;
+        private bool _UpdateCheckDone;
+        private bool _mapDashboardUpdateRequested;
+        private bool _labDashboardHideUnknown;
+        private bool _globalDashboardUpdateRequested;
+        private bool _heistDashboardUpdateRequested;
+        private bool _restoreOk = true;
         private int _shaperKillsInFight;
         private int _nextAreaLevel;
         private int _currentAreaLevel;
         private int _timeCapLab = 3600;
         private int _timeCapMap = 3600;
         private int _timeCapHeist = 3600;
-        private SqliteConnection _dbConnection;
+        private int _lastHash = 0;
+        private double _logLinesTotal;
+        private double _logLinesRead;
+        //private SqliteConnection _dbConnection;
         private bool _historyInitialized;
-        private List<string> _knownPlayerNames;
+        private LoadScreen _loadScreenWindow;
         private BindingList<string> _backups;
         private Dictionary<int, string> _dict;
         private Dictionary<string, int> _numericStats;
         private Dictionary<string, string> _statNamesLong;
-        private List<string> labs;
-        private LoadScreen _loadScreenWindow;
-        private List<TrX_TrackedActivity> _eventHistory;
-        private ConcurrentQueue<TrX_TrackingEvent> _eventQueue;
-        private List<TrX_ActivityTag> _tags;
         private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
+        private List<string> _parsedActivities;
+        private List<string> _knownPlayerNames;
+        private List<string> labs;
+        private List<TrX_ActivityTag> _tags;
+        private List<TrX_TrackedActivity> _eventHistory;
+        private readonly TrX_SettingsManager _mySettings;
         private TrX_EventMapping _eventMapping;
         private TrX_DefaultMappings _defaultMappings;
-        private List<string> _parsedActivities;
-        private ILog _log;
-        private bool _showGridInStats;
-        private bool _UpdateCheckDone;
-        private string _lastSimuEndpoint;
-        private readonly TrX_SettingsManager _mySettings;
-        private TrX_Theme _myTheme;
-
         private TrX_ListViewManager _lvmStats, _lvmActlog;
-        private bool _restoreOk = true;
-        private string _failedRestoreReason = "";
-        private readonly string _dbPath;
-        private readonly string _cachePath;
-        private readonly string _myAppData;
-        private bool _mapDashboardUpdateRequested;
-        private bool _labDashboardHideUnknown;
-        private bool _globalDashboardUpdateRequested;
-        private bool _heistDashboardUpdateRequested;
+        private TrX_Theme _myTheme;
+        private TrX_DBManager _myDB;
+        private ILog _log;
+        private ConcurrentQueue<TrX_TrackingEvent> _eventQueue;
+        private TrX_TrackedActivity _currentActivity;
+        private EVENT_TYPES _lastEventType;
+        private Thread _logParseThread;
+        private Thread _eventThread;
+        private DateTime _inAreaSince;
+        private DateTime _lastDeathTime;
+        private DateTime _initStartTime;
+        private DateTime _initEndTime;
 
         /// <summary>
         /// Setting Property for LogFilePath
@@ -410,7 +410,8 @@ namespace TraXile
             _loadScreenWindow = new LoadScreen();
             _loadScreenWindow.Show(this);
 
-            InitDatabase();
+            _myDB = new TrX_DBManager(_myAppData + @"\data.db", ref _log);
+            InitDefaultTags();
             
             _lastEventType = EVENT_TYPES.APP_STARTED;
             InitNumStats();
@@ -535,10 +536,8 @@ namespace TraXile
             {
                 try
                 {
-                    SqliteCommand cmd = _dbConnection.CreateCommand();
-                    cmd.CommandText = "insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) values " +
-                                  "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default', " + (tag.ShowInListView ? "1" : "0") + ")";
-                    cmd.ExecuteNonQuery();
+                    _myDB.DoNonQuery("insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) values " +
+                                  "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default', " + (tag.ShowInListView ? "1" : "0") + ")");
                     _log.Info("Default tag '" + tag.ID + "' added to database");
                 }
                 catch(SqliteException e)
@@ -562,11 +561,7 @@ namespace TraXile
         private void LoadCustomTags()
         {
             SqliteDataReader sqlReader;
-            SqliteCommand cmd;
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "SELECT * FROM tx_tags ORDER BY tag_id DESC";
-            sqlReader = cmd.ExecuteReader();
+            sqlReader = _myDB.GetSQLReader("SELECT * FROM tx_tags ORDER BY tag_id DESC");
 
             while (sqlReader.Read())
             {
@@ -1017,18 +1012,11 @@ namespace TraXile
         /// </summary>
         private void ClearStatsDB()
         {
-            SqliteCommand cmd;
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "drop table tx_stats";
-            cmd.ExecuteNonQuery();
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "create table if not exists tx_stats " +
+            _myDB.DoNonQuery("drop table tx_stats");
+            _myDB.DoNonQuery("create table if not exists tx_stats " +
                 "(timestamp int, " +
                 "stat_name text, " +
-                "stat_value int)";
-            cmd.ExecuteNonQuery();
+                "stat_value int)");
 
             InitNumStats();
             SaveStatsCache();
@@ -1041,17 +1029,10 @@ namespace TraXile
         /// </summary>
         private void ClearActivityLog()
         {
-            SqliteCommand cmd;
-
             _eventHistory.Clear();
             listViewActLog.Items.Clear();
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "drop table tx_activity_log";
-            cmd.ExecuteNonQuery();
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "create table if not exists tx_activity_log " +
+            _myDB.DoNonQuery("drop table tx_activity_log");
+            _myDB.DoNonQuery("create table if not exists tx_activity_log " +
                  "(timestamp int, " +
                  "act_type text, " +
                  "act_area text, " +
@@ -1059,8 +1040,7 @@ namespace TraXile
                  "act_deathcounter int," +
                  "act_ulti_rounds int," +
                  "act_is_zana int," +
-                 "act_tags" + ")";
-            cmd.ExecuteNonQuery();
+                 "act_tags" + ")");
 
             InitNumStats();
             SaveStatsCache();
@@ -1089,125 +1069,6 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Initialize the databse
-        /// TODO: Move datbase handling to own class
-        /// </summary>
-        private void InitDatabase()
-        {
-            _dbConnection = new SqliteConnection("Data Source=" + _dbPath);
-            _dbConnection.Open();
-
-            //Create Tables
-            SqliteCommand cmd;
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "create table if not exists tx_activity_log " +
-                "(timestamp int, " +
-                "act_type text, " +
-                "act_area text, " +
-                "act_stopwatch int, " +
-                "act_deathcounter int," +
-                "act_ulti_rounds int," +
-                "act_is_zana int," + 
-                "act_tags" + ")";
-            cmd.ExecuteNonQuery();
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "create table if not exists tx_tags " +
-                "(tag_id text, " +
-                "tag_display text," +
-                "tag_bgcolor text, " +
-                "tag_forecolor text," +
-                "tag_type text," +
-                "tag_show_in_lv int default 0)";
-            cmd.ExecuteNonQuery();
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "create unique index if not exists tx_tag_id on tx_tags(tag_id)";
-            cmd.ExecuteNonQuery();
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "create table if not exists tx_stats " +
-                "(timestamp int, " +
-                "stat_name text, " +
-                "stat_value int)";
-            cmd.ExecuteNonQuery();
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "create table if not exists tx_stats_cache " +
-                "(" +
-                "stat_name text, " +
-                "stat_value int)";
-            cmd.ExecuteNonQuery();
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "create table if not exists tx_known_players " +
-                "(" +
-                "player_name )";
-            cmd.ExecuteNonQuery();
-            InitDefaultTags();
-
-            PatchDatabase();
-            _log.Info("Database initialized.");
-        }
-
-        /// <summary>
-        /// Apply patches to database
-        /// TODO: Move datbase handling to own class
-        /// </summary>
-        private void PatchDatabase()
-        {
-            SqliteCommand cmd;
-            // Update 0.3.4
-            try
-            {
-                cmd = _dbConnection.CreateCommand();
-                cmd.CommandText = "alter table tx_activity_log add column act_tags text";
-                cmd.ExecuteNonQuery();
-                _log.Info("PatchDatabase 0.3.4 -> " + cmd.CommandText);
-            }
-            catch
-            {
-            }
-
-            // Update 0.4.5
-            try
-            {
-                cmd = _dbConnection.CreateCommand();
-                cmd.CommandText = "alter table tx_activity_log add column act_area_level int default 0";
-                cmd.ExecuteNonQuery();
-                _log.Info("PatchDatabase 0.4.5 -> " + cmd.CommandText);
-            }
-            catch
-            {
-            }
-
-            // Update 0.5.2
-            try
-            {
-                cmd = _dbConnection.CreateCommand();
-                cmd.CommandText = "alter table tx_activity_log add column act_success int default 0";
-                cmd.ExecuteNonQuery();
-                _log.Info("PatchDatabase 0.5.2 -> " + cmd.CommandText);
-            }
-            catch
-            {
-            }
-
-            // Update 0.5.2
-            try
-            {
-                cmd = _dbConnection.CreateCommand();
-                cmd.CommandText = "alter table tx_tags add column tag_show_in_lv int default 0";
-                cmd.ExecuteNonQuery();
-                _log.Info("PatchDatabase 0.5.2 -> " + cmd.CommandText);
-            }
-            catch
-            {
-            }
-        }
-
-        /// <summary>
         /// Track known players. Needed to find out if death events are for your own 
         /// char or not. If a player name enters your area, It could not be you :)
         /// </summary>
@@ -1217,10 +1078,7 @@ namespace TraXile
             if(!_knownPlayerNames.Contains(s_name))
             {
                 _knownPlayerNames.Add(s_name);
-                SqliteCommand cmd;
-                cmd = _dbConnection.CreateCommand();
-                cmd.CommandText = "insert into tx_known_players (player_name) VALUES ('" + s_name + "')";
-                cmd.ExecuteNonQuery();
+                _myDB.DoNonQuery("insert into tx_known_players (player_name) VALUES ('" + s_name + "')");
                 _log.Info("KnownPlayerAdded -> name: " + s_name);
             }
         }
@@ -1231,10 +1089,7 @@ namespace TraXile
         /// <param name="l_timestamp"></param>
         private void DeleteActLogEntry(long l_timestamp)
         {
-            SqliteCommand cmd;
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "delete from tx_activity_log where timestamp = " + l_timestamp.ToString();
-            cmd.ExecuteNonQuery();
+            _myDB.DoNonQuery("delete from tx_activity_log where timestamp = " + l_timestamp.ToString());
         }
 
         /// <summary>
@@ -1243,11 +1098,7 @@ namespace TraXile
         private void ReadKnownPlayers()
         {
             SqliteDataReader sqlReader;
-            SqliteCommand cmd;
-
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "SELECT * FROM tx_known_players";
-            sqlReader = cmd.ExecuteReader();
+            sqlReader = _myDB.GetSQLReader("SELECT * FROM tx_known_players");
 
             while (sqlReader.Read())
             {
@@ -1280,9 +1131,7 @@ namespace TraXile
                     sTags += "|";
             }
 
-            SqliteCommand cmd;
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "insert into tx_activity_log " +
+            _myDB.DoNonQuery("insert into tx_activity_log " +
                "(timestamp, " +
                "act_type, " +
                "act_area, " +
@@ -1302,9 +1151,7 @@ namespace TraXile
                  + ", " + i_ulti_rounds 
                  + ", " + (b_zana ? "1" : "0")
                  + ", '" + sTags + "'"
-                 + ", " + (b_success ? "1" : "0") + ")";
-
-            cmd.ExecuteNonQuery();
+                 + ", " + (b_success ? "1" : "0") + ")");
 
             _parsedActivities.Add(i_ts.ToString() + "_" + s_area);
         }
@@ -1342,14 +1189,11 @@ namespace TraXile
         private void ReadActivityLogFromSQLite()
         {
             SqliteDataReader sqlReader;
-            SqliteCommand cmd;
+            sqlReader = _myDB.GetSQLReader("SELECT * FROM tx_activity_log ORDER BY timestamp DESC");
+
             string[] arrTags;
 
-            cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "SELECT * FROM tx_activity_log ORDER BY timestamp DESC";
-            sqlReader = cmd.ExecuteReader();
-
-            while(sqlReader.Read())
+            while (sqlReader.Read())
             {
                 TimeSpan ts = TimeSpan.FromSeconds(sqlReader.GetInt32(3));
                 string sType = sqlReader.GetString(1);
@@ -2499,10 +2343,7 @@ namespace TraXile
         private void IncrementStat(string s_key, DateTime dt, int i_value = 1)
         {
             _numericStats[s_key] += i_value;
-
-            SqliteCommand cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + _numericStats[s_key] + ")";
-            cmd.ExecuteNonQuery();
+            _myDB.DoNonQuery("INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + _numericStats[s_key] + ")");
         }
 
         /// <summary>
@@ -2514,10 +2355,7 @@ namespace TraXile
         private void SetStat(string s_key, DateTime dt, int i_value)
         {
             _numericStats[s_key] = i_value;
-
-            SqliteCommand cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + _numericStats[s_key] + ")";
-            cmd.ExecuteNonQuery();
+            _myDB.DoNonQuery("INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + _numericStats[s_key] + ")");
         }
 
         /// <summary>
@@ -3694,7 +3532,6 @@ namespace TraXile
 
                 DateTime dt1, dt2;
                 SqliteDataReader sqlReader;
-                SqliteCommand cmd;
                 long lTS1, lTS2;
 
                 label38.Text = listViewStats.SelectedItems[0].Text;
@@ -3706,18 +3543,19 @@ namespace TraXile
                     dt2 = new DateTime(dt1.Year, dt1.Month, dt1.Day, 23, 59, 59);
                     lTS1 = ((DateTimeOffset)dt1).ToUnixTimeSeconds();
                     lTS2 = ((DateTimeOffset)dt2).ToUnixTimeSeconds();
-                    cmd = _dbConnection.CreateCommand();
 
+
+                    string sQuery;
                     if (sStatName == "HighestLevel")
                     {
-                        cmd.CommandText = "SELECT stat_value FROM tx_stats WHERE stat_name = '" + sStatName + "' AND timestamp BETWEEN " + lTS1 + " AND " + lTS2;
+                        sQuery = "SELECT stat_value FROM tx_stats WHERE stat_name = '" + sStatName + "' AND timestamp BETWEEN " + lTS1 + " AND " + lTS2;
                     }
                     else
                     {
-                        cmd.CommandText = "SELECT COUNT(*) FROM tx_stats WHERE stat_name = '" + sStatName + "' AND timestamp BETWEEN " + lTS1 + " AND " + lTS2;
+                        sQuery = "SELECT COUNT(*) FROM tx_stats WHERE stat_name = '" + sStatName + "' AND timestamp BETWEEN " + lTS1 + " AND " + lTS2;
                     }
 
-                    sqlReader = cmd.ExecuteReader();
+                    sqlReader = _myDB.GetSQLReader(sQuery);
                     while (sqlReader.Read())
                     {
                         chartStats.Series[0].Points.AddXY(dt1, sqlReader.GetInt32(0));
@@ -3890,11 +3728,8 @@ namespace TraXile
         private void AddTag(TrX_ActivityTag tag)
         {
             _tags.Add(tag);
-
-            SqliteCommand cmd = _dbConnection.CreateCommand();
-            cmd.CommandText = "INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) VALUES "
-                + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom', " + (tag.ShowInListView ? "1" : "0") + ")";
-            cmd.ExecuteNonQuery();
+            _myDB.DoNonQuery("INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) VALUES "
+                + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom', " + (tag.ShowInListView ? "1" : "0") + ")");
 
             listViewActLog.Columns.Add(tag.DisplayName);
             ResetMapHistory();
@@ -3971,9 +3806,7 @@ namespace TraXile
                         if (i < (act.Tags.Count - 1))
                             sTags += "|";
                     }
-                    SqliteCommand cmd = _dbConnection.CreateCommand();
-                    cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
-                    cmd.ExecuteNonQuery();
+                    _myDB.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
                 }
             }
         }
@@ -3992,9 +3825,7 @@ namespace TraXile
                     sTags += act.Tags[i];
                     if (i < (act.Tags.Count - 1))
                         sTags += "|";
-                    SqliteCommand cmd = _dbConnection.CreateCommand();
-                    cmd.CommandText = "UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString();
-                    cmd.ExecuteNonQuery();
+                    _myDB.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
                 }
             }
         }
@@ -4010,10 +3841,8 @@ namespace TraXile
                 _tags[iTagIndex].BackColor = Color.FromArgb(Convert.ToInt32(s_backcolor));
                 _tags[iTagIndex].ShowInListView = b_show_in_hist;
 
-                SqliteCommand cmd = _dbConnection.CreateCommand();
-                cmd.CommandText = "UPDATE tx_tags SET tag_display = '" + s_display_name + "', tag_forecolor = '" + s_forecolor + "', tag_bgcolor = '" + s_backcolor + "', " +
-                    "tag_show_in_lv = " + (b_show_in_hist ? "1" : "0") + " WHERE tag_id = '" + s_id + "'";
-                cmd.ExecuteNonQuery();
+                _myDB.DoNonQuery("UPDATE tx_tags SET tag_display = '" + s_display_name + "', tag_forecolor = '" + s_forecolor + "', tag_bgcolor = '" + s_backcolor + "', " +
+                    "tag_show_in_lv = " + (b_show_in_hist ? "1" : "0") + " WHERE tag_id = '" + s_id + "'");
             }
 
             RenderTagsForConfig(true);
@@ -4074,9 +3903,7 @@ namespace TraXile
                     if (dr == DialogResult.Yes)
                     {
                         _tags.RemoveAt(iIndex);
-                        SqliteCommand cmd = _dbConnection.CreateCommand();
-                        cmd.CommandText = "DELETE FROM tx_tags WHERE tag_id = '" + s_id + "' AND tag_type != 'default'";
-                        cmd.ExecuteNonQuery();
+                        _myDB.DoNonQuery("DELETE FROM tx_tags WHERE tag_id = '" + s_id + "' AND tag_type != 'default'");
                     }
                 }
                 RenderTagsForConfig(true);
