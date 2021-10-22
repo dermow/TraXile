@@ -95,8 +95,8 @@ namespace TraXile
         /// </summary>
         public string SettingPoeLogFilePath
         {
-            get { return ReadSetting("poe_logfile_path", null); }
-            set {AddUpdateAppSettings("poe_logfile_path", value); }
+            get { return this.ReadSetting("poe_logfile_path", null); }
+            set { this.AddUpdateAppSettings("poe_logfile_path", value); }
         }
 
         /// <summary>
@@ -4182,15 +4182,15 @@ namespace TraXile
         {
             if (theme == "Dark")
             {
-                _myTheme = new TxThemeDark();
+                this._myTheme = new TxThemeDark();
             }
             else
             {
-                _myTheme = new TxThemeLight();
+                this._myTheme = new TxThemeLight();
             }
 
-            _myTheme.Apply(this);
-            AddUpdateAppSettings("theme", theme);
+            this._myTheme.Apply(this);
+            this.AddUpdateAppSettings("theme", theme);
         }
 
 
