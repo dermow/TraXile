@@ -59,7 +59,6 @@ namespace TraXile
         private int _lastHash = 0;
         private double _logLinesTotal;
         private double _logLinesRead;
-        //private SqliteConnection _dbConnection;
         private bool _historyInitialized;
         private LoadScreen _loadScreenWindow;
         private BindingList<string> _backups;
@@ -112,7 +111,6 @@ namespace TraXile
         /// </summary>
         public MainW()
         {
-            //TEST: Create folder in userdata
             _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
             _dbPath = _myAppData + @"\data.db";
             _cachePath = _myAppData + @"\stats.cache";
