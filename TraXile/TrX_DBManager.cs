@@ -55,6 +55,7 @@ namespace TraXile
             cmd = _dbConnection.CreateCommand();
             cmd.CommandText = "create unique index if not exists tx_tag_id on tx_tags(tag_id)";
             cmd.ExecuteNonQuery();
+                      
 
             cmd = _dbConnection.CreateCommand();
             cmd.CommandText = "create table if not exists tx_stats " +

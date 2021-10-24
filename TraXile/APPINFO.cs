@@ -6,7 +6,7 @@ namespace TraXile
 {
     static class APPINFO
     {
-        public static string VERSION = "0.6.2";
+        public static string VERSION = "0.6.3";
         public static string RELEASE_TAG = "final";
         public static string NAME = "TraXile";
         public static string ISSUE_URL = "https://github.com/dermow/TraXile/issues";
@@ -33,9 +33,7 @@ namespace TraXile
             var offset = BitConverter.ToInt32(buffer, c_PeHeaderOffset);
             var secondsSince1970 = BitConverter.ToInt32(buffer, offset + c_LinkerTimestampOffset);
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
             var linkTimeUtc = epoch.AddSeconds(secondsSince1970);
-
             var tz = target ?? TimeZoneInfo.Local;
             var localTime = TimeZoneInfo.ConvertTimeFromUtc(linkTimeUtc, tz);
 
