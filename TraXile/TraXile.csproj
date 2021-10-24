@@ -262,6 +262,7 @@
     </Content>
     <Content Include="favicon-32x32.ico" />
     <Content Include="favicon-96x96.ico" />
+    <Content Include="version.xml" />
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

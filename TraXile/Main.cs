@@ -9,9 +9,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Xml;
 
 namespace TraXile
 {
@@ -92,8 +94,6 @@ namespace TraXile
         private TrX_ListViewManager _lvmStats, _lvmActlog;
         private TrX_Theme _myTheme;
         private ILog _log;
-        
-       
 
         /// <summary>
         /// Setting Property for LogFilePath
@@ -119,7 +119,7 @@ namespace TraXile
         public Main()
         {
             _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
-           // _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME + "_2";
+            //_myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME + "_2";
             _dbPath = _myAppData + @"\data.db";
             _cachePath = _myAppData + @"\stats.cache";
             _mySettings = new TrX_SettingsManager(_myAppData + @"\config.xml");
@@ -155,24 +155,27 @@ namespace TraXile
         {
             try
             {
-                string GITHUB_API = "https://api.github.com/repos/{0}/{1}/releases/latest";
-                WebClient webClient = new WebClient();
-                webClient.Headers.Add("User-Agent", "Unity web player");
-                Uri uri = new Uri(string.Format(GITHUB_API, "dermow", "TraXile"));
-                string releases = webClient.DownloadString(uri);
-                int iIndex = releases.IndexOf("tag_name");
-                string sVersion = releases.Substring(iIndex + 11, 6);
+                string updateURL = ReadSetting("update_check_url", "https://dermow.github.io/traxile-update-info/version.xml");
+                string updateXMLNode = ReadSetting("update_path", "latest");
 
-                // hotfix: 2 digit at the end
-                try
+                WebClient webClient = new WebClient();
+                Uri uri = new Uri(updateURL);
+                string releases = webClient.DownloadString(uri);
+
+                XmlDocument xml = new XmlDocument();
+                xml.LoadXml(releases);
+
+                string sVersion;
+                sVersion = xml.SelectSingleNode(string.Format("/version/{0}", updateXMLNode)).InnerText;
+
+                StringBuilder sbChanges = new StringBuilder();
+
+                foreach(XmlNode xn in xml.SelectNodes("/version/changes/chg"))
                 {
-                    Convert.ToInt32(sVersion.Split('.')[2]);
-                    sVersion = releases.Substring(iIndex + 11, 6);
+                    sbChanges.AppendLine(" - " + xn.InnerText);
                 }
-                catch
-                {
-                    sVersion = releases.Substring(iIndex + 11, 5);
-                }
+
+                _log.Info(string.Format("UpdateCheck -> My version: {0}, Remote version: {1}", APPINFO.VERSION, sVersion));
 
                 int MyMajor = Convert.ToInt32(APPINFO.VERSION.Split('.')[0]);
                 int MyMinor = Convert.ToInt32(APPINFO.VERSION.Split('.')[1]);
@@ -198,8 +201,18 @@ namespace TraXile
 
                 if (bUpdate)
                 {
-                    if(MessageBox.Show("There is a new version available for TraXile (current=" + APPINFO.VERSION + ", new=" + sVersion + ")"
-                        + Environment.NewLine + Environment.NewLine + "Update now?", "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    _log.Info("UpdateCheck -> New version available");
+                    StringBuilder sbMessage = new StringBuilder();
+                    sbMessage.AppendLine(string.Format("There is a new version for TraXile available ({0} => {1})", APPINFO.VERSION, sVersion));
+                    sbMessage.AppendLine();
+                    sbMessage.AppendLine(string.Format("Changelog: ", sVersion));
+                    sbMessage.AppendLine("===========");
+                    sbMessage.AppendLine(sbChanges.ToString());
+                    sbMessage.AppendLine();
+                    sbMessage.AppendLine("Do you want to update now?");
+
+
+                    if (MessageBox.Show(sbMessage.ToString(), "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         ProcessStartInfo psi = new ProcessStartInfo
                         {
@@ -211,7 +224,8 @@ namespace TraXile
                 }
                 else
                 {
-                    if(b_notify_ok)
+                    _log.Info("UpdateCheck -> Already up to date :)");
+                    if (b_notify_ok)
                         MessageBox.Show("Your version: " + APPINFO.VERSION 
                             + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine + Environment.NewLine 
                             + "Your version is already up to date :)");
@@ -4243,9 +4257,14 @@ namespace TraXile
 
         private void button7_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("For this action, the application needs to be restarted. Continue?", "Warning", MessageBoxButtons.YesNo);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("WARNING: this action will reload the entire Client.txt. Manual data like paused activities or custom-tags on activities will be lost.");
+            sb.AppendLine("Continue? TraXile will be restarted.");
+
+            DialogResult dr = MessageBox.Show(sb.ToString(), "Warning", MessageBoxButtons.YesNo); ;
             if (dr == DialogResult.Yes)
             {
+                ClearActivityLog();
                 ReloadLogFile();
             }
         }
