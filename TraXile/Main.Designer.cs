@@ -1356,7 +1356,7 @@ namespace TraXile
             this.tableLayoutPanel24.ColumnCount = 3;
             this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 0.9259259F));
             this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 99.07407F));
-            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 94F));
+            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 95F));
             this.tableLayoutPanel24.Controls.Add(this.chartGlobalDashboard, 1, 1);
             this.tableLayoutPanel24.Controls.Add(this.label89, 1, 0);
             this.tableLayoutPanel24.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1383,7 +1383,7 @@ namespace TraXile
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chartGlobalDashboard.Series.Add(series2);
-            this.chartGlobalDashboard.Size = new System.Drawing.Size(985, 791);
+            this.chartGlobalDashboard.Size = new System.Drawing.Size(984, 791);
             this.chartGlobalDashboard.TabIndex = 0;
             this.chartGlobalDashboard.Text = "chart8";
             // 
@@ -1395,7 +1395,7 @@ namespace TraXile
             this.label89.ForeColor = System.Drawing.Color.White;
             this.label89.Location = new System.Drawing.Point(12, 0);
             this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(985, 30);
+            this.label89.Size = new System.Drawing.Size(984, 30);
             this.label89.TabIndex = 1;
             this.label89.Text = "Activity Time (Hours)";
             this.label89.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
