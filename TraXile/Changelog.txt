@@ -95,3 +95,4 @@
 
 0.5.10
 - No need to restart after changing theme
+- Fixed a bug which leads to wrong heist tagging
