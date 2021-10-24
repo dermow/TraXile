@@ -96,3 +96,7 @@
 0.5.10
 - No need to restart after changing theme
 - Fixed a bug which leads to wrong heist tagging
+
+0.6.1
+- Fixed bug in versioning
+- Increased minor version to enforce auto update

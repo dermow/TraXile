@@ -161,7 +161,18 @@ namespace TraXile
                 Uri uri = new Uri(string.Format(GITHUB_API, "dermow", "TraXile"));
                 string releases = webClient.DownloadString(uri);
                 int iIndex = releases.IndexOf("tag_name");
-                string sVersion =  releases.Substring(iIndex + 11, 5);
+                string sVersion = releases.Substring(iIndex + 11, 6);
+
+                // hotfix: 2 digit at the end
+                try
+                {
+                    Convert.ToInt32(sVersion.Split('.')[2]);
+                    sVersion = releases.Substring(iIndex + 11, 6);
+                }
+                catch
+                {
+                    sVersion = releases.Substring(iIndex + 11, 5);
+                }
 
                 int MyMajor = Convert.ToInt32(APPINFO.VERSION.Split('.')[0]);
                 int MyMinor = Convert.ToInt32(APPINFO.VERSION.Split('.')[1]);
