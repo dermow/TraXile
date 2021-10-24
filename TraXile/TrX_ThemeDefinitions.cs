@@ -26,7 +26,7 @@ namespace TraXile
     public class TrX_ThemeDark : TrX_Theme
     {
         /// <summary>
-        /// Light Theme
+        /// Dark Theme
         /// </summary>
         public TrX_ThemeDark()
         {

@@ -119,6 +119,7 @@ namespace TraXile
         public Main()
         {
             _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
+           // _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME + "_2";
             _dbPath = _myAppData + @"\data.db";
             _cachePath = _myAppData + @"\stats.cache";
             _mySettings = new TrX_SettingsManager(_myAppData + @"\config.xml");
@@ -2254,55 +2255,82 @@ namespace TraXile
                     case EVENT_TYPES.HEIST_GIANNA_SPEAK:
                         if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            _currentActivity.AddTag("gianna");
+                            if(CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.AddTag("gianna");
+                            }
                         }
                         break;
                     case EVENT_TYPES.HEIST_HUCK_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            _currentActivity.AddTag("huck");
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.AddTag("huck");
+                            }
                         }
                         break;
                     case EVENT_TYPES.HEIST_ISLA_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            _currentActivity.AddTag("isla");
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.AddTag("isla");
+                            }
                         }
                         break;
                     case EVENT_TYPES.HEIST_NENET_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            _currentActivity.AddTag("nenet");
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.AddTag("nenet");
+                            }
                         }
                         break;
                     case EVENT_TYPES.HEIST_NILES_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            _currentActivity.AddTag("niles");
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.AddTag("niles");
+                            }
                         }
                         break;
                     case EVENT_TYPES.HEIST_TIBBS_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            _currentActivity.AddTag("tibbs");
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.AddTag("tibbs");
+                            }
                         }
                         break;
                     case EVENT_TYPES.HEIST_TULLINA_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            _currentActivity.AddTag("tullina");
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.AddTag("tullina");
+                            }
                         }
                         break;
                     case EVENT_TYPES.HEIST_VINDERI_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            _currentActivity.AddTag("vinderi");
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.AddTag("vinderi");
+                            }
                         }
                         break;
                     case EVENT_TYPES.HEIST_KARST_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            _currentActivity.AddTag("karst");
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.AddTag("karst");
+                            }
                         }
                         break;
 

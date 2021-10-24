@@ -19,6 +19,42 @@ namespace TraXile
             _chartValueLabelForeColor,
             _buttonForeColor;
 
+        public Color MainBackGroundColor
+        {
+            get { return _mainBackgroundColor; }
+            set { _mainBackgroundColor = value; }
+        }
+
+        public Color MainFontColor
+        {
+            get { return _mainFontColor; }
+            set { _mainFontColor = value; }
+        }
+
+        public Color ListBackColor
+        {
+            get { return _listBackColor; }
+            set { _listBackColor = value; }
+        }
+
+        public Color ChartSeriesColor
+        {
+            get { return _chartSeriesColor; }
+            set { _chartSeriesColor = value; }
+        }
+
+        public Color ChartLabelColor
+        {
+            get { return _chartValueLabelForeColor; }
+            set { _chartValueLabelForeColor = value; }
+        }
+
+        public Color ButtonForeColor
+        {
+            get { return _buttonForeColor; }
+            set { _buttonForeColor = value; }
+        }
+
         public IEnumerable<Control> GetAll(Control control, Type type)
         {
             var controls = control.Controls.Cast<Control>();
@@ -31,6 +67,7 @@ namespace TraXile
         public void Apply(Control control)
         {
             control.BackColor = _mainBackgroundColor;
+            control.ForeColor = _mainFontColor;
 
             foreach (Control cnt in GetAll(control, typeof(Panel)))
             {
@@ -117,41 +154,7 @@ namespace TraXile
             }
         }
 
-        public Color MainBackGroundColor
-        {
-            get { return _mainBackgroundColor; }
-            set { _mainBackgroundColor = value; }
-        }
-
-        public Color MainFontColor
-        {
-            get { return _mainFontColor; }
-            set { _mainFontColor = value; }
-        }
-
-        public Color ListBackColor
-        {
-            get { return _listBackColor; }
-            set { _listBackColor = value; }
-        }
-
-        public Color ChartSeriesColor
-        {
-            get { return _chartSeriesColor; }
-            set { _chartSeriesColor = value; }
-        }
-
-        public Color ChartLabelColor
-        {
-            get { return _chartValueLabelForeColor; }
-            set { _chartValueLabelForeColor = value; }
-        }
-
-        public Color ButtonForeColor
-        {
-            get { return _buttonForeColor; }
-            set { _buttonForeColor = value; }
-        }
+      
 
     }
 
