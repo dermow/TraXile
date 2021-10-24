@@ -79,16 +79,6 @@ namespace TraXile.Updater
                 Process p1 = new Process();
                 p1.StartInfo.FileName = _myAppData + @"\Setup_" + s_version + ".msi";
                 p1.Start();
-                p1.WaitForExit(36000);
-                Log("Update successful. Starting TraXile again.");
-
-
-                Process process;
-                process = new Process();
-                process.StartInfo.FileName = "TraXile.exe";
-                process.StartInfo.WorkingDirectory = Application.StartupPath;
-                process.Start();
-
                 bExit = true;
 
             }
