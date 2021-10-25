@@ -178,5 +178,10 @@ namespace TraXile
         {
             get { return _listView.Columns; }
         }
+
+        public int CurrentItemCount
+        {
+            get { return _listView.Items.Count; }
+        }
     }
 }

@@ -31,90 +31,10 @@ namespace TraXile
         private long _activityTimeStamp;
         private string _customStopWatchValue;
 
-        public TrX_TrackedActivity()
+        public TrX_TrackedActivity ZanaMap
         {
-            _stopWatch = new Stopwatch();
-            _zanaMap = null;
-            _tagIDs = new List<string>();
-        }
-
-        public bool HasTag(string s_id)
-        {
-            foreach(string tag in _tagIDs)
-            {
-                if (tag == s_id)
-                    return true;
-            }
-            return false;
-        }
-
-        public void StartPauseTime(DateTime dt)
-        {
-            if(!_paused)
-            {
-                _paused = true;
-                _pauseTimeStart = dt;
-            }
-        }
-
-        public void EndPauseTime(DateTime dt)
-        {
-            if(_paused)
-            {
-                _paused = false;
-                _pauseCount++;
-                _pausedTime += (dt - _pauseTimeStart).TotalSeconds;
-            }
-            _paused = false;
-        }
-
-        public void RemoveTag(string s_id)
-        {
-            if(HasTag(s_id))
-               _tagIDs.Remove(s_id);
-        }
-
-        public void AddTag(string s_id)
-        {
-            if(!_tagIDs.Contains(s_id))
-            {
-                _tagIDs.Add(s_id);
-            }
-        }
-
-        public int PauseCount
-        {
-            get { return _pauseCount; }
-        }
-
-        public double PausedTime
-        {
-            get { return _pausedTime; }
-            set { _pausedTime = value; }
-        }
-
-        public void Pause()
-        {
-              _isManuallyPaused = true;
-              if(_stopWatch.IsRunning)
-                _stopWatch.Stop();
-        }
-
-        public void Resume()
-        {
-            _isManuallyPaused = false;
-            if(!_stopWatch.IsRunning)
-                 _stopWatch.Start();
-        }
-
-        public void StartStopWatch()
-        {
-            _stopWatch.Start();
-        }
-
-        public void StopStopWatch()
-        {
-            _stopWatch.Stop();
+            get { return _zanaMap; }
+            set { _zanaMap = value; }
         }
 
         public bool Success
@@ -122,7 +42,6 @@ namespace TraXile
             get { return _success; }
             set { _success = value; }
         }
-
 
         public TimeSpan StopWatchTimeSpan
         {
@@ -139,7 +58,7 @@ namespace TraXile
         {
             get
             {
-                if(CustomStopWatchValue != null)
+                if (CustomStopWatchValue != null)
                 {
                     return _customStopWatchValue;
                 }
@@ -205,12 +124,11 @@ namespace TraXile
             set { _portalsUsed = value; }
         }
 
-
         public int MapTier
         {
             get
             {
-                switch(_areaLevel)
+                switch (_areaLevel)
                 {
                     case 68:
                         return 1;
@@ -250,11 +168,12 @@ namespace TraXile
             }
         }
 
-        public TrX_TrackedActivity ZanaMap
+        public string UniqueID
         {
-            get { return _zanaMap; }
-            set { _zanaMap = value; }
+            get { return string.Format("{0}_{1}", _activityTimeStamp, _areaName); }
         }
+
+      
 
         public bool ManuallyPaused
         {
@@ -312,6 +231,125 @@ namespace TraXile
         {
             get { return _tagIDs; }
         }
+
+        public int PauseCount
+        {
+            get { return _pauseCount; }
+        }
+
+        public double PausedTime
+        {
+            get { return _pausedTime; }
+            set { _pausedTime = value; }
+        }
+
+        public TrX_TrackedActivity()
+        {
+            _stopWatch = new Stopwatch();
+            _zanaMap = null;
+            _tagIDs = new List<string>();
+        }
+
+        public bool HasTag(string s_id)
+        {
+            foreach(string tag in _tagIDs)
+            {
+                if (tag == s_id)
+                    return true;
+            }
+            return false;
+        }
+
+        public void StartPauseTime(DateTime dt)
+        {
+            if(!_paused)
+            {
+                _paused = true;
+                _pauseTimeStart = dt;
+            }
+        }
+
+        public void EndPauseTime(DateTime dt)
+        {
+            if(_paused)
+            {
+                _paused = false;
+                _pauseCount++;
+                _pausedTime += (dt - _pauseTimeStart).TotalSeconds;
+            }
+            _paused = false;
+        }
+
+        public void RemoveTag(string s_id)
+        {
+            if(HasTag(s_id))
+               _tagIDs.Remove(s_id);
+        }
+
+        public void AddTag(string s_id)
+        {
+            if(!_tagIDs.Contains(s_id))
+            {
+                _tagIDs.Add(s_id);
+            }
+        }
+
+        public override string ToString()
+        {
+            return string.Format(
+                "{0} -> UID: {1}, " +
+                "Type: {2}, " +
+                "Timestamp: {3, " +
+                "Area: {4}, " +
+                "AreaLevel: {5}, " +
+                "PausedTime: {6}, " +
+                "PausedCount: {7}, " +
+                "Instance: {8}, " +
+                "Started: {9}," +
+                "LastEnded: {10}",
+                "StopWatchValue: {11}",
+                "CustomStopWatchValue: {12}",
+                this.GetType(), 
+                _activityType, 
+                _activityTimeStamp,
+                _areaName,
+                _areaLevel,
+                PausedTime,
+                PauseCount,
+                _instanceEndpoint,
+                _startTime,
+                _lastEndTime,
+                StopWatchValue,
+                CustomStopWatchValue
+                );
+        }
+
+
+        public void Pause()
+        {
+              _isManuallyPaused = true;
+              if(_stopWatch.IsRunning)
+                _stopWatch.Stop();
+        }
+
+        public void Resume()
+        {
+            _isManuallyPaused = false;
+            if(!_stopWatch.IsRunning)
+                 _stopWatch.Start();
+        }
+
+        public void StartStopWatch()
+        {
+            _stopWatch.Start();
+        }
+
+        public void StopStopWatch()
+        {
+            _stopWatch.Stop();
+        }
+
+       
 
     }
 }

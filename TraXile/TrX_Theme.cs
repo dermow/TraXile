@@ -134,7 +134,11 @@ namespace TraXile
 
             foreach (Control cnt in GetAll(control, typeof(Label)))
             {
-                cnt.ForeColor = _mainFontColor;
+                // Do not overwrite tag styles
+                if(!cnt.Name.Contains("lbl_tag_"))
+                {
+                    cnt.ForeColor = _mainFontColor;
+                }
             }
 
             foreach (Control cnt in GetAll(control, typeof(CheckBox)))
