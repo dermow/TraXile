@@ -30,6 +30,9 @@ namespace TraXile
 
     public partial class Main : Form
     {
+        // DEBUG: CHANGE BEFORE RELEASE!!
+        private bool IS_IN_DEBUG_MODE = false;
+
         // App parameters
         private readonly string _dbPath;
         private readonly string _cachePath;
@@ -49,6 +52,7 @@ namespace TraXile
         private int _timeCapLab = 3600;
         private int _timeCapMap = 3600;
         private int _timeCapHeist = 3600;
+        private int _actLogItemCount = 0;
 
         // Core Logic variables
         private string _currentArea;
@@ -118,8 +122,15 @@ namespace TraXile
         /// </summary>
         public Main()
         {
-            _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
-            //_myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME + "_2";
+            if(IS_IN_DEBUG_MODE)
+            {
+                _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME + "_Debug";
+            }
+            else
+            {
+                _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
+            }
+            
             _dbPath = _myAppData + @"\data.db";
             _cachePath = _myAppData + @"\stats.cache";
             _mySettings = new TrX_SettingsManager(_myAppData + @"\config.xml");
@@ -568,7 +579,7 @@ namespace TraXile
                 try
                 {
                     _myDB.DoNonQuery("insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) values " +
-                                  "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default', " + (tag.ShowInListView ? "1" : "0") + ")");
+                                  "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default', " + (tag.ShowInListView ? "1" : "0") + ")", false);
                     _log.Info("Default tag '" + tag.ID + "' added to database");
                 }
                 catch(SqliteException e)
@@ -651,6 +662,7 @@ namespace TraXile
                 if (!_tagLabelsConfig.ContainsKey(tag.ID))
                 {
                     lbl.Text = tag.DisplayName;
+                    lbl.Name = "lbl_tag_" + tag.ID;
                     lbl.TextAlign = ContentAlignment.MiddleCenter;
                     lbl.BackColor = tag.BackColor;
                     lbl.ForeColor = tag.ForeColor;
@@ -746,6 +758,7 @@ namespace TraXile
                 if(!_tagLabels.ContainsKey(tag.ID))
                 {
                     lbl.Text = tag.DisplayName;
+                    lbl.Name = "lbl_tag_" + tag.ID;
                     lbl.TextAlign = ContentAlignment.MiddleCenter;
                     lbl.BackColor = Color.Gray;
                     lbl.ForeColor = Color.LightGray;
@@ -1266,8 +1279,13 @@ namespace TraXile
                     map.AddTag(arrTags[i]);
                 }
 
-                //mapHistory
-                _eventHistory.Add(map);
+                if(!_parsedActivities.Contains(map.UniqueID))
+                {
+                    _eventHistory.Add(map);
+                    _parsedActivities.Add(map.UniqueID);
+                }
+               
+                
             }
             _historyInitialized = true;
             ResetMapHistory();
@@ -1882,7 +1900,7 @@ namespace TraXile
                     {
                         if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
                         {
-                            FinishActivity(_currentActivity, sTargetArea, actType, DateTime.Parse(ev.LogLine.Split(' ')[0] + " " + ev.LogLine.Split(' ')[1]));
+                            FinishActivity(_currentActivity, sTargetArea, actType, ev.EventTime);
                         }
                     }
                 }
@@ -2433,6 +2451,8 @@ namespace TraXile
         /// <param name="dtNextMapStarted"></param>
         private void FinishActivity(TrX_TrackedActivity activity, string sNextMap, ACTIVITY_TYPES sNextMapType, DateTime dtNextMapStarted)
         {
+            _log.Debug("Finishing activity: " + activity.UniqueID);
+
             _currentActivity.StopStopWatch();
 
             TimeSpan ts;
@@ -2501,7 +2521,7 @@ namespace TraXile
             activity.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                       tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
 
-            if(!_parsedActivities.Contains(activity.TimeStamp.ToString() + "_" + activity.Area))
+            if(!_parsedActivities.Contains(activity.UniqueID))
             {
                 AddMapLvItem(activity);
                 SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success);
@@ -2518,7 +2538,7 @@ namespace TraXile
                        tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
                 _eventHistory.Insert(0, _currentActivity.ZanaMap);
 
-                if (!_parsedActivities.Contains(activity.ZanaMap.TimeStamp.ToString() + "_" + activity.ZanaMap.Area))
+                if (!_parsedActivities.Contains(activity.ZanaMap.UniqueID))
                 {
                     AddMapLvItem(activity.ZanaMap, true);
                     SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.ZanaMap.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
@@ -2537,7 +2557,8 @@ namespace TraXile
                     Type = sNextMapType,
                     AreaLevel = _nextAreaLevel,
                     InstanceEndpoint = _currentInstanceEndpoint,
-                    Started = dtNextMapStarted
+                    Started = dtNextMapStarted,
+                    TimeStamp = ((DateTimeOffset)dtNextMapStarted).ToUnixTimeSeconds()
                 };
                 _nextAreaLevel = 0;
                 _currentActivity.StartStopWatch();
@@ -2761,12 +2782,14 @@ namespace TraXile
 
                 if(iPos == -1)
                 {
-                    _lvmActlog.AddLvItem(lvi, map.TimeStamp + "_" + map.Area, b_display);
+                    _lvmActlog.AddLvItem(lvi, map.UniqueID, b_display);
                 }
                 else
                 {
-                    _lvmActlog.InsertLvItem(lvi, map.TimeStamp + "_" + map.Area, iPos, b_display);
+                    _lvmActlog.InsertLvItem(lvi, map.UniqueID, iPos, b_display);
                 }
+
+                _actLogItemCount = _lvmActlog.CurrentItemCount;
                 
             });
         }
@@ -2780,7 +2803,7 @@ namespace TraXile
         {
             foreach(TrX_TrackedActivity ta in _eventHistory)
             {
-                if (ta.TimeStamp + "_" + ta.Area == s_name)
+                if (ta.UniqueID == s_name)
                     return ta;
             }
             return null;
@@ -2848,9 +2871,7 @@ namespace TraXile
                     RenderTagsForConfig();
                     textBoxLogFilePath.Text = ReadSetting("poe_logfile_path");
 
-                    labelItemCount.Text = "items: " + _lvmActlog.listView.Items.Count.ToString();
-
-                  
+                    labelItemCount.Text = "items: " + _actLogItemCount.ToString();
                    
 
                     if(listViewStats.Items.Count > 0)
@@ -4006,7 +4027,7 @@ namespace TraXile
                         }
                         if (iMatched > 0)
                         {
-                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
+                            itemNames.Add(ta.UniqueID);
                         }
                     }
                     _lvmActlog.FilterByNameList(itemNames);
@@ -4032,7 +4053,7 @@ namespace TraXile
                         }
                         if (iMatched > 0)
                         {
-                            itemNames.Add(ta.TimeStamp + "_" + ta.Area);
+                            itemNames.Add(ta.UniqueID);
                         }
                     }
                     _lvmActlog.FilterByNameList(itemNames);
@@ -4043,6 +4064,7 @@ namespace TraXile
             {
                 _lvmActlog.ApplyFullTextFilter(textBox8.Text);
             }
+            _actLogItemCount = _lvmActlog.CurrentItemCount;
         }
 
         /// <summary>

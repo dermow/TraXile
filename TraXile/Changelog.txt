@@ -100,3 +100,12 @@
 0.6.1
 - Fixed bug in versioning
 - Increased minor version to enforce auto update
+
+0.6.2-0.6.4
+- Smaller bugfixes
+
+0.6.5
+- Fixed a bug which causes some activities beeing not displayed in list
+- Fixed a bug which causes duplicate activity entries in database
+- Fixed a bug which causes the application to crash while updating the UI
+- Fixed a bug where applying a UI theme overwrites tag styles

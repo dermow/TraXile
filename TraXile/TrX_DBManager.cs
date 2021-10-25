@@ -151,7 +151,7 @@ namespace TraXile
             }
         }
 
-        public void DoNonQuery(string s_query)
+        public void DoNonQuery(string s_query, bool b_log_error = true)
         {
             SqliteCommand cmd;
 
@@ -163,8 +163,11 @@ namespace TraXile
             }
             catch(Exception ex)
             {
-                _log.Error("Query error: " + s_query);
-                _log.Error(ex.ToString());
+                if(b_log_error)
+                {
+                    _log.Error("Query error: " + s_query);
+                    _log.Error(ex.ToString());
+                }
             }
            
         }

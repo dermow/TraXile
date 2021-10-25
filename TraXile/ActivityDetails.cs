@@ -87,6 +87,7 @@ namespace TraXile
                 }
 
                 lbl.Text = tag.DisplayName;
+                lbl.Name = "lbl_tag_" + tag.ID;
                 lbl.TextAlign = ContentAlignment.MiddleCenter;
                 lbl.BackColor = tag.BackColor;
                 lbl.ForeColor = tag.ForeColor;
