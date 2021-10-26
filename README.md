@@ -5,6 +5,9 @@ For Installation and Update instructions, just check the Wiki here:
 
 [https://github.com/dermow/TraXile/wiki](https://github.com/dermow/TraXile/wiki)
 
+## Prerequisites
+- This application is build for Windows and requires the .NET Framework (tested with 4.5).
+
 ## Screenshots
 
 ### Map Tracking
