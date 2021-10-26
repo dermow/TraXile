@@ -30,6 +30,9 @@ For Installation and Update instructions, just check the Wiki here:
 All we need is the path to your game logfile (Client.txt). TraXile will read the whole file the first time. After that it is live
 tracking your logfile for updates.
 
+## Questions?
+Check out the [FAQ](https://github.com/dermow/TraXile/wiki/FAQ).
+
 ## Special thanks goes to:
 * [Esturnat](https://de.pathofexile.com/account/view-profile/Esturnat2) for the name "TraXile", great testing and ideas.
 * [Mr__Khan](https://www.twitch.tv/mr__khan) for great support in testing, labyrinth-features and feedback
