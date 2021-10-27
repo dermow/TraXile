@@ -109,3 +109,8 @@
 - Fixed a bug which causes duplicate activity entries in database
 - Fixed a bug which causes the application to crash while updating the UI
 - Fixed a bug where applying a UI theme overwrites tag styles
+
+0.6.6
+- Fixed a bug which causes values in Dashboard-Charts were not shown 
+- Displaying percentage values in pie chart
+- Remember setting 'hide unknown' in lab dashboard
