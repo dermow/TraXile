@@ -126,7 +126,7 @@ namespace TraXile
         {
             if (_mainWindow.ValidateTagName(comboBox1.Text, true))
             {
-                _mainWindow.AddTagAutoCreate(_mainWindow.GetTagByDisplayName(comboBox1.Text).ID, _trackedActivity);
+                _mainWindow.AddTagAutoCreate(comboBox1.Text, _trackedActivity);
                 RenderTags(true);
                 _mainWindow.ResetMapHistory();
             }
