@@ -366,9 +366,12 @@ namespace TraXile
 
                 // Expedition
                 { "] Tujen, the Haggler:", EVENT_TYPES.EXP_TUJEN_ENCOUNTER },
+                { "] Tujen:", EVENT_TYPES.EXP_TUJEN_ENCOUNTER },
                 { "] Gwennen, the Gambler:", EVENT_TYPES.EXP_GWENNEN_ENCOUNTER },
+                { "] Gwennen:", EVENT_TYPES.EXP_GWENNEN_ENCOUNTER },
                 { "] Rog:", EVENT_TYPES.EXP_ROG_ENCOUNTER },
-                { "] Dannig, Warrior Skald:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
+                { "] Dannig, Warrior Skald:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER }
+                { "] Dannig:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
 
                 // Heist
                 { "] Karst, the Lockpick: ", EVENT_TYPES.HEIST_KARST_SPEAK },
