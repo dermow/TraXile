@@ -7,7 +7,18 @@ namespace TraXile
         public List<string> MAP_AREAS,
             HEIST_AREAS,
             SIMU_AREAS,
-            CAMP_AREAS;
+            CAMP_AREAS,
+            SIRUS_AREAS,
+            ATZIRI_AREAS,
+            UBER_ATZIRI_AREAS,
+            ELDER_AREAS,
+            SHAPER_AREAS,
+            TEMPLE_AREAS,
+            DEATH_COUNT_ENABLED_AREAS,
+            MAVEN_FIGHT_AREAS,
+            MAVEN_INV_AREAS,
+            LAB_START_AREAS,
+            DELVE_AREAS;
 
         public Dictionary<string, string> WIKI_LINKS;
 
@@ -239,6 +250,87 @@ namespace TraXile
                "Oriath Docks",
                "Karui Shores"
             };
+
+            SIRUS_AREAS = new List<string>
+            {
+                "Eye of the Storm"
+            };
+
+            TEMPLE_AREAS = new List<string>
+            {
+                "The Temple of Atzoatl"
+            };
+
+            ATZIRI_AREAS = new List<string>
+            {
+                "The Apex of Sacrifice"
+            };
+
+            UBER_ATZIRI_AREAS = new List<string>
+            {
+                "The Alluring Abyss"
+            };
+
+            SHAPER_AREAS = new List<string>
+            {
+                "The Shapers Realm"
+            };
+
+            ELDER_AREAS = new List<string>
+            {
+                "Absence of Value and Meaning"
+            };
+
+            MAVEN_FIGHT_AREAS = new List<string>
+            {
+                "Absence of Mercy and Empathy"
+            };
+
+            MAVEN_INV_AREAS = new List<string>
+            {
+                "The Mavens Crucible"
+            };
+
+            DELVE_AREAS = new List<string>
+            {
+                "Azurite Mine"
+            };
+
+            LAB_START_AREAS = new List<string>
+            {
+                "Estate Path",
+                "Estate Walkways",
+                "Estate Crossing"
+            };
+
+            // Map areas with enabled death counter
+            DEATH_COUNT_ENABLED_AREAS = new List<string>();
+            DEATH_COUNT_ENABLED_AREAS.AddRange(SIMU_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(MAP_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(HEIST_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(SIRUS_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(TEMPLE_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(ATZIRI_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(SHAPER_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(ELDER_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(UBER_ATZIRI_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(MAVEN_INV_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(MAVEN_FIGHT_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(DELVE_AREAS);
         }
     }
 }
+
+
+/*
+  bool bTargetAreaMine = sTargetArea == "Azurite Mine";
+            bool bTargetAreaTemple = sTargetArea == "The Temple of Atzoatl";
+            bool bTargetAreaIsLab = sTargetArea == "Estate Path" || sTargetArea == "Estate Walkways" || sTargetArea == "Estate Crossing";
+            bool bTargetAreaIsMI = sTargetArea == "The Mavens Crucible";
+            bool bTargetAreaIsAtziri = sTargetArea == "The Apex of Sacrifice";
+            bool bTargetAreaIsUberAtziri = sTargetArea == "The Alluring Abyss";
+            bool bTargetAreaIsElder = sTargetArea == "Absence of Value and Meaning";
+            bool bTargetAreaIsShaper = sTargetArea == "The Shapers Realm";
+            bool bTargetAreaIsSirusFight = sTargetArea == "Eye of the Storm";
+            bool bTargetAreaIsMavenFight = sTargetArea == "Absence of Mercy and Empathy";
+*/

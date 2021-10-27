@@ -370,7 +370,7 @@ namespace TraXile
                 { "] Gwennen, the Gambler:", EVENT_TYPES.EXP_GWENNEN_ENCOUNTER },
                 { "] Gwennen:", EVENT_TYPES.EXP_GWENNEN_ENCOUNTER },
                 { "] Rog:", EVENT_TYPES.EXP_ROG_ENCOUNTER },
-                { "] Dannig, Warrior Skald:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER }
+                { "] Dannig, Warrior Skald:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
                 { "] Dannig:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
 
                 // Heist

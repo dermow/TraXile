@@ -25,13 +25,21 @@ namespace TraXile
         SIMULACRUM,
         BLIGHTED_MAP,
         DELVE,
-        TEMPLE
+        TEMPLE,
+        MAVEN_INVITATION,
+        ATZIRI,
+        UBER_ATZIRI,
+        ELDER_FIGHT,
+        SHAPER_FIGHT,
+        MAVEN_FIGHT,
+        SIRUS_FIGHT,
+        OTHER
     }
 
     public partial class Main : Form
     {
         // DEBUG: CHANGE BEFORE RELEASE!!
-        private bool IS_IN_DEBUG_MODE = false;
+        private bool IS_IN_DEBUG_MODE = true;
 
         // App parameters
         private readonly string _dbPath;
@@ -98,7 +106,6 @@ namespace TraXile
         private TrX_ListViewManager _lvmStats, _lvmActlog;
         private TrX_Theme _myTheme;
         private ILog _log;
-
         /// <summary>
         /// Setting Property for LogFilePath
         /// </summary>
@@ -469,15 +476,19 @@ namespace TraXile
 
             if(String.IsNullOrEmpty(SettingPoeLogFilePath))
             {
-                FileSelectScreen fs = new FileSelectScreen(this);
-                fs.StartPosition = FormStartPosition.CenterParent;
-                fs.ShowInTaskbar = false;
+                FileSelectScreen fs = new FileSelectScreen(this)
+                {
+                    StartPosition = FormStartPosition.CenterParent,
+                    ShowInTaskbar = false
+                };
                 fs.ShowDialog();
             }
 
-            _loadScreenWindow = new LoadScreen();
-            _loadScreenWindow.StartPosition = FormStartPosition.CenterScreen;
-            _loadScreenWindow.FormBorderStyle = FormBorderStyle.None;
+            _loadScreenWindow = new LoadScreen
+            {
+                StartPosition = FormStartPosition.CenterScreen,
+                FormBorderStyle = FormBorderStyle.None
+            };
             _loadScreenWindow.Show(this);
 
             _myDB = new TrX_DBManager(_myAppData + @"\data.db", ref _log);
@@ -1251,6 +1262,20 @@ namespace TraXile
                     return ACTIVITY_TYPES.DELVE;
                 case "temple":
                     return ACTIVITY_TYPES.TEMPLE;
+                case "maven_invitation":
+                    return ACTIVITY_TYPES.MAVEN_INVITATION;
+                case "atziri":
+                    return ACTIVITY_TYPES.ATZIRI;
+                case "uber_atziri":
+                    return ACTIVITY_TYPES.UBER_ATZIRI;
+                case "elder_fight":
+                    return ACTIVITY_TYPES.ELDER_FIGHT;
+                case "shaper_fight":
+                    return ACTIVITY_TYPES.SHAPER_FIGHT;
+                case "maven_fight":
+                    return ACTIVITY_TYPES.MAVEN_FIGHT;
+                case "sirus_fight":
+                    return ACTIVITY_TYPES.SIRUS_FIGHT;
             }
             return ACTIVITY_TYPES.MAP;
         }
@@ -1663,9 +1688,16 @@ namespace TraXile
             bool bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea);
             bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
             bool bTargetAreaIsSimu = false;
-            bool bTargetAreaMine = sTargetArea == "Azurite Mine";
-            bool bTargetAreaTemple = sTargetArea == "The Temple of Atzoatl";
-            bool bTargetAreaIsLab = sTargetArea == "Estate Path" || sTargetArea == "Estate Walkways" || sTargetArea == "Estate Crossing";
+            bool bTargetAreaMine = _defaultMappings.DELVE_AREAS.Contains(sTargetArea);
+            bool bTargetAreaTemple = _defaultMappings.TEMPLE_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsLab = _defaultMappings.LAB_START_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsMI = _defaultMappings.MAVEN_INV_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsAtziri = _defaultMappings.ATZIRI_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsUberAtziri = _defaultMappings.UBER_ATZIRI_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsElder = _defaultMappings.ELDER_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsShaper = _defaultMappings.SHAPER_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsSirusFight = _defaultMappings.SIRUS_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsMavenFight = _defaultMappings.MAVEN_FIGHT_AREAS.Contains(sTargetArea);
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
             _inAreaSince = ev.EventTime;
@@ -1739,6 +1771,35 @@ namespace TraXile
             {
                 actType = ACTIVITY_TYPES.TEMPLE;
             }
+            else if (bTargetAreaIsMI)
+            {
+                actType = ACTIVITY_TYPES.MAVEN_INVITATION;
+            }
+            else if (bTargetAreaIsAtziri)
+            {
+                actType = ACTIVITY_TYPES.ATZIRI;
+            }
+            else if (bTargetAreaIsUberAtziri)
+            {
+                actType = ACTIVITY_TYPES.UBER_ATZIRI;
+            }
+            else if (bTargetAreaIsShaper)
+            {
+                actType = ACTIVITY_TYPES.SHAPER_FIGHT;
+            }
+            else if (bTargetAreaIsElder)
+            { 
+                actType = ACTIVITY_TYPES.ELDER_FIGHT;
+            }
+            else if(bTargetAreaIsMavenFight)
+            {
+                actType = ACTIVITY_TYPES.MAVEN_FIGHT;
+            }
+            else if(bTargetAreaIsSirusFight)
+            {
+                actType = ACTIVITY_TYPES.SIRUS_FIGHT;
+            }
+
 
             //Lab started?
             if (actType == ACTIVITY_TYPES.LABYRINTH && sSourceArea == "Aspirants Plaza")
@@ -1853,7 +1914,24 @@ namespace TraXile
                 }
             }
 
-            if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsLab || bTargetAreaMine || bTargetAreaTemple)
+            // Mechanisms that can be tracked with default logic:
+            // One Area + Own instance
+            bool bIsDefaultTrackable =
+                bTargetAreaIsMap ||
+                bTargetAreaIsHeist ||
+                bTargetAreaIsSimu ||
+                bTargetAreaIsLab ||
+                bTargetAreaMine ||
+                bTargetAreaTemple ||
+                bTargetAreaIsMI ||
+                bTargetAreaIsUberAtziri ||
+                bTargetAreaIsAtziri ||
+                bTargetAreaIsElder ||
+                bTargetAreaIsShaper ||
+                bTargetAreaIsMavenFight ||
+                bTargetAreaIsSirusFight;
+
+            if (bIsDefaultTrackable)
             {
                 _elderFightActive = false;
                 _shaperKillsInFight = 0;
@@ -1979,10 +2057,7 @@ namespace TraXile
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
                 }
 
-                // do not count deaths outsite activities to them
-                if (CheckIfAreaIsMap(_currentArea) == false
-                    && CheckIfAreaIsHeist(_currentArea) == false
-                    && CheckIfAreaIsSimu(_currentArea) == false)
+                if(!_defaultMappings.DEATH_COUNT_ENABLED_AREAS.Contains(_currentArea))
                 {
                     return;
                 }
@@ -3263,6 +3338,30 @@ namespace TraXile
                 { ACTIVITY_TYPES.LABYRINTH, 0 },
                 { ACTIVITY_TYPES.SIMULACRUM, 0 },
                 { ACTIVITY_TYPES.TEMPLE, 0 },
+                { ACTIVITY_TYPES.MAVEN_INVITATION, 0 },
+                { ACTIVITY_TYPES.ATZIRI, 0 },
+                { ACTIVITY_TYPES.UBER_ATZIRI, 0 },
+                { ACTIVITY_TYPES.ELDER_FIGHT, 0 },
+                { ACTIVITY_TYPES.SHAPER_FIGHT, 0 },
+                { ACTIVITY_TYPES.MAVEN_FIGHT, 0 },
+                { ACTIVITY_TYPES.SIRUS_FIGHT, 0 },
+            };
+
+            Dictionary<ACTIVITY_TYPES, int> typeListCount= new Dictionary<ACTIVITY_TYPES, int>
+            {
+                { ACTIVITY_TYPES.MAP, 0 },
+                { ACTIVITY_TYPES.HEIST, 0 },
+                { ACTIVITY_TYPES.DELVE, 0 },
+                { ACTIVITY_TYPES.LABYRINTH, 0 },
+                { ACTIVITY_TYPES.SIMULACRUM, 0 },
+                { ACTIVITY_TYPES.TEMPLE, 0 },
+                { ACTIVITY_TYPES.MAVEN_INVITATION, 0 },
+                { ACTIVITY_TYPES.ATZIRI, 0 },
+                { ACTIVITY_TYPES.UBER_ATZIRI, 0 },
+                { ACTIVITY_TYPES.ELDER_FIGHT, 0 },
+                { ACTIVITY_TYPES.SHAPER_FIGHT, 0 },
+                { ACTIVITY_TYPES.MAVEN_FIGHT, 0 },
+                { ACTIVITY_TYPES.SIRUS_FIGHT, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -3273,6 +3372,14 @@ namespace TraXile
                 { ACTIVITY_TYPES.LABYRINTH, Color.DarkTurquoise },
                 { ACTIVITY_TYPES.SIMULACRUM, Color.Gray },
                 { ACTIVITY_TYPES.TEMPLE, Color.MediumSeaGreen },
+                { ACTIVITY_TYPES.MAVEN_INVITATION, Color.Violet },
+                { ACTIVITY_TYPES.ATZIRI, Color.OrangeRed },
+                { ACTIVITY_TYPES.UBER_ATZIRI, Color.OrangeRed },
+                { ACTIVITY_TYPES.ELDER_FIGHT, Color.Gray },
+                { ACTIVITY_TYPES.SHAPER_FIGHT, Color.MediumVioletRed },
+                { ACTIVITY_TYPES.MAVEN_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.SIRUS_FIGHT, Color.AntiqueWhite },
+                { ACTIVITY_TYPES.OTHER, Color.Gray }
             };
 
             double totalCount = 0;
@@ -3293,6 +3400,8 @@ namespace TraXile
                         break;
                 }
 
+                typeListCount[act.Type]++;
+
                 // Filter out
                 if(act.TotalSeconds < iCap)
                 {
@@ -3307,10 +3416,15 @@ namespace TraXile
             }
 
             chartGlobalDashboard.Series[0].Points.Clear();
+            listView1.Items.Clear();
+            double dOther = 0;
             foreach(KeyValuePair<ACTIVITY_TYPES,double> kvp in typeList)
             {
+                ListViewItem lvi;
+
                 // calculate percent value
                 double percentVal = 0;
+
 
                 if(kvp.Value > 0)
                 {
@@ -3318,13 +3432,39 @@ namespace TraXile
                     percentVal = Math.Round(percentVal, 2);
                 }
 
-                TimeSpan tsDuration = TimeSpan.FromSeconds(kvp.Value);
+                if(percentVal >= 10)
+                {
+                    TimeSpan tsDuration = TimeSpan.FromSeconds(kvp.Value);
+                    chartGlobalDashboard.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
+                    chartGlobalDashboard.Series[0].Points.Last().Color = colorList[kvp.Key];
+                    chartGlobalDashboard.Series[0].Points.Last().Label = kvp.Value > 0 ? string.Format("{0} hours", Math.Round(tsDuration.TotalHours, 1)) : " ";
+                    chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", kvp.Key.ToString(), percentVal);
 
-                chartGlobalDashboard.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
-                chartGlobalDashboard.Series[0].Points.Last().Color = colorList[kvp.Key];
-                chartGlobalDashboard.Series[0].Points.Last().Label = kvp.Value > 0 ? string.Format("{0}", Math.Round(tsDuration.TotalHours, 1)) : " ";
-                chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", kvp.Key.ToString(), percentVal);
+                    lvi = new ListViewItem(kvp.Key.ToString());
+                    lvi.SubItems.Add(typeListCount[kvp.Key].ToString());
+                    lvi.SubItems.Add(Math.Round(kvp.Value / 60 / 60, 1).ToString() + " hours");
+                    lvi.SubItems.Add(percentVal + "%");
+                    listView1.Items.Add(lvi);
+                }
+                else
+                {
+                    dOther += kvp.Value;
+                    lvi = new ListViewItem(kvp.Key.ToString());
+                    lvi.SubItems.Add(typeListCount[kvp.Key].ToString());
+                    lvi.SubItems.Add(Math.Round(kvp.Value / 60 / 60, 1).ToString() + " hours");
+                    lvi.SubItems.Add(percentVal + "%");
+                    listView1.Items.Add(lvi);
+                }
             }
+
+            // Add Other
+            double percentValOther = dOther / totalCount * 100;
+            percentValOther = Math.Round(percentValOther, 2);
+            TimeSpan tsDurationOther = TimeSpan.FromSeconds(dOther);
+            chartGlobalDashboard.Series[0].Points.AddXY("Other", Math.Round(dOther / 60 / 60, 1));
+            chartGlobalDashboard.Series[0].Points.Last().Color = colorList[ACTIVITY_TYPES.OTHER];
+            chartGlobalDashboard.Series[0].Points.Last().Label = dOther > 0 ? string.Format("{0} hours", Math.Round(tsDurationOther.TotalHours, 1)) : " ";
+            chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", "Other", percentValOther);
         }
 
         /// <summary>
