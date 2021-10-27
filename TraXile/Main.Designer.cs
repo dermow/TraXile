@@ -1356,7 +1356,7 @@ namespace TraXile
             this.tableLayoutPanel24.ColumnCount = 3;
             this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 0.9259259F));
             this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 99.07407F));
-            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 98F));
+            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 109F));
             this.tableLayoutPanel24.Controls.Add(this.chartGlobalDashboard, 1, 1);
             this.tableLayoutPanel24.Controls.Add(this.label89, 1, 0);
             this.tableLayoutPanel24.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1383,7 +1383,7 @@ namespace TraXile
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chartGlobalDashboard.Series.Add(series2);
-            this.chartGlobalDashboard.Size = new System.Drawing.Size(981, 791);
+            this.chartGlobalDashboard.Size = new System.Drawing.Size(970, 791);
             this.chartGlobalDashboard.TabIndex = 0;
             this.chartGlobalDashboard.Text = "chart8";
             // 
@@ -1395,7 +1395,7 @@ namespace TraXile
             this.label89.ForeColor = System.Drawing.Color.White;
             this.label89.Location = new System.Drawing.Point(12, 0);
             this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(981, 30);
+            this.label89.Size = new System.Drawing.Size(970, 30);
             this.label89.TabIndex = 1;
             this.label89.Text = "Activity Time (Hours)";
             this.label89.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1443,8 +1443,8 @@ namespace TraXile
             this.tableLayoutPanel11.Location = new System.Drawing.Point(4, 4);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 2;
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.91228F));
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.08772F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.19469F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.80531F));
             this.tableLayoutPanel11.Size = new System.Drawing.Size(540, 339);
             this.tableLayoutPanel11.TabIndex = 0;
             // 
@@ -1457,13 +1457,13 @@ namespace TraXile
             this.chartMapTierCount.Dock = System.Windows.Forms.DockStyle.Fill;
             legend3.Name = "Legend1";
             this.chartMapTierCount.Legends.Add(legend3);
-            this.chartMapTierCount.Location = new System.Drawing.Point(3, 53);
+            this.chartMapTierCount.Location = new System.Drawing.Point(3, 23);
             this.chartMapTierCount.Name = "chartMapTierCount";
             series3.ChartArea = "ChartArea1";
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             this.chartMapTierCount.Series.Add(series3);
-            this.chartMapTierCount.Size = new System.Drawing.Size(534, 283);
+            this.chartMapTierCount.Size = new System.Drawing.Size(534, 313);
             this.chartMapTierCount.TabIndex = 1;
             this.chartMapTierCount.Text = "chart2";
             title1.Name = "Map Tiers";
@@ -1477,7 +1477,7 @@ namespace TraXile
             this.label9.ForeColor = System.Drawing.Color.White;
             this.label9.Location = new System.Drawing.Point(3, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(534, 50);
+            this.label9.Size = new System.Drawing.Size(534, 20);
             this.label9.TabIndex = 2;
             this.label9.Text = "Map Tiers";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1492,8 +1492,8 @@ namespace TraXile
             this.tableLayoutPanel12.Location = new System.Drawing.Point(551, 4);
             this.tableLayoutPanel12.Name = "tableLayoutPanel12";
             this.tableLayoutPanel12.RowCount = 2;
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.91228F));
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.08772F));
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.19469F));
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.80531F));
             this.tableLayoutPanel12.Size = new System.Drawing.Size(540, 339);
             this.tableLayoutPanel12.TabIndex = 3;
             // 
@@ -1506,13 +1506,13 @@ namespace TraXile
             this.chartMapTierAvgTime.Dock = System.Windows.Forms.DockStyle.Fill;
             legend4.Name = "Legend1";
             this.chartMapTierAvgTime.Legends.Add(legend4);
-            this.chartMapTierAvgTime.Location = new System.Drawing.Point(3, 53);
+            this.chartMapTierAvgTime.Location = new System.Drawing.Point(3, 23);
             this.chartMapTierAvgTime.Name = "chartMapTierAvgTime";
             series4.ChartArea = "ChartArea1";
             series4.Legend = "Legend1";
             series4.Name = "Series1";
             this.chartMapTierAvgTime.Series.Add(series4);
-            this.chartMapTierAvgTime.Size = new System.Drawing.Size(534, 283);
+            this.chartMapTierAvgTime.Size = new System.Drawing.Size(534, 313);
             this.chartMapTierAvgTime.TabIndex = 1;
             this.chartMapTierAvgTime.Text = "chart3";
             title2.Name = "Map Tiers";
@@ -1526,7 +1526,7 @@ namespace TraXile
             this.label18.ForeColor = System.Drawing.Color.White;
             this.label18.Location = new System.Drawing.Point(3, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(534, 50);
+            this.label18.Size = new System.Drawing.Size(534, 20);
             this.label18.TabIndex = 2;
             this.label18.Text = "Average time per map/tier (minutes)";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1682,8 +1682,8 @@ namespace TraXile
             this.tableLayoutPanel17.Location = new System.Drawing.Point(550, 3);
             this.tableLayoutPanel17.Name = "tableLayoutPanel17";
             this.tableLayoutPanel17.RowCount = 2;
-            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.91228F));
-            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.08772F));
+            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.895705F));
+            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.10429F));
             this.tableLayoutPanel17.Size = new System.Drawing.Size(542, 326);
             this.tableLayoutPanel17.TabIndex = 3;
             // 
@@ -1696,13 +1696,15 @@ namespace TraXile
             this.chartLabsAvgTime.Dock = System.Windows.Forms.DockStyle.Fill;
             legend5.Name = "Legend1";
             this.chartLabsAvgTime.Legends.Add(legend5);
-            this.chartLabsAvgTime.Location = new System.Drawing.Point(3, 51);
+            this.chartLabsAvgTime.Location = new System.Drawing.Point(3, 32);
             this.chartLabsAvgTime.Name = "chartLabsAvgTime";
             series5.ChartArea = "ChartArea1";
+            series5.IsValueShownAsLabel = true;
             series5.Legend = "Legend1";
             series5.Name = "Series1";
+            series5.SmartLabelStyle.AllowOutsidePlotArea = System.Windows.Forms.DataVisualization.Charting.LabelOutsidePlotAreaStyle.Yes;
             this.chartLabsAvgTime.Series.Add(series5);
-            this.chartLabsAvgTime.Size = new System.Drawing.Size(536, 272);
+            this.chartLabsAvgTime.Size = new System.Drawing.Size(536, 291);
             this.chartLabsAvgTime.TabIndex = 1;
             this.chartLabsAvgTime.Text = "chart5";
             title3.Name = "Map Tiers";
@@ -1716,7 +1718,7 @@ namespace TraXile
             this.label50.ForeColor = System.Drawing.Color.White;
             this.label50.Location = new System.Drawing.Point(3, 0);
             this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(536, 48);
+            this.label50.Size = new System.Drawing.Size(536, 29);
             this.label50.TabIndex = 2;
             this.label50.Text = "Avg. time per successful  lab (minutes)";
             this.label50.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1731,8 +1733,8 @@ namespace TraXile
             this.tableLayoutPanel16.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel16.Name = "tableLayoutPanel16";
             this.tableLayoutPanel16.RowCount = 2;
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.91228F));
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.08772F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.895705F));
+            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.10429F));
             this.tableLayoutPanel16.Size = new System.Drawing.Size(541, 326);
             this.tableLayoutPanel16.TabIndex = 1;
             // 
@@ -1745,13 +1747,13 @@ namespace TraXile
             this.chartLabsDone.Dock = System.Windows.Forms.DockStyle.Fill;
             legend6.Name = "Legend1";
             this.chartLabsDone.Legends.Add(legend6);
-            this.chartLabsDone.Location = new System.Drawing.Point(3, 51);
+            this.chartLabsDone.Location = new System.Drawing.Point(3, 32);
             this.chartLabsDone.Name = "chartLabsDone";
             series6.ChartArea = "ChartArea1";
             series6.Legend = "Legend1";
             series6.Name = "Series1";
             this.chartLabsDone.Series.Add(series6);
-            this.chartLabsDone.Size = new System.Drawing.Size(535, 272);
+            this.chartLabsDone.Size = new System.Drawing.Size(535, 291);
             this.chartLabsDone.TabIndex = 1;
             this.chartLabsDone.Text = "chart4";
             title4.Name = "Map Tiers";
@@ -1765,7 +1767,7 @@ namespace TraXile
             this.label25.ForeColor = System.Drawing.Color.White;
             this.label25.Location = new System.Drawing.Point(3, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(535, 48);
+            this.label25.Size = new System.Drawing.Size(535, 29);
             this.label25.TabIndex = 2;
             this.label25.Text = "Successful labs done by type";
             this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

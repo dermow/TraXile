@@ -311,6 +311,9 @@ namespace TraXile
             chartStats.Series[0].LabelBorderColor = Color.Black;
             chartStats.Series[0].Color = Color.White;
             chartStats.Legends[0].Enabled = false;
+            chartStats.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+            chartStats.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+            chartStats.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
             chartMapTierCount.BackColor = Color.Black;
             chartMapTierCount.ChartAreas[0].BackColor = Color.Black;
@@ -326,6 +329,9 @@ namespace TraXile
             chartMapTierCount.Series[0].IsValueShownAsLabel = true;
             chartMapTierCount.Series[0].LabelForeColor = Color.White;
             chartMapTierCount.Series[0].Color = Color.White;
+            chartMapTierCount.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+            chartMapTierCount.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+            chartMapTierCount.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
             chartMapTierAvgTime.BackColor = Color.Black;
             chartMapTierAvgTime.ChartAreas[0].BackColor = Color.Black;
@@ -342,6 +348,9 @@ namespace TraXile
             chartMapTierAvgTime.Series[0].IsValueShownAsLabel = true;
             chartMapTierAvgTime.Series[0].LabelForeColor = Color.White;
             chartMapTierAvgTime.Series[0].Color = Color.White;
+            chartMapTierAvgTime.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+            chartMapTierAvgTime.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+            chartMapTierAvgTime.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
             chartLabsDone.BackColor = Color.Black;
             chartLabsDone.ChartAreas[0].BackColor = Color.Black;
@@ -357,6 +366,9 @@ namespace TraXile
             chartLabsDone.Series[0].IsValueShownAsLabel = true;
             chartLabsDone.Series[0].LabelForeColor = Color.White;
             chartLabsDone.Series[0].Color = Color.White;
+            chartLabsDone.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+            chartLabsDone.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+            chartLabsDone.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
             chartLabsAvgTime.BackColor = Color.Black;
             chartLabsAvgTime.ChartAreas[0].BackColor = Color.Black;
@@ -372,6 +384,9 @@ namespace TraXile
             chartLabsAvgTime.Series[0].IsValueShownAsLabel = true;
             chartLabsAvgTime.Series[0].LabelForeColor = Color.White;
             chartLabsAvgTime.Series[0].Color = Color.White;
+            chartLabsAvgTime.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+            chartLabsAvgTime.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+            chartLabsAvgTime.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
             chartHeistByLevel.BackColor = Color.Black;
             chartHeistByLevel.ChartAreas[0].BackColor = Color.Black;
@@ -387,6 +402,9 @@ namespace TraXile
             chartHeistByLevel.Series[0].IsValueShownAsLabel = true;
             chartHeistByLevel.Series[0].LabelForeColor = Color.White;
             chartHeistByLevel.Series[0].Color = Color.White;
+            chartHeistByLevel.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+            chartHeistByLevel.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+            chartHeistByLevel.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
             chartHeistAvgTime.BackColor = Color.Black;
             chartHeistAvgTime.ChartAreas[0].BackColor = Color.Black;
@@ -402,6 +420,9 @@ namespace TraXile
             chartHeistAvgTime.Series[0].IsValueShownAsLabel = true;
             chartHeistAvgTime.Series[0].LabelForeColor = Color.White;
             chartHeistAvgTime.Series[0].Color = Color.White;
+            chartHeistAvgTime.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+            chartHeistAvgTime.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+            chartHeistAvgTime.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
             chartGlobalDashboard.BackColor = Color.Black;
             chartGlobalDashboard.ChartAreas[0].BackColor = Color.Black;
@@ -417,6 +438,9 @@ namespace TraXile
             chartGlobalDashboard.Series[0].IsValueShownAsLabel = true;
             chartGlobalDashboard.Series[0].LabelForeColor = Color.White;
             chartGlobalDashboard.Series[0].Color = Color.White;
+            chartGlobalDashboard.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+            chartGlobalDashboard.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+            chartGlobalDashboard.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
             var ca = chartStats.ChartAreas["ChartArea1"].CursorX;
             ca.IsUserEnabled = true;
@@ -446,10 +470,14 @@ namespace TraXile
             if(String.IsNullOrEmpty(SettingPoeLogFilePath))
             {
                 FileSelectScreen fs = new FileSelectScreen(this);
+                fs.StartPosition = FormStartPosition.CenterParent;
+                fs.ShowInTaskbar = false;
                 fs.ShowDialog();
             }
 
             _loadScreenWindow = new LoadScreen();
+            _loadScreenWindow.StartPosition = FormStartPosition.CenterScreen;
+            _loadScreenWindow.FormBorderStyle = FormBorderStyle.None;
             _loadScreenWindow.Show(this);
 
             _myDB = new TrX_DBManager(_myAppData + @"\data.db", ref _log);
@@ -3036,7 +3064,14 @@ namespace TraXile
                     {
                         RenderGlobalDashboard();
                         _globalDashboardUpdateRequested = false;
+
+                        if (checkBoxLabHideUnknown.Checked != _labDashboardHideUnknown)
+                        {
+                            checkBoxLabHideUnknown.Checked = _labDashboardHideUnknown;
+                        }
                     }
+
+                    
 
 
                 });
@@ -3053,12 +3088,12 @@ namespace TraXile
             _timeCapLab = Convert.ToInt32(ReadSetting("TimeCapLab", "3600"));
             _timeCapMap = Convert.ToInt32(ReadSetting("TimeCapMap", "3600"));
             _timeCapHeist = Convert.ToInt32(ReadSetting("TimeCapHeist", "3600"));
+            _labDashboardHideUnknown = Convert.ToBoolean(ReadSetting("dashboard_lab_hide_unknown", "false"));
+            
             comboBoxTheme.SelectedItem = ReadSetting("theme", "Dark") == "Dark" ? "Dark" : "Light";
-
             textBoxMapCap.Text = _timeCapMap.ToString();
             textBoxLabCap.Text = _timeCapLab.ToString();
             textBoxHeistCap.Text = _timeCapHeist.ToString();
-
             listViewActLog.GridLines = _showGridInActLog;
             listViewStats.GridLines = _showGridInStats;
         }
@@ -3190,8 +3225,9 @@ namespace TraXile
                     {
                         sName += "*";
                     }
+
                     chartLabsDone.Series[0].Points.AddXY(sName, kvp.Value);
-                    chartLabsAvgTime.Series[0].Points.AddXY(sName, Math.Round(labAvgTimes[kvp.Key] / 60, 2));
+                    chartLabsAvgTime.Series[0].Points.AddXY(sName, Math.Round(labAvgTimes[kvp.Key] / 60, 1));
 
                     ListViewItem lvi = new ListViewItem(kvp.Key);
                     
@@ -3236,9 +3272,10 @@ namespace TraXile
                 { ACTIVITY_TYPES.DELVE, Color.Orange },
                 { ACTIVITY_TYPES.LABYRINTH, Color.DarkTurquoise },
                 { ACTIVITY_TYPES.SIMULACRUM, Color.Gray },
-                { ACTIVITY_TYPES.TEMPLE, Color.GreenYellow },
+                { ACTIVITY_TYPES.TEMPLE, Color.MediumSeaGreen },
             };
 
+            double totalCount = 0;
             foreach (TrX_TrackedActivity act in _eventHistory)
             {
                 int iCap = 3600;
@@ -3260,18 +3297,33 @@ namespace TraXile
                 if(act.TotalSeconds < iCap)
                 {
                     typeList[act.Type] += act.TotalSeconds;
+                    totalCount += act.TotalSeconds;
                 }
                 else
                 {
                     typeList[act.Type] += iCap;
+                    totalCount += iCap;
                 }
             }
 
             chartGlobalDashboard.Series[0].Points.Clear();
             foreach(KeyValuePair<ACTIVITY_TYPES,double> kvp in typeList)
             {
+                // calculate percent value
+                double percentVal = 0;
+
+                if(kvp.Value > 0)
+                {
+                    percentVal = kvp.Value / totalCount * 100;
+                    percentVal = Math.Round(percentVal, 2);
+                }
+
+                TimeSpan tsDuration = TimeSpan.FromSeconds(kvp.Value);
+
                 chartGlobalDashboard.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
                 chartGlobalDashboard.Series[0].Points.Last().Color = colorList[kvp.Key];
+                chartGlobalDashboard.Series[0].Points.Last().Label = kvp.Value > 0 ? string.Format("{0}", Math.Round(tsDuration.TotalHours, 1)) : " ";
+                chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", kvp.Key.ToString(), percentVal);
             }
         }
 
@@ -3393,7 +3445,9 @@ namespace TraXile
 
                 foreach (KeyValuePair<int, double> kvp in levelAvgs)
                 {
-                    chartHeistAvgTime.Series[0].Points.AddXY(kvp.Key, Math.Round(kvp.Value / 60, 2));
+                    TimeSpan ts = TimeSpan.FromSeconds(kvp.Value);
+
+                    chartHeistAvgTime.Series[0].Points.AddXY(kvp.Key, Math.Round(kvp.Value / 60, 1));
                     chartHeistByLevel.Series[0].Points.AddXY(kvp.Key, levelCounts[kvp.Key]);
                 }
             };
@@ -3526,7 +3580,7 @@ namespace TraXile
                 chartMapTierAvgTime.Series[0].Points.Clear();
                 for(int i = 0; i < tierAverages.Length; i++)
                 {
-                    chartMapTierAvgTime.Series[0].Points.AddXY(i+1, Math.Round(tierAverages[i] / 60, 2));
+                    chartMapTierAvgTime.Series[0].Points.AddXY(i+1, Math.Round(tierAverages[i] / 60, 1));
                 }
             };
             Invoke(mi);
@@ -3695,9 +3749,17 @@ namespace TraXile
         /// <param name="ta"></param>
         private void OpenActivityDetails(TrX_TrackedActivity ta)
         {
-            ActivityDetails ad = new ActivityDetails(ta, this);
-            _myTheme.Apply(ad);
-            ad.Show();
+            OpenChildWindow(new ActivityDetails(ta, this));
+        }
+
+        private void OpenChildWindow(Form form)
+        {
+            form.StartPosition = FormStartPosition.Manual;
+            form.ShowInTaskbar = false;
+            form.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
+            form.Owner = this;
+            _myTheme.Apply(form);
+            form.Show();
         }
 
         /// <summary>
@@ -4238,9 +4300,7 @@ namespace TraXile
 
         private void button4_Click(object sender, EventArgs e)
         {
-            ExportActvityList exp = new ExportActvityList(this);
-            _myTheme.Apply(exp);
-            exp.Show();
+            OpenChildWindow(new ExportActvityList(this));
         }
 
        
@@ -4487,9 +4547,7 @@ namespace TraXile
 
         private void chatCommandsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChatCommandHelp cmh = new ChatCommandHelp();
-            _myTheme.Apply(cmh);
-            cmh.ShowDialog();
+            OpenChildWindow(new ChatCommandHelp());
         }
 
         private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -4506,8 +4564,7 @@ namespace TraXile
 
         private void chatCommandsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            ChatCommandHelp cmh = new ChatCommandHelp();
-            cmh.ShowDialog();
+            OpenChildWindow(new ChatCommandHelp());
         }
 
         private void textBox7_TextChanged(object sender, EventArgs e)
@@ -4522,9 +4579,7 @@ namespace TraXile
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            SearchHelp sh = new SearchHelp();
-            _myTheme.Apply(sh);
-            sh.Show();
+            OpenChildWindow(new SearchHelp());
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -4545,16 +4600,12 @@ namespace TraXile
 
         private void infoToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AboutW ab = new AboutW();
-            _myTheme.Apply(ab);
-            ab.ShowDialog();
+            OpenChildWindow(new AboutW());
         }
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            AboutW ab = new AboutW();
-            _myTheme.Apply(ab);
-            ab.ShowDialog();
+            OpenChildWindow(new AboutW());
         }
 
        
@@ -4617,6 +4668,7 @@ namespace TraXile
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
             _labDashboardHideUnknown = ((CheckBox)sender).Checked;
+            AddUpdateAppSettings("dashboard_lab_hide_unknown", _labDashboardHideUnknown.ToString());
             RenderLabDashboard();
         }
 
