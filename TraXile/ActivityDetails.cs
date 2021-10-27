@@ -19,6 +19,7 @@ namespace TraXile
 
             labelTime.Text = ta.Started.ToString();
             labelType.Text = ta.Type.ToString();
+            label12.Text = "ID: " + ta.UniqueID;
             if(ta.IsZana)
             {
                 labelType.Text += " (Zana)";
