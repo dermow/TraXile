@@ -2128,8 +2128,11 @@ namespace TraXile
 
                     if (_currentActivity.ZanaMap != null)
                     {
-                        _currentActivity.ZanaMap.StopStopWatch();
-                        _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                        if(sSourceArea == _currentActivity.ZanaMap.Area)
+                        {
+                            _currentActivity.ZanaMap.StopStopWatch();
+                            _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                        }
                     }
 
                 }
@@ -2621,7 +2624,7 @@ namespace TraXile
 
                 if (!bInit) TextLogEvent(ev);
             }
-            catch(AbandonedMutexException ex)
+            catch(Exception ex)
             {
                 _log.Warn("ParseError -> Ex.Message: " + ex.Message + ", LogLine: " + ev.LogLine);
                 _log.Debug(ex.ToString());
