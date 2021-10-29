@@ -131,6 +131,18 @@ namespace TraXile
             catch
             {
             }
+
+            // Update 0.7.0
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "alter table tx_activity_log add column act_pause_time int default 0";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 0.7.0 -> " + cmd.CommandText);
+            }
+            catch
+            {
+            }
         }
 
         public SqliteDataReader GetSQLReader(string s_query)

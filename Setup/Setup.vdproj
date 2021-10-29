@@ -1820,6 +1820,22 @@
                 }
             }
         }
+        "TEST"
+        {
+        "DisplayName" = "8:TEST"
+        "IsDebugOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:TEST\\Setup.msi"
+        "PackageFilesAs" = "3:2"
+        "PackageFileSize" = "3:-2147483648"
+        "CabType" = "3:1"
+        "Compression" = "3:2"
+        "SignOutput" = "11:FALSE"
+        "CertificateFile" = "8:"
+        "PrivateKeyFile" = "8:"
+        "TimeStampServer" = "8:"
+        "InstallerBootstrapper" = "3:2"
+        }
     }
     "Deployable"
     {
@@ -6679,7 +6695,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_70A8E5F21F07426CB9C2F141D47232D2"
             {
-            "SourcePath" = "8:..\\TraXile\\obj\\Debug\\TraXile.exe"
+            "SourcePath" = "8:..\\TraXile\\obj\\TEST\\TraXile.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
@@ -6763,7 +6779,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A821A7161BC04BF890A508F78ED8FCDC"
             {
-            "SourcePath" = "8:..\\TraXile.Updater\\obj\\Debug\\TraXile.Updater.exe"
+            "SourcePath" = "8:..\\TraXile.Updater\\obj\\TEST\\TraXile.Updater.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"

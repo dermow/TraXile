@@ -66,7 +66,8 @@ namespace TraXile
         HEIST_GIANNA_SPEAK,
         HEIST_HUCK_SPEAK,
         HEIST_KARST_SPEAK,
-        ABNORMAL_DISCONNECT
+        ABNORMAL_DISCONNECT,
+        CAMPAIGN_FINISHED
     }
 
     public class TrX_EventMapping
@@ -383,6 +384,9 @@ namespace TraXile
                 { "] Vinderi, the Dismantler: ", EVENT_TYPES.HEIST_VINDERI_SPEAK },
                 { "] Gianna, the Master of Disguise: ", EVENT_TYPES.HEIST_GIANNA_SPEAK },
                 { "] Huck, the Soldier: ", EVENT_TYPES.HEIST_HUCK_SPEAK },
+
+                // Campaign
+                { "] Sin: May a new dawn arise!", EVENT_TYPES.CAMPAIGN_FINISHED },
 
                 // Disconnect
                 { "Abnormal disconnect: An unexpected disconnection occurred.", EVENT_TYPES.ABNORMAL_DISCONNECT },

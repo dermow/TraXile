@@ -54,8 +54,8 @@ namespace TraXile
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 268F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 74F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 59F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(673, 442);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
@@ -78,7 +78,7 @@ namespace TraXile
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(3, 268);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(667, 33);
+            this.label1.Size = new System.Drawing.Size(667, 74);
             this.label1.TabIndex = 1;
             this.label1.Text = "0";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -91,12 +91,12 @@ namespace TraXile
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel3.Controls.Add(this.button1, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 304);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 345);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.96296F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.03704F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(667, 135);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(667, 94);
             this.tableLayoutPanel3.TabIndex = 2;
             // 
             // button1
@@ -105,7 +105,7 @@ namespace TraXile
             this.button1.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.Location = new System.Drawing.Point(123, 3);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(421, 51);
+            this.button1.Size = new System.Drawing.Size(421, 34);
             this.button1.TabIndex = 1;
             this.button1.Text = "Select Client.txt";
             this.button1.UseVisualStyleBackColor = true;

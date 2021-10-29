@@ -33,13 +33,14 @@ namespace TraXile
         SHAPER_FIGHT,
         MAVEN_FIGHT,
         SIRUS_FIGHT,
-        OTHER
+        OTHER,
+        CAMPAIGN
     }
 
     public partial class Main : Form
     {
         // DEBUG: CHANGE BEFORE RELEASE!!
-        private bool IS_IN_DEBUG_MODE = true;
+        private readonly bool IS_IN_DEBUG_MODE = false;
 
         // App parameters
         private readonly string _dbPath;
@@ -57,6 +58,7 @@ namespace TraXile
         private bool _globalDashboardUpdateRequested;
         private bool _heistDashboardUpdateRequested;
         private bool _restoreOk = true;
+        private bool _StartedFlag = false;
         private int _timeCapLab = 3600;
         private int _timeCapMap = 3600;
         private int _timeCapHeist = 3600;
@@ -97,6 +99,10 @@ namespace TraXile
         private DateTime _initStartTime;
         private DateTime _initEndTime;
 
+        // Hideout time
+        private DateTime _hoStart;
+        private bool _trackingHO;
+
         // Other variables
         private LoadScreen _loadScreenWindow;
         private BindingList<string> _backups;
@@ -106,6 +112,8 @@ namespace TraXile
         private TrX_ListViewManager _lvmStats, _lvmActlog;
         private TrX_Theme _myTheme;
         private ILog _log;
+        private bool _showHideoutInPie;
+
         /// <summary>
         /// Setting Property for LogFilePath
         /// </summary>
@@ -129,9 +137,15 @@ namespace TraXile
         /// </summary>
         public Main()
         {
-            if(IS_IN_DEBUG_MODE)
+            if(File.Exists(Application.StartupPath + @"\DEBUG_MODE_ON.txt"))
+            {
+                IS_IN_DEBUG_MODE = true;
+            }
+
+            if (IS_IN_DEBUG_MODE)
             {
                 _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME + "_Debug";
+                Text += "!!!!! DEBUG MODE ON !!!!!!";
             }
             else
             {
@@ -472,6 +486,12 @@ namespace TraXile
             _tags = new List<TrX_ActivityTag>();
 
             Text = APPINFO.NAME;
+
+            if(IS_IN_DEBUG_MODE)
+            {
+                Text += " ---> !!!!! DEBUG MODE !!!!!";
+            }
+
             _initStartTime = DateTime.Now;
 
             if(String.IsNullOrEmpty(SettingPoeLogFilePath))
@@ -925,6 +945,7 @@ namespace TraXile
                 { "AreaChanges", 0 },
                 { "BaranStarted", 0 },
                 { "BaranKilled", 0 },
+                { "CampaignFinished", 0 },
                 { "CatarinaTried", 0 },
                 { "CatarinaKilled", 0 },
                 { "TotalKilledCount", 0 },
@@ -938,6 +959,7 @@ namespace TraXile
                 { "ExpeditionEncounters_Tujen", 0 },
                 { "ExpeditionEncounters_Gwennen", 0 },
                 { "ExpeditionEncounters_Dannig", 0 },
+                { "HideoutTimeSec", 0 },
                 { "HighestLevel", 0 },
                 { "HunterKilled", 0 },
                 { "HunterStarted", 0 },
@@ -1005,6 +1027,8 @@ namespace TraXile
                 { "ExpeditionEncounters_Tujen", "Expedition encounters: Tujen" },
                 { "ExpeditionEncounters_Gwennen", "Expedition encounters: Gwennen" },
                 { "ExpeditionEncounters_Dannig", "Expedition encounters: Dannig" },
+                { "HideoutTimeSec", "Hideout time" },
+                { "CampaignFinished", "Campaign finished" },
             };
 
             labs = new List<string>
@@ -1201,7 +1225,7 @@ namespace TraXile
         /// <param name="i_ulti_rounds"></param>
         /// <param name="b_zana"></param>
         /// <param name="l_tags"></param>
-        private void SaveToActivityLog(long i_ts, string s_type, string s_area, int i_area_level, int i_stopwatch, int i_death_counter, int i_ulti_rounds, bool b_zana, List<string> l_tags, bool b_success)
+        private void SaveToActivityLog(long i_ts, string s_type, string s_area, int i_area_level, int i_stopwatch, int i_death_counter, int i_ulti_rounds, bool b_zana, List<string> l_tags, bool b_success, int i_pause_time = 0)
         {
             //replace ' in area
             s_area = s_area.Replace("'", "");
@@ -1224,7 +1248,8 @@ namespace TraXile
                "act_ulti_rounds," +
                "act_is_zana," +
                "act_tags," +
-               "act_success) VALUES (" +
+               "act_success," +
+               "act_pause_time) VALUES (" +
                i_ts.ToString() 
                  + ", '" + s_type 
                  + "', '" + s_area
@@ -1234,7 +1259,9 @@ namespace TraXile
                  + ", " + i_ulti_rounds 
                  + ", " + (b_zana ? "1" : "0")
                  + ", '" + sTags + "'"
-                 + ", " + (b_success ? "1" : "0") + ")");
+                 + ", " + (b_success ? "1" : "0") 
+                 + ", " + i_pause_time.ToString()
+                 + ")");
 
             _parsedActivities.Add(i_ts.ToString() + "_" + s_area);
         }
@@ -1276,6 +1303,8 @@ namespace TraXile
                     return ACTIVITY_TYPES.MAVEN_FIGHT;
                 case "sirus_fight":
                     return ACTIVITY_TYPES.SIRUS_FIGHT;
+                case "campaign":
+                    return ACTIVITY_TYPES.CAMPAIGN;
             }
             return ACTIVITY_TYPES.MAP;
         }
@@ -1305,7 +1334,8 @@ namespace TraXile
                     Type = aType,
                     Area = sqlReader.GetString(2),
                     DeathCounter = sqlReader.GetInt32(4),
-                    TrialMasterCount = sqlReader.GetInt32(5)
+                    TrialMasterCount = sqlReader.GetInt32(5),
+                    PausedTime = sqlReader.GetDouble(10)
                 };
 
                 try
@@ -1554,22 +1584,7 @@ namespace TraXile
             }
             return false;
         }
-
-        /// <summary>
-        /// Check if a given area is simulacrum
-        /// </summary>
-        /// <param name="sArea"></param>
-        /// <returns></returns>
-        private bool CheckIfAreaIsSimu(string sArea)
-        {
-            foreach (string s in _defaultMappings.SIMU_AREAS)
-            {
-                if (s.Trim().Equals(sArea.Trim()))
-                    return true;
-            }
-            return false;
-        }
-
+       
         /// <summary>
         /// Process a command entered via ingame chat
         /// </summary>
@@ -1698,11 +1713,38 @@ namespace TraXile
             bool bTargetAreaIsShaper = _defaultMappings.SHAPER_AREAS.Contains(sTargetArea);
             bool bTargetAreaIsSirusFight = _defaultMappings.SIRUS_AREAS.Contains(sTargetArea);
             bool bTargetAreaIsMavenFight = _defaultMappings.MAVEN_FIGHT_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsCampaign = _defaultMappings.CAMPAIGN_AREAS.Contains(sTargetArea);
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
             _inAreaSince = ev.EventTime;
 
             IncrementStat("AreaChanges", ev.EventTime, 1);
+
+            // Track the very first activity
+            if((!sTargetArea.Contains("Hideout")) && (!_defaultMappings.CAMP_AREAS.Contains(sTargetArea)))
+            {
+                _StartedFlag = false;
+            }
+
+            // Hideout?
+            if(sTargetArea.Contains("Hideout"))
+            {
+                if(!_trackingHO)
+                {
+                    _hoStart = ev.EventTime;
+                    _trackingHO = true;
+                }
+            }
+            else
+            {
+                if(_trackingHO)
+                {
+                    int hoSeconds;
+                    hoSeconds = Convert.ToInt32((ev.EventTime - _hoStart).TotalSeconds);
+                    IncrementStat("HideoutTimeSec", ev.EventTime, hoSeconds);
+                    _trackingHO = false;
+                }
+            }
 
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
             {
@@ -1798,6 +1840,10 @@ namespace TraXile
             else if(bTargetAreaIsSirusFight)
             {
                 actType = ACTIVITY_TYPES.SIRUS_FIGHT;
+            }
+            else if(bTargetAreaIsCampaign)
+            {
+                actType = ACTIVITY_TYPES.CAMPAIGN;
             }
 
 
@@ -1899,8 +1945,54 @@ namespace TraXile
                 FinishActivity(_currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
             }
 
+
+            //Campaign ?
+            if (bTargetAreaIsCampaign)
+            {
+                // Do not track first town visit after login
+                if(!_StartedFlag)
+                {
+                    if (_currentActivity != null)
+                    {
+                        if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
+                        {
+                            _currentActivity.LastEnded = ev.EventTime;
+                            FinishActivity(_currentActivity, sTargetArea, ACTIVITY_TYPES.CAMPAIGN, ev.EventTime);
+                        }
+                    }
+                    else
+                    {
+                        _currentActivity = new TrX_TrackedActivity
+                        {
+                            Area = sTargetArea,
+                            Type = ACTIVITY_TYPES.CAMPAIGN,
+                            AreaLevel = _nextAreaLevel,
+                            TimeStamp = lTS,
+                            Started = ev.EventTime,
+                            InstanceEndpoint = _currentInstanceEndpoint
+                        };
+                        _currentActivity.StartStopWatch();
+                    }
+                }
+                else
+                {
+                    _StartedFlag = false;
+                }
+
+              
+            }
+            else
+            {
+                // Pause campaing when entering hideout
+                if (sTargetArea.Contains("Hideout") && _currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN)
+                {
+                    _currentActivity.LastEnded = ev.EventTime;
+                    FinishActivity(_currentActivity, null, ACTIVITY_TYPES.OTHER, ev.EventTime);
+                }
+            }
+
             // PAUSE RESUME Handling
-            if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu)
+            if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsCampaign)
             {
                 if (_currentActivity != null)
                 {
@@ -1914,9 +2006,11 @@ namespace TraXile
                 }
             }
 
+
+
             // Mechanisms that can be tracked with default logic:
             // One Area + Own instance
-            bool bIsDefaultTrackable =
+            bool enteringDefaultTrackableActivity =
                 bTargetAreaIsMap ||
                 bTargetAreaIsHeist ||
                 bTargetAreaIsSimu ||
@@ -1930,8 +2024,9 @@ namespace TraXile
                 bTargetAreaIsShaper ||
                 bTargetAreaIsMavenFight ||
                 bTargetAreaIsSirusFight;
+                
 
-            if (bIsDefaultTrackable)
+            if (enteringDefaultTrackableActivity)
             {
                 _elderFightActive = false;
                 _shaperKillsInFight = 0;
@@ -2011,19 +2106,23 @@ namespace TraXile
                     }
                 }
             }
-            else
+            else // ENTERING AN AREA WHICH IS NOT AN DEFAULT ACTIVITY
             {
-                if (_currentActivity != null && _currentActivity.Type != ACTIVITY_TYPES.LABYRINTH)
+                if (_currentActivity != null && _currentActivity.Type != ACTIVITY_TYPES.LABYRINTH && _currentActivity.Type != ACTIVITY_TYPES.CAMPAIGN)
                 {
-                    _currentActivity.StopStopWatch();
-                    _currentActivity.LastEnded = ev.EventTime;
-
-                    // PAUSE TIME
-                    if (new ACTIVITY_TYPES[] { ACTIVITY_TYPES.MAP, ACTIVITY_TYPES.HEIST, ACTIVITY_TYPES.SIMULACRUM }.Contains(_currentActivity.Type))
+                    //TEST: Pause when left the source area
+                    if(sSourceArea == _currentActivity.Area)
                     {
-                        if (_defaultMappings.CAMP_AREAS.Contains(sTargetArea) || sTargetArea.Contains("Hideout"))
+                        _currentActivity.StopStopWatch();
+                        _currentActivity.LastEnded = ev.EventTime;
+
+                        // PAUSE TIME
+                        if (_defaultMappings.PAUSABLE_ACTIVITY_TYPES.Contains(_currentActivity.Type))
                         {
-                            _currentActivity.StartPauseTime(ev.EventTime);
+                            if (_defaultMappings.CAMP_AREAS.Contains(sTargetArea) || sTargetArea.Contains("Hideout"))
+                            {
+                                _currentActivity.StartPauseTime(ev.EventTime);
+                            }
                         }
                     }
 
@@ -2032,6 +2131,7 @@ namespace TraXile
                         _currentActivity.ZanaMap.StopStopWatch();
                         _currentActivity.ZanaMap.LastEnded = ev.EventTime;
                     }
+
                 }
             }
 
@@ -2069,6 +2169,7 @@ namespace TraXile
                         if (_currentActivity.ZanaMap != null)
                         {
                             _currentActivity.ZanaMap.DeathCounter++;
+                            _currentActivity.ZanaMap.LastEnded = ev.EventTime;
                         }
                     }
                     else
@@ -2102,14 +2203,28 @@ namespace TraXile
                         break;
 
                     case EVENT_TYPES.POE_CLIENT_START:
+                        _StartedFlag = true;
+
                         if(_currentActivity != null)
                         {
-                            _currentActivity.IsFinished = true;
-                            if(_currentActivity.ZanaMap != null)
+                            // Filter out non trackable ends, like town visits right before app close
+                            if (_currentActivity.LastEnded.Year < 2000)
                             {
-                                _currentActivity.ZanaMap.IsFinished = true;
+                                _currentActivity = null;
                             }
-                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                            else
+                            {
+                                _currentActivity.IsFinished = true;
+                                if (_currentActivity.ZanaMap != null)
+                                {
+                                    _currentActivity.ZanaMap.IsFinished = true;
+                                }
+                                FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                            }
+                        }
+                        if(_trackingHO)
+                        {
+                            _trackingHO = false;
                         }
                         break;
                     case EVENT_TYPES.CHAT_CMD_RECEIVED:
@@ -2479,6 +2594,9 @@ namespace TraXile
                             }
                         }
                         break;
+                    case EVENT_TYPES.CAMPAIGN_FINISHED:
+                        IncrementStat("CampaignFinished", ev.EventTime, 1);
+                        break;
 
                 }
 
@@ -2503,7 +2621,7 @@ namespace TraXile
 
                 if (!bInit) TextLogEvent(ev);
             }
-            catch(Exception ex)
+            catch(AbandonedMutexException ex)
             {
                 _log.Warn("ParseError -> Ex.Message: " + ex.Message + ", LogLine: " + ev.LogLine);
                 _log.Debug(ex.ToString());
@@ -2563,6 +2681,7 @@ namespace TraXile
             int iSeconds;
             int iSecondsZana = 0;
 
+           
 
             // Filter out invalid labs (discnnect etc)
             if(activity.Type == ACTIVITY_TYPES.LABYRINTH)
@@ -2602,6 +2721,18 @@ namespace TraXile
                     tsZana = (activity.ZanaMap.LastEnded - activity.ZanaMap.Started);
                     iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
                 }
+
+                // Filter out town activities without end date
+                if(activity.LastEnded.Year < 2000)
+                {
+                    return;
+                }
+
+                // Filter out 0-second town visits
+                if (activity.Type == ACTIVITY_TYPES.CAMPAIGN &&  iSeconds == 0)
+                {
+                    return;
+                }
             }
             else
             {
@@ -2627,7 +2758,7 @@ namespace TraXile
             if(!_parsedActivities.Contains(activity.UniqueID))
             {
                 AddMapLvItem(activity);
-                SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success);
+                SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
               
                 // Refresh ListView
                 if (_eventQueueInitizalized) DoSearch();
@@ -2645,7 +2776,7 @@ namespace TraXile
                 {
                     AddMapLvItem(activity.ZanaMap, true);
                     SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.ZanaMap.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
-                        .Tags, activity.ZanaMap.Success);
+                        .Tags, activity.ZanaMap.Success, Convert.ToInt32(activity.ZanaMap.PausedTime));
 
                     // Refresh ListView
                     if (_eventQueueInitizalized) DoSearch();
@@ -2982,7 +3113,16 @@ namespace TraXile
                         for (int i = 0; i < _numericStats.Count; i++)
                         {
                             KeyValuePair<string, int> kvp = _numericStats.ElementAt(i);
-                            _lvmStats.GetLvItem("stats_" + kvp.Key).SubItems[1].Text = kvp.Value.ToString();
+
+                            if(kvp.Key == "HideoutTimeSec")
+                            {
+                                _lvmStats.GetLvItem("stats_" + kvp.Key).SubItems[1].Text = Math.Round(((double)(kvp.Value / 60 / 60)), 1).ToString() + " hours";
+                            }
+                            else
+                            {
+                                _lvmStats.GetLvItem("stats_" + kvp.Key).SubItems[1].Text = kvp.Value.ToString();
+                            }
+                            
                         }
                     }
 
@@ -3144,10 +3284,13 @@ namespace TraXile
                         {
                             checkBoxLabHideUnknown.Checked = _labDashboardHideUnknown;
                         }
+
+                        if (checkBox1.Checked != _showHideoutInPie)
+                        {
+                            checkBox1.Checked = _showHideoutInPie;
+                        }
                     }
-
-                    
-
+                    listView1.Columns[2].Width = listView1.Width;
 
                 });
             }
@@ -3164,7 +3307,8 @@ namespace TraXile
             _timeCapMap = Convert.ToInt32(ReadSetting("TimeCapMap", "3600"));
             _timeCapHeist = Convert.ToInt32(ReadSetting("TimeCapHeist", "3600"));
             _labDashboardHideUnknown = Convert.ToBoolean(ReadSetting("dashboard_lab_hide_unknown", "false"));
-            
+            _showHideoutInPie = Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true"));
+
             comboBoxTheme.SelectedItem = ReadSetting("theme", "Dark") == "Dark" ? "Dark" : "Light";
             textBoxMapCap.Text = _timeCapMap.ToString();
             textBoxLabCap.Text = _timeCapLab.ToString();
@@ -3345,6 +3489,7 @@ namespace TraXile
                 { ACTIVITY_TYPES.SHAPER_FIGHT, 0 },
                 { ACTIVITY_TYPES.MAVEN_FIGHT, 0 },
                 { ACTIVITY_TYPES.SIRUS_FIGHT, 0 },
+                { ACTIVITY_TYPES.CAMPAIGN, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount= new Dictionary<ACTIVITY_TYPES, int>
@@ -3362,6 +3507,7 @@ namespace TraXile
                 { ACTIVITY_TYPES.SHAPER_FIGHT, 0 },
                 { ACTIVITY_TYPES.MAVEN_FIGHT, 0 },
                 { ACTIVITY_TYPES.SIRUS_FIGHT, 0 },
+                { ACTIVITY_TYPES.CAMPAIGN, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -3379,10 +3525,16 @@ namespace TraXile
                 { ACTIVITY_TYPES.SHAPER_FIGHT, Color.MediumVioletRed },
                 { ACTIVITY_TYPES.MAVEN_FIGHT, Color.Blue },
                 { ACTIVITY_TYPES.SIRUS_FIGHT, Color.AntiqueWhite },
-                { ACTIVITY_TYPES.OTHER, Color.Gray }
+                { ACTIVITY_TYPES.OTHER, Color.Gray },
+                { ACTIVITY_TYPES.CAMPAIGN, Color.Turquoise }
             };
 
             double totalCount = 0;
+            if(Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true")))
+            {
+                totalCount += _numericStats["HideoutTimeSec"];
+            }
+            
             foreach (TrX_TrackedActivity act in _eventHistory)
             {
                 int iCap = 3600;
@@ -3432,18 +3584,19 @@ namespace TraXile
                     percentVal = Math.Round(percentVal, 2);
                 }
 
-                if(percentVal >= 10)
+                if(percentVal >= 5)
                 {
                     TimeSpan tsDuration = TimeSpan.FromSeconds(kvp.Value);
                     chartGlobalDashboard.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
                     chartGlobalDashboard.Series[0].Points.Last().Color = colorList[kvp.Key];
-                    chartGlobalDashboard.Series[0].Points.Last().Label = kvp.Value > 0 ? string.Format("{0} hours", Math.Round(tsDuration.TotalHours, 1)) : " ";
+                    chartGlobalDashboard.Series[0].Points.Last().Label = kvp.Value > 0 ? string.Format("{0} h", Math.Round(tsDuration.TotalHours, 1)) : " ";
                     chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", kvp.Key.ToString(), percentVal);
 
                     lvi = new ListViewItem(kvp.Key.ToString());
                     lvi.SubItems.Add(typeListCount[kvp.Key].ToString());
-                    lvi.SubItems.Add(Math.Round(kvp.Value / 60 / 60, 1).ToString() + " hours");
+                    lvi.SubItems.Add(Math.Round(kvp.Value / 60 / 60, 1).ToString() + " h");
                     lvi.SubItems.Add(percentVal + "%");
+                    lvi.BackColor = colorList[kvp.Key];
                     listView1.Items.Add(lvi);
                 }
                 else
@@ -3451,8 +3604,10 @@ namespace TraXile
                     dOther += kvp.Value;
                     lvi = new ListViewItem(kvp.Key.ToString());
                     lvi.SubItems.Add(typeListCount[kvp.Key].ToString());
-                    lvi.SubItems.Add(Math.Round(kvp.Value / 60 / 60, 1).ToString() + " hours");
+                    lvi.SubItems.Add(Math.Round(kvp.Value / 60 / 60, 1).ToString() + " h");
                     lvi.SubItems.Add(percentVal + "%");
+                    lvi.BackColor = colorList[ACTIVITY_TYPES.OTHER];
+
                     listView1.Items.Add(lvi);
                 }
             }
@@ -3463,8 +3618,28 @@ namespace TraXile
             TimeSpan tsDurationOther = TimeSpan.FromSeconds(dOther);
             chartGlobalDashboard.Series[0].Points.AddXY("Other", Math.Round(dOther / 60 / 60, 1));
             chartGlobalDashboard.Series[0].Points.Last().Color = colorList[ACTIVITY_TYPES.OTHER];
-            chartGlobalDashboard.Series[0].Points.Last().Label = dOther > 0 ? string.Format("{0} hours", Math.Round(tsDurationOther.TotalHours, 1)) : " ";
+            chartGlobalDashboard.Series[0].Points.Last().Label = dOther > 0 ? string.Format("{0} h", Math.Round(tsDurationOther.TotalHours, 1)) : " ";
             chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", "Other", percentValOther);
+
+            if(_showHideoutInPie)
+            {
+                // Add HO
+                double percentValHO = _numericStats["HideoutTimeSec"] / totalCount * 100;
+                percentValHO = Math.Round(percentValHO, 2);
+                TimeSpan tsDurationHO = TimeSpan.FromSeconds(_numericStats["HideoutTimeSec"]);
+                chartGlobalDashboard.Series[0].Points.AddXY("Hideout", Math.Round(tsDurationHO.TotalSeconds / 60 / 60, 1));
+                chartGlobalDashboard.Series[0].Points.Last().Color = Color.Blue; ;
+                chartGlobalDashboard.Series[0].Points.Last().Label = tsDurationHO.TotalSeconds > 0 ? string.Format("{0} h", Math.Round(tsDurationHO.TotalHours, 1)) : " ";
+                chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", "Hideout", percentValHO);
+
+                ListViewItem lvi = new ListViewItem("HIDEOUT");
+                lvi.SubItems.Add("-");
+                lvi.SubItems.Add(Math.Round(tsDurationHO.TotalSeconds / 60 / 60, 1).ToString() + " h");
+                lvi.SubItems.Add(percentValHO + "%");
+                lvi.BackColor = Color.Blue;
+
+                listView1.Items.Add(lvi);
+            }
         }
 
         /// <summary>
@@ -4858,7 +5033,12 @@ namespace TraXile
             ChangeTheme(comboBoxTheme.SelectedItem.ToString());
         }
 
-       
+        private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("pie_chart_show_hideout", checkBox1.Checked.ToString());
+            _showHideoutInPie = checkBox1.Checked;
+            RenderGlobalDashboard();
+        }
 
         private void pictureBox19_Click(object sender, EventArgs e)
         {

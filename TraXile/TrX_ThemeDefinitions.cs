@@ -14,12 +14,14 @@ namespace TraXile
         /// </summary>
         public TrX_ThemeLight()
         {
-            this.MainBackGroundColor = Color.LightGray;
-            this.MainFontColor = Color.Black;
-            this.ListBackColor = Color.White;
-            this.ChartLabelColor = Color.Red;
-            this.ChartSeriesColor = Color.Red;
-            this.ButtonForeColor = Color.Black;
+            MainBackGroundColor = Color.LightGray;
+            MainFontColor = Color.Black;
+            ListBackColor = Color.White;
+            ChartLabelColor = Color.Red;
+            ChartSeriesColor = Color.Red;
+            ButtonBackColor = Color.DarkGray;
+            ButtonForeColor = Color.White;
+            ButtonBorderColor = Color.White;
         }
     }
 
@@ -30,12 +32,14 @@ namespace TraXile
         /// </summary>
         public TrX_ThemeDark()
         {
-            this.MainBackGroundColor = Color.Black;
-            this.MainFontColor = Color.White;
-            this.ListBackColor = Color.Black;
-            this.ChartLabelColor = Color.White;
-            this.ChartSeriesColor = Color.White;
-            this.ButtonForeColor = Color.Black;
+            MainBackGroundColor = Color.Black;
+            MainFontColor = Color.White;
+            ListBackColor = Color.Black;
+            ChartLabelColor = Color.White;
+            ChartSeriesColor = Color.White;
+            ButtonForeColor = Color.Black;
+            ButtonBackColor = Color.White;
+            ButtonBorderColor = Color.DarkGray;
         }
     }
 }
