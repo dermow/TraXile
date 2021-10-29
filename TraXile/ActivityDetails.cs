@@ -19,6 +19,7 @@ namespace TraXile
 
             labelTime.Text = ta.Started.ToString();
             labelType.Text = ta.Type.ToString();
+            label12.Text = "ID: " + ta.UniqueID;
             if(ta.IsZana)
             {
                 labelType.Text += " (Zana)";
@@ -125,7 +126,7 @@ namespace TraXile
         {
             if (_mainWindow.ValidateTagName(comboBox1.Text, true))
             {
-                _mainWindow.AddTagAutoCreate(_mainWindow.GetTagByDisplayName(comboBox1.Text).ID, _trackedActivity);
+                _mainWindow.AddTagAutoCreate(comboBox1.Text, _trackedActivity);
                 RenderTags(true);
                 _mainWindow.ResetMapHistory();
             }

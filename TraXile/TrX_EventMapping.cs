@@ -66,7 +66,8 @@ namespace TraXile
         HEIST_GIANNA_SPEAK,
         HEIST_HUCK_SPEAK,
         HEIST_KARST_SPEAK,
-        ABNORMAL_DISCONNECT
+        ABNORMAL_DISCONNECT,
+        CAMPAIGN_FINISHED
     }
 
     public class TrX_EventMapping
@@ -366,9 +367,12 @@ namespace TraXile
 
                 // Expedition
                 { "] Tujen, the Haggler:", EVENT_TYPES.EXP_TUJEN_ENCOUNTER },
+                { "] Tujen:", EVENT_TYPES.EXP_TUJEN_ENCOUNTER },
                 { "] Gwennen, the Gambler:", EVENT_TYPES.EXP_GWENNEN_ENCOUNTER },
+                { "] Gwennen:", EVENT_TYPES.EXP_GWENNEN_ENCOUNTER },
                 { "] Rog:", EVENT_TYPES.EXP_ROG_ENCOUNTER },
                 { "] Dannig, Warrior Skald:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
+                { "] Dannig:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
 
                 // Heist
                 { "] Karst, the Lockpick: ", EVENT_TYPES.HEIST_KARST_SPEAK },
@@ -380,6 +384,9 @@ namespace TraXile
                 { "] Vinderi, the Dismantler: ", EVENT_TYPES.HEIST_VINDERI_SPEAK },
                 { "] Gianna, the Master of Disguise: ", EVENT_TYPES.HEIST_GIANNA_SPEAK },
                 { "] Huck, the Soldier: ", EVENT_TYPES.HEIST_HUCK_SPEAK },
+
+                // Campaign
+                { "] Sin: May a new dawn arise!", EVENT_TYPES.CAMPAIGN_FINISHED },
 
                 // Disconnect
                 { "Abnormal disconnect: An unexpected disconnection occurred.", EVENT_TYPES.ABNORMAL_DISCONNECT },

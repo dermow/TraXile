@@ -18,6 +18,8 @@ namespace TraXile
             _chartSeriesColor,
             _chartValueLabelForeColor,
             _buttonForeColor;
+        private Color _buttonBackColor;
+        private Color _buttonBorderColor;
 
         public Color MainBackGroundColor
         {
@@ -53,6 +55,18 @@ namespace TraXile
         {
             get { return _buttonForeColor; }
             set { _buttonForeColor = value; }
+        }
+
+        public Color ButtonBorderColor
+        {
+            get { return _buttonBorderColor; }
+            set { _buttonBorderColor = value; }
+        }
+
+        public Color ButtonBackColor
+        {
+            get { return _buttonBackColor; }
+            set { _buttonBackColor = value; }
         }
 
         public IEnumerable<Control> GetAll(Control control, Type type)
@@ -134,8 +148,8 @@ namespace TraXile
 
             foreach (Control cnt in GetAll(control, typeof(Label)))
             {
-                // Do not overwrite tag styles
-                if(!cnt.Name.Contains("lbl_tag_"))
+                // Do not overwrite special labels
+                if(!cnt.Name.Contains("lbl_"))
                 {
                     cnt.ForeColor = _mainFontColor;
                 }
@@ -148,14 +162,21 @@ namespace TraXile
 
             foreach (Control cnt in GetAll(control, typeof(Button)))
             {
-                cnt.ForeColor = _buttonForeColor;
+                Button btt = (Button)cnt;
+                btt.ForeColor = _buttonForeColor;
+                btt.BackColor = _buttonBackColor;
+                btt.FlatStyle = FlatStyle.Flat;
+                btt.FlatAppearance.BorderSize = 1;
+                btt.FlatAppearance.BorderColor = _buttonBorderColor;
             }
 
             foreach (Control cnt in GetAll(control, typeof(TabControl)))
             {
-                cnt.BackColor = _mainBackgroundColor;
-                cnt.ForeColor = _buttonForeColor;
+                TabControl tbc = (TabControl)cnt;
+                tbc.BackColor = _mainBackgroundColor;
+                tbc.ForeColor = _buttonForeColor;
             }
+
         }
 
       
