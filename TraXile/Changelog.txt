@@ -127,3 +127,6 @@
 - New trackable activity: CAMPAIGN
 - Hideout time is now tracked
 - New statistics: CampaignFinished
+
+0.7.2
+- Bugfix: statistics for map tiers wrong after reload logfile
