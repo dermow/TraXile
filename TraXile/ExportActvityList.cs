@@ -17,7 +17,7 @@ namespace TraXile
 
         private void button1_Click(object sender, EventArgs e)
         {
-            switch(comboBox1.SelectedItem.ToString())
+            switch (comboBox1.SelectedItem.ToString())
             {
                 case "csv":
                     SaveFileDialog sfd = new SaveFileDialog
@@ -42,7 +42,7 @@ namespace TraXile
                     }
                     break;
             }
-            
+
         }
     }
 }

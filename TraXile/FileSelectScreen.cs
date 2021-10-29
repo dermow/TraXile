@@ -19,7 +19,7 @@ namespace TraXile
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            if(ofd.ShowDialog() == DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
                 this._mainWindow.SettingPoeLogFilePath = ofd.FileName;
                 this._mainWindow.AddUpdateAppSettings("poe_logfile_path", ofd.FileName);

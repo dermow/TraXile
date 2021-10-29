@@ -173,7 +173,7 @@ namespace TraXile
             get { return string.Format("{0}_{1}", _activityTimeStamp, _areaName); }
         }
 
-      
+
 
         public bool ManuallyPaused
         {
@@ -252,7 +252,7 @@ namespace TraXile
 
         public bool HasTag(string s_id)
         {
-            foreach(string tag in _tagIDs)
+            foreach (string tag in _tagIDs)
             {
                 if (tag == s_id)
                     return true;
@@ -262,7 +262,7 @@ namespace TraXile
 
         public void StartPauseTime(DateTime dt)
         {
-            if(!_paused)
+            if (!_paused)
             {
                 _paused = true;
                 _pauseTimeStart = dt;
@@ -271,7 +271,7 @@ namespace TraXile
 
         public void EndPauseTime(DateTime dt)
         {
-            if(_paused)
+            if (_paused)
             {
                 _paused = false;
                 _pauseCount++;
@@ -282,13 +282,13 @@ namespace TraXile
 
         public void RemoveTag(string s_id)
         {
-            if(HasTag(s_id))
-               _tagIDs.Remove(s_id);
+            if (HasTag(s_id))
+                _tagIDs.Remove(s_id);
         }
 
         public void AddTag(string s_id)
         {
-            if(!_tagIDs.Contains(s_id))
+            if (!_tagIDs.Contains(s_id))
             {
                 _tagIDs.Add(s_id);
             }
@@ -309,8 +309,8 @@ namespace TraXile
                 "LastEnded: {10}",
                 "StopWatchValue: {11}",
                 "CustomStopWatchValue: {12}",
-                this.GetType(), 
-                _activityType, 
+                this.GetType(),
+                _activityType,
                 _activityTimeStamp,
                 _areaName,
                 _areaLevel,
@@ -327,16 +327,16 @@ namespace TraXile
 
         public void Pause()
         {
-              _isManuallyPaused = true;
-              if(_stopWatch.IsRunning)
+            _isManuallyPaused = true;
+            if (_stopWatch.IsRunning)
                 _stopWatch.Stop();
         }
 
         public void Resume()
         {
             _isManuallyPaused = false;
-            if(!_stopWatch.IsRunning)
-                 _stopWatch.Start();
+            if (!_stopWatch.IsRunning)
+                _stopWatch.Start();
         }
 
         public void StartStopWatch()
@@ -349,7 +349,7 @@ namespace TraXile
             _stopWatch.Stop();
         }
 
-       
+
 
     }
 }

@@ -19,7 +19,7 @@ namespace TraXile
             _filteredList = new List<ListViewItem>();
             _itemMap = new Dictionary<string, ListViewItem>();
 
-            foreach(ListViewItem lvi in _listView.Items)
+            foreach (ListViewItem lvi in _listView.Items)
             {
                 _masterList.Add(lvi);
                 _filteredList.Add(lvi);
@@ -35,13 +35,13 @@ namespace TraXile
             int iMax = _masterList.Count > i_max ? i_max : _masterList.Count;
             _filteredList.Clear();
 
-            foreach(ListViewItem lvi in _masterList.GetRange(i_min, iMax))
+            foreach (ListViewItem lvi in _masterList.GetRange(i_min, iMax))
             {
-                if(!_filteredList.Contains(lvi))
+                if (!_filteredList.Contains(lvi))
                 {
                     _filteredList.Add(lvi);
                 }
-                
+
             }
 
             _listView.Items.Clear();
@@ -60,20 +60,20 @@ namespace TraXile
         {
             List<string> names = new List<string>();
 
-            foreach(ListViewItem lvi in _masterList)
+            foreach (ListViewItem lvi in _masterList)
             {
-                if(lvi.Text.ToLower().Contains(s_filter.ToLower()))
+                if (lvi.Text.ToLower().Contains(s_filter.ToLower()))
                 {
-                    if(!names.Contains(lvi.Name))
+                    if (!names.Contains(lvi.Name))
                     {
                         names.Add(lvi.Name);
                     }
                 }
                 else
                 {
-                    foreach(ListViewSubItem si in lvi.SubItems)
+                    foreach (ListViewSubItem si in lvi.SubItems)
                     {
-                        if(si.Text.ToLower().Contains(s_filter.ToLower()))
+                        if (si.Text.ToLower().Contains(s_filter.ToLower()))
                         {
                             if (!names.Contains(lvi.Name))
                             {
@@ -92,9 +92,9 @@ namespace TraXile
             _listView.SuspendLayout();
 
             _filteredList.Clear();
-            foreach(string s in item_names)
+            foreach (string s in item_names)
             {
-                if(_itemMap.ContainsKey(s))
+                if (_itemMap.ContainsKey(s))
                 {
                     _filteredList.Add(_itemMap[s]);
                 }
@@ -102,7 +102,7 @@ namespace TraXile
 
             _listView.Items.Clear();
 
-            foreach(ListViewItem lvi in _filteredList)
+            foreach (ListViewItem lvi in _filteredList)
             {
                 _listView.Items.Add(lvi);
             }
@@ -136,14 +136,14 @@ namespace TraXile
 
         public void AddLvItem(ListViewItem lvi, string s_name, bool b_display = true)
         {
-            if(!_itemMap.ContainsKey(s_name))
+            if (!_itemMap.ContainsKey(s_name))
             {
                 lvi.Name = s_name;
                 _masterList.Add(lvi);
                 _itemMap.Add(s_name, lvi);
                 if (!_isFiltered)
                 {
-                    if(b_display)
+                    if (b_display)
                         _listView.Items.Add(lvi);
                 }
             }
@@ -151,7 +151,7 @@ namespace TraXile
 
         public void InsertLvItem(ListViewItem lvi, string s_name, int i_pos, bool b_display = true)
         {
-            if(!_itemMap.ContainsKey(s_name))
+            if (!_itemMap.ContainsKey(s_name))
             {
                 lvi.Name = s_name;
                 _masterList.Insert(i_pos, lvi);

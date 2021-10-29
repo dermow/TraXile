@@ -20,7 +20,7 @@ namespace TraXile
             labelTime.Text = ta.Started.ToString();
             labelType.Text = ta.Type.ToString();
             label12.Text = "ID: " + ta.UniqueID;
-            if(ta.IsZana)
+            if (ta.IsZana)
             {
                 labelType.Text += " (Zana)";
             }
@@ -30,9 +30,9 @@ namespace TraXile
             Text = ta.Type + " Details: " + ta.Area;
             label9.Text = ta.Type.ToString();
 
-            if(_trackedActivity.AreaLevel > 0)
+            if (_trackedActivity.AreaLevel > 0)
             {
-                if(_trackedActivity.Type == ACTIVITY_TYPES.MAP)
+                if (_trackedActivity.Type == ACTIVITY_TYPES.MAP)
                 {
                     label10.Text = "T" + _trackedActivity.MapTier.ToString();
                 }
@@ -46,9 +46,9 @@ namespace TraXile
                 label10.Text = "unknown";
             }
 
-            foreach(TrX_ActivityTag tag in main.Tags)
+            foreach (TrX_ActivityTag tag in main.Tags)
             {
-                if(!tag.IsDefault)
+                if (!tag.IsDefault)
                 {
                     comboBox1.Items.Add(tag.DisplayName);
                 }
@@ -71,7 +71,7 @@ namespace TraXile
             int iCols = 3;
             int iCurrCols = 0;
 
-            for(int i = 0; i < _trackedActivity.Tags.Count; i++)
+            for (int i = 0; i < _trackedActivity.Tags.Count; i++)
             {
                 TrX_ActivityTag tag = _mainWindow.GetTagByID(_trackedActivity.Tags[i]);
 
@@ -80,7 +80,7 @@ namespace TraXile
 
                 Label lbl = new Label();
 
-                if (iCurrCols > (iCols-1))
+                if (iCurrCols > (iCols - 1))
                 {
                     iY += 28;
                     iX = iOffsetX;
@@ -104,10 +104,10 @@ namespace TraXile
 
         private void Lbl_MouseClick(object sender, MouseEventArgs e)
         {
-            if(_isDeleteMode)
+            if (_isDeleteMode)
             {
                 TrX_ActivityTag tag = _mainWindow.GetTagByDisplayName(((Label)sender).Text);
-                if(tag.IsDefault)
+                if (tag.IsDefault)
                 {
                     MessageBox.Show("Sorry. You cannot remove auto tags.");
                 }
@@ -118,7 +118,7 @@ namespace TraXile
                     RenderTags(true);
                     _mainWindow.ResetMapHistory();
                 }
-               
+
             }
         }
 
@@ -134,12 +134,12 @@ namespace TraXile
 
         private void ActivityDetails_FormClosed(object sender, FormClosedEventArgs e)
         {
-           
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(!_isDeleteMode)
+            if (!_isDeleteMode)
             {
                 _isDeleteMode = true;
                 label8.ForeColor = Color.Red;
