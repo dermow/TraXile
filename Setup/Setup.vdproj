@@ -1842,6 +1842,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -6069,15 +6077,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TraXile"
-        "ProductCode" = "8:{60FA60D0-82A4-422A-A1C3-05907D335E47}"
-        "PackageCode" = "8:{71733CD2-1862-42EB-BE5C-A9D46BA6F347}"
+        "ProductCode" = "8:{7E954D62-F892-405D-AC0A-2E75B87C0392}"
+        "PackageCode" = "8:{AFD24589-EC0A-4BFF-84C9-F020D48CA527}"
         "UpgradeCode" = "8:{C811751D-FFAF-470F-8AA3-11A3FEEE6981}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.7.0"
+        "ProductVersion" = "8:0.7.1"
         "Manufacturer" = "8:dermow"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
