@@ -2796,24 +2796,25 @@ namespace TraXile
                     }
                 }
 
-                if (sNextMap != null)
+            }
+
+            if (sNextMap != null)
+            {
+                _currentActivity = new TrX_TrackedActivity
                 {
-                    _currentActivity = new TrX_TrackedActivity
-                    {
-                        Area = sNextMap,
-                        Type = sNextMapType,
-                        AreaLevel = _nextAreaLevel,
-                        InstanceEndpoint = _currentInstanceEndpoint,
-                        Started = dtNextMapStarted,
-                        TimeStamp = ((DateTimeOffset)dtNextMapStarted).ToUnixTimeSeconds()
-                    };
-                    _nextAreaLevel = 0;
-                    _currentActivity.StartStopWatch();
-                }
-                else
-                {
-                    _currentActivity = null;
-                }
+                    Area = sNextMap,
+                    Type = sNextMapType,
+                    AreaLevel = _nextAreaLevel,
+                    InstanceEndpoint = _currentInstanceEndpoint,
+                    Started = dtNextMapStarted,
+                    TimeStamp = ((DateTimeOffset)dtNextMapStarted).ToUnixTimeSeconds()
+                };
+                _nextAreaLevel = 0;
+                _currentActivity.StartStopWatch();
+            }
+            else
+            {
+                _currentActivity = null;
             }
 
             if (activity.Type == ACTIVITY_TYPES.HEIST)
