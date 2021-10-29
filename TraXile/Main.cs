@@ -41,6 +41,7 @@ namespace TraXile
     {
         // DEBUG: CHANGE BEFORE RELEASE!!
         private readonly bool IS_IN_DEBUG_MODE = false;
+        public bool SAFE_RELOAD_MODE;
 
         // App parameters
         private readonly string _dbPath;
@@ -132,6 +133,7 @@ namespace TraXile
             set { _tags = value; }
         }
 
+       
         /// <summary>
         /// Main Window Constructor
         /// </summary>
@@ -151,7 +153,13 @@ namespace TraXile
             {
                 _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
             }
-            
+
+            if (File.Exists(_myAppData + @"\IS_SAFE_RELOAD"))
+            {
+                SAFE_RELOAD_MODE = true;
+                File.Delete(_myAppData + @"\IS_SAFE_RELOAD");
+            }
+
             _dbPath = _myAppData + @"\data.db";
             _cachePath = _myAppData + @"\stats.cache";
             _mySettings = new TrX_SettingsManager(_myAppData + @"\config.xml");
@@ -1445,6 +1453,7 @@ namespace TraXile
                                   + Math.Round(tsInitDuration.TotalSeconds, 2) + " seconds." 
                             });
                             _lastHash = lineHash;
+                            SAFE_RELOAD_MODE = false;
                         }
                         _eventQueueInitizalized = true;
                         bNewContent = true;
@@ -2679,130 +2688,132 @@ namespace TraXile
 
             _currentActivity.StopStopWatch();
 
-            TimeSpan ts;
-            TimeSpan tsZana;
-            int iSeconds;
-            int iSecondsZana = 0;
-
-           
-
-            // Filter out invalid labs (discnnect etc)
-            if(activity.Type == ACTIVITY_TYPES.LABYRINTH)
+            if(!SAFE_RELOAD_MODE)
             {
-                if(activity.Area == "Unknown")
+                TimeSpan ts;
+                TimeSpan tsZana;
+                int iSeconds;
+                int iSecondsZana = 0;
+
+
+                // Filter out invalid labs (discnnect etc)
+                if (activity.Type == ACTIVITY_TYPES.LABYRINTH)
                 {
-                    // no area changes logged for some old lab runs :/
-                    activity.Success = activity.DeathCounter == 0;
+                    if (activity.Area == "Unknown")
+                    {
+                        // no area changes logged for some old lab runs :/
+                        activity.Success = activity.DeathCounter == 0;
+                    }
+
+                    // Labs must be successfull or death counter 1
+                    if (activity.Success != true && activity.DeathCounter == 0)
+                    {
+                        _log.Info("Filtered out lab run [time=" + activity.Started + ", area: " + activity.Area + "]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
+                        _currentActivity = null;
+                        return;
+                    }
+
                 }
 
-                // Labs must be successfull or death counter 1
-                if (activity.Success != true && activity.DeathCounter == 0)
+
+                if (!_eventQueueInitizalized)
                 {
-                    _log.Info("Filtered out lab run [time=" + activity.Started + ", area: " + activity.Area + "]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
-                    _currentActivity = null;
-                    return;
+                    ts = (activity.LastEnded - activity.Started);
+                    try
+                    {
+                        iSeconds = Convert.ToInt32(ts.TotalSeconds);
+                        iSeconds -= Convert.ToInt32(activity.PausedTime);
+                    }
+                    catch
+                    {
+                        iSeconds = 0;
+                    }
+
+                    if (activity.ZanaMap != null)
+                    {
+                        tsZana = (activity.ZanaMap.LastEnded - activity.ZanaMap.Started);
+                        iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
+                    }
+
+                    // Filter out town activities without end date
+                    if (activity.LastEnded.Year < 2000)
+                    {
+                        return;
+                    }
+
+                    // Filter out 0-second town visits
+                    if (activity.Type == ACTIVITY_TYPES.CAMPAIGN && iSeconds == 0)
+                    {
+                        return;
+                    }
                 }
-               
-            }
-
-
-            if(!_eventQueueInitizalized)
-            {
-                ts = (activity.LastEnded - activity.Started);
-                try
+                else
                 {
+                    ts = activity.StopWatchTimeSpan;
                     iSeconds = Convert.ToInt32(ts.TotalSeconds);
-                    iSeconds -= Convert.ToInt32(activity.PausedTime);
-                }
-                catch
-                {
-                    iSeconds = 0;
-                }
-                
-                if (activity.ZanaMap != null)
-                {
-                    tsZana = (activity.ZanaMap.LastEnded - activity.ZanaMap.Started);
-                    iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
+                    if (activity.ZanaMap != null)
+                    {
+                        tsZana = activity.ZanaMap.StopWatchTimeSpan;
+                        iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
+                    }
                 }
 
-                // Filter out town activities without end date
-                if(activity.LastEnded.Year < 2000)
+                _currentActivity.TotalSeconds = iSeconds;
+                if (!_eventHistory.Contains(_currentActivity))
                 {
-                    return;
+                    _eventHistory.Insert(0, _currentActivity);
                 }
 
-                // Filter out 0-second town visits
-                if (activity.Type == ACTIVITY_TYPES.CAMPAIGN &&  iSeconds == 0)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                ts = activity.StopWatchTimeSpan;
-                iSeconds = Convert.ToInt32(ts.TotalSeconds);
-                if (activity.ZanaMap != null)
-                {
-                    tsZana = activity.ZanaMap.StopWatchTimeSpan;
-                    iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
-                }
-            }
+                TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
+                activity.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                          tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
 
-            _currentActivity.TotalSeconds = iSeconds;
-            if(!_eventHistory.Contains(_currentActivity))
-            {
-                _eventHistory.Insert(0, _currentActivity);
-            }
-            
-            TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
-            activity.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
-                      tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
-
-            if(!_parsedActivities.Contains(activity.UniqueID))
-            {
-                AddMapLvItem(activity);
-                SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
-              
-                // Refresh ListView
-                if (_eventQueueInitizalized) DoSearch();
-            }
-            
-          
-            if (activity.ZanaMap != null)
-            {
-                TimeSpan tsZanaMap = TimeSpan.FromSeconds(iSecondsZana);
-                activity.ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
-                       tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
-                _eventHistory.Insert(0, _currentActivity.ZanaMap);
-
-                if (!_parsedActivities.Contains(activity.ZanaMap.UniqueID))
+                if (!_parsedActivities.Contains(activity.UniqueID))
                 {
-                    AddMapLvItem(activity.ZanaMap, true);
-                    SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.ZanaMap.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
-                        .Tags, activity.ZanaMap.Success, Convert.ToInt32(activity.ZanaMap.PausedTime));
+                    AddMapLvItem(activity);
+                    SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
 
                     // Refresh ListView
                     if (_eventQueueInitizalized) DoSearch();
                 }
-            }
 
-            if (sNextMap != null)
-            {
-                _currentActivity = new TrX_TrackedActivity
+
+                if (activity.ZanaMap != null)
                 {
-                    Area = sNextMap,
-                    Type = sNextMapType,
-                    AreaLevel = _nextAreaLevel,
-                    InstanceEndpoint = _currentInstanceEndpoint,
-                    Started = dtNextMapStarted,
-                    TimeStamp = ((DateTimeOffset)dtNextMapStarted).ToUnixTimeSeconds()
-                };
-                _nextAreaLevel = 0;
-                _currentActivity.StartStopWatch();
-            }
-            else
-            {
-                _currentActivity = null;
+                    TimeSpan tsZanaMap = TimeSpan.FromSeconds(iSecondsZana);
+                    activity.ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                           tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
+                    _eventHistory.Insert(0, _currentActivity.ZanaMap);
+
+                    if (!_parsedActivities.Contains(activity.ZanaMap.UniqueID))
+                    {
+                        AddMapLvItem(activity.ZanaMap, true);
+                        SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.ZanaMap.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
+                            .Tags, activity.ZanaMap.Success, Convert.ToInt32(activity.ZanaMap.PausedTime));
+
+                        // Refresh ListView
+                        if (_eventQueueInitizalized) DoSearch();
+                    }
+                }
+
+                if (sNextMap != null)
+                {
+                    _currentActivity = new TrX_TrackedActivity
+                    {
+                        Area = sNextMap,
+                        Type = sNextMapType,
+                        AreaLevel = _nextAreaLevel,
+                        InstanceEndpoint = _currentInstanceEndpoint,
+                        Started = dtNextMapStarted,
+                        TimeStamp = ((DateTimeOffset)dtNextMapStarted).ToUnixTimeSeconds()
+                    };
+                    _nextAreaLevel = 0;
+                    _currentActivity.StartStopWatch();
+                }
+                else
+                {
+                    _currentActivity = null;
+                }
             }
 
             if(activity.Type == ACTIVITY_TYPES.HEIST)
@@ -5041,6 +5052,20 @@ namespace TraXile
             AddUpdateAppSettings("pie_chart_show_hideout", checkBox1.Checked.ToString());
             _showHideoutInPie = checkBox1.Checked;
             RenderGlobalDashboard();
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("WARNING: this action will reload the entire Client.txt, keeping your manual data like custom tags and pauses.");
+            sb.AppendLine("Continue? TraXile will be restarted.");
+
+            DialogResult dr = MessageBox.Show(sb.ToString(), "Warning", MessageBoxButtons.YesNo); ;
+            if (dr == DialogResult.Yes)
+            {
+                File.Create(_myAppData + @"\IS_SAFE_RELOAD");
+                ReloadLogFile();
+            }
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
