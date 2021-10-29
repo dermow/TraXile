@@ -31,7 +31,7 @@ namespace TraXile
             get { return _DisplayName; }
             set { _DisplayName = value; }
         }
-     
+
         public Color ForeColor
         {
             get { return _foreColor; }

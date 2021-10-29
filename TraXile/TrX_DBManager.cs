@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using log4net;
+﻿using log4net;
 using Microsoft.Data.Sqlite;
+using System;
 
 namespace TraXile
 {
@@ -55,7 +51,7 @@ namespace TraXile
             cmd = _dbConnection.CreateCommand();
             cmd.CommandText = "create unique index if not exists tx_tag_id on tx_tags(tag_id)";
             cmd.ExecuteNonQuery();
-                      
+
 
             cmd = _dbConnection.CreateCommand();
             cmd.CommandText = "create table if not exists tx_stats " +
@@ -173,15 +169,15 @@ namespace TraXile
                 cmd.CommandText = s_query;
                 cmd.ExecuteNonQuery();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                if(b_log_error)
+                if (b_log_error)
                 {
                     _log.Error("Query error: " + s_query);
                     _log.Error(ex.ToString());
                 }
             }
-           
+
         }
 
     }

@@ -18,7 +18,7 @@ namespace TraXile
 
         public string ReadSetting(string s_key, string s_default = null)
         {
-            if(kvStore.ContainsKey(s_key))
+            if (kvStore.ContainsKey(s_key))
             {
                 return kvStore[s_key];
             }
@@ -30,7 +30,7 @@ namespace TraXile
 
         public void AddOrUpdateSetting(string s_key, string s_value)
         {
-            if(kvStore.ContainsKey(s_key))
+            if (kvStore.ContainsKey(s_key))
             {
                 kvStore[s_key] = s_value;
             }
@@ -42,7 +42,7 @@ namespace TraXile
 
         public void LoadFromXml()
         {
-            if(File.Exists(_xmlPath))
+            if (File.Exists(_xmlPath))
             {
                 XmlDocument xml = new XmlDocument();
                 xml.Load(_xmlPath);
@@ -63,7 +63,7 @@ namespace TraXile
             wrt.Indentation = 4;
 
             // Write Settings
-            foreach(KeyValuePair<string,string> kvp in kvStore)
+            foreach (KeyValuePair<string, string> kvp in kvStore)
             {
                 wrt.WriteStartElement("setting");
                 wrt.WriteAttributeString("key", kvp.Key);

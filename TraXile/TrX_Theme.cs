@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -115,7 +113,7 @@ namespace TraXile
 
             foreach (Control cnt in GetAll(control, typeof(Chart)))
             {
-                foreach(ChartArea ca in ((Chart)cnt).ChartAreas)
+                foreach (ChartArea ca in ((Chart)cnt).ChartAreas)
                 {
                     ca.BackColor = _mainBackgroundColor;
                 }
@@ -139,7 +137,7 @@ namespace TraXile
 
             foreach (Control cnt in GetAll(control, typeof(TextBox)))
             {
-                if(((TextBox)cnt).Multiline)
+                if (((TextBox)cnt).Multiline)
                 {
                     cnt.BackColor = _listBackColor;
                     cnt.ForeColor = _mainFontColor;
@@ -149,7 +147,7 @@ namespace TraXile
             foreach (Control cnt in GetAll(control, typeof(Label)))
             {
                 // Do not overwrite special labels
-                if(!cnt.Name.Contains("lbl_"))
+                if (!cnt.Name.Contains("lbl_"))
                 {
                     cnt.ForeColor = _mainFontColor;
                 }
@@ -179,11 +177,11 @@ namespace TraXile
 
         }
 
-      
+
 
     }
 
-   
 
-    
+
+
 }

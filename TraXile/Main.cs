@@ -133,13 +133,13 @@ namespace TraXile
             set { _tags = value; }
         }
 
-       
+
         /// <summary>
         /// Main Window Constructor
         /// </summary>
         public Main()
         {
-            if(File.Exists(Application.StartupPath + @"\DEBUG_MODE_ON.txt"))
+            if (File.Exists(Application.StartupPath + @"\DEBUG_MODE_ON.txt"))
             {
                 IS_IN_DEBUG_MODE = true;
             }
@@ -164,17 +164,17 @@ namespace TraXile
             _cachePath = _myAppData + @"\stats.cache";
             _mySettings = new TrX_SettingsManager(_myAppData + @"\config.xml");
 
-            if(!Directory.Exists(_myAppData))
+            if (!Directory.Exists(_myAppData))
             {
                 Directory.CreateDirectory(_myAppData);
             }
-                       
+
             Visible = false;
             InitializeComponent();
 
             Init();
 
-            if(ReadSetting("theme", "Dark") == "Light")
+            if (ReadSetting("theme", "Dark") == "Light")
             {
                 _myTheme = new TrX_ThemeLight();
                 _myTheme.Apply(this);
@@ -210,7 +210,7 @@ namespace TraXile
 
                 StringBuilder sbChanges = new StringBuilder();
 
-                foreach(XmlNode xn in xml.SelectNodes("/version/changes/chg"))
+                foreach (XmlNode xn in xml.SelectNodes("/version/changes/chg"))
                 {
                     sbChanges.AppendLine(" - " + xn.InnerText);
                 }
@@ -226,15 +226,15 @@ namespace TraXile
                 int RemotePatch = Convert.ToInt32(sVersion.Split('.')[2]);
 
                 bool bUpdate = false;
-                if(RemoteMajor > MyMajor)
+                if (RemoteMajor > MyMajor)
                 {
                     bUpdate = true;
                 }
-                else if(RemoteMajor == MyMajor && RemoteMinor > MyMinor)
+                else if (RemoteMajor == MyMajor && RemoteMinor > MyMinor)
                 {
                     bUpdate = true;
                 }
-                else if(RemoteMajor == MyMajor && RemoteMinor == MyMinor && RemotePatch > MyPatch)
+                else if (RemoteMajor == MyMajor && RemoteMinor == MyMinor && RemotePatch > MyPatch)
                 {
                     bUpdate = true;
                 }
@@ -266,12 +266,12 @@ namespace TraXile
                 {
                     _log.Info("UpdateCheck -> Already up to date :)");
                     if (b_notify_ok)
-                        MessageBox.Show("Your version: " + APPINFO.VERSION 
-                            + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine + Environment.NewLine 
+                        MessageBox.Show("Your version: " + APPINFO.VERSION
+                            + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine + Environment.NewLine
                             + "Your version is already up to date :)");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.Error("Could not check for Update: " + ex.Message);
             }
@@ -306,9 +306,9 @@ namespace TraXile
 
             try
             {
-                DoBackupRestoreIfPrepared();        
+                DoBackupRestoreIfPrepared();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _restoreMode = true;
                 _restoreOk = false;
@@ -495,14 +495,14 @@ namespace TraXile
 
             Text = APPINFO.NAME;
 
-            if(IS_IN_DEBUG_MODE)
+            if (IS_IN_DEBUG_MODE)
             {
                 Text += " ---> !!!!! DEBUG MODE !!!!!";
             }
 
             _initStartTime = DateTime.Now;
 
-            if(String.IsNullOrEmpty(SettingPoeLogFilePath))
+            if (String.IsNullOrEmpty(SettingPoeLogFilePath))
             {
                 FileSelectScreen fs = new FileSelectScreen(this)
                 {
@@ -521,7 +521,7 @@ namespace TraXile
 
             _myDB = new TrX_DBManager(_myAppData + @"\data.db", ref _log);
             InitDefaultTags();
-            
+
             _lastEventType = EVENT_TYPES.APP_STARTED;
             InitNumStats();
 
@@ -571,14 +571,14 @@ namespace TraXile
         /// </summary>
         private void SaveLayout()
         {
-            foreach(ColumnHeader ch in listViewActLog.Columns)
+            foreach (ColumnHeader ch in listViewActLog.Columns)
             {
-                if(ch.Width > 0)
+                if (ch.Width > 0)
                 {
                     AddUpdateAppSettings("layout.listview.cols." + ch.Name + ".width", ch.Width.ToString());
                 }
             }
-            if(Width > 50 && Height > 50)
+            if (Width > 50 && Height > 50)
             {
                 AddUpdateAppSettings("layout.window.width", Width.ToString());
                 AddUpdateAppSettings("layout.window.height", Height.ToString());
@@ -593,7 +593,7 @@ namespace TraXile
             foreach (ColumnHeader ch in listViewActLog.Columns)
             {
                 int w = Convert.ToInt32(ReadSetting("layout.listview.cols." + ch.Name + ".width"));
-                if(w > 0)
+                if (w > 0)
                 {
                     ch.Width = w;
                 }
@@ -602,7 +602,7 @@ namespace TraXile
             int iWidth = Convert.ToInt32(ReadSetting("layout.window.width"));
             int iHeight = Convert.ToInt32(ReadSetting("layout.window.height"));
 
-            if(iWidth > 50 && iHeight > 50)
+            if (iWidth > 50 && iHeight > 50)
             {
                 Width = iWidth;
                 Height = iHeight;
@@ -649,9 +649,9 @@ namespace TraXile
                                   "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default', " + (tag.ShowInListView ? "1" : "0") + ")", false);
                     _log.Info("Default tag '" + tag.ID + "' added to database");
                 }
-                catch(SqliteException e)
+                catch (SqliteException e)
                 {
-                    if(e.Message.Contains("SQLite Error 19"))
+                    if (e.Message.Contains("SQLite Error 19"))
                     {
                         _log.Info("Default tag '" + tag.ID + "' already in database, nothing todo");
                     }
@@ -660,7 +660,7 @@ namespace TraXile
                         _log.Error(e.ToString());
                     }
                 }
-               
+
             }
         }
 
@@ -707,7 +707,7 @@ namespace TraXile
             int iLabelWidth = 100;
             int iMaxCols = 5;
 
-            int iCols = (groupBox3.Width-20) / iLabelWidth;
+            int iCols = (groupBox3.Width - 20) / iLabelWidth;
             if (iCols > iMaxCols) iCols = iMaxCols;
             int iCurrCols = 0;
 
@@ -822,7 +822,7 @@ namespace TraXile
                     iCurrCols = 0;
                 }
 
-                if(!_tagLabels.ContainsKey(tag.ID))
+                if (!_tagLabels.ContainsKey(tag.ID))
                 {
                     lbl.Text = tag.DisplayName;
                     lbl.Name = "lbl_tag_" + tag.ID;
@@ -833,17 +833,17 @@ namespace TraXile
                     lbl.MouseHover += tagLabel_MouseOver;
                     lbl.MouseLeave += tagLabel_MouseLeave;
                     lbl.MouseClick += Lbl_MouseClick;
-                    
+
                     groupBoxTrackingTags.Controls.Add(lbl);
                     _tagLabels.Add(tag.ID, lbl);
                 }
                 else
                 {
-                    if(_currentActivity != null)
+                    if (_currentActivity != null)
                     {
                         TrX_TrackedActivity mapToCheck = _isMapZana ? _currentActivity.ZanaMap : _currentActivity;
 
-                        if(mapToCheck.Tags.Contains(tag.ID))
+                        if (mapToCheck.Tags.Contains(tag.ID))
                         {
                             _tagLabels[tag.ID].BackColor = tag.BackColor;
                             _tagLabels[tag.ID].ForeColor = tag.ForeColor;
@@ -873,7 +873,7 @@ namespace TraXile
         /// <returns></returns>
         public TrX_ActivityTag GetTagByDisplayName(string s_display_name)
         {
-            foreach(TrX_ActivityTag t in _tags)
+            foreach (TrX_ActivityTag t in _tags)
             {
                 if (t.DisplayName == s_display_name)
                     return t;
@@ -890,11 +890,11 @@ namespace TraXile
         private void Lbl_MouseClick(object sender, MouseEventArgs e)
         {
             TrX_ActivityTag tag = GetTagByDisplayName(((Label)sender).Text);
-            if(!tag.IsDefault)
+            if (!tag.IsDefault)
             {
-                if(_currentActivity != null)
+                if (_currentActivity != null)
                 {
-                    if(_isMapZana && _currentActivity.ZanaMap != null)
+                    if (_isMapZana && _currentActivity.ZanaMap != null)
                     {
                         if (_currentActivity.ZanaMap.HasTag(tag.ID))
                         {
@@ -907,7 +907,7 @@ namespace TraXile
                     }
                     else
                     {
-                        if(_currentActivity.HasTag(tag.ID))
+                        if (_currentActivity.HasTag(tag.ID))
                         {
                             _currentActivity.RemoveTag(tag.ID);
                         }
@@ -915,7 +915,7 @@ namespace TraXile
                         {
                             _currentActivity.AddTag(tag.ID);
                         }
-                        
+
                     }
                 }
             }
@@ -1079,7 +1079,7 @@ namespace TraXile
             for (int i = 0; i <= 16; i++)
             {
                 string sShort = "MapTierFinished_T" + i.ToString();
-                string sLong = i > 0 ?  ("Maps done: T" + i.ToString()) : "Maps done: Tier unknown";
+                string sLong = i > 0 ? ("Maps done: T" + i.ToString()) : "Maps done: Tier unknown";
                 if (!_numericStats.ContainsKey(sShort))
                     _numericStats.Add(sShort, 0);
                 if (!_statNamesLong.ContainsKey(sShort))
@@ -1104,7 +1104,7 @@ namespace TraXile
         /// <returns></returns>
         private string GetStatLongName(string s_key)
         {
-            if(_statNamesLong.ContainsKey(s_key))
+            if (_statNamesLong.ContainsKey(s_key))
             {
                 return _statNamesLong[s_key];
             }
@@ -1168,15 +1168,15 @@ namespace TraXile
         /// </summary>
         private void ReadBackupList()
         {
-            if(Directory.Exists(_myAppData + @"\backups"))
+            if (Directory.Exists(_myAppData + @"\backups"))
             {
-                foreach(string s in Directory.GetDirectories(_myAppData + @"\backups"))
+                foreach (string s in Directory.GetDirectories(_myAppData + @"\backups"))
                 {
-                    foreach(string s2 in Directory.GetDirectories(s))
+                    foreach (string s2 in Directory.GetDirectories(s))
                     {
                         string s_name = s2.Replace(_myAppData, "");
-                        
-                        if(!_backups.Contains(s_name))
+
+                        if (!_backups.Contains(s_name))
                             _backups.Add(s_name);
                     }
                 }
@@ -1190,7 +1190,7 @@ namespace TraXile
         /// <param name="s_name"></param>
         private void AddKnownPlayerIfNotExists(string s_name)
         {
-            if(!_knownPlayerNames.Contains(s_name))
+            if (!_knownPlayerNames.Contains(s_name))
             {
                 _knownPlayerNames.Add(s_name);
                 _myDB.DoNonQuery("insert into tx_known_players (player_name) VALUES ('" + s_name + "')");
@@ -1258,16 +1258,16 @@ namespace TraXile
                "act_tags," +
                "act_success," +
                "act_pause_time) VALUES (" +
-               i_ts.ToString() 
-                 + ", '" + s_type 
+               i_ts.ToString()
+                 + ", '" + s_type
                  + "', '" + s_area
                  + "', '" + i_area_level.ToString()
-                 + "', " + i_stopwatch 
-                 + ", " + i_death_counter 
-                 + ", " + i_ulti_rounds 
+                 + "', " + i_stopwatch
+                 + ", " + i_death_counter
+                 + ", " + i_ulti_rounds
                  + ", " + (b_zana ? "1" : "0")
                  + ", '" + sTags + "'"
-                 + ", " + (b_success ? "1" : "0") 
+                 + ", " + (b_success ? "1" : "0")
                  + ", " + i_pause_time.ToString()
                  + ")");
 
@@ -1365,18 +1365,18 @@ namespace TraXile
                     arrTags = new string[0];
                 }
 
-                for(int i = 0; i < arrTags.Length; i++)
+                for (int i = 0; i < arrTags.Length; i++)
                 {
                     map.AddTag(arrTags[i]);
                 }
 
-                if(!_parsedActivities.Contains(map.UniqueID))
+                if (!_parsedActivities.Contains(map.UniqueID))
                 {
                     _eventHistory.Add(map);
                     _parsedActivities.Add(map.UniqueID);
                 }
-               
-                
+
+
             }
             _historyInitialized = true;
             ResetMapHistory();
@@ -1387,13 +1387,13 @@ namespace TraXile
         /// </summary>
         private void LogParsing()
         {
-            while(true)
+            while (true)
             {
                 Thread.Sleep(1000);
-                if(SettingPoeLogFilePath != null)
+                if (SettingPoeLogFilePath != null)
                 {
                     ParseLogFile();
-                  
+
                 }
             }
         }
@@ -1437,7 +1437,7 @@ namespace TraXile
                 while (!_exit)
                 {
                     line = reader.ReadLine();
-                    
+
                     if (line == null)
                     {
                         if (!_eventQueueInitizalized)
@@ -1446,11 +1446,11 @@ namespace TraXile
                             _isMapZana = false;
                             _initEndTime = DateTime.Now;
                             TimeSpan tsInitDuration = (_initEndTime - _initStartTime);
-                            _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_READY) 
-                            { 
-                                EventTime = DateTime.Now, 
-                                LogLine = "Application initialized in " 
-                                  + Math.Round(tsInitDuration.TotalSeconds, 2) + " seconds." 
+                            _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_READY)
+                            {
+                                EventTime = DateTime.Now,
+                                LogLine = "Application initialized in "
+                                  + Math.Round(tsInitDuration.TotalSeconds, 2) + " seconds."
                             });
                             _lastHash = lineHash;
                             SAFE_RELOAD_MODE = false;
@@ -1467,7 +1467,7 @@ namespace TraXile
                     if (_dict.ContainsKey(lineHash))
                         continue;
 
-                    if(lineHash == _lastHash || _lastHash == 0)
+                    if (lineHash == _lastHash || _lastHash == 0)
                     {
                         bNewContent = true;
                     }
@@ -1480,7 +1480,7 @@ namespace TraXile
 
                     _lastHash = lineHash;
 
-                    foreach (KeyValuePair<string,EVENT_TYPES> kv in _eventMapping.MAP)
+                    foreach (KeyValuePair<string, EVENT_TYPES> kv in _eventMapping.MAP)
                     {
                         if (line.Contains(kv.Key))
                         {
@@ -1500,7 +1500,7 @@ namespace TraXile
                                 }
                                 _dict.Add(lineHash, "init");
 
-                                if(!_eventQueueInitizalized)
+                                if (!_eventQueueInitizalized)
                                 {
                                     HandleSingleEvent(ev, true);
                                 }
@@ -1508,7 +1508,7 @@ namespace TraXile
                                 {
                                     _eventQueue.Enqueue(ev);
                                 }
-                                
+
                             }
                         }
                     }
@@ -1559,7 +1559,7 @@ namespace TraXile
 
             foreach (string s in _defaultMappings.MAP_AREAS)
             {
-               if (s.Trim().Equals(sArea.Trim()))
+                if (s.Trim().Equals(sArea.Trim()))
                     return true;
             }
             return false;
@@ -1576,7 +1576,7 @@ namespace TraXile
             // Laboratory could be map or heist...
             if (sArea == "Laboratory")
             {
-                if(sSourceArea == "The Rogue Harbour")
+                if (sSourceArea == "The Rogue Harbour")
                 {
                     return true;
                 }
@@ -1593,7 +1593,7 @@ namespace TraXile
             }
             return false;
         }
-       
+
         /// <summary>
         /// Process a command entered via ingame chat
         /// </summary>
@@ -1607,7 +1607,7 @@ namespace TraXile
 
             sMain = spl[0];
 
-            if(spl.Length > 1)
+            if (spl.Length > 1)
             {
                 sArgs = spl[1];
             }
@@ -1628,7 +1628,7 @@ namespace TraXile
             switch (sMain)
             {
                 case "tag":
-                    if(currentAct != null)
+                    if (currentAct != null)
                     {
                         MethodInvoker mi = delegate
                         {
@@ -1730,15 +1730,15 @@ namespace TraXile
             IncrementStat("AreaChanges", ev.EventTime, 1);
 
             // Track the very first activity
-            if((!sTargetArea.Contains("Hideout")) && (!_defaultMappings.CAMP_AREAS.Contains(sTargetArea)))
+            if ((!sTargetArea.Contains("Hideout")) && (!_defaultMappings.CAMP_AREAS.Contains(sTargetArea)))
             {
                 _StartedFlag = false;
             }
 
             // Hideout?
-            if(sTargetArea.Contains("Hideout"))
+            if (sTargetArea.Contains("Hideout"))
             {
-                if(!_trackingHO)
+                if (!_trackingHO)
                 {
                     _hoStart = ev.EventTime;
                     _trackingHO = true;
@@ -1746,7 +1746,7 @@ namespace TraXile
             }
             else
             {
-                if(_trackingHO)
+                if (_trackingHO)
                 {
                     int hoSeconds;
                     hoSeconds = Convert.ToInt32((ev.EventTime - _hoStart).TotalSeconds);
@@ -1839,18 +1839,18 @@ namespace TraXile
                 actType = ACTIVITY_TYPES.SHAPER_FIGHT;
             }
             else if (bTargetAreaIsElder)
-            { 
+            {
                 actType = ACTIVITY_TYPES.ELDER_FIGHT;
             }
-            else if(bTargetAreaIsMavenFight)
+            else if (bTargetAreaIsMavenFight)
             {
                 actType = ACTIVITY_TYPES.MAVEN_FIGHT;
             }
-            else if(bTargetAreaIsSirusFight)
+            else if (bTargetAreaIsSirusFight)
             {
                 actType = ACTIVITY_TYPES.SIRUS_FIGHT;
             }
-            else if(bTargetAreaIsCampaign)
+            else if (bTargetAreaIsCampaign)
             {
                 actType = ACTIVITY_TYPES.CAMPAIGN;
             }
@@ -1884,7 +1884,7 @@ namespace TraXile
                 }
 
                 // Finish activity
-                if(_currentActivity != null)
+                if (_currentActivity != null)
                 {
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                 }
@@ -1905,7 +1905,7 @@ namespace TraXile
 
             //Lab Trial entered
             {
-                if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH && sTargetArea == "Aspirants Trial")
+                if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH && sTargetArea == "Aspirants Trial")
                 {
                     _currentActivity.TrialCount++;
                 }
@@ -1959,7 +1959,7 @@ namespace TraXile
             if (bTargetAreaIsCampaign)
             {
                 // Do not track first town visit after login
-                if(!_StartedFlag)
+                if (!_StartedFlag)
                 {
                     if (_currentActivity != null)
                     {
@@ -1988,7 +1988,7 @@ namespace TraXile
                     _StartedFlag = false;
                 }
 
-              
+
             }
             else
             {
@@ -2033,7 +2033,7 @@ namespace TraXile
                 bTargetAreaIsShaper ||
                 bTargetAreaIsMavenFight ||
                 bTargetAreaIsSirusFight;
-                
+
 
             if (enteringDefaultTrackableActivity)
             {
@@ -2120,7 +2120,7 @@ namespace TraXile
                 if (_currentActivity != null && _currentActivity.Type != ACTIVITY_TYPES.LABYRINTH && _currentActivity.Type != ACTIVITY_TYPES.CAMPAIGN)
                 {
                     //TEST: Pause when left the source area
-                    if(sSourceArea == _currentActivity.Area)
+                    if (sSourceArea == _currentActivity.Area)
                     {
                         _currentActivity.StopStopWatch();
                         _currentActivity.LastEnded = ev.EventTime;
@@ -2137,7 +2137,7 @@ namespace TraXile
 
                     if (_currentActivity.ZanaMap != null)
                     {
-                        if(sSourceArea == _currentActivity.ZanaMap.Area)
+                        if (sSourceArea == _currentActivity.ZanaMap.Area)
                         {
                             _currentActivity.ZanaMap.StopStopWatch();
                             _currentActivity.ZanaMap.LastEnded = ev.EventTime;
@@ -2169,7 +2169,7 @@ namespace TraXile
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
                 }
 
-                if(!_defaultMappings.DEATH_COUNT_ENABLED_AREAS.Contains(_currentArea))
+                if (!_defaultMappings.DEATH_COUNT_ENABLED_AREAS.Contains(_currentArea))
                 {
                     return;
                 }
@@ -2206,7 +2206,7 @@ namespace TraXile
             {
                 switch (ev.EventType)
                 {
-                   case EVENT_TYPES.ABNORMAL_DISCONNECT:
+                    case EVENT_TYPES.ABNORMAL_DISCONNECT:
                         if (_currentActivity != null)
                         {
                             _log.Info("Abnormal disconnect found in log. Finishing Map.");
@@ -2217,7 +2217,7 @@ namespace TraXile
                     case EVENT_TYPES.POE_CLIENT_START:
                         _StartedFlag = true;
 
-                        if(_currentActivity != null)
+                        if (_currentActivity != null)
                         {
                             // Filter out non trackable ends, like town visits right before app close
                             if (_currentActivity.LastEnded.Year < 2000)
@@ -2234,7 +2234,7 @@ namespace TraXile
                                 FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                             }
                         }
-                        if(_trackingHO)
+                        if (_trackingHO)
                         {
                             _trackingHO = false;
                         }
@@ -2480,7 +2480,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.LAB_START_INFO_RECEIVED:
-                     
+
                         break;
                     case EVENT_TYPES.NEXT_AREA_LEVEL_RECEIVED:
                         string sLvl = ev.LogLine.Split(new string[] { "Generating level " }, StringSplitOptions.None)[1]
@@ -2526,9 +2526,9 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.HEIST_GIANNA_SPEAK:
-                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
-                            if(CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
                                 _currentActivity.AddTag("gianna");
                             }
@@ -2633,7 +2633,7 @@ namespace TraXile
 
                 if (!bInit) TextLogEvent(ev);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.Warn("ParseError -> Ex.Message: " + ex.Message + ", LogLine: " + ev.LogLine);
                 _log.Debug(ex.ToString());
@@ -2672,7 +2672,7 @@ namespace TraXile
         /// <returns></returns>
         private string GetEndpointFromInstanceEvent(TrX_TrackingEvent ev)
         {
-            return ev.LogLine.Split(new String[] { "Connecting to instance server at "}, StringSplitOptions.None)[1];
+            return ev.LogLine.Split(new String[] { "Connecting to instance server at " }, StringSplitOptions.None)[1];
         }
 
         /// <summary>
@@ -2688,7 +2688,7 @@ namespace TraXile
 
             _currentActivity.StopStopWatch();
 
-            if(!SAFE_RELOAD_MODE)
+            if (!SAFE_RELOAD_MODE)
             {
                 TimeSpan ts;
                 TimeSpan tsZana;
@@ -2816,22 +2816,22 @@ namespace TraXile
                 }
             }
 
-            if(activity.Type == ACTIVITY_TYPES.HEIST)
+            if (activity.Type == ACTIVITY_TYPES.HEIST)
             {
                 IncrementStat("TotalHeistsDone", activity.Started, 1);
                 IncrementStat("HeistsFinished_" + activity.Area, activity.Started, 1);
             }
-            else if(activity.Type == ACTIVITY_TYPES.MAP)
+            else if (activity.Type == ACTIVITY_TYPES.MAP)
             {
                 IncrementStat("TotalMapsDone", activity.Started, 1);
                 IncrementStat("MapsFinished_" + activity.Area, activity.Started, 1);
                 IncrementStat("MapTierFinished_T" + activity.MapTier.ToString(), activity.Started, 1);
 
-                if(activity.ZanaMap != null)
+                if (activity.ZanaMap != null)
                 {
                     IncrementStat("TotalMapsDone", activity.ZanaMap.Started, 1);
                     IncrementStat("MapsFinished_" + activity.ZanaMap.Area, activity.ZanaMap.Started, 1);
-                    IncrementStat("MapTierFinished_T" + activity.ZanaMap.MapTier.ToString(),activity.ZanaMap.Started, 1);
+                    IncrementStat("MapTierFinished_T" + activity.ZanaMap.MapTier.ToString(), activity.ZanaMap.Started, 1);
                 }
             }
             else if (activity.Type == ACTIVITY_TYPES.SIMULACRUM)
@@ -2843,7 +2843,7 @@ namespace TraXile
                 IncrementStat("TemplesDone", activity.Started, 1);
             }
 
-            if(_eventQueueInitizalized)
+            if (_eventQueueInitizalized)
             {
                 RenderGlobalDashboard();
                 RenderHeistDashboard();
@@ -2857,7 +2857,7 @@ namespace TraXile
         /// </summary>
         private void ReadStatsCache()
         {
-            if(File.Exists(_cachePath))
+            if (File.Exists(_cachePath))
             {
                 StreamReader r = new StreamReader(_cachePath);
                 string line;
@@ -2874,16 +2874,16 @@ namespace TraXile
                     {
                         statID = line.Split(';')[0];
                         statValue = Convert.ToInt32(line.Split(';')[1]);
-                        if(_numericStats.ContainsKey(statID))
+                        if (_numericStats.ContainsKey(statID))
                         {
                             _numericStats[line.Split(';')[0]] = statValue;
-                            _log.Info("StatsCacheRead -> " + statID  + "=" + statValue.ToString());
+                            _log.Info("StatsCacheRead -> " + statID + "=" + statValue.ToString());
                         }
                         else
                         {
                             _log.Warn("StatsCacheRead -> Unknown stat '" + statID + "' in stats.cache, maybe from an older version.");
                         }
-                        
+
                     }
 
                     iLine++;
@@ -2899,7 +2899,7 @@ namespace TraXile
         {
             StreamWriter wrt = new StreamWriter(_cachePath);
             wrt.WriteLine("last;" + _lastHash.ToString());
-            foreach(KeyValuePair<string, int> kvp in _numericStats)
+            foreach (KeyValuePair<string, int> kvp in _numericStats)
             {
                 wrt.WriteLine(kvp.Key + ";" + kvp.Value);
             }
@@ -2955,7 +2955,7 @@ namespace TraXile
 
             foreach (TrX_ActivityTag tag in _tags)
             {
-                if(tag.ShowInListView)
+                if (tag.ShowInListView)
                 {
                     ColumnHeader ch = new ColumnHeader()
                     {
@@ -2999,11 +2999,11 @@ namespace TraXile
                 string sName = map.Area;
                 string sTier = "";
 
-                if(map.AreaLevel == 0)
+                if (map.AreaLevel == 0)
                 {
                     sTier = "-";
                 }
-                else if(map.Type == ACTIVITY_TYPES.MAP)
+                else if (map.Type == ACTIVITY_TYPES.MAP)
                 {
                     sTier = "T" + map.MapTier.ToString();
                 }
@@ -3020,15 +3020,15 @@ namespace TraXile
                 lvi.SubItems.Add(map.StopWatchValue.ToString());
                 lvi.SubItems.Add(map.DeathCounter.ToString());
 
-                foreach(TrX_ActivityTag t in _tags)
+                foreach (TrX_ActivityTag t in _tags)
                 {
-                    if(t.ShowInListView)
+                    if (t.ShowInListView)
                     {
                         lvi.SubItems.Add(map.Tags.Contains(t.ID) ? "X" : "");
                     }
                 }
 
-                if(iPos == -1)
+                if (iPos == -1)
                 {
                     _lvmActlog.AddLvItem(lvi, map.UniqueID, b_display);
                 }
@@ -3038,7 +3038,7 @@ namespace TraXile
                 }
 
                 _actLogItemCount = _lvmActlog.CurrentItemCount;
-                
+
             });
         }
 
@@ -3049,7 +3049,7 @@ namespace TraXile
         /// <returns></returns>
         private TrX_TrackedActivity GetActivityFromListItemName(string s_name)
         {
-            foreach(TrX_TrackedActivity ta in _eventHistory)
+            foreach (TrX_TrackedActivity ta in _eventHistory)
             {
                 if (ta.UniqueID == s_name)
                     return ta;
@@ -3078,7 +3078,7 @@ namespace TraXile
                 .Replace(".", "").Trim();
             return sArea.Replace("'", "");
         }
-     
+
         /// <summary>
         /// Handle the GUI updates
         /// </summary>
@@ -3089,7 +3089,7 @@ namespace TraXile
             checkBoxShowGridInStats.Checked = _showGridInStats;
             ReadBackupList();
             listBoxRestoreBackup.DataSource = _backups;
-            
+
 
             if (_eventQueueInitizalized)
             {
@@ -3098,7 +3098,7 @@ namespace TraXile
                 {
                     Show();
 
-                    if(_restoreMode)
+                    if (_restoreMode)
                     {
                         _restoreMode = false;
                         if (_restoreOk)
@@ -3120,15 +3120,15 @@ namespace TraXile
                     textBoxLogFilePath.Text = ReadSetting("poe_logfile_path");
 
                     labelItemCount.Text = "items: " + _actLogItemCount.ToString();
-                   
 
-                    if(listViewStats.Items.Count > 0)
+
+                    if (listViewStats.Items.Count > 0)
                     {
                         for (int i = 0; i < _numericStats.Count; i++)
                         {
                             KeyValuePair<string, int> kvp = _numericStats.ElementAt(i);
 
-                            if(kvp.Key == "HideoutTimeSec")
+                            if (kvp.Key == "HideoutTimeSec")
                             {
                                 _lvmStats.GetLvItem("stats_" + kvp.Key).SubItems[1].Text = Math.Round(((double)(kvp.Value / 60 / 60)), 1).ToString() + " hours";
                             }
@@ -3136,21 +3136,21 @@ namespace TraXile
                             {
                                 _lvmStats.GetLvItem("stats_" + kvp.Key).SubItems[1].Text = kvp.Value.ToString();
                             }
-                            
+
                         }
                     }
 
-                    if(!_listViewInitielaized)
+                    if (!_listViewInitielaized)
                     {
                         DoSearch();
                         _listViewInitielaized = true;
                     }
-                    
+
                     labelCurrArea.Text = _currentArea;
                     labelCurrentAreaLvl.Text = _currentAreaLevel > 0 ? _currentAreaLevel.ToString() : "-";
                     labelLastDeath.Text = _lastDeathTime.Year > 2000 ? _lastDeathTime.ToString() : "-";
-                    
-                    if(_currentArea.Contains("Hideout"))
+
+                    if (_currentArea.Contains("Hideout"))
                     {
                         labelCurrActivity.Text = "In Hideout";
                     }
@@ -3171,7 +3171,7 @@ namespace TraXile
                     {
                         string sTier = "";
 
-                       
+
 
                         if (_currentActivity.Type == ACTIVITY_TYPES.SIMULACRUM)
                         {
@@ -3180,7 +3180,7 @@ namespace TraXile
 
                         if (_currentActivity.AreaLevel > 0)
                         {
-                            if(_currentActivity.Type == ACTIVITY_TYPES.MAP)
+                            if (_currentActivity.Type == ACTIVITY_TYPES.MAP)
                             {
                                 sTier = "T" + _currentActivity.MapTier.ToString();
                             }
@@ -3189,7 +3189,7 @@ namespace TraXile
                                 sTier = "Lvl. " + _currentActivity.AreaLevel.ToString();
                             }
                         }
-                       
+
 
                         if (_isMapZana && _currentActivity.ZanaMap != null)
                         {
@@ -3265,7 +3265,7 @@ namespace TraXile
                     labelMavenStatus.Text = _numericStats["MavenKilled"] > 0 ? "Yes" : "No";
                     labelMavenKilled.Text = _numericStats["MavenKilled"].ToString() + "x";
                     labelMavenTried.Text = _numericStats["MavenStarted"].ToString() + "x";
-                   
+
 
                     // MAP Dashbaord
                     if (_mapDashboardUpdateRequested)
@@ -3367,7 +3367,7 @@ namespace TraXile
             labAvgTimes = new Dictionary<string, double>();
             labBestTimes = new Dictionary<string, TrX_TrackedActivity>();
 
-            foreach(string s in labs)
+            foreach (string s in labs)
             {
                 if (_labDashboardHideUnknown && s == "Unknown")
                     continue;
@@ -3378,11 +3378,11 @@ namespace TraXile
             }
 
             // Lab counts
-            foreach(TrX_TrackedActivity act in _eventHistory)
+            foreach (TrX_TrackedActivity act in _eventHistory)
             {
-                if(act.Type == ACTIVITY_TYPES.LABYRINTH && act.DeathCounter == 0)
+                if (act.Type == ACTIVITY_TYPES.LABYRINTH && act.DeathCounter == 0)
                 {
-                    if(labCounts.ContainsKey(act.Area))
+                    if (labCounts.ContainsKey(act.Area))
                     {
                         labCounts[act.Area]++;
                     }
@@ -3390,7 +3390,7 @@ namespace TraXile
             }
 
             // Avg lab times
-            foreach(string s in labs)
+            foreach (string s in labs)
             {
                 if (!labs.Contains(s))
                     continue;
@@ -3401,16 +3401,16 @@ namespace TraXile
                 int iSum = 0;
                 int iCount = 0;
 
-                foreach(TrX_TrackedActivity act in _eventHistory)
+                foreach (TrX_TrackedActivity act in _eventHistory)
                 {
-                    if(act.Type == ACTIVITY_TYPES.LABYRINTH && act.DeathCounter == 0)
+                    if (act.Type == ACTIVITY_TYPES.LABYRINTH && act.DeathCounter == 0)
                     {
-                        if(act.Area == s)
+                        if (act.Area == s)
                         {
                             // Average
                             iCount++;
 
-                            if(act.TotalSeconds < _timeCapLab)
+                            if (act.TotalSeconds < _timeCapLab)
                             {
                                 iSum += act.TotalSeconds;
                             }
@@ -3420,13 +3420,13 @@ namespace TraXile
                             }
 
                             // Top 
-                            if(labBestTimes[s] == null)
+                            if (labBestTimes[s] == null)
                             {
                                 labBestTimes[s] = act;
                             }
                             else
                             {
-                                if(labBestTimes[s].TotalSeconds > act.TotalSeconds)
+                                if (labBestTimes[s].TotalSeconds > act.TotalSeconds)
                                 {
                                     labBestTimes[s] = act;
                                 }
@@ -3435,7 +3435,7 @@ namespace TraXile
                     }
                 }
 
-                if(iSum > 0 && iCount > 0)
+                if (iSum > 0 && iCount > 0)
                 {
                     labAvgTimes[s] = iSum / iCount;
                 }
@@ -3447,14 +3447,14 @@ namespace TraXile
                 chartLabsDone.Series[0].Points.Clear();
                 chartLabsAvgTime.Series[0].Points.Clear();
                 listViewBestLabs.Items.Clear();
-                foreach (KeyValuePair<string,int> kvp in labCounts)
+                foreach (KeyValuePair<string, int> kvp in labCounts)
                 {
                     string sName = kvp.Key;
-                    if(sName != "The Labyrinth")
+                    if (sName != "The Labyrinth")
                     {
                         sName = sName.Replace("The ", "").Replace(" Labyrinth", "");
                     }
-                    if(sName == "Unknown")
+                    if (sName == "Unknown")
                     {
                         sName += "*";
                     }
@@ -3463,8 +3463,8 @@ namespace TraXile
                     chartLabsAvgTime.Series[0].Points.AddXY(sName, Math.Round(labAvgTimes[kvp.Key] / 60, 1));
 
                     ListViewItem lvi = new ListViewItem(kvp.Key);
-                    
-                    if(labBestTimes[kvp.Key] != null)
+
+                    if (labBestTimes[kvp.Key] != null)
                     {
                         lvi.SubItems.Add(labBestTimes[kvp.Key].StopWatchValue);
                         lvi.SubItems.Add(labBestTimes[kvp.Key].Started.ToString());
@@ -3480,7 +3480,7 @@ namespace TraXile
                 }
             };
             BeginInvoke(mi);
-            
+
         }
 
         /// <summary>
@@ -3506,7 +3506,7 @@ namespace TraXile
                 { ACTIVITY_TYPES.CAMPAIGN, 0 },
             };
 
-            Dictionary<ACTIVITY_TYPES, int> typeListCount= new Dictionary<ACTIVITY_TYPES, int>
+            Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
             {
                 { ACTIVITY_TYPES.MAP, 0 },
                 { ACTIVITY_TYPES.HEIST, 0 },
@@ -3544,16 +3544,16 @@ namespace TraXile
             };
 
             double totalCount = 0;
-            if(Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true")))
+            if (Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true")))
             {
                 totalCount += _numericStats["HideoutTimeSec"];
             }
-            
+
             foreach (TrX_TrackedActivity act in _eventHistory)
             {
                 int iCap = 3600;
 
-                switch(act.Type)
+                switch (act.Type)
                 {
                     case ACTIVITY_TYPES.MAP:
                         iCap = _timeCapMap;
@@ -3569,7 +3569,7 @@ namespace TraXile
                 typeListCount[act.Type]++;
 
                 // Filter out
-                if(act.TotalSeconds < iCap)
+                if (act.TotalSeconds < iCap)
                 {
                     typeList[act.Type] += act.TotalSeconds;
                     totalCount += act.TotalSeconds;
@@ -3584,7 +3584,7 @@ namespace TraXile
             chartGlobalDashboard.Series[0].Points.Clear();
             listView1.Items.Clear();
             double dOther = 0;
-            foreach(KeyValuePair<ACTIVITY_TYPES,double> kvp in typeList)
+            foreach (KeyValuePair<ACTIVITY_TYPES, double> kvp in typeList)
             {
                 ListViewItem lvi;
 
@@ -3592,13 +3592,13 @@ namespace TraXile
                 double percentVal = 0;
 
 
-                if(kvp.Value > 0)
+                if (kvp.Value > 0)
                 {
                     percentVal = kvp.Value / totalCount * 100;
                     percentVal = Math.Round(percentVal, 2);
                 }
 
-                if(percentVal >= 5)
+                if (percentVal >= 5)
                 {
                     TimeSpan tsDuration = TimeSpan.FromSeconds(kvp.Value);
                     chartGlobalDashboard.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
@@ -3635,7 +3635,7 @@ namespace TraXile
             chartGlobalDashboard.Series[0].Points.Last().Label = dOther > 0 ? string.Format("{0} h", Math.Round(tsDurationOther.TotalHours, 1)) : " ";
             chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", "Other", percentValOther);
 
-            if(_showHideoutInPie)
+            if (_showHideoutInPie)
             {
                 // Add HO
                 double percentValHO = _numericStats["HideoutTimeSec"] / totalCount * 100;
@@ -3702,12 +3702,12 @@ namespace TraXile
                     {
                         if (!String.IsNullOrEmpty(s))
                         {
-                            if(tmpListTags.ContainsKey(s))
+                            if (tmpListTags.ContainsKey(s))
                             {
                                 int iVal = tmpListTags[s];
                                 tmpListTags[s]++;
                             }
-                           
+
                         }
                     }
                 }
@@ -3729,13 +3729,13 @@ namespace TraXile
             listView5.Items.Clear();
             foreach (KeyValuePair<string, int> kvp in top10Tags)
             {
-                if(kvp.Value > 0)
+                if (kvp.Value > 0)
                 {
                     ListViewItem lvi = new ListViewItem(kvp.Key);
                     lvi.SubItems.Add(kvp.Value.ToString());
                     listView5.Items.Add(lvi);
                 }
-               
+
             }
 
             Dictionary<int, double> levelAvgs = new Dictionary<int, double>();
@@ -3745,13 +3745,13 @@ namespace TraXile
                 int iCount = 0;
                 int iSum = 0;
 
-                foreach(TrX_TrackedActivity act in _eventHistory)
+                foreach (TrX_TrackedActivity act in _eventHistory)
                 {
                     if (act.Type == ACTIVITY_TYPES.HEIST && act.AreaLevel == i)
                     {
                         iCount++;
 
-                        if(act.TotalSeconds < _timeCapHeist)
+                        if (act.TotalSeconds < _timeCapHeist)
                         {
                             iSum += act.TotalSeconds;
                         }
@@ -3759,7 +3759,7 @@ namespace TraXile
                         {
                             iSum += _timeCapHeist;
                         }
-                        
+
                     }
                 }
 
@@ -3788,7 +3788,7 @@ namespace TraXile
         /// </summary>
         public void RenderMappingDashboard()
         {
-            List<KeyValuePair<string,int>> tmpList = new List<KeyValuePair<string, int>>();
+            List<KeyValuePair<string, int>> tmpList = new List<KeyValuePair<string, int>>();
             List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
             Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
             List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
@@ -3808,7 +3808,7 @@ namespace TraXile
             tmpList.Reverse();
             top10.AddRange(tmpList.GetRange(0, 10));
             listViewTop10Maps.Items.Clear();
-            foreach(KeyValuePair<string,int> kvp in top10)
+            foreach (KeyValuePair<string, int> kvp in top10)
             {
                 ListViewItem lvi = new ListViewItem(kvp.Key);
                 lvi.SubItems.Add(kvp.Value.ToString());
@@ -3822,15 +3822,15 @@ namespace TraXile
                 tmpListTags.Add(tg.ID, 0);
             }
 
-            foreach(TrX_TrackedActivity act in _eventHistory)
+            foreach (TrX_TrackedActivity act in _eventHistory)
             {
-                if(act.Type == ACTIVITY_TYPES.MAP)
+                if (act.Type == ACTIVITY_TYPES.MAP)
                 {
-                    foreach(string s in act.Tags)
+                    foreach (string s in act.Tags)
                     {
-                        if(!String.IsNullOrEmpty(s))
+                        if (!String.IsNullOrEmpty(s))
                         {
-                            if(tmpListTags.ContainsKey(s))
+                            if (tmpListTags.ContainsKey(s))
                             {
                                 int iVal = tmpListTags[s];
                                 tmpListTags[s]++;
@@ -3840,7 +3840,7 @@ namespace TraXile
                 }
             }
 
-            foreach(KeyValuePair<string,int> kvp in tmpListTags)
+            foreach (KeyValuePair<string, int> kvp in tmpListTags)
             {
                 tmpList.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
             }
@@ -3856,7 +3856,7 @@ namespace TraXile
             listViewTaggingOverview.Items.Clear();
             foreach (KeyValuePair<string, int> kvp in top10Tags)
             {
-                if(kvp.Value > 0)
+                if (kvp.Value > 0)
                 {
                     ListViewItem lvi = new ListViewItem(kvp.Key);
                     lvi.SubItems.Add(kvp.Value.ToString());
@@ -3869,14 +3869,14 @@ namespace TraXile
                 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
             };
 
-            for(int i = 0; i < 16; i++)
+            for (int i = 0; i < 16; i++)
             {
                 int iSum = 0;
-                int iCount= 0;
+                int iCount = 0;
 
-                foreach(TrX_TrackedActivity act in _eventHistory)
+                foreach (TrX_TrackedActivity act in _eventHistory)
                 {
-                    if(act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i+1))
+                    if (act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i + 1))
                     {
                         if (act.TotalSeconds < _timeCapMap)
                         {
@@ -3886,16 +3886,16 @@ namespace TraXile
                         {
                             iSum += _timeCapMap;
                         }
-                        
+
                         iCount++;
                     }
                 }
 
-                if(iSum > 0 && iCount > 0)
+                if (iSum > 0 && iCount > 0)
                 {
                     tierAverages[i] = (iSum / iCount);
                 }
-                
+
             }
 
             MethodInvoker mi = delegate
@@ -3907,9 +3907,9 @@ namespace TraXile
                 }
 
                 chartMapTierAvgTime.Series[0].Points.Clear();
-                for(int i = 0; i < tierAverages.Length; i++)
+                for (int i = 0; i < tierAverages.Length; i++)
                 {
-                    chartMapTierAvgTime.Series[0].Points.AddXY(i+1, Math.Round(tierAverages[i] / 60, 1));
+                    chartMapTierAvgTime.Series[0].Points.AddXY(i + 1, Math.Round(tierAverages[i] / 60, 1));
                 }
             };
             Invoke(mi);
@@ -3984,7 +3984,7 @@ namespace TraXile
         /// <param name="i_days_back"></param>
         private void FillChart(int i_days_back)
         {
-            if(_lvmStats.listView.SelectedIndices.Count > 0)
+            if (_lvmStats.listView.SelectedIndices.Count > 0)
             {
                 chartStats.Series[0].Points.Clear();
                 DateTime dtStart = DateTime.Now.AddDays(i_days_back * -1);
@@ -4031,7 +4031,7 @@ namespace TraXile
         /// <returns></returns>
         public TrX_ActivityTag GetTagByID(string s_id)
         {
-            foreach(TrX_ActivityTag tag in _tags)
+            foreach (TrX_ActivityTag tag in _tags)
             {
                 if (tag.ID == s_id)
                     return tag;
@@ -4047,14 +4047,14 @@ namespace TraXile
         {
             string sBackupDir = _myAppData + @"/backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
             System.IO.Directory.CreateDirectory(sBackupDir);
-            
-            if(System.IO.File.Exists(SettingPoeLogFilePath))
+
+            if (System.IO.File.Exists(SettingPoeLogFilePath))
                 System.IO.File.Copy(SettingPoeLogFilePath, sBackupDir + @"/Client.txt");
-            if(System.IO.File.Exists(_cachePath))
+            if (System.IO.File.Exists(_cachePath))
                 System.IO.File.Copy(_cachePath, sBackupDir + @"/stats.cache");
-            if(System.IO.File.Exists(_dbPath))
+            if (System.IO.File.Exists(_dbPath))
                 System.IO.File.Copy(_dbPath, sBackupDir + @"/data.db");
-            if(System.IO.File.Exists("TraXile.exe.config"))
+            if (System.IO.File.Exists("TraXile.exe.config"))
                 System.IO.File.Copy("TraXile.exe.config", sBackupDir + @"/TraXile.exe.config");
         }
 
@@ -4104,7 +4104,7 @@ namespace TraXile
             string sLine = "time;type;area;area_level;stopwatch;death_counter";
             wrt.WriteLine(sLine);
 
-            for(int i = 0; i < _eventHistory.Count; i++)
+            for (int i = 0; i < _eventHistory.Count; i++)
             {
                 tm = _eventHistory[i];
                 sLine = "";
@@ -4232,7 +4232,7 @@ namespace TraXile
                     UpdateGUI();
                     Opacity = 100;
                 }
-             
+
             }
         }
 
@@ -4488,7 +4488,7 @@ namespace TraXile
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            if(_eventQueueInitizalized)
+            if (_eventQueueInitizalized)
             {
                 SaveStatsCache();
             }
@@ -4532,12 +4532,12 @@ namespace TraXile
             if (listViewStats.SelectedItems.Count > 0)
                 RefreshChart();
         }
-       
+
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
             buttonRefreshChart.Focus();
-            if(comboBoxTimeRangeStats.SelectedIndex > 5)
+            if (comboBoxTimeRangeStats.SelectedIndex > 5)
             {
                 if (MessageBox.Show("Selecting more than 3 month could lead to high loading times. Continue?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -4554,7 +4554,7 @@ namespace TraXile
                 if (listViewStats.SelectedItems.Count > 0)
                     RefreshChart();
             }
-           
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -4586,18 +4586,18 @@ namespace TraXile
 
         private void pictureBox18_Click(object sender, EventArgs e)
         {
-            if(_currentActivity != null)
+            if (_currentActivity != null)
             {
-                if(_isMapZana && _currentActivity.ZanaMap != null)
+                if (_isMapZana && _currentActivity.ZanaMap != null)
                 {
-                    if(!_currentActivity.ZanaMap.ManuallyPaused)
+                    if (!_currentActivity.ZanaMap.ManuallyPaused)
                     {
                         _currentActivity.ZanaMap.Pause();
                     }
                 }
                 else
                 {
-                    if(!_currentActivity.ManuallyPaused)
+                    if (!_currentActivity.ManuallyPaused)
                     {
                         _currentActivity.Pause();
                     }
@@ -4607,7 +4607,7 @@ namespace TraXile
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if(listViewActLog.SelectedItems.Count == 1)
+            if (listViewActLog.SelectedItems.Count == 1)
             {
                 int iIndex = listViewActLog.SelectedIndices[0];
                 long lTimestamp = _eventHistory[iIndex].TimeStamp;
@@ -4632,7 +4632,7 @@ namespace TraXile
             OpenChildWindow(new ExportActvityList(this));
         }
 
-       
+
 
         private void button5_Click(object sender, EventArgs e)
         {
@@ -4640,7 +4640,7 @@ namespace TraXile
             {
                 int iIndex = listViewActLog.SelectedIndices[0];
                 TrX_TrackedActivity act = GetActivityFromListItemName(listViewActLog.Items[iIndex].Name);
-                if(act != null)
+                if (act != null)
                     OpenActivityDetails(act);
             }
 
@@ -4717,7 +4717,7 @@ namespace TraXile
         private void button15_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show("With this action your Path of Exile log will be flushed and all data and statistics in TraXile will be deleted." + Environment.NewLine
-                + Environment.NewLine +  "It is recommendet to create a backup first - using the 'Create Backup' function. Do you want to create a backup before reset?", "Warning", MessageBoxButtons.YesNoCancel);
+                + Environment.NewLine + "It is recommendet to create a backup first - using the 'Create Backup' function. Do you want to create a backup before reset?", "Warning", MessageBoxButtons.YesNoCancel);
 
             if (dr == DialogResult.Yes)
                 CreateBackup("Auto_Backup");
@@ -4734,12 +4734,12 @@ namespace TraXile
         {
             try
             {
-                if(textBoxBackupName.Text == "")
+                if (textBoxBackupName.Text == "")
                 {
                     textBoxBackupName.Text = "Default";
                 }
 
-                if(textBoxBackupName.Text.Contains("/") || textBoxBackupName.Text.Contains("."))
+                if (textBoxBackupName.Text.Contains("/") || textBoxBackupName.Text.Contains("."))
                 {
                     MessageBox.Show("Please do not define a path in the field name");
                 }
@@ -4748,27 +4748,27 @@ namespace TraXile
                     CreateBackup(textBoxBackupName.Text);
                     MessageBox.Show("Backup successfully created!");
                 }
-               
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            
+
         }
 
-      
+
 
         private void button17_Click(object sender, EventArgs e)
         {
             DialogResult dr;
 
-            if(Process.GetProcessesByName("PathOfExileSteam").Length > 0 ||
+            if (Process.GetProcessesByName("PathOfExileSteam").Length > 0 ||
                 Process.GetProcessesByName("PathOfExile").Length > 0)
             {
                 MessageBox.Show("It seems that PathOfExile is running at the moment. Please close it first.");
             }
-           else
+            else
             {
                 dr = MessageBox.Show("Do you really want to restore the selected Backup? The Application will be restarted. Please make sure that your PathOfExile Client is not running.", "Warning", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.Yes)
@@ -4780,21 +4780,21 @@ namespace TraXile
 
         private void panelTags_SizeChanged(object sender, EventArgs e)
         {
-            if(_eventQueueInitizalized)
+            if (_eventQueueInitizalized)
                 RenderTagsForTracking(true);
         }
 
         private void panelEditTags_SizeChanged(object sender, EventArgs e)
         {
-            if(_eventQueueInitizalized)
+            if (_eventQueueInitizalized)
                 RenderTagsForConfig(true);
         }
 
-       
+
 
         private void button10_Click(object sender, EventArgs e)
         {
-            if(ValidateTagName(textBox2.Text, true))
+            if (ValidateTagName(textBox2.Text, true))
             {
                 if (!CheckTagExists(textBox2.Text))
                 {
@@ -4808,7 +4808,7 @@ namespace TraXile
                     MessageBox.Show("Tag '" + textBox2.Text + "' already exists.");
                 }
             }
-           
+
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -4828,7 +4828,7 @@ namespace TraXile
             label63.ForeColor = colorDialog1.Color;
         }
 
-     
+
 
         private void button13_Click(object sender, EventArgs e)
         {
@@ -4872,7 +4872,7 @@ namespace TraXile
         {
             textBox5.Text = textBox4.Text;
         }
-       
+
 
         private void chatCommandsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -4898,7 +4898,7 @@ namespace TraXile
 
         private void textBox7_TextChanged(object sender, EventArgs e)
         {
-            if(textBoxSearchStats.Text == String.Empty)
+            if (textBoxSearchStats.Text == String.Empty)
             {
                 _lvmStats.Reset();
             }
@@ -4937,13 +4937,13 @@ namespace TraXile
             OpenChildWindow(new AboutW());
         }
 
-       
+
 
         private void button21_Click(object sender, EventArgs e)
         {
             DialogResult dr = MessageBox.Show("Your current Client.txt will be renamed and a new one will be created. " + Environment.NewLine
                 + "The renamed version can be deleted or backed up afterwards. Continue?", "Warning", MessageBoxButtons.YesNo);
-            if(dr == DialogResult.Yes)
+            if (dr == DialogResult.Yes)
             {
                 try
                 {
@@ -4962,7 +4962,7 @@ namespace TraXile
                 {
                     MessageBox.Show(ex.Message);
                 }
-               
+
             }
         }
 
@@ -4971,7 +4971,7 @@ namespace TraXile
             Process.Start(APPINFO.WIKI_URL);
         }
 
-       
+
 
         private void button22_Click(object sender, EventArgs e)
         {
@@ -5009,7 +5009,7 @@ namespace TraXile
                 int iHeist = Convert.ToInt32(textBoxHeistCap.Text);
                 int iLab = Convert.ToInt32(textBoxLabCap.Text);
 
-                if(iMap > 0 && iHeist > 0 && iLab > 0)
+                if (iMap > 0 && iHeist > 0 && iLab > 0)
                 {
                     _timeCapMap = iMap;
                     _timeCapLab = iLab;
@@ -5028,9 +5028,9 @@ namespace TraXile
                 {
                     MessageBox.Show("Time cap values must be greater than 0");
                 }
-               
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.Error(ex.ToString());
                 MessageBox.Show("Invalid format for time cap. Only integers are supported");
@@ -5072,9 +5072,9 @@ namespace TraXile
         {
             if (_currentActivity != null)
             {
-               FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
+                FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
             }
-               
+
         }
 
         private void pictureBox15_Click_1(object sender, EventArgs e)
@@ -5084,6 +5084,6 @@ namespace TraXile
                 FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
             }
         }
-       
+
     }
 }
