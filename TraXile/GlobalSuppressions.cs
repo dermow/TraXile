@@ -84,3 +84,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE1006:Benennungsstile", Justification = "<Ausstehend>", Scope = "member", Target = "~M:TraXile.Main.wikiToolStripMenuItem_Click(System.Object,System.EventArgs)")]
 [assembly: SuppressMessage("Style", "IDE1006:Benennungsstile", Justification = "<Ausstehend>", Scope = "member", Target = "~P:TraXile.TrX_ListViewManager.listView")]
 [assembly: SuppressMessage("Style", "IDE1006:Benennungsstile", Justification = "<Ausstehend>", Scope = "member", Target = "~M:TraXile.Main.checkBox1_CheckedChanged_1(System.Object,System.EventArgs)")]
+[assembly: SuppressMessage("Style", "IDE1006:Benennungsstile", Justification = "<Ausstehend>", Scope = "member", Target = "~M:TraXile.Main.button4_Click_1(System.Object,System.EventArgs)")]

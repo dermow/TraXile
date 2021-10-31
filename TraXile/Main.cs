@@ -54,16 +54,21 @@ namespace TraXile
         private bool _labDashboardUpdateRequested;
         private bool _showGridInStats;
         private bool _UpdateCheckDone;
-        private bool _mapDashboardUpdateRequested;
-        private bool _labDashboardHideUnknown;
-        private bool _globalDashboardUpdateRequested;
-        private bool _heistDashboardUpdateRequested;
         private bool _restoreOk = true;
         private bool _StartedFlag = false;
         private int _timeCapLab = 3600;
         private int _timeCapMap = 3600;
         private int _timeCapHeist = 3600;
         private int _actLogItemCount = 0;
+
+        // GUI Update Flags
+        private bool _uiFlagMapDashboard;
+        private bool _labDashboardHideUnknown;
+        private bool _uiFlagGlobalDashboard;
+        private bool _uiFlagHeistDashboard;
+        private bool _uiFlagActivityList;
+        private bool _uiFlagStatsList;
+
 
         // Core Logic variables
         private string _currentArea;
@@ -114,6 +119,7 @@ namespace TraXile
         private TrX_Theme _myTheme;
         private ILog _log;
         private bool _showHideoutInPie;
+        private bool _uiFlagBossDashboard;
 
         /// <summary>
         /// Setting Property for LogFilePath
@@ -561,9 +567,11 @@ namespace TraXile
 
             // Request initial Dashboard update
             _labDashboardUpdateRequested = true;
-            _mapDashboardUpdateRequested = true;
-            _heistDashboardUpdateRequested = true;
-            _globalDashboardUpdateRequested = true;
+            _uiFlagMapDashboard = true;
+            _uiFlagHeistDashboard = true;
+            _uiFlagGlobalDashboard = true;
+            _uiFlagStatsList = true;
+            _uiFlagActivityList = true;
         }
 
         /// <summary>
@@ -2651,6 +2659,8 @@ namespace TraXile
         {
             _numericStats[s_key] += i_value;
             _myDB.DoNonQuery("INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + _numericStats[s_key] + ")");
+            _uiFlagStatsList = true;
+            _uiFlagBossDashboard = true;
         }
 
         /// <summary>
@@ -2663,6 +2673,8 @@ namespace TraXile
         {
             _numericStats[s_key] = i_value;
             _myDB.DoNonQuery("INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + _numericStats[s_key] + ")");
+            _uiFlagStatsList = true;
+            _uiFlagBossDashboard = true;
         }
 
         /// <summary>
@@ -2771,10 +2783,12 @@ namespace TraXile
                 if (!_parsedActivities.Contains(activity.UniqueID))
                 {
                     AddMapLvItem(activity);
-                    SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
 
-                    // Refresh ListView
-                    if (_eventQueueInitizalized) DoSearch();
+                    // Request GUI Update
+                    _uiFlagActivityList = true;
+
+                    // Save to DB
+                    SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
                 }
 
 
@@ -2788,11 +2802,13 @@ namespace TraXile
                     if (!_parsedActivities.Contains(activity.ZanaMap.UniqueID))
                     {
                         AddMapLvItem(activity.ZanaMap, true);
+
+                        //Request GUI Update
+                        _uiFlagActivityList = true;
+
+                        //Save to DB
                         SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.ZanaMap.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
                             .Tags, activity.ZanaMap.Success, Convert.ToInt32(activity.ZanaMap.PausedTime));
-
-                        // Refresh ListView
-                        if (_eventQueueInitizalized) DoSearch();
                     }
                 }
 
@@ -2846,10 +2862,16 @@ namespace TraXile
 
             if (_eventQueueInitizalized)
             {
-                RenderGlobalDashboard();
-                RenderHeistDashboard();
-                RenderLabDashboard();
-                RenderMappingDashboard();
+                MethodInvoker mi = delegate
+                {
+                    RenderGlobalDashboard();
+                    RenderHeistDashboard();
+                    RenderLabDashboard();
+                    RenderMappingDashboard();
+                };
+                Invoke(mi);
+
+              
             }
         }
 
@@ -3083,7 +3105,7 @@ namespace TraXile
         /// <summary>
         /// Handle the GUI updates
         /// </summary>
-        private void UpdateGUI()
+        private void UpdateUI()
         {
             TimeSpan tsAreaTime = (DateTime.Now - _inAreaSince);
             checkBoxShowGridInAct.Checked = _showGridInActLog;
@@ -3123,7 +3145,7 @@ namespace TraXile
                     labelItemCount.Text = "items: " + _actLogItemCount.ToString();
 
 
-                    if (listViewStats.Items.Count > 0)
+                    if (listViewStats.Items.Count > 0 && _uiFlagStatsList)
                     {
                         for (int i = 0; i < _numericStats.Count; i++)
                         {
@@ -3139,6 +3161,7 @@ namespace TraXile
                             }
 
                         }
+                        _uiFlagStatsList = false;
                     }
 
                     if (!_listViewInitielaized)
@@ -3217,62 +3240,59 @@ namespace TraXile
                         labelTrackingType.Text = "Enter an ingame activity to auto. start tracking.";
                     }
 
-                    labelElderStatus.ForeColor = _numericStats["ElderKilled"] > 0 ? Color.Green : Color.Red;
-                    labelElderStatus.Text = _numericStats["ElderKilled"] > 0 ? "Yes" : "No";
-                    labelElderKillCount.Text = _numericStats["ElderKilled"].ToString() + "x";
-                    labelElderTried.Text = _numericStats["ElderTried"].ToString() + "x";
+                    if(_uiFlagBossDashboard)
+                    {
+                        labelElderStatus.ForeColor = _numericStats["ElderKilled"] > 0 ? Color.Green : Color.Red;
+                        labelElderStatus.Text = _numericStats["ElderKilled"] > 0 ? "Yes" : "No";
+                        labelElderKillCount.Text = _numericStats["ElderKilled"].ToString() + "x";
+                        labelElderTried.Text = _numericStats["ElderTried"].ToString() + "x";
+                        labelShaperStatus.ForeColor = _numericStats["ShaperKilled"] > 0 ? Color.Green : Color.Red;
+                        labelShaperStatus.Text = _numericStats["ShaperKilled"] > 0 ? "Yes" : "No";
+                        labelShaperKillCount.Text = _numericStats["ShaperKilled"].ToString() + "x";
+                        labelShaperTried.Text = _numericStats["ShaperTried"].ToString() + "x";
+                        labelSirusStatus.ForeColor = _numericStats["SirusKilled"] > 0 ? Color.Green : Color.Red;
+                        labelSirusStatus.Text = _numericStats["SirusKilled"] > 0 ? "Yes" : "No";
+                        labelSirusKillCount.Text = _numericStats["SirusKilled"].ToString() + "x";
+                        labelSirusTries.Text = _numericStats["SirusStarted"].ToString() + "x";
+                        label80.ForeColor = _numericStats["CatarinaKilled"] > 0 ? Color.Green : Color.Red;
+                        label80.Text = _numericStats["CatarinaKilled"] > 0 ? "Yes" : "No";
+                        label78.Text = _numericStats["CatarinaKilled"].ToString() + "x";
+                        label82.Text = _numericStats["CatarinaTried"].ToString() + "x";
+                        labelVeritaniaStatus.ForeColor = _numericStats["VeritaniaKilled"] > 0 ? Color.Green : Color.Red;
+                        labelVeritaniaKillCount.Text = _numericStats["VeritaniaKilled"].ToString() + "x";
+                        labelVeritaniaStatus.Text = _numericStats["VeritaniaKilled"] > 0 ? "Yes" : "No";
+                        labelVeritaniaTries.Text = _numericStats["VeritaniaStarted"].ToString() + "x";
+                        labelHunterStatus.ForeColor = _numericStats["HunterKilled"] > 0 ? Color.Green : Color.Red;
+                        labelHunterStatus.Text = _numericStats["HunterKilled"] > 0 ? "Yes" : "No";
+                        labelHunterKillCount.Text = _numericStats["HunterKilled"].ToString() + "x";
+                        labelHunterTries.Text = _numericStats["HunterStarted"].ToString() + "x";
+                        labelDroxStatus.ForeColor = _numericStats["DroxKilled"] > 0 ? Color.Green : Color.Red;
+                        labelDroxStatus.Text = _numericStats["DroxKilled"] > 0 ? "Yes" : "No";
+                        labelDroxKillCount.Text = _numericStats["DroxKilled"].ToString() + "x";
+                        labelDroxTries.Text = _numericStats["DroxStarted"].ToString() + "x";
+                        labelBaranStatus.ForeColor = _numericStats["BaranKilled"] > 0 ? Color.Green : Color.Red;
+                        labelBaranStatus.Text = _numericStats["BaranKilled"] > 0 ? "Yes" : "No";
+                        labelBaranKillCount.Text = _numericStats["BaranKilled"].ToString() + "x";
+                        labelBaranTries.Text = _numericStats["BaranStarted"].ToString() + "x";
+                        labelTrialMasterStatus.ForeColor = _numericStats["TrialMasterKilled"] > 0 ? Color.Green : Color.Red;
+                        labelTrialMasterStatus.Text = _numericStats["TrialMasterKilled"] > 0 ? "Yes" : "No";
+                        labelTrialMasterKilled.Text = _numericStats["TrialMasterKilled"].ToString() + "x";
+                        labelTrialMasterTried.Text = _numericStats["TrialMasterStarted"].ToString() + "x";
+                        labelMavenStatus.ForeColor = _numericStats["MavenKilled"] > 0 ? Color.Green : Color.Red;
+                        labelMavenStatus.Text = _numericStats["MavenKilled"] > 0 ? "Yes" : "No";
+                        labelMavenKilled.Text = _numericStats["MavenKilled"].ToString() + "x";
+                        labelMavenTried.Text = _numericStats["MavenStarted"].ToString() + "x";
 
-                    labelShaperStatus.ForeColor = _numericStats["ShaperKilled"] > 0 ? Color.Green : Color.Red;
-                    labelShaperStatus.Text = _numericStats["ShaperKilled"] > 0 ? "Yes" : "No";
-                    labelShaperKillCount.Text = _numericStats["ShaperKilled"].ToString() + "x";
-                    labelShaperTried.Text = _numericStats["ShaperTried"].ToString() + "x";
-
-                    labelSirusStatus.ForeColor = _numericStats["SirusKilled"] > 0 ? Color.Green : Color.Red;
-                    labelSirusStatus.Text = _numericStats["SirusKilled"] > 0 ? "Yes" : "No";
-                    labelSirusKillCount.Text = _numericStats["SirusKilled"].ToString() + "x";
-                    labelSirusTries.Text = _numericStats["SirusStarted"].ToString() + "x";
-
-                    label80.ForeColor = _numericStats["CatarinaKilled"] > 0 ? Color.Green : Color.Red;
-                    label80.Text = _numericStats["CatarinaKilled"] > 0 ? "Yes" : "No";
-                    label78.Text = _numericStats["CatarinaKilled"].ToString() + "x";
-                    label82.Text = _numericStats["CatarinaTried"].ToString() + "x";
-
-                    labelVeritaniaStatus.ForeColor = _numericStats["VeritaniaKilled"] > 0 ? Color.Green : Color.Red;
-                    labelVeritaniaKillCount.Text = _numericStats["VeritaniaKilled"].ToString() + "x";
-                    labelVeritaniaStatus.Text = _numericStats["VeritaniaKilled"] > 0 ? "Yes" : "No";
-                    labelVeritaniaTries.Text = _numericStats["VeritaniaStarted"].ToString() + "x";
-
-                    labelHunterStatus.ForeColor = _numericStats["HunterKilled"] > 0 ? Color.Green : Color.Red;
-                    labelHunterStatus.Text = _numericStats["HunterKilled"] > 0 ? "Yes" : "No";
-                    labelHunterKillCount.Text = _numericStats["HunterKilled"].ToString() + "x";
-                    labelHunterTries.Text = _numericStats["HunterStarted"].ToString() + "x";
-
-                    labelDroxStatus.ForeColor = _numericStats["DroxKilled"] > 0 ? Color.Green : Color.Red;
-                    labelDroxStatus.Text = _numericStats["DroxKilled"] > 0 ? "Yes" : "No";
-                    labelDroxKillCount.Text = _numericStats["DroxKilled"].ToString() + "x";
-                    labelDroxTries.Text = _numericStats["DroxStarted"].ToString() + "x";
-
-                    labelBaranStatus.ForeColor = _numericStats["BaranKilled"] > 0 ? Color.Green : Color.Red;
-                    labelBaranStatus.Text = _numericStats["BaranKilled"] > 0 ? "Yes" : "No";
-                    labelBaranKillCount.Text = _numericStats["BaranKilled"].ToString() + "x";
-                    labelBaranTries.Text = _numericStats["BaranStarted"].ToString() + "x";
-
-                    labelTrialMasterStatus.ForeColor = _numericStats["TrialMasterKilled"] > 0 ? Color.Green : Color.Red;
-                    labelTrialMasterStatus.Text = _numericStats["TrialMasterKilled"] > 0 ? "Yes" : "No";
-                    labelTrialMasterKilled.Text = _numericStats["TrialMasterKilled"].ToString() + "x";
-                    labelTrialMasterTried.Text = _numericStats["TrialMasterStarted"].ToString() + "x";
-
-                    labelMavenStatus.ForeColor = _numericStats["MavenKilled"] > 0 ? Color.Green : Color.Red;
-                    labelMavenStatus.Text = _numericStats["MavenKilled"] > 0 ? "Yes" : "No";
-                    labelMavenKilled.Text = _numericStats["MavenKilled"].ToString() + "x";
-                    labelMavenTried.Text = _numericStats["MavenStarted"].ToString() + "x";
+                        _uiFlagBossDashboard = false;
+                    }
+                    
 
 
                     // MAP Dashbaord
-                    if (_mapDashboardUpdateRequested)
+                    if (_uiFlagMapDashboard)
                     {
                         RenderMappingDashboard();
-                        _mapDashboardUpdateRequested = false;
+                        _uiFlagMapDashboard = false;
                     }
 
                     // LAB Dashbaord
@@ -3283,17 +3303,17 @@ namespace TraXile
                     }
 
                     // HEIST Dashbaord
-                    if (_heistDashboardUpdateRequested)
+                    if (_uiFlagHeistDashboard)
                     {
                         RenderHeistDashboard();
-                        _heistDashboardUpdateRequested = false;
+                        _uiFlagHeistDashboard = false;
                     }
 
                     // Global Dashbaord
-                    if (_globalDashboardUpdateRequested)
+                    if (_uiFlagGlobalDashboard)
                     {
                         RenderGlobalDashboard();
-                        _globalDashboardUpdateRequested = false;
+                        _uiFlagGlobalDashboard = false;
 
                         if (checkBoxLabHideUnknown.Checked != _labDashboardHideUnknown)
                         {
@@ -3305,6 +3325,14 @@ namespace TraXile
                             checkBox1.Checked = _showHideoutInPie;
                         }
                     }
+
+                    // Activity List
+                    if(_uiFlagActivityList)
+                    {
+                        DoSearch();
+                        _uiFlagActivityList = false;
+                    }
+
                     listView1.Columns[2].Width = listView1.Width;
 
                 });
@@ -4230,7 +4258,7 @@ namespace TraXile
                 }
                 else
                 {
-                    UpdateGUI();
+                    UpdateUI();
                     Opacity = 100;
                 }
 
@@ -4391,7 +4419,7 @@ namespace TraXile
         {
             if (textBox8.Text == String.Empty)
             {
-                _lvmActlog.Clear();
+                //_lvmActlog.Clear();
                 _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
 
             }
