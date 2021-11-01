@@ -51,7 +51,7 @@ namespace TraXile
         private bool _listViewInitielaized;
         private bool _showGridInActLog;
         private bool _restoreMode;
-        private bool _labDashboardUpdateRequested;
+        private bool _uiFlagLabDashboard;
         private bool _showGridInStats;
         private bool _UpdateCheckDone;
         private bool _restoreOk = true;
@@ -578,7 +578,7 @@ namespace TraXile
             _eventThread.Start();
 
             // Request initial Dashboard update
-            _labDashboardUpdateRequested = true;
+            _uiFlagLabDashboard = true;
             _uiFlagMapDashboard = true;
             _uiFlagHeistDashboard = true;
             _uiFlagGlobalDashboard = true;
@@ -3310,10 +3310,10 @@ namespace TraXile
                     }
 
                     // LAB Dashbaord
-                    if (_labDashboardUpdateRequested)
+                    if (_uiFlagLabDashboard)
                     {
                         RenderLabDashboard();
-                        _labDashboardUpdateRequested = false;
+                        _uiFlagLabDashboard = false;
                     }
 
                     // HEIST Dashbaord
@@ -4502,6 +4502,15 @@ namespace TraXile
             _backups.Remove(listBoxRestoreBackup.SelectedItem.ToString());
         }
 
+        public void RequestDashboardUpdates()
+        {
+            _uiFlagBossDashboard = true;
+            _uiFlagGlobalDashboard = true;
+            _uiFlagHeistDashboard = true;
+            _uiFlagStatsList = true;
+            _uiFlagLabDashboard = true;
+        }
+
         private void DoSearch()
         {
             if (textBox8.Text == String.Empty)
@@ -4740,6 +4749,8 @@ namespace TraXile
                     _eventHistory.RemoveAt(iIndex);
                     DeleteActLogEntry(lTimestamp);
                 }
+
+                RequestDashboardUpdates();
             }
         }
 
