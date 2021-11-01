@@ -130,3 +130,10 @@
 
 0.7.2
 - Bugfix: statistics for map tiers wrong after reload logfile
+
+0.7.3
+- Corrected wrong information in lab dashboard, area levels were logged since 3.15, not 3.12
+
+0.7.4
+- Improvements to UI performance
+- Bugfix: When deleting Activities from filtered List, wrong Item was deleted in some cases

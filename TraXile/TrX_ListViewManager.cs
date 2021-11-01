@@ -164,6 +164,26 @@ namespace TraXile
             }
         }
 
+        public void RemoveItemByName(string s_name)
+        {
+            if(_itemMap.ContainsKey(s_name))
+            {
+                ListViewItem toDelete = _itemMap[s_name];
+                if(_masterList.Contains(toDelete))
+                {
+                    _masterList.Remove(toDelete);
+                }
+                if(_filteredList.Contains(toDelete))
+                {
+                    _filteredList.Remove(toDelete);
+                }
+                if(_listView.Items.Contains(toDelete))
+                {
+                    _listView.Items.Remove(toDelete);
+                }
+            }
+        }
+
         public ListView listView
         {
             get { return _listView; }

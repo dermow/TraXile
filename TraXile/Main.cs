@@ -54,16 +54,21 @@ namespace TraXile
         private bool _labDashboardUpdateRequested;
         private bool _showGridInStats;
         private bool _UpdateCheckDone;
-        private bool _mapDashboardUpdateRequested;
-        private bool _labDashboardHideUnknown;
-        private bool _globalDashboardUpdateRequested;
-        private bool _heistDashboardUpdateRequested;
         private bool _restoreOk = true;
         private bool _StartedFlag = false;
         private int _timeCapLab = 3600;
         private int _timeCapMap = 3600;
         private int _timeCapHeist = 3600;
         private int _actLogItemCount = 0;
+
+        // GUI Update Flags
+        private bool _uiFlagMapDashboard;
+        private bool _labDashboardHideUnknown;
+        private bool _uiFlagGlobalDashboard;
+        private bool _uiFlagHeistDashboard;
+        private bool _uiFlagActivityList;
+        private bool _uiFlagStatsList;
+
 
         // Core Logic variables
         private string _currentArea;
@@ -114,6 +119,7 @@ namespace TraXile
         private TrX_Theme _myTheme;
         private ILog _log;
         private bool _showHideoutInPie;
+        private bool _uiFlagBossDashboard;
 
         /// <summary>
         /// Setting Property for LogFilePath
@@ -185,6 +191,18 @@ namespace TraXile
                 _myTheme.Apply(this);
             }
 
+        }
+
+        private int FindEventLogIndexByID(string id)
+        {
+            foreach(TrX_TrackedActivity act in _eventHistory)
+            {
+                if(act.UniqueID == id)
+                {
+                    return _eventHistory.IndexOf(act);
+                }
+            }
+            return -1;
         }
 
         /// <summary>
@@ -561,9 +579,11 @@ namespace TraXile
 
             // Request initial Dashboard update
             _labDashboardUpdateRequested = true;
-            _mapDashboardUpdateRequested = true;
-            _heistDashboardUpdateRequested = true;
-            _globalDashboardUpdateRequested = true;
+            _uiFlagMapDashboard = true;
+            _uiFlagHeistDashboard = true;
+            _uiFlagGlobalDashboard = true;
+            _uiFlagStatsList = true;
+            _uiFlagActivityList = true;
         }
 
         /// <summary>
@@ -2651,6 +2671,8 @@ namespace TraXile
         {
             _numericStats[s_key] += i_value;
             _myDB.DoNonQuery("INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + _numericStats[s_key] + ")");
+            _uiFlagStatsList = true;
+            _uiFlagBossDashboard = true;
         }
 
         /// <summary>
@@ -2663,6 +2685,8 @@ namespace TraXile
         {
             _numericStats[s_key] = i_value;
             _myDB.DoNonQuery("INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + _numericStats[s_key] + ")");
+            _uiFlagStatsList = true;
+            _uiFlagBossDashboard = true;
         }
 
         /// <summary>
@@ -2771,10 +2795,12 @@ namespace TraXile
                 if (!_parsedActivities.Contains(activity.UniqueID))
                 {
                     AddMapLvItem(activity);
-                    SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
 
-                    // Refresh ListView
-                    if (_eventQueueInitizalized) DoSearch();
+                    // Request GUI Update
+                    _uiFlagActivityList = true;
+
+                    // Save to DB
+                    SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
                 }
 
 
@@ -2788,11 +2814,13 @@ namespace TraXile
                     if (!_parsedActivities.Contains(activity.ZanaMap.UniqueID))
                     {
                         AddMapLvItem(activity.ZanaMap, true);
+
+                        //Request GUI Update
+                        _uiFlagActivityList = true;
+
+                        //Save to DB
                         SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.ZanaMap.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
                             .Tags, activity.ZanaMap.Success, Convert.ToInt32(activity.ZanaMap.PausedTime));
-
-                        // Refresh ListView
-                        if (_eventQueueInitizalized) DoSearch();
                     }
                 }
 
@@ -2846,10 +2874,16 @@ namespace TraXile
 
             if (_eventQueueInitizalized)
             {
-                RenderGlobalDashboard();
-                RenderHeistDashboard();
-                RenderLabDashboard();
-                RenderMappingDashboard();
+                MethodInvoker mi = delegate
+                {
+                    RenderGlobalDashboard();
+                    RenderHeistDashboard();
+                    RenderLabDashboard();
+                    RenderMappingDashboard();
+                };
+                Invoke(mi);
+
+              
             }
         }
 
@@ -3083,7 +3117,7 @@ namespace TraXile
         /// <summary>
         /// Handle the GUI updates
         /// </summary>
-        private void UpdateGUI()
+        private void UpdateUI()
         {
             TimeSpan tsAreaTime = (DateTime.Now - _inAreaSince);
             checkBoxShowGridInAct.Checked = _showGridInActLog;
@@ -3123,7 +3157,7 @@ namespace TraXile
                     labelItemCount.Text = "items: " + _actLogItemCount.ToString();
 
 
-                    if (listViewStats.Items.Count > 0)
+                    if (listViewStats.Items.Count > 0 && _uiFlagStatsList)
                     {
                         for (int i = 0; i < _numericStats.Count; i++)
                         {
@@ -3139,6 +3173,7 @@ namespace TraXile
                             }
 
                         }
+                        _uiFlagStatsList = false;
                     }
 
                     if (!_listViewInitielaized)
@@ -3217,62 +3252,61 @@ namespace TraXile
                         labelTrackingType.Text = "Enter an ingame activity to auto. start tracking.";
                     }
 
-                    labelElderStatus.ForeColor = _numericStats["ElderKilled"] > 0 ? Color.Green : Color.Red;
-                    labelElderStatus.Text = _numericStats["ElderKilled"] > 0 ? "Yes" : "No";
-                    labelElderKillCount.Text = _numericStats["ElderKilled"].ToString() + "x";
-                    labelElderTried.Text = _numericStats["ElderTried"].ToString() + "x";
+                    if(_uiFlagBossDashboard)
+                    {
+                        labelElderStatus.ForeColor = _numericStats["ElderKilled"] > 0 ? Color.Green : Color.Red;
+                        labelElderStatus.Text = _numericStats["ElderKilled"] > 0 ? "Yes" : "No";
+                        labelElderKillCount.Text = _numericStats["ElderKilled"].ToString() + "x";
+                        labelElderTried.Text = _numericStats["ElderTried"].ToString() + "x";
+                        labelShaperStatus.ForeColor = _numericStats["ShaperKilled"] > 0 ? Color.Green : Color.Red;
+                        labelShaperStatus.Text = _numericStats["ShaperKilled"] > 0 ? "Yes" : "No";
+                        labelShaperKillCount.Text = _numericStats["ShaperKilled"].ToString() + "x";
+                        labelShaperTried.Text = _numericStats["ShaperTried"].ToString() + "x";
+                        labelSirusStatus.ForeColor = _numericStats["SirusKilled"] > 0 ? Color.Green : Color.Red;
+                        labelSirusStatus.Text = _numericStats["SirusKilled"] > 0 ? "Yes" : "No";
+                        labelSirusKillCount.Text = _numericStats["SirusKilled"].ToString() + "x";
+                        labelSirusTries.Text = _numericStats["SirusStarted"].ToString() + "x";
+                        label80.ForeColor = _numericStats["CatarinaKilled"] > 0 ? Color.Green : Color.Red;
+                        label80.Text = _numericStats["CatarinaKilled"] > 0 ? "Yes" : "No";
+                        label78.Text = _numericStats["CatarinaKilled"].ToString() + "x";
+                        label82.Text = _numericStats["CatarinaTried"].ToString() + "x";
+                        labelVeritaniaStatus.ForeColor = _numericStats["VeritaniaKilled"] > 0 ? Color.Green : Color.Red;
+                        labelVeritaniaKillCount.Text = _numericStats["VeritaniaKilled"].ToString() + "x";
+                        labelVeritaniaStatus.Text = _numericStats["VeritaniaKilled"] > 0 ? "Yes" : "No";
+                        labelVeritaniaTries.Text = _numericStats["VeritaniaStarted"].ToString() + "x";
+                        labelHunterStatus.ForeColor = _numericStats["HunterKilled"] > 0 ? Color.Green : Color.Red;
+                        labelHunterStatus.Text = _numericStats["HunterKilled"] > 0 ? "Yes" : "No";
+                        labelHunterKillCount.Text = _numericStats["HunterKilled"].ToString() + "x";
+                        labelHunterTries.Text = _numericStats["HunterStarted"].ToString() + "x";
+                        labelDroxStatus.ForeColor = _numericStats["DroxKilled"] > 0 ? Color.Green : Color.Red;
+                        labelDroxStatus.Text = _numericStats["DroxKilled"] > 0 ? "Yes" : "No";
+                        labelDroxKillCount.Text = _numericStats["DroxKilled"].ToString() + "x";
+                        labelDroxTries.Text = _numericStats["DroxStarted"].ToString() + "x";
+                        labelBaranStatus.ForeColor = _numericStats["BaranKilled"] > 0 ? Color.Green : Color.Red;
+                        labelBaranStatus.Text = _numericStats["BaranKilled"] > 0 ? "Yes" : "No";
+                        labelBaranKillCount.Text = _numericStats["BaranKilled"].ToString() + "x";
+                        labelBaranTries.Text = _numericStats["BaranStarted"].ToString() + "x";
+                        labelTrialMasterStatus.ForeColor = _numericStats["TrialMasterKilled"] > 0 ? Color.Green : Color.Red;
+                        labelTrialMasterStatus.Text = _numericStats["TrialMasterKilled"] > 0 ? "Yes" : "No";
+                        labelTrialMasterKilled.Text = _numericStats["TrialMasterKilled"].ToString() + "x";
+                        labelTrialMasterTried.Text = _numericStats["TrialMasterStarted"].ToString() + "x";
+                        labelMavenStatus.ForeColor = _numericStats["MavenKilled"] > 0 ? Color.Green : Color.Red;
+                        labelMavenStatus.Text = _numericStats["MavenKilled"] > 0 ? "Yes" : "No";
+                        labelMavenKilled.Text = _numericStats["MavenKilled"].ToString() + "x";
+                        labelMavenTried.Text = _numericStats["MavenStarted"].ToString() + "x";
 
-                    labelShaperStatus.ForeColor = _numericStats["ShaperKilled"] > 0 ? Color.Green : Color.Red;
-                    labelShaperStatus.Text = _numericStats["ShaperKilled"] > 0 ? "Yes" : "No";
-                    labelShaperKillCount.Text = _numericStats["ShaperKilled"].ToString() + "x";
-                    labelShaperTried.Text = _numericStats["ShaperTried"].ToString() + "x";
-
-                    labelSirusStatus.ForeColor = _numericStats["SirusKilled"] > 0 ? Color.Green : Color.Red;
-                    labelSirusStatus.Text = _numericStats["SirusKilled"] > 0 ? "Yes" : "No";
-                    labelSirusKillCount.Text = _numericStats["SirusKilled"].ToString() + "x";
-                    labelSirusTries.Text = _numericStats["SirusStarted"].ToString() + "x";
-
-                    label80.ForeColor = _numericStats["CatarinaKilled"] > 0 ? Color.Green : Color.Red;
-                    label80.Text = _numericStats["CatarinaKilled"] > 0 ? "Yes" : "No";
-                    label78.Text = _numericStats["CatarinaKilled"].ToString() + "x";
-                    label82.Text = _numericStats["CatarinaTried"].ToString() + "x";
-
-                    labelVeritaniaStatus.ForeColor = _numericStats["VeritaniaKilled"] > 0 ? Color.Green : Color.Red;
-                    labelVeritaniaKillCount.Text = _numericStats["VeritaniaKilled"].ToString() + "x";
-                    labelVeritaniaStatus.Text = _numericStats["VeritaniaKilled"] > 0 ? "Yes" : "No";
-                    labelVeritaniaTries.Text = _numericStats["VeritaniaStarted"].ToString() + "x";
-
-                    labelHunterStatus.ForeColor = _numericStats["HunterKilled"] > 0 ? Color.Green : Color.Red;
-                    labelHunterStatus.Text = _numericStats["HunterKilled"] > 0 ? "Yes" : "No";
-                    labelHunterKillCount.Text = _numericStats["HunterKilled"].ToString() + "x";
-                    labelHunterTries.Text = _numericStats["HunterStarted"].ToString() + "x";
-
-                    labelDroxStatus.ForeColor = _numericStats["DroxKilled"] > 0 ? Color.Green : Color.Red;
-                    labelDroxStatus.Text = _numericStats["DroxKilled"] > 0 ? "Yes" : "No";
-                    labelDroxKillCount.Text = _numericStats["DroxKilled"].ToString() + "x";
-                    labelDroxTries.Text = _numericStats["DroxStarted"].ToString() + "x";
-
-                    labelBaranStatus.ForeColor = _numericStats["BaranKilled"] > 0 ? Color.Green : Color.Red;
-                    labelBaranStatus.Text = _numericStats["BaranKilled"] > 0 ? "Yes" : "No";
-                    labelBaranKillCount.Text = _numericStats["BaranKilled"].ToString() + "x";
-                    labelBaranTries.Text = _numericStats["BaranStarted"].ToString() + "x";
-
-                    labelTrialMasterStatus.ForeColor = _numericStats["TrialMasterKilled"] > 0 ? Color.Green : Color.Red;
-                    labelTrialMasterStatus.Text = _numericStats["TrialMasterKilled"] > 0 ? "Yes" : "No";
-                    labelTrialMasterKilled.Text = _numericStats["TrialMasterKilled"].ToString() + "x";
-                    labelTrialMasterTried.Text = _numericStats["TrialMasterStarted"].ToString() + "x";
-
-                    labelMavenStatus.ForeColor = _numericStats["MavenKilled"] > 0 ? Color.Green : Color.Red;
-                    labelMavenStatus.Text = _numericStats["MavenKilled"] > 0 ? "Yes" : "No";
-                    labelMavenKilled.Text = _numericStats["MavenKilled"].ToString() + "x";
-                    labelMavenTried.Text = _numericStats["MavenStarted"].ToString() + "x";
+                        _uiFlagBossDashboard = false;
+                    }
+                    
 
 
                     // MAP Dashbaord
-                    if (_mapDashboardUpdateRequested)
+                    if (_uiFlagMapDashboard)
                     {
                         RenderMappingDashboard();
-                        _mapDashboardUpdateRequested = false;
+                       //+
+                       //RenderMappingDashboard2();
+                        _uiFlagMapDashboard = false;
                     }
 
                     // LAB Dashbaord
@@ -3283,17 +3317,17 @@ namespace TraXile
                     }
 
                     // HEIST Dashbaord
-                    if (_heistDashboardUpdateRequested)
+                    if (_uiFlagHeistDashboard)
                     {
                         RenderHeistDashboard();
-                        _heistDashboardUpdateRequested = false;
+                        _uiFlagHeistDashboard = false;
                     }
 
                     // Global Dashbaord
-                    if (_globalDashboardUpdateRequested)
+                    if (_uiFlagGlobalDashboard)
                     {
                         RenderGlobalDashboard();
-                        _globalDashboardUpdateRequested = false;
+                        _uiFlagGlobalDashboard = false;
 
                         if (checkBoxLabHideUnknown.Checked != _labDashboardHideUnknown)
                         {
@@ -3305,6 +3339,14 @@ namespace TraXile
                             checkBox1.Checked = _showHideoutInPie;
                         }
                     }
+
+                    // Activity List
+                    if(_uiFlagActivityList)
+                    {
+                        DoSearch();
+                        _uiFlagActivityList = false;
+                    }
+
                     listView1.Columns[2].Width = listView1.Width;
 
                 });
@@ -3784,40 +3826,137 @@ namespace TraXile
             Invoke(mi);
         }
 
+        private int LevelToTier(int level)
+        {
+            switch(level)
+            {
+                case 68:
+                    return 1;
+                case 69:
+                    return 2;
+                case 70:
+                    return 3;
+                case 71:
+                    return 4;
+                case 72:
+                    return 5;
+                case 73:
+                    return 6;
+                case 74:
+                    return 7;
+                case 75:
+                    return 8;
+                case 76:
+                    return 9;
+                case 77:
+                    return 10;
+                case 78:
+                    return 11;
+                case 79:
+                    return 12;
+                case 80:
+                    return 13;
+                case 81:
+                    return 14;
+                case 82:
+                    return 15;
+                case 83:
+                    return 16;
+                default:
+                    return 0;
+            }
+        }
+
+        private string TierToName(int tier)
+        {
+            if (tier == 0)
+            {
+                return "Unknown";
+            }
+            else
+            {
+                return "T" + tier;
+            }
+        }
+
         /// <summary>
-        /// Render mapping dashboard
+        /// Render Mapping Dashboard
         /// </summary>
         public void RenderMappingDashboard()
         {
-            List<KeyValuePair<string, int>> tmpList = new List<KeyValuePair<string, int>>();
-            List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
-            Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
-            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
+            string queryByTier, queryByArea;
+            Dictionary<int, int> countByTier, secondsByTier;
+            Dictionary<string, int> countByArea;
+            Dictionary<int, double> avgPerTier;
+            
+            countByTier = new Dictionary<int, int>();
+            secondsByTier = new Dictionary<int, int>();
+            avgPerTier = new Dictionary<int, double>();
+            countByArea = new Dictionary<string, int>();
+            queryByTier = "SELECT COUNT(*), SUM(act_stopwatch), act_area_level FROM tx_activity_log WHERE act_type = 'map' GROUP BY act_area_level";
+            queryByArea = "SELECT COUNT(*), act_area FROM tx_activity_log WHERE act_type = 'map' GROUP BY act_area";
 
-            // MAP AREAS
-            foreach (string s in _defaultMappings.MAP_AREAS)
+            SqliteDataReader rd;
+            rd = _myDB.GetSQLReader(queryByTier);
+
+            // Init countByTier
+            for(int i = 1; i <= 16; i++)
             {
-                tmpList.Add(new KeyValuePair<string, int>(s, _numericStats["MapsFinished_" + s]));
+                countByTier.Add(i, 0);
+                secondsByTier.Add(i, 0);
+                avgPerTier.Add(i, 0);
             }
 
-            tmpList.Sort(
-                delegate (KeyValuePair<string, int> pair1,
-                KeyValuePair<string, int> pair2)
+            int count;
+            int sec;
+            int lvl;
+            int tier;
+            while(rd.Read())
+            {
+                count = rd.GetInt32(0);
+                sec = rd.GetInt32(1);
+                lvl = rd.GetInt32(2);
+                tier = LevelToTier(lvl);
+                if(tier > 0)
                 {
-                    return pair1.Value.CompareTo(pair2.Value);
-                });
-            tmpList.Reverse();
-            top10.AddRange(tmpList.GetRange(0, 10));
-            listViewTop10Maps.Items.Clear();
-            foreach (KeyValuePair<string, int> kvp in top10)
-            {
-                ListViewItem lvi = new ListViewItem(kvp.Key);
-                lvi.SubItems.Add(kvp.Value.ToString());
-                listViewTop10Maps.Items.Add(lvi);
+                    countByTier[tier] = count;
+                    secondsByTier[tier] = count;
+                    avgPerTier[tier] =  (sec / count);
+                }
             }
+
+            rd = _myDB.GetSQLReader(queryByArea);
+
+            string area;
+            while (rd.Read())
+            {
+                count = rd.GetInt32(0);
+                area = rd.GetString(1);
+                countByArea.Add(area, count);
+            }
+
+            List<KeyValuePair<string, int>> tmpSort;
+            tmpSort = new List<KeyValuePair<string, int>>();
+
+            foreach(KeyValuePair<string,int> kvp in countByArea)
+            {
+                tmpSort.Add(kvp);
+            }
+
+            tmpSort.Sort(
+               delegate (KeyValuePair<string, int> pair1,
+               KeyValuePair<string, int> pair2)
+               {
+                   return pair1.Value.CompareTo(pair2.Value);
+               });
+            tmpSort.Reverse();
 
             // TAG CALC
-            tmpList.Clear();
+            Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
+            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
+            List<KeyValuePair<string, int>> tmpSortTags = new List<KeyValuePair<string, int>>(); ;
+
+            tmpSortTags.Clear();
             foreach (TrX_ActivityTag tg in Tags)
             {
                 tmpListTags.Add(tg.ID, 0);
@@ -3843,77 +3982,53 @@ namespace TraXile
 
             foreach (KeyValuePair<string, int> kvp in tmpListTags)
             {
-                tmpList.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+                tmpSortTags.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
             }
 
-            tmpList.Sort(
+            tmpSortTags.Sort(
                 delegate (KeyValuePair<string, int> pair1,
                 KeyValuePair<string, int> pair2)
                 {
                     return pair1.Value.CompareTo(pair2.Value);
                 });
-            tmpList.Reverse();
-            top10Tags.AddRange(tmpList);
+            tmpSortTags.Reverse();
+            top10Tags.AddRange(tmpSortTags);
             listViewTaggingOverview.Items.Clear();
-            foreach (KeyValuePair<string, int> kvp in top10Tags)
-            {
-                if (kvp.Value > 0)
-                {
-                    ListViewItem lvi = new ListViewItem(kvp.Key);
-                    lvi.SubItems.Add(kvp.Value.ToString());
-                    listViewTaggingOverview.Items.Add(lvi);
-                }
-            }
-
-            double[] tierAverages = new double[]
-            {
-                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-            };
-
-            for (int i = 0; i < 16; i++)
-            {
-                int iSum = 0;
-                int iCount = 0;
-
-                foreach (TrX_TrackedActivity act in _eventHistory)
-                {
-                    if (act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i + 1))
-                    {
-                        if (act.TotalSeconds < _timeCapMap)
-                        {
-                            iSum += act.TotalSeconds;
-                        }
-                        else
-                        {
-                            iSum += _timeCapMap;
-                        }
-
-                        iCount++;
-                    }
-                }
-
-                if (iSum > 0 && iCount > 0)
-                {
-                    tierAverages[i] = (iSum / iCount);
-                }
-
-            }
 
             MethodInvoker mi = delegate
             {
                 chartMapTierCount.Series[0].Points.Clear();
                 for (int i = 1; i <= 16; i++)
                 {
-                    chartMapTierCount.Series[0].Points.AddXY(i, _numericStats["MapTierFinished_T" + i.ToString()]);
+                    chartMapTierCount.Series[0].Points.AddXY(i, countByTier[i].ToString());
                 }
 
                 chartMapTierAvgTime.Series[0].Points.Clear();
-                for (int i = 0; i < tierAverages.Length; i++)
+                for (int i = 1; i <= 16; i++)
                 {
-                    chartMapTierAvgTime.Series[0].Points.AddXY(i + 1, Math.Round(tierAverages[i] / 60, 1));
+                    chartMapTierAvgTime.Series[0].Points.AddXY(i, Math.Round(avgPerTier[i] / 60, 1));
+                }
+
+                listViewTop10Maps.Items.Clear();
+                for(int i = 0; i < 10; i++)
+                {
+                    ListViewItem lvi = new ListViewItem(tmpSort[i].Key);
+                    lvi.SubItems.Add(tmpSort[i].Value.ToString());
+                    listViewTop10Maps.Items.Add(lvi);
+                }
+
+                foreach (KeyValuePair<string, int> kvp in top10Tags)
+                {
+                    if (kvp.Value > 0)
+                    {
+                        ListViewItem lvi = new ListViewItem(kvp.Key);
+                        lvi.SubItems.Add(kvp.Value.ToString());
+                        listViewTaggingOverview.Items.Add(lvi);
+                    }
                 }
             };
             Invoke(mi);
+
         }
 
         /// <summary>
@@ -4230,7 +4345,7 @@ namespace TraXile
                 }
                 else
                 {
-                    UpdateGUI();
+                    UpdateUI();
                     Opacity = 100;
                 }
 
@@ -4391,7 +4506,7 @@ namespace TraXile
         {
             if (textBox8.Text == String.Empty)
             {
-                _lvmActlog.Clear();
+                //_lvmActlog.Clear();
                 _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
 
             }
@@ -4610,18 +4725,18 @@ namespace TraXile
         {
             if (listViewActLog.SelectedItems.Count == 1)
             {
-                int iIndex = listViewActLog.SelectedIndices[0];
+                int iIndex = FindEventLogIndexByID(listViewActLog.SelectedItems[0].Name);
                 long lTimestamp = _eventHistory[iIndex].TimeStamp;
-                string sType = listViewActLog.Items[iIndex].SubItems[1].Text;
-                string sArea = listViewActLog.Items[iIndex].SubItems[2].Text;
+                string sType = listViewActLog.SelectedItems[0].SubItems[1].Text;
+                string sArea = listViewActLog.SelectedItems[0].SubItems[2].Text;
 
                 if (MessageBox.Show("Do you really want to delete this Activity? " + Environment.NewLine
                     + Environment.NewLine
                     + "Type: " + sType + Environment.NewLine
                     + "Area: " + sArea + Environment.NewLine
-                    + "Time: " + listViewActLog.Items[iIndex].SubItems[0].Text, "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    + "Time: " + listViewActLog.SelectedItems[0].SubItems[0].Text, "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    listViewActLog.Items.Remove(listViewActLog.SelectedItems[0]);
+                    _lvmActlog.RemoveItemByName(listViewActLog.SelectedItems[0].Name);
                     _eventHistory.RemoveAt(iIndex);
                     DeleteActLogEntry(lTimestamp);
                 }
