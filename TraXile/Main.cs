@@ -193,6 +193,18 @@ namespace TraXile
 
         }
 
+        private int FindEventLogIndexByID(string id)
+        {
+            foreach(TrX_TrackedActivity act in _eventHistory)
+            {
+                if(act.UniqueID == id)
+                {
+                    return _eventHistory.IndexOf(act);
+                }
+            }
+            return -1;
+        }
+
         /// <summary>
         /// Check if a new version is available on GitHub and ask for update.
         /// </summary>
@@ -3887,6 +3899,14 @@ namespace TraXile
             SqliteDataReader rd;
             rd = _myDB.GetSQLReader(queryByTier);
 
+            // Init countByTier
+            for(int i = 1; i <= 16; i++)
+            {
+                countByTier.Add(i, 0);
+                secondsByTier.Add(i, 0);
+                avgPerTier.Add(i, 0);
+            }
+
             int count;
             int sec;
             int lvl;
@@ -3899,9 +3919,9 @@ namespace TraXile
                 tier = LevelToTier(lvl);
                 if(tier > 0)
                 {
-                    countByTier.Add(tier, count);
-                    secondsByTier.Add(tier, sec);
-                    avgPerTier.Add(tier, sec / count);
+                    countByTier[tier] = count;
+                    secondsByTier[tier] = count;
+                    avgPerTier[tier] =  (sec / count);
                 }
             }
 
@@ -3934,8 +3954,9 @@ namespace TraXile
             // TAG CALC
             Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
             List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
+            List<KeyValuePair<string, int>> tmpSortTags = new List<KeyValuePair<string, int>>(); ;
 
-            tmpSort.Clear();
+            tmpSortTags.Clear();
             foreach (TrX_ActivityTag tg in Tags)
             {
                 tmpListTags.Add(tg.ID, 0);
@@ -3961,17 +3982,17 @@ namespace TraXile
 
             foreach (KeyValuePair<string, int> kvp in tmpListTags)
             {
-                tmpSort.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+                tmpSortTags.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
             }
 
-            tmpSort.Sort(
+            tmpSortTags.Sort(
                 delegate (KeyValuePair<string, int> pair1,
                 KeyValuePair<string, int> pair2)
                 {
                     return pair1.Value.CompareTo(pair2.Value);
                 });
-            tmpSort.Reverse();
-            top10Tags.AddRange(tmpSort);
+            tmpSortTags.Reverse();
+            top10Tags.AddRange(tmpSortTags);
             listViewTaggingOverview.Items.Clear();
 
             MethodInvoker mi = delegate
@@ -3985,7 +4006,7 @@ namespace TraXile
                 chartMapTierAvgTime.Series[0].Points.Clear();
                 for (int i = 1; i <= 16; i++)
                 {
-                    chartMapTierAvgTime.Series[0].Points.AddXY(i + 1, Math.Round(avgPerTier[i] / 60, 1));
+                    chartMapTierAvgTime.Series[0].Points.AddXY(i, Math.Round(avgPerTier[i] / 60, 1));
                 }
 
                 listViewTop10Maps.Items.Clear();
@@ -4704,18 +4725,18 @@ namespace TraXile
         {
             if (listViewActLog.SelectedItems.Count == 1)
             {
-                int iIndex = listViewActLog.SelectedIndices[0];
+                int iIndex = FindEventLogIndexByID(listViewActLog.SelectedItems[0].Name);
                 long lTimestamp = _eventHistory[iIndex].TimeStamp;
-                string sType = listViewActLog.Items[iIndex].SubItems[1].Text;
-                string sArea = listViewActLog.Items[iIndex].SubItems[2].Text;
+                string sType = listViewActLog.SelectedItems[0].SubItems[1].Text;
+                string sArea = listViewActLog.SelectedItems[0].SubItems[2].Text;
 
                 if (MessageBox.Show("Do you really want to delete this Activity? " + Environment.NewLine
                     + Environment.NewLine
                     + "Type: " + sType + Environment.NewLine
                     + "Area: " + sArea + Environment.NewLine
-                    + "Time: " + listViewActLog.Items[iIndex].SubItems[0].Text, "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    + "Time: " + listViewActLog.SelectedItems[0].SubItems[0].Text, "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    listViewActLog.Items.Remove(listViewActLog.SelectedItems[0]);
+                    _lvmActlog.RemoveItemByName(listViewActLog.SelectedItems[0].Name);
                     _eventHistory.RemoveAt(iIndex);
                     DeleteActLogEntry(lTimestamp);
                 }
