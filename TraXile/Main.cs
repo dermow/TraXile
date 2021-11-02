@@ -51,7 +51,7 @@ namespace TraXile
         private bool _listViewInitielaized;
         private bool _showGridInActLog;
         private bool _restoreMode;
-        private bool _labDashboardUpdateRequested;
+        private bool _uiFlagLabDashboard;
         private bool _showGridInStats;
         private bool _UpdateCheckDone;
         private bool _restoreOk = true;
@@ -552,7 +552,27 @@ namespace TraXile
 
             _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
 
-            ReadStatsCache();
+            if (ReadStatsCache() == false) // when stats cache could not be reasd
+            {
+                _log.Info("unable to load stats.cache -> trying to restore from DB");
+                try
+                {
+                    RestoreStatsCacheFromDB();
+                }
+                // SEVERE ERROR DURING RESTORE -> This should never happen
+                // It means, stats.cache AND kvstore in db is corrupted
+                catch(Exception ex)
+                {
+                    _log.Fatal(string.Format("Unable to restore stats.cache from DB: {0}", ex.Message));
+                    _log.Debug(ex.ToString());
+                    _log.Info("Forcing full logfile reload for stats.");
+
+                    // Drop statistic values and enable stat_reload mode
+                    _myDB.DoNonQuery("DELETE FROM tx_stats WHERE timestamp > 0");
+                    SAFE_RELOAD_MODE = true;                    
+                }
+                
+            }
             ReadKnownPlayers();
             LoadCustomTags();
             ResetMapHistory();
@@ -578,12 +598,38 @@ namespace TraXile
             _eventThread.Start();
 
             // Request initial Dashboard update
-            _labDashboardUpdateRequested = true;
+            _uiFlagLabDashboard = true;
             _uiFlagMapDashboard = true;
             _uiFlagHeistDashboard = true;
             _uiFlagGlobalDashboard = true;
             _uiFlagStatsList = true;
             _uiFlagActivityList = true;
+        }
+
+        private void RestoreStatsCacheFromDB()
+        {
+            SqliteDataReader dr1 = _myDB.GetSQLReader("select value from tx_kvstore where key='last_hash'");
+            while (dr1.Read())
+            {
+                _lastHash = Convert.ToInt32(dr1.GetString(0));
+            }
+
+            List<string> stats = new List<string>();
+            foreach(KeyValuePair<string, int> kvp in _numericStats)
+            {
+                stats.Add(kvp.Key);
+            }
+
+            foreach (string s in stats)
+            {
+                SqliteDataReader dr2 = _myDB.GetSQLReader(string.Format("select stat_value from tx_stats where stat_name ='{0}' order by timestamp desc limit 1", s));
+                while(dr2.Read())
+                {
+                    _numericStats[s] = dr2.GetInt32(0);
+                }
+            }
+
+            _log.Info("stats.cache successfully restored.");
         }
 
         /// <summary>
@@ -2890,41 +2936,59 @@ namespace TraXile
         /// <summary>
         /// Read the statistics cache
         /// </summary>
-        private void ReadStatsCache()
+        private bool ReadStatsCache()
         {
             if (File.Exists(_cachePath))
             {
                 StreamReader r = new StreamReader(_cachePath);
-                string line;
-                string statID;
-                int statValue;
-                int iLine = 0;
-                while ((line = r.ReadLine()) != null)
+
+                try
                 {
-                    if (iLine == 0)
+                    string line;
+                    string statID;
+                    int statValue;
+                    int iLine = 0;
+                    while ((line = r.ReadLine()) != null)
                     {
-                        _lastHash = Convert.ToInt32(line.Split(';')[1]);
-                    }
-                    else
-                    {
-                        statID = line.Split(';')[0];
-                        statValue = Convert.ToInt32(line.Split(';')[1]);
-                        if (_numericStats.ContainsKey(statID))
+                        if (iLine == 0)
                         {
-                            _numericStats[line.Split(';')[0]] = statValue;
-                            _log.Info("StatsCacheRead -> " + statID + "=" + statValue.ToString());
+                            _lastHash = Convert.ToInt32(line.Split(';')[1]);
                         }
                         else
                         {
-                            _log.Warn("StatsCacheRead -> Unknown stat '" + statID + "' in stats.cache, maybe from an older version.");
+                            statID = line.Split(';')[0];
+                            statValue = Convert.ToInt32(line.Split(';')[1]);
+                            if (_numericStats.ContainsKey(statID))
+                            {
+                                _numericStats[line.Split(';')[0]] = statValue;
+                                _log.Info("StatsCacheRead -> " + statID + "=" + statValue.ToString());
+                            }
+                            else
+                            {
+                                _log.Warn("StatsCacheRead -> Unknown stat '" + statID + "' in stats.cache, maybe from an older version.");
+                            }
+
                         }
 
+                        iLine++;
                     }
-
-                    iLine++;
+                    r.Close();
+                    return true;
                 }
-                r.Close();
+                catch
+                {
+                    return false;
+                }
+                finally
+                {
+                    r.Close();
+                }
             }
+            else
+            {
+                return true;
+            }
+               
         }
 
         /// <summary>
@@ -2932,6 +2996,9 @@ namespace TraXile
         /// </summary>
         private void SaveStatsCache()
         {
+            // DB
+            _myDB.DoNonQuery(string.Format("UPDATE tx_kvstore SET value='{0}' where key='last_hash'", _lastHash));
+
             StreamWriter wrt = new StreamWriter(_cachePath);
             wrt.WriteLine("last;" + _lastHash.ToString());
             foreach (KeyValuePair<string, int> kvp in _numericStats)
@@ -3304,16 +3371,14 @@ namespace TraXile
                     if (_uiFlagMapDashboard)
                     {
                         RenderMappingDashboard();
-                       //+
-                       //RenderMappingDashboard2();
                         _uiFlagMapDashboard = false;
                     }
 
                     // LAB Dashbaord
-                    if (_labDashboardUpdateRequested)
+                    if (_uiFlagLabDashboard)
                     {
                         RenderLabDashboard();
-                        _labDashboardUpdateRequested = false;
+                        _uiFlagLabDashboard = false;
                     }
 
                     // HEIST Dashbaord
@@ -3708,10 +3773,25 @@ namespace TraXile
             List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
             Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
             List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
+            Dictionary<string, int> countByArea = new Dictionary<string, int>();
 
+            // MAP AREAS
             foreach (string s in _defaultMappings.HEIST_AREAS)
             {
-                tmpList.Add(new KeyValuePair<string, int>(s, _numericStats["HeistsFinished_" + s]));
+                countByArea.Add(s, 0);
+            }
+
+            foreach (TrX_TrackedActivity act in _eventHistory)
+            {
+                if (act.Type == ACTIVITY_TYPES.HEIST)
+                {
+                    countByArea[act.Area]++;
+                }
+            }
+
+            foreach (KeyValuePair<string,int> kvp in countByArea)
+            {
+                tmpList.Add(kvp);
             }
 
             tmpList.Sort(
@@ -3879,84 +3959,59 @@ namespace TraXile
             }
         }
 
-        /// <summary>
-        /// Render Mapping Dashboard
-        /// </summary>
         public void RenderMappingDashboard()
         {
-            string queryByTier, queryByArea;
-            Dictionary<int, int> countByTier, secondsByTier;
-            Dictionary<string, int> countByArea;
-            Dictionary<int, double> avgPerTier;
-            
-            countByTier = new Dictionary<int, int>();
-            secondsByTier = new Dictionary<int, int>();
-            avgPerTier = new Dictionary<int, double>();
-            countByArea = new Dictionary<string, int>();
-            queryByTier = "SELECT COUNT(*), SUM(act_stopwatch), act_area_level FROM tx_activity_log WHERE act_type = 'map' GROUP BY act_area_level";
-            queryByArea = "SELECT COUNT(*), act_area FROM tx_activity_log WHERE act_type = 'map' GROUP BY act_area";
+            List<KeyValuePair<string, int>> tmpList = new List<KeyValuePair<string, int>>();
+            List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
+            Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
+            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
 
-            SqliteDataReader rd;
-            rd = _myDB.GetSQLReader(queryByTier);
+            Dictionary<string, int> countByArea = new Dictionary<string, int>();
+            Dictionary<int, int> countByTier = new Dictionary<int, int>();
 
-            // Init countByTier
-            for(int i = 1; i <= 16; i++)
+            // MAP AREAS
+            foreach (string s in _defaultMappings.MAP_AREAS)
             {
-                countByTier.Add(i, 0);
-                secondsByTier.Add(i, 0);
-                avgPerTier.Add(i, 0);
+                countByArea.Add(s, 0);
             }
 
-            int count;
-            int sec;
-            int lvl;
-            int tier;
-            while(rd.Read())
+            for(int i = 0; i <= 16; i++)
             {
-                count = rd.GetInt32(0);
-                sec = rd.GetInt32(1);
-                lvl = rd.GetInt32(2);
-                tier = LevelToTier(lvl);
-                if(tier > 0)
+                countByTier.Add(i, 0);
+            }
+
+            foreach(TrX_TrackedActivity act in _eventHistory)
+            {
+                if(act.Type == ACTIVITY_TYPES.MAP)
                 {
-                    countByTier[tier] = count;
-                    secondsByTier[tier] = count;
-                    avgPerTier[tier] =  (sec / count);
+                    countByArea[act.Area]++;
+                    countByTier[act.MapTier]++;
                 }
             }
 
-            rd = _myDB.GetSQLReader(queryByArea);
-
-            string area;
-            while (rd.Read())
-            {
-                count = rd.GetInt32(0);
-                area = rd.GetString(1);
-                countByArea.Add(area, count);
-            }
-
-            List<KeyValuePair<string, int>> tmpSort;
-            tmpSort = new List<KeyValuePair<string, int>>();
-
             foreach(KeyValuePair<string,int> kvp in countByArea)
             {
-                tmpSort.Add(kvp);
+                tmpList.Add(kvp);
             }
 
-            tmpSort.Sort(
-               delegate (KeyValuePair<string, int> pair1,
-               KeyValuePair<string, int> pair2)
-               {
-                   return pair1.Value.CompareTo(pair2.Value);
-               });
-            tmpSort.Reverse();
+            tmpList.Sort(
+                delegate (KeyValuePair<string, int> pair1,
+                KeyValuePair<string, int> pair2)
+                {
+                    return pair1.Value.CompareTo(pair2.Value);
+                });
+            tmpList.Reverse();
+            top10.AddRange(tmpList.GetRange(0, 10));
+            listViewTop10Maps.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in top10)
+            {
+                ListViewItem lvi = new ListViewItem(kvp.Key);
+                lvi.SubItems.Add(kvp.Value.ToString());
+                listViewTop10Maps.Items.Add(lvi);
+            }
 
             // TAG CALC
-            Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
-            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
-            List<KeyValuePair<string, int>> tmpSortTags = new List<KeyValuePair<string, int>>(); ;
-
-            tmpSortTags.Clear();
+            tmpList.Clear();
             foreach (TrX_ActivityTag tg in Tags)
             {
                 tmpListTags.Add(tg.ID, 0);
@@ -3982,53 +4037,77 @@ namespace TraXile
 
             foreach (KeyValuePair<string, int> kvp in tmpListTags)
             {
-                tmpSortTags.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+                tmpList.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
             }
 
-            tmpSortTags.Sort(
+            tmpList.Sort(
                 delegate (KeyValuePair<string, int> pair1,
                 KeyValuePair<string, int> pair2)
                 {
                     return pair1.Value.CompareTo(pair2.Value);
                 });
-            tmpSortTags.Reverse();
-            top10Tags.AddRange(tmpSortTags);
+            tmpList.Reverse();
+            top10Tags.AddRange(tmpList);
             listViewTaggingOverview.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in top10Tags)
+            {
+                if (kvp.Value > 0)
+                {
+                    ListViewItem lvi = new ListViewItem(kvp.Key);
+                    lvi.SubItems.Add(kvp.Value.ToString());
+                    listViewTaggingOverview.Items.Add(lvi);
+                }
+            }
+
+            double[] tierAverages = new double[]
+            {
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+            };
+
+            for (int i = 0; i < 16; i++)
+            {
+                int iSum = 0;
+                int iCount = 0;
+
+                foreach (TrX_TrackedActivity act in _eventHistory)
+                {
+                    if (act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i + 1))
+                    {
+                        if (act.TotalSeconds < _timeCapMap)
+                        {
+                            iSum += act.TotalSeconds;
+                        }
+                        else
+                        {
+                            iSum += _timeCapMap;
+                        }
+
+                        iCount++;
+                    }
+                }
+
+                if (iSum > 0 && iCount > 0)
+                {
+                    tierAverages[i] = (iSum / iCount);
+                }
+
+            }
 
             MethodInvoker mi = delegate
             {
                 chartMapTierCount.Series[0].Points.Clear();
                 for (int i = 1; i <= 16; i++)
                 {
-                    chartMapTierCount.Series[0].Points.AddXY(i, countByTier[i].ToString());
+                    chartMapTierCount.Series[0].Points.AddXY(i, countByTier[i]);
                 }
 
                 chartMapTierAvgTime.Series[0].Points.Clear();
-                for (int i = 1; i <= 16; i++)
+                for (int i = 0; i < tierAverages.Length; i++)
                 {
-                    chartMapTierAvgTime.Series[0].Points.AddXY(i, Math.Round(avgPerTier[i] / 60, 1));
-                }
-
-                listViewTop10Maps.Items.Clear();
-                for(int i = 0; i < 10; i++)
-                {
-                    ListViewItem lvi = new ListViewItem(tmpSort[i].Key);
-                    lvi.SubItems.Add(tmpSort[i].Value.ToString());
-                    listViewTop10Maps.Items.Add(lvi);
-                }
-
-                foreach (KeyValuePair<string, int> kvp in top10Tags)
-                {
-                    if (kvp.Value > 0)
-                    {
-                        ListViewItem lvi = new ListViewItem(kvp.Key);
-                        lvi.SubItems.Add(kvp.Value.ToString());
-                        listViewTaggingOverview.Items.Add(lvi);
-                    }
+                    chartMapTierAvgTime.Series[0].Points.AddXY(i + 1, Math.Round(tierAverages[i] / 60, 1));
                 }
             };
             Invoke(mi);
-
         }
 
         /// <summary>
@@ -4502,6 +4581,15 @@ namespace TraXile
             _backups.Remove(listBoxRestoreBackup.SelectedItem.ToString());
         }
 
+        public void RequestDashboardUpdates()
+        {
+            _uiFlagBossDashboard = true;
+            _uiFlagGlobalDashboard = true;
+            _uiFlagHeistDashboard = true;
+            _uiFlagStatsList = true;
+            _uiFlagLabDashboard = true;
+        }
+
         private void DoSearch()
         {
             if (textBox8.Text == String.Empty)
@@ -4740,6 +4828,8 @@ namespace TraXile
                     _eventHistory.RemoveAt(iIndex);
                     DeleteActLogEntry(lTimestamp);
                 }
+
+                RequestDashboardUpdates();
             }
         }
 
