@@ -552,7 +552,27 @@ namespace TraXile
 
             _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
 
-            ReadStatsCache();
+            if (ReadStatsCache() == false) // when stats cache could not be reasd
+            {
+                _log.Info("unable to load stats.cache -> trying to restore from DB");
+                try
+                {
+                    RestoreStatsCacheFromDB();
+                }
+                // SEVERE ERROR DURING RESTORE -> This should never happen
+                // It means, stats.cache AND kvstore in db is corrupted
+                catch(Exception ex)
+                {
+                    _log.Fatal(string.Format("Unable to restore stats.cache from DB: {0}", ex.Message));
+                    _log.Debug(ex.ToString());
+                    _log.Info("Forcing full logfile reload for stats.");
+
+                    // Drop statistic values and enable stat_reload mode
+                    _myDB.DoNonQuery("DELETE FROM tx_stats WHERE timestamp > 0");
+                    SAFE_RELOAD_MODE = true;                    
+                }
+                
+            }
             ReadKnownPlayers();
             LoadCustomTags();
             ResetMapHistory();
@@ -584,6 +604,32 @@ namespace TraXile
             _uiFlagGlobalDashboard = true;
             _uiFlagStatsList = true;
             _uiFlagActivityList = true;
+        }
+
+        private void RestoreStatsCacheFromDB()
+        {
+            SqliteDataReader dr1 = _myDB.GetSQLReader("select value from tx_kvstore where key='last_hash'");
+            while (dr1.Read())
+            {
+                _lastHash = Convert.ToInt32(dr1.GetString(0));
+            }
+
+            List<string> stats = new List<string>();
+            foreach(KeyValuePair<string, int> kvp in _numericStats)
+            {
+                stats.Add(kvp.Key);
+            }
+
+            foreach (string s in stats)
+            {
+                SqliteDataReader dr2 = _myDB.GetSQLReader(string.Format("select stat_value from tx_stats where stat_name ='{0}' order by timestamp desc limit 1", s));
+                while(dr2.Read())
+                {
+                    _numericStats[s] = dr2.GetInt32(0);
+                }
+            }
+
+            _log.Info("stats.cache successfully restored.");
         }
 
         /// <summary>
@@ -2890,41 +2936,59 @@ namespace TraXile
         /// <summary>
         /// Read the statistics cache
         /// </summary>
-        private void ReadStatsCache()
+        private bool ReadStatsCache()
         {
             if (File.Exists(_cachePath))
             {
                 StreamReader r = new StreamReader(_cachePath);
-                string line;
-                string statID;
-                int statValue;
-                int iLine = 0;
-                while ((line = r.ReadLine()) != null)
+
+                try
                 {
-                    if (iLine == 0)
+                    string line;
+                    string statID;
+                    int statValue;
+                    int iLine = 0;
+                    while ((line = r.ReadLine()) != null)
                     {
-                        _lastHash = Convert.ToInt32(line.Split(';')[1]);
-                    }
-                    else
-                    {
-                        statID = line.Split(';')[0];
-                        statValue = Convert.ToInt32(line.Split(';')[1]);
-                        if (_numericStats.ContainsKey(statID))
+                        if (iLine == 0)
                         {
-                            _numericStats[line.Split(';')[0]] = statValue;
-                            _log.Info("StatsCacheRead -> " + statID + "=" + statValue.ToString());
+                            _lastHash = Convert.ToInt32(line.Split(';')[1]);
                         }
                         else
                         {
-                            _log.Warn("StatsCacheRead -> Unknown stat '" + statID + "' in stats.cache, maybe from an older version.");
+                            statID = line.Split(';')[0];
+                            statValue = Convert.ToInt32(line.Split(';')[1]);
+                            if (_numericStats.ContainsKey(statID))
+                            {
+                                _numericStats[line.Split(';')[0]] = statValue;
+                                _log.Info("StatsCacheRead -> " + statID + "=" + statValue.ToString());
+                            }
+                            else
+                            {
+                                _log.Warn("StatsCacheRead -> Unknown stat '" + statID + "' in stats.cache, maybe from an older version.");
+                            }
+
                         }
 
+                        iLine++;
                     }
-
-                    iLine++;
+                    r.Close();
+                    return true;
                 }
-                r.Close();
+                catch
+                {
+                    return false;
+                }
+                finally
+                {
+                    r.Close();
+                }
             }
+            else
+            {
+                return true;
+            }
+               
         }
 
         /// <summary>
@@ -2932,6 +2996,9 @@ namespace TraXile
         /// </summary>
         private void SaveStatsCache()
         {
+            // DB
+            _myDB.DoNonQuery(string.Format("UPDATE tx_kvstore SET value='{0}' where key='last_hash'", _lastHash));
+
             StreamWriter wrt = new StreamWriter(_cachePath);
             wrt.WriteLine("last;" + _lastHash.ToString());
             foreach (KeyValuePair<string, int> kvp in _numericStats)

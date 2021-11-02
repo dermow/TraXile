@@ -139,6 +139,25 @@ namespace TraXile
             catch
             {
             }
+
+            // Update 0.7.5
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "create table if not exists tx_kvstore" +
+                    "(" +
+                    "key text, " +
+                    "value text)";
+                cmd.ExecuteNonQuery();
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "create unique index if not exists kvstore on tx_kvstore(key)";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 0.7.5 -> " + cmd.CommandText);
+                DoNonQuery("INSERT INTO tx_kvstore (key, value) VALUES ('last_hash', '0')", false);
+            }
+            catch
+            {
+            }
         }
 
         public SqliteDataReader GetSQLReader(string s_query)
