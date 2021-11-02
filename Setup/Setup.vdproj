@@ -6077,15 +6077,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TraXile"
-        "ProductCode" = "8:{B112EFA4-155D-4B16-B19D-E5CA20D05C84}"
-        "PackageCode" = "8:{4F2E7D36-B617-4C14-9B9B-A6C047A17D32}"
+        "ProductCode" = "8:{A18151C0-1EF8-4B24-97AE-198AD2F635DE}"
+        "PackageCode" = "8:{F9CEF311-DBC1-47D3-A007-807C7FBD4EBD}"
         "UpgradeCode" = "8:{C811751D-FFAF-470F-8AA3-11A3FEEE6981}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.7.4"
+        "ProductVersion" = "8:0.7.5"
         "Manufacturer" = "8:dermow"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -6711,7 +6711,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_70A8E5F21F07426CB9C2F141D47232D2"
             {
-            "SourcePath" = "8:..\\TraXile\\obj\\Debug\\TraXile.exe"
+            "SourcePath" = "8:..\\TraXile\\obj\\Release\\TraXile.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
@@ -6795,7 +6795,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_A821A7161BC04BF890A508F78ED8FCDC"
             {
-            "SourcePath" = "8:..\\TraXile.Updater\\obj\\Debug\\TraXile.Updater.exe"
+            "SourcePath" = "8:..\\TraXile.Updater\\obj\\Release\\TraXile.Updater.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8B2F434F5BAF430FAFD18EC3EF06C0ED"
