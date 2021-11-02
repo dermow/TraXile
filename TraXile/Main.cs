@@ -3304,8 +3304,6 @@ namespace TraXile
                     if (_uiFlagMapDashboard)
                     {
                         RenderMappingDashboard();
-                       //+
-                       //RenderMappingDashboard2();
                         _uiFlagMapDashboard = false;
                     }
 
@@ -3708,10 +3706,25 @@ namespace TraXile
             List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
             Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
             List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
+            Dictionary<string, int> countByArea = new Dictionary<string, int>();
 
+            // MAP AREAS
             foreach (string s in _defaultMappings.HEIST_AREAS)
             {
-                tmpList.Add(new KeyValuePair<string, int>(s, _numericStats["HeistsFinished_" + s]));
+                countByArea.Add(s, 0);
+            }
+
+            foreach (TrX_TrackedActivity act in _eventHistory)
+            {
+                if (act.Type == ACTIVITY_TYPES.HEIST)
+                {
+                    countByArea[act.Area]++;
+                }
+            }
+
+            foreach (KeyValuePair<string,int> kvp in countByArea)
+            {
+                tmpList.Add(kvp);
             }
 
             tmpList.Sort(
@@ -3879,84 +3892,59 @@ namespace TraXile
             }
         }
 
-        /// <summary>
-        /// Render Mapping Dashboard
-        /// </summary>
         public void RenderMappingDashboard()
         {
-            string queryByTier, queryByArea;
-            Dictionary<int, int> countByTier, secondsByTier;
-            Dictionary<string, int> countByArea;
-            Dictionary<int, double> avgPerTier;
-            
-            countByTier = new Dictionary<int, int>();
-            secondsByTier = new Dictionary<int, int>();
-            avgPerTier = new Dictionary<int, double>();
-            countByArea = new Dictionary<string, int>();
-            queryByTier = "SELECT COUNT(*), SUM(act_stopwatch), act_area_level FROM tx_activity_log WHERE act_type = 'map' GROUP BY act_area_level";
-            queryByArea = "SELECT COUNT(*), act_area FROM tx_activity_log WHERE act_type = 'map' GROUP BY act_area";
+            List<KeyValuePair<string, int>> tmpList = new List<KeyValuePair<string, int>>();
+            List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
+            Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
+            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
 
-            SqliteDataReader rd;
-            rd = _myDB.GetSQLReader(queryByTier);
+            Dictionary<string, int> countByArea = new Dictionary<string, int>();
+            Dictionary<int, int> countByTier = new Dictionary<int, int>();
 
-            // Init countByTier
-            for(int i = 1; i <= 16; i++)
+            // MAP AREAS
+            foreach (string s in _defaultMappings.MAP_AREAS)
             {
-                countByTier.Add(i, 0);
-                secondsByTier.Add(i, 0);
-                avgPerTier.Add(i, 0);
+                countByArea.Add(s, 0);
             }
 
-            int count;
-            int sec;
-            int lvl;
-            int tier;
-            while(rd.Read())
+            for(int i = 0; i <= 16; i++)
             {
-                count = rd.GetInt32(0);
-                sec = rd.GetInt32(1);
-                lvl = rd.GetInt32(2);
-                tier = LevelToTier(lvl);
-                if(tier > 0)
+                countByTier.Add(i, 0);
+            }
+
+            foreach(TrX_TrackedActivity act in _eventHistory)
+            {
+                if(act.Type == ACTIVITY_TYPES.MAP)
                 {
-                    countByTier[tier] = count;
-                    secondsByTier[tier] = count;
-                    avgPerTier[tier] =  (sec / count);
+                    countByArea[act.Area]++;
+                    countByTier[act.MapTier]++;
                 }
             }
 
-            rd = _myDB.GetSQLReader(queryByArea);
-
-            string area;
-            while (rd.Read())
-            {
-                count = rd.GetInt32(0);
-                area = rd.GetString(1);
-                countByArea.Add(area, count);
-            }
-
-            List<KeyValuePair<string, int>> tmpSort;
-            tmpSort = new List<KeyValuePair<string, int>>();
-
             foreach(KeyValuePair<string,int> kvp in countByArea)
             {
-                tmpSort.Add(kvp);
+                tmpList.Add(kvp);
             }
 
-            tmpSort.Sort(
-               delegate (KeyValuePair<string, int> pair1,
-               KeyValuePair<string, int> pair2)
-               {
-                   return pair1.Value.CompareTo(pair2.Value);
-               });
-            tmpSort.Reverse();
+            tmpList.Sort(
+                delegate (KeyValuePair<string, int> pair1,
+                KeyValuePair<string, int> pair2)
+                {
+                    return pair1.Value.CompareTo(pair2.Value);
+                });
+            tmpList.Reverse();
+            top10.AddRange(tmpList.GetRange(0, 10));
+            listViewTop10Maps.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in top10)
+            {
+                ListViewItem lvi = new ListViewItem(kvp.Key);
+                lvi.SubItems.Add(kvp.Value.ToString());
+                listViewTop10Maps.Items.Add(lvi);
+            }
 
             // TAG CALC
-            Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
-            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
-            List<KeyValuePair<string, int>> tmpSortTags = new List<KeyValuePair<string, int>>(); ;
-
-            tmpSortTags.Clear();
+            tmpList.Clear();
             foreach (TrX_ActivityTag tg in Tags)
             {
                 tmpListTags.Add(tg.ID, 0);
@@ -3982,53 +3970,77 @@ namespace TraXile
 
             foreach (KeyValuePair<string, int> kvp in tmpListTags)
             {
-                tmpSortTags.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
+                tmpList.Add(new KeyValuePair<string, int>(kvp.Key, kvp.Value));
             }
 
-            tmpSortTags.Sort(
+            tmpList.Sort(
                 delegate (KeyValuePair<string, int> pair1,
                 KeyValuePair<string, int> pair2)
                 {
                     return pair1.Value.CompareTo(pair2.Value);
                 });
-            tmpSortTags.Reverse();
-            top10Tags.AddRange(tmpSortTags);
+            tmpList.Reverse();
+            top10Tags.AddRange(tmpList);
             listViewTaggingOverview.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in top10Tags)
+            {
+                if (kvp.Value > 0)
+                {
+                    ListViewItem lvi = new ListViewItem(kvp.Key);
+                    lvi.SubItems.Add(kvp.Value.ToString());
+                    listViewTaggingOverview.Items.Add(lvi);
+                }
+            }
+
+            double[] tierAverages = new double[]
+            {
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+            };
+
+            for (int i = 0; i < 16; i++)
+            {
+                int iSum = 0;
+                int iCount = 0;
+
+                foreach (TrX_TrackedActivity act in _eventHistory)
+                {
+                    if (act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i + 1))
+                    {
+                        if (act.TotalSeconds < _timeCapMap)
+                        {
+                            iSum += act.TotalSeconds;
+                        }
+                        else
+                        {
+                            iSum += _timeCapMap;
+                        }
+
+                        iCount++;
+                    }
+                }
+
+                if (iSum > 0 && iCount > 0)
+                {
+                    tierAverages[i] = (iSum / iCount);
+                }
+
+            }
 
             MethodInvoker mi = delegate
             {
                 chartMapTierCount.Series[0].Points.Clear();
                 for (int i = 1; i <= 16; i++)
                 {
-                    chartMapTierCount.Series[0].Points.AddXY(i, countByTier[i].ToString());
+                    chartMapTierCount.Series[0].Points.AddXY(i, countByTier[i]);
                 }
 
                 chartMapTierAvgTime.Series[0].Points.Clear();
-                for (int i = 1; i <= 16; i++)
+                for (int i = 0; i < tierAverages.Length; i++)
                 {
-                    chartMapTierAvgTime.Series[0].Points.AddXY(i, Math.Round(avgPerTier[i] / 60, 1));
-                }
-
-                listViewTop10Maps.Items.Clear();
-                for(int i = 0; i < 10; i++)
-                {
-                    ListViewItem lvi = new ListViewItem(tmpSort[i].Key);
-                    lvi.SubItems.Add(tmpSort[i].Value.ToString());
-                    listViewTop10Maps.Items.Add(lvi);
-                }
-
-                foreach (KeyValuePair<string, int> kvp in top10Tags)
-                {
-                    if (kvp.Value > 0)
-                    {
-                        ListViewItem lvi = new ListViewItem(kvp.Key);
-                        lvi.SubItems.Add(kvp.Value.ToString());
-                        listViewTaggingOverview.Items.Add(lvi);
-                    }
+                    chartMapTierAvgTime.Series[0].Points.AddXY(i + 1, Math.Round(tierAverages[i] / 60, 1));
                 }
             };
             Invoke(mi);
-
         }
 
         /// <summary>
