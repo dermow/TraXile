@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace TraXile
@@ -16,6 +17,8 @@ namespace TraXile
             _mainWindow = main;
             _trackedActivity = ta;
             _isDeleteMode = false;
+            this.Icon = Icon.FromHandle(((Bitmap)main.imageList1.Images[main.GetImageIndex(ta)]).GetHicon());
+            pictureBox1.Image = main.imageList2.Images[main.GetImageIndex(ta)];
 
             labelTime.Text = ta.Started.ToString();
             labelType.Text = ta.Type.ToString();
@@ -29,6 +32,12 @@ namespace TraXile
             labelDeaths.Text = ta.DeathCounter.ToString();
             Text = ta.Type + " Details: " + ta.Area;
             label9.Text = ta.Type.ToString();
+            label13.Text = ta.Area.ToString();
+
+            if(!main.IS_IN_DEBUG_MODE)
+            {
+                button3.Hide();
+            }
 
             if (_trackedActivity.AreaLevel > 0)
             {
@@ -151,6 +160,17 @@ namespace TraXile
                 _isDeleteMode = false;
                 label8.ForeColor = Color.Black;
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(_trackedActivity.DebugStartEventLine);
+            sb.AppendLine(_trackedActivity.DebugEndEventLine);
+            sb.AppendLine(_trackedActivity.LastEnded.ToString());
+            sb.Append(_trackedActivity.InstanceEndpoint);
+
+            MessageBox.Show(sb.ToString());
         }
     }
 }

@@ -67,7 +67,8 @@ namespace TraXile
         HEIST_HUCK_SPEAK,
         HEIST_KARST_SPEAK,
         ABNORMAL_DISCONNECT,
-        CAMPAIGN_FINISHED
+        CAMPAIGN_FINISHED,
+        NEXT_CEMETERY_IS_LOGBOOK
     }
 
     public class TrX_EventMapping
@@ -110,6 +111,7 @@ namespace TraXile
                 { "Sirus, Awakener of Worlds: Did you really think this would work?", EVENT_TYPES.SIRUS_FIGHT_STARTED },
                 { " is now level ", EVENT_TYPES.LEVELUP },
 
+                
                 // Veritania Fight Events
                 { "You and I both know this isn't over.", EVENT_TYPES.VERITANIA_KILLED },
                 { "The roots have taken hold. We shall see each other again.", EVENT_TYPES.VERITANIA_KILLED },
@@ -328,8 +330,9 @@ namespace TraXile
                 { "The Trialmaster: You win... again.", EVENT_TYPES.TRIALMASTER_VICTORY },
                 { "The Trialmaster: This is insufferable...", EVENT_TYPES.TRIALMASTER_VICTORY },
                 { "The Trialmaster: Take your prize and go.", EVENT_TYPES.TRIALMASTER_VICTORY },
-                {"Catarina, Master of Undeath: You found me at last... Very resourceful, Jun. I too am resourceful. Witness.", EVENT_TYPES.CATARINA_FIGHT_STARTED },
-                {"Catarina, Master of Undeath: Don't do this, Exile. You can still join us", EVENT_TYPES.CATARINA_KILLED },
+
+                {"] Catarina, Master of Undeath: You found me at last... Very resourceful, Jun. I too am resourceful. Witness.", EVENT_TYPES.CATARINA_FIGHT_STARTED },
+                {"] Jun, Veiled Master: Shut up.", EVENT_TYPES.CATARINA_KILLED },
                 {"Strange Voice: So be it.", EVENT_TYPES.SIMULACRUM_FULLCLEAR },
 
                 // Encounters
