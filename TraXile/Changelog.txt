@@ -140,3 +140,16 @@
 
 0.7.5
 - Restoring stats.cache from database when corrupted
+
+0.8.0
+- New trackable activity: CATARINA_FIGHT
+- New trackable activity: SAFEHOUSE
+- New trackable activity: VAAL_SIDEAREA
+- New trackable activity: ABYSSAL_DEPTHS
+- New trackable activity: LABTRIAL
+- New trackable activity: LOGBOOK
+- New auto tag: abyss-depths - Abyssal Dephts on Map
+- New auto tag: lab-trial - Lab Trial found in Map
+- New auto tag: vaal-area - Vaal Ara in Map
+- New auto tag: exp-side-area - Side Area in Logbook
+- Added logos for activities

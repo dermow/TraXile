@@ -19,7 +19,14 @@ namespace TraXile
             MAVEN_INV_AREAS,
             LAB_START_AREAS,
             DELVE_AREAS,
-            CAMPAIGN_AREAS;
+            CAMPAIGN_AREAS,
+            ABYSS_AREAS,
+            VAAL_AREAS,
+            LOGBOOK_AREAS,
+            LOGBOOK_SIDE_AREAS,
+            LAB_TRIAL_AREAS,
+            CATARINA_AREAS,
+            SAFEHOUSE_AREAS;
 
         public Dictionary<string, string> WIKI_LINKS;
         public List<ACTIVITY_TYPES> PAUSABLE_ACTIVITY_TYPES;
@@ -459,6 +466,121 @@ namespace TraXile
                 "Oriath Docks",
             };
 
+            ABYSS_AREAS = new List<string>
+            {
+                "Abyssal Depths"
+            };
+
+            VAAL_AREAS = new List<string>
+            {
+                "Abandoned Dam",
+                "Ancient Catacomb",
+                "Arcane Chambers",
+                "Blind Alley",
+                "Clouded Ledge",
+                "Clouded Ridge",
+                "Concealed Caldarium",
+                "Concealed Cavity",
+                "Covered-up Hollow",
+                "Cremated Archives",
+                "Deathly Chambers",
+                "Desolate Isle",
+                "Desolate Track",
+                "Disused Furnace",
+                "Dusty Bluff",
+                "Entombed Alcove",
+                "Entombed Chamber",
+                "Evacuated Quarter",
+                "Flooded Complex",
+                "Forbidden Archives",
+                "Forbidden Chamber",
+                "Forbidden Shrine",
+                "Forgotten Conduit",
+                "Forgotten Gulch",
+                "Forgotten Oubliette",
+                "Haunted Mineshaft",
+                "Hidden Patch",
+                "Inner Grounds",
+                "Moonlit Chambers",
+                "Mystical Clearing",
+                "Narrow Ravine",
+                "Neglected Cellar",
+                "Quarantined Quarters",
+                "Radiant Pools",
+                "Reclaimed Barracks",
+                "Remote Gulch",
+                "Restricted Collection",
+                "Restricted Gallery",
+                "Sacred Chambers",
+                "Sealed Basement",
+                "Sealed Corridors",
+                "Sealed Repository",
+                "Secluded Canal",
+                "Secluded Copse",
+                "Secret Laboratory",
+                "Shifting Sands",
+                "Side Chapel",
+                "Stagnant Canal",
+                "Strange Sinkhole",
+                "Sunken Shingle",
+                "Twisted Inquisitorium",
+                "Walled-off Ducts",
+                "Isolated Sound",
+                "Frozen Springs",
+                "Suffocating Fissure",
+            };
+
+            LOGBOOK_AREAS = new List<string>
+            {
+                "Battleground Graves",
+                "Bluffs",
+                "Cemetery",
+                "Desert Ruins",
+                "Dried Riverbed",
+                "Forest Ruins",
+                "Karui Wargraves",
+                "Mountainside",
+                "Rotting Temple",
+                "Sarn Slums",
+                "Scrublands",
+                "Shipwreck Reef",
+                "Utzaal Outskirts",
+                "Vaal Temple",
+                "Volcanic Island",
+            };
+
+            LOGBOOK_SIDE_AREAS = new List<string>
+            {
+                "Chittering Chamber",
+                "Forgotten Grotto",
+                "Fortified Redoubt",
+                "Heroic Tomb",
+                "Lost Sanctum",
+                "Mushroom Thicket",
+                "Noxious Gutter",
+                "Sandy Vestige",
+                "Spectral Hollow",
+            };
+
+            LAB_TRIAL_AREAS = new List<string>
+            {
+                "Trial of Piercing Truth",
+                "Trial of Swirling Fear",
+                "Trial of Crippling Grief",
+                "Trial of Burning Rage",
+                "Trial of Lingering Pain",
+                "Trial of Stinging Doubt",
+            };
+
+            CATARINA_AREAS = new List<string>
+            {
+                "Masterminds Lair"
+            };
+
+            SAFEHOUSE_AREAS = new List<string>
+            {
+                "Syndicate Hideout"
+            };
 
             PAUSABLE_ACTIVITY_TYPES = new List<ACTIVITY_TYPES>
             {
@@ -470,7 +592,14 @@ namespace TraXile
                 ACTIVITY_TYPES.SHAPER_FIGHT,
                 ACTIVITY_TYPES.ELDER_FIGHT,
                 ACTIVITY_TYPES.ATZIRI,
-                ACTIVITY_TYPES.UBER_ATZIRI
+                ACTIVITY_TYPES.UBER_ATZIRI,
+                ACTIVITY_TYPES.CATARINA_FIGHT,
+                ACTIVITY_TYPES.LAB_TRIAL,
+                ACTIVITY_TYPES.LOGBOOK,
+                ACTIVITY_TYPES.LOGBOOK_SIDE,
+                ACTIVITY_TYPES.SAFEHOUSE,
+                ACTIVITY_TYPES.ABYSSAL_DEPTHS,
+                ACTIVITY_TYPES.VAAL_SIDEAREA
             };
 
             // Map areas with enabled death counter
@@ -488,6 +617,13 @@ namespace TraXile
             DEATH_COUNT_ENABLED_AREAS.AddRange(MAVEN_FIGHT_AREAS);
             DEATH_COUNT_ENABLED_AREAS.AddRange(DELVE_AREAS);
             DEATH_COUNT_ENABLED_AREAS.AddRange(CAMPAIGN_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(LOGBOOK_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(LOGBOOK_SIDE_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(LAB_TRIAL_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(VAAL_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(ABYSS_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(CATARINA_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(SAFEHOUSE_AREAS);
         }
     }
 }

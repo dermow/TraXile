@@ -34,13 +34,20 @@ namespace TraXile
         MAVEN_FIGHT,
         SIRUS_FIGHT,
         OTHER,
-        CAMPAIGN
+        CAMPAIGN,
+        ABYSSAL_DEPTHS,
+        VAAL_SIDEAREA,
+        LAB_TRIAL,
+        LOGBOOK,
+        SAFEHOUSE,
+        CATARINA_FIGHT,
+        LOGBOOK_SIDE,
     }
 
     public partial class Main : Form
     {
-        // DEBUG: CHANGE BEFORE RELEASE!!
-        private readonly bool IS_IN_DEBUG_MODE = false;
+        // START FLAGS
+        public readonly bool IS_IN_DEBUG_MODE = false;
         public bool SAFE_RELOAD_MODE;
 
         // App parameters
@@ -56,6 +63,7 @@ namespace TraXile
         private bool _UpdateCheckDone;
         private bool _restoreOk = true;
         private bool _StartedFlag = false;
+        private bool _nextAreaIsExp = false;
         private int _timeCapLab = 3600;
         private int _timeCapMap = 3600;
         private int _timeCapHeist = 3600;
@@ -77,7 +85,10 @@ namespace TraXile
         private string _failedRestoreReason = "";
         private bool _eventQueueInitizalized;
         private bool _isMapZana;
-        private bool _elderFightActive;
+        private bool _isMapVaalArea;
+        private bool _isMapAbyssArea;
+        private bool _isMapLabTrial;
+        private bool _isMapLogbookSide;
         private int _shaperKillsInFight;
         private int _nextAreaLevel;
         private int _currentAreaLevel;
@@ -97,13 +108,15 @@ namespace TraXile
         private TrX_DBManager _myDB;
         private ConcurrentQueue<TrX_TrackingEvent> _eventQueue;
         private TrX_TrackedActivity _currentActivity;
-        private EVENT_TYPES _lastEventType;
+        private EVENT_TYPES _lastEventTypeConq;
         private Thread _logParseThread;
         private Thread _eventThread;
         private DateTime _inAreaSince;
         private DateTime _lastDeathTime;
         private DateTime _initStartTime;
         private DateTime _initEndTime;
+        private string _lastShaperInstance;
+        private string _lastElderInstance;
 
         // Hideout time
         private DateTime _hoStart;
@@ -228,7 +241,7 @@ namespace TraXile
 
                 StringBuilder sbChanges = new StringBuilder();
 
-                foreach (XmlNode xn in xml.SelectNodes("/version/changes/chg"))
+                foreach (XmlNode xn in xml.SelectNodes(string.Format("/version/changelog/chg[@version='{0}']", sVersion)))
                 {
                     sbChanges.AppendLine(" - " + xn.InnerText);
                 }
@@ -540,7 +553,7 @@ namespace TraXile
             _myDB = new TrX_DBManager(_myAppData + @"\data.db", ref _log);
             InitDefaultTags();
 
-            _lastEventType = EVENT_TYPES.APP_STARTED;
+            _lastEventTypeConq = EVENT_TYPES.APP_STARTED;
             InitNumStats();
 
             foreach (KeyValuePair<string, int> kvp in _numericStats)
@@ -600,12 +613,14 @@ namespace TraXile
             // Request initial Dashboard update
             _uiFlagLabDashboard = true;
             _uiFlagMapDashboard = true;
+            _uiFlagBossDashboard = true;
             _uiFlagHeistDashboard = true;
             _uiFlagGlobalDashboard = true;
             _uiFlagStatsList = true;
             _uiFlagActivityList = true;
         }
 
+        // Self-Healing for stats.cache
         private void RestoreStatsCacheFromDB()
         {
             SqliteDataReader dr1 = _myDB.GetSQLReader("select value from tx_kvstore where key='last_hash'");
@@ -704,7 +719,11 @@ namespace TraXile
                 new TrX_ActivityTag("nenet") { BackColor = Color.IndianRed, ForeColor = Color.Black },
                 new TrX_ActivityTag("vinderi") { BackColor = Color.IndianRed, ForeColor = Color.Black },
                 new TrX_ActivityTag("gianna") { BackColor = Color.IndianRed, ForeColor = Color.Black },
-                new TrX_ActivityTag("huck") { BackColor = Color.IndianRed, ForeColor = Color.Black }
+                new TrX_ActivityTag("huck") { BackColor = Color.IndianRed, ForeColor = Color.Black },
+                new TrX_ActivityTag("vaal-area") { BackColor = Color.DarkRed, ForeColor = Color.White },
+                new TrX_ActivityTag("lab-trial") { BackColor = Color.DarkTurquoise, ForeColor = Color.Black },
+                new TrX_ActivityTag("abyss-depths") { BackColor = Color.ForestGreen, ForeColor = Color.Black },
+                new TrX_ActivityTag("exp-side-area") { BackColor = Color.Turquoise, ForeColor = Color.Black },
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -907,7 +926,7 @@ namespace TraXile
                 {
                     if (_currentActivity != null)
                     {
-                        TrX_TrackedActivity mapToCheck = _isMapZana ? _currentActivity.ZanaMap : _currentActivity;
+                        TrX_TrackedActivity mapToCheck = _isMapZana ? _currentActivity.SideArea_ZanaMap : _currentActivity;
 
                         if (mapToCheck.Tags.Contains(tag.ID))
                         {
@@ -960,15 +979,15 @@ namespace TraXile
             {
                 if (_currentActivity != null)
                 {
-                    if (_isMapZana && _currentActivity.ZanaMap != null)
+                    if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                     {
-                        if (_currentActivity.ZanaMap.HasTag(tag.ID))
+                        if (_currentActivity.SideArea_ZanaMap.HasTag(tag.ID))
                         {
-                            _currentActivity.ZanaMap.RemoveTag(tag.ID);
+                            _currentActivity.SideArea_ZanaMap.RemoveTag(tag.ID);
                         }
                         else
                         {
-                            _currentActivity.ZanaMap.AddTag(tag.ID);
+                            _currentActivity.SideArea_ZanaMap.AddTag(tag.ID);
                         }
                     }
                     else
@@ -1379,6 +1398,20 @@ namespace TraXile
                     return ACTIVITY_TYPES.SIRUS_FIGHT;
                 case "campaign":
                     return ACTIVITY_TYPES.CAMPAIGN;
+                case "vaal_sidearea":
+                    return ACTIVITY_TYPES.VAAL_SIDEAREA;
+                case "abyssal_depths":
+                    return ACTIVITY_TYPES.ABYSSAL_DEPTHS;
+                case "lab_trial":
+                    return ACTIVITY_TYPES.LAB_TRIAL;
+                case "logbook":
+                    return ACTIVITY_TYPES.LOGBOOK;
+                case "logbook_side":
+                    return ACTIVITY_TYPES.LOGBOOK_SIDE;
+                case "catarina_fight":
+                    return ACTIVITY_TYPES.CATARINA_FIGHT;
+                case "safehouse":
+                    return ACTIVITY_TYPES.SAFEHOUSE;
             }
             return ACTIVITY_TYPES.MAP;
         }
@@ -1574,7 +1607,6 @@ namespace TraXile
                                 {
                                     _eventQueue.Enqueue(ev);
                                 }
-
                             }
                         }
                     }
@@ -1681,9 +1713,9 @@ namespace TraXile
             TrX_TrackedActivity currentAct = null;
             if (_currentActivity != null)
             {
-                if (_isMapZana && _currentActivity.ZanaMap != null)
+                if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                 {
-                    currentAct = _currentActivity.ZanaMap;
+                    currentAct = _currentActivity.SideArea_ZanaMap;
                 }
                 else
                 {
@@ -1715,42 +1747,10 @@ namespace TraXile
                     }
                     break;
                 case "pause":
-                    if (_currentActivity != null)
-                    {
-                        if (_isMapZana && _currentActivity.ZanaMap != null)
-                        {
-                            if (!_currentActivity.ZanaMap.ManuallyPaused)
-                            {
-                                _currentActivity.ZanaMap.Pause();
-                            }
-                        }
-                        else
-                        {
-                            if (!_currentActivity.ManuallyPaused)
-                            {
-                                _currentActivity.Pause();
-                            }
-                        }
-                    }
+                    PauseCurrentActivityOrSide();
                     break;
                 case "resume":
-                    if (_currentActivity != null)
-                    {
-                        if (_isMapZana && _currentActivity.ZanaMap != null)
-                        {
-                            if (_currentActivity.ZanaMap.ManuallyPaused)
-                            {
-                                _currentActivity.ZanaMap.Resume();
-                            }
-                        }
-                        else
-                        {
-                            if (_currentActivity.ManuallyPaused)
-                            {
-                                _currentActivity.Resume();
-                            }
-                        }
-                    }
+                    ResumeCurrentActivityOrSide();
                     break;
                 case "finish":
                     if (currentAct != null && !_isMapZana)
@@ -1775,6 +1775,10 @@ namespace TraXile
             string sTargetArea = GetAreaNameFromEvent(ev);
             string sAreaName = GetAreaNameFromEvent(ev);
             bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea);
+            bool bSourceAreaIsVaal = _defaultMappings.VAAL_AREAS.Contains(sSourceArea);
+            bool bSourceAreaIsAbyss = _defaultMappings.ABYSS_AREAS.Contains(sSourceArea);
+            bool bSourceAreaIsLabTrial = sSourceArea.Contains("Trial of");
+            bool bSourceAreaIsLogbookSide = _defaultMappings.LOGBOOK_SIDE_AREAS.Contains(sSourceArea);
             bool bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea);
             bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
             bool bTargetAreaIsSimu = false;
@@ -1789,11 +1793,37 @@ namespace TraXile
             bool bTargetAreaIsSirusFight = _defaultMappings.SIRUS_AREAS.Contains(sTargetArea);
             bool bTargetAreaIsMavenFight = _defaultMappings.MAVEN_FIGHT_AREAS.Contains(sTargetArea);
             bool bTargetAreaIsCampaign = _defaultMappings.CAMPAIGN_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsLabTrial = sTargetArea.Contains("Trial of");
+            bool bTargetAreaIsAbyssal = _defaultMappings.ABYSS_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsVaal = _defaultMappings.VAAL_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsLogbook = _defaultMappings.LOGBOOK_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsLogBookSide = _defaultMappings.LOGBOOK_SIDE_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsCata = _defaultMappings.CATARINA_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsSafehouse = _defaultMappings.SAFEHOUSE_AREAS.Contains(sTargetArea);
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
             _inAreaSince = ev.EventTime;
 
             IncrementStat("AreaChanges", ev.EventTime, 1);
+
+
+            // Calculate Instance change based statistics:
+            // ===========================================
+
+            // Shaper
+            if(bTargetAreaIsShaper && _currentInstanceEndpoint != _lastShaperInstance)
+            {
+                IncrementStat("ShaperTried", ev.EventTime, 1);
+                _lastShaperInstance = _currentInstanceEndpoint;
+            }
+
+            // Elder
+            if(bTargetAreaIsElder && _currentInstanceEndpoint != _lastElderInstance)
+            {
+                _log.Debug("ELDER_TRIED");
+                IncrementStat("ElderTried", ev.EventTime, 1);
+                _lastElderInstance = _currentInstanceEndpoint;
+            }
 
             // Track the very first activity
             if ((!sTargetArea.Contains("Hideout")) && (!_defaultMappings.CAMP_AREAS.Contains(sTargetArea)))
@@ -1802,7 +1832,7 @@ namespace TraXile
             }
 
             // Hideout?
-            if (sTargetArea.Contains("Hideout"))
+            if (sTargetArea.Contains("Hideout") && !sTargetArea.Contains("Syndicate"))
             {
                 if (!_trackingHO)
                 {
@@ -1851,16 +1881,6 @@ namespace TraXile
                     };
                     _nextAreaLevel = 0;
                 }
-            }
-
-            // Special calculation for Elder fight - he has no start dialoge.
-            if (sAreaName == "Absence of Value and Meaning".Trim())
-            {
-                if (!_elderFightActive)
-                {
-                    IncrementStat("ElderTried", ev.EventTime, 1);
-                }
-                _elderFightActive = true;
             }
 
             ACTIVITY_TYPES actType = ACTIVITY_TYPES.MAP;
@@ -1920,7 +1940,41 @@ namespace TraXile
             {
                 actType = ACTIVITY_TYPES.CAMPAIGN;
             }
-
+            else if (bTargetAreaIsAbyssal)
+            {
+                actType = ACTIVITY_TYPES.ABYSSAL_DEPTHS;
+            }
+            else if (bTargetAreaIsLabTrial)
+            {
+                actType = ACTIVITY_TYPES.LAB_TRIAL;
+            }
+            else if (bTargetAreaIsVaal)
+            {
+                actType = ACTIVITY_TYPES.VAAL_SIDEAREA;
+            }
+            else if (bTargetAreaIsLogbook)
+            {
+                actType = ACTIVITY_TYPES.LOGBOOK;
+            }
+            else if (bTargetAreaIsLogBookSide)
+            {
+                actType = ACTIVITY_TYPES.LOGBOOK_SIDE;
+            }
+            else if (bTargetAreaIsCata)
+            {
+                actType = ACTIVITY_TYPES.CATARINA_FIGHT;
+            }
+            else if (bTargetAreaIsSafehouse)
+            {
+                actType = ACTIVITY_TYPES.SAFEHOUSE;
+            }
+                       
+            // Special handling for logbook cemetery + vaal temple
+            if (bTargetAreaIsLogbook && bTargetAreaIsMap)
+            {
+                actType = _nextAreaIsExp ? ACTIVITY_TYPES.LOGBOOK : ACTIVITY_TYPES.MAP;
+                _nextAreaIsExp = false;
+            }
 
             //Lab started?
             if (actType == ACTIVITY_TYPES.LABYRINTH && sSourceArea == "Aspirants Plaza")
@@ -1952,6 +2006,8 @@ namespace TraXile
                 // Finish activity
                 if (_currentActivity != null)
                 {
+                    if (IS_IN_DEBUG_MODE)
+                        _currentActivity.DebugEndEventLine = ev.LogLine;
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                 }
 
@@ -1969,7 +2025,7 @@ namespace TraXile
 
             }
 
-            //Lab Trial entered
+            //Aspirants Trial entered
             {
                 if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH && sTargetArea == "Aspirants Trial")
                 {
@@ -1981,8 +2037,154 @@ namespace TraXile
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
             {
                 if (sTargetArea.Contains("Hideout") || _defaultMappings.CAMP_AREAS.Contains(sTargetArea))
-                {
+                {if (IS_IN_DEBUG_MODE)
+                        _currentActivity.DebugEndEventLine = ev.LogLine;
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
+                }
+            }
+
+            // Vaal Side area entered?
+            if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && actType == ACTIVITY_TYPES.VAAL_SIDEAREA)
+            {
+                if(_currentActivity.SideArea_VaalArea == null)
+                {
+                    _currentActivity.SideArea_VaalArea = new TrX_TrackedActivity
+                    {
+                        Area = sTargetArea,
+                        AreaLevel = _nextAreaLevel,
+                        Type = actType,
+                        Started = ev.EventTime,
+                        TimeStamp = lTS,
+                        InstanceEndpoint = _currentActivity.InstanceEndpoint
+                    };
+                    _currentActivity.AddTag("vaal-area");
+                }
+                _currentActivity.SideArea_VaalArea.StartStopWatch();
+                _currentActivity.SideArea_VaalArea.EndPauseTime(ev.EventTime);
+                _isMapVaalArea = true;
+            }
+            else
+            {
+                _isMapVaalArea = false;
+            }
+
+            // Left Vaal Side area?
+            if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && bSourceAreaIsVaal)
+            {
+                if(_currentActivity.SideArea_VaalArea != null)
+                {
+                    _currentActivity.SideArea_VaalArea.LastEnded = ev.EventTime;
+                    _currentActivity.SideArea_VaalArea.StopStopWatch();
+                    _currentActivity.SideArea_VaalArea.StartPauseTime(ev.EventTime);
+                }
+            }
+
+            // Logbook Side area entered?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LOGBOOK && actType == ACTIVITY_TYPES.LOGBOOK_SIDE)
+            {
+                if (_currentActivity.SideArea_LogbookSide == null)
+                {
+                    _currentActivity.SideArea_LogbookSide = new TrX_TrackedActivity
+                    {
+                        Area = sTargetArea,
+                        AreaLevel = _nextAreaLevel,
+                        Type = actType,
+                        Started = ev.EventTime,
+                        TimeStamp = lTS,
+                        InstanceEndpoint = _currentActivity.InstanceEndpoint
+                    };
+                    _currentActivity.AddTag("exp-side-area");
+
+                }
+                _currentActivity.SideArea_LogbookSide.StartStopWatch();
+                _currentActivity.SideArea_LogbookSide.EndPauseTime(ev.EventTime);
+                _isMapLogbookSide = true;
+            }
+            else
+            {
+                _isMapLogbookSide = false;
+            }
+
+            // Left Logbook Side area?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LOGBOOK && bSourceAreaIsLogbookSide)
+            {
+                if (_currentActivity.SideArea_LogbookSide != null)
+                {
+                    _currentActivity.SideArea_LogbookSide.LastEnded = ev.EventTime;
+                    _currentActivity.SideArea_LogbookSide.StopStopWatch();
+                    _currentActivity.SideArea_LogbookSide.StartPauseTime(ev.EventTime);
+                }
+            }
+
+            // Abyss Side area entered?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && actType == ACTIVITY_TYPES.ABYSSAL_DEPTHS)
+            {
+                if (_currentActivity.SideArea_AbyssArea == null)
+                {
+                    _currentActivity.SideArea_AbyssArea = new TrX_TrackedActivity
+                    {
+                        Area = sTargetArea,
+                        AreaLevel = _nextAreaLevel,
+                        Type = actType,
+                        Started = ev.EventTime,
+                        TimeStamp = lTS,
+                        InstanceEndpoint = _currentActivity.InstanceEndpoint
+                    };
+                    _currentActivity.AddTag("abyss-depths");
+                }
+                _currentActivity.SideArea_AbyssArea.StartStopWatch();
+                _currentActivity.SideArea_AbyssArea.EndPauseTime(ev.EventTime);
+                _isMapAbyssArea = true;
+            }
+            else
+            {
+                _isMapAbyssArea = false;
+            }
+
+            // Left Abyss Side area?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && bSourceAreaIsAbyss)
+            {
+                if (_currentActivity.SideArea_AbyssArea != null)
+                {
+                    _currentActivity.SideArea_AbyssArea.LastEnded = ev.EventTime;
+                    _currentActivity.SideArea_AbyssArea.StopStopWatch();
+                    _currentActivity.SideArea_AbyssArea.StartPauseTime(ev.EventTime);
+                }
+            }
+
+            // Lab Side area entered?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && actType == ACTIVITY_TYPES.LAB_TRIAL)
+            {
+                if (_currentActivity.SideArea_LabTrial == null)
+                {
+                    _currentActivity.SideArea_LabTrial = new TrX_TrackedActivity
+                    {
+                        Area = sTargetArea,
+                        AreaLevel = _nextAreaLevel,
+                        Type = actType,
+                        Started = ev.EventTime,
+                        TimeStamp = lTS,
+                        InstanceEndpoint = _currentActivity.InstanceEndpoint
+                    };
+                    _currentActivity.AddTag("lab-trial");
+                }
+                _currentActivity.SideArea_LabTrial.StartStopWatch();
+                _currentActivity.SideArea_LabTrial.EndPauseTime(ev.EventTime);
+                _isMapLabTrial = true;
+            }
+            else
+            {
+                _isMapLabTrial = false;
+            }
+
+            // Left Abyss Side area?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && bSourceAreaIsLabTrial)
+            {
+                if (_currentActivity.SideArea_LabTrial != null)
+                {
+                    _currentActivity.SideArea_LabTrial.LastEnded = ev.EventTime;
+                    _currentActivity.SideArea_LabTrial.StopStopWatch();
+                    _currentActivity.SideArea_LabTrial.StartPauseTime(ev.EventTime);
                 }
             }
 
@@ -1991,7 +2193,8 @@ namespace TraXile
             {
                 // Finish activity
                 if (_currentActivity != null)
-                {
+                {if (IS_IN_DEBUG_MODE)
+                        _currentActivity.DebugEndEventLine = ev.LogLine;
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                 }
 
@@ -2016,7 +2219,8 @@ namespace TraXile
 
             // End Delving?
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE && !bTargetAreaMine)
-            {
+            {if (IS_IN_DEBUG_MODE)
+                    _currentActivity.DebugEndEventLine = ev.LogLine;
                 FinishActivity(_currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
             }
 
@@ -2032,6 +2236,8 @@ namespace TraXile
                         if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
                         {
                             _currentActivity.LastEnded = ev.EventTime;
+                            if (IS_IN_DEBUG_MODE)
+                                _currentActivity.DebugEndEventLine = ev.LogLine;
                             FinishActivity(_currentActivity, sTargetArea, ACTIVITY_TYPES.CAMPAIGN, ev.EventTime);
                         }
                     }
@@ -2081,8 +2287,6 @@ namespace TraXile
                 }
             }
 
-
-
             // Mechanisms that can be tracked with default logic:
             // One Area + Own instance
             bool enteringDefaultTrackableActivity =
@@ -2098,14 +2302,41 @@ namespace TraXile
                 bTargetAreaIsElder ||
                 bTargetAreaIsShaper ||
                 bTargetAreaIsMavenFight ||
-                bTargetAreaIsSirusFight;
+                bTargetAreaIsSirusFight ||
+                bTargetAreaIsLogbook ||
+                bTargetAreaIsSafehouse ||
+                bTargetAreaIsCata;
 
+            // Check if opened activity needs to be opened on Mapdevice
+            bool isMapDeviceActivity =
+                bTargetAreaIsMap ||
+                bTargetAreaIsAtziri ||
+                bTargetAreaIsCata ||
+                bTargetAreaIsElder ||
+                bTargetAreaIsShaper ||
+                bTargetAreaIsSimu ||
+                bTargetAreaIsSafehouse ||
+                bTargetAreaIsSirusFight ||
+                bTargetAreaTemple ||
+                bTargetAreaIsMI ||
+                bTargetAreaIsMavenFight ||
+                bTargetAreaIsLogbook;
+
+            if(isMapDeviceActivity)
+            {
+                if(!bTargetAreaIsShaper)
+                {
+                    _shaperKillsInFight = 0;
+                }
+
+                if(!bTargetAreaIsElder)
+                {
+                    _lastElderInstance = "";
+                }
+            }
 
             if (enteringDefaultTrackableActivity)
             {
-                _elderFightActive = false;
-                _shaperKillsInFight = 0;
-
                 if (_currentActivity == null)
                 {
                     _currentActivity = new TrX_TrackedActivity
@@ -2115,7 +2346,8 @@ namespace TraXile
                         AreaLevel = _nextAreaLevel,
                         Started = ev.EventTime,
                         TimeStamp = lTS,
-                        InstanceEndpoint = _currentInstanceEndpoint
+                        InstanceEndpoint = _currentInstanceEndpoint,
+                        DebugStartEventLine = ev.LogLine
                     };
                     _nextAreaLevel = 0;
                 }
@@ -2136,9 +2368,9 @@ namespace TraXile
                         // entered Zana Map
                         _isMapZana = true;
                         _currentActivity.StopStopWatch();
-                        if (_currentActivity.ZanaMap == null)
+                        if (_currentActivity.SideArea_ZanaMap == null)
                         {
-                            _currentActivity.ZanaMap = new TrX_TrackedActivity
+                            _currentActivity.SideArea_ZanaMap = new TrX_TrackedActivity
                             {
                                 Type = ACTIVITY_TYPES.MAP,
                                 Area = sTargetArea,
@@ -2146,22 +2378,22 @@ namespace TraXile
                                 Started = ev.EventTime,
                                 TimeStamp = lTS,
                             };
-                            _currentActivity.ZanaMap.AddTag("zana-map");
+                            _currentActivity.SideArea_ZanaMap.AddTag("zana-map");
                             _nextAreaLevel = 0;
                         }
-                        if (!_currentActivity.ZanaMap.ManuallyPaused)
-                            _currentActivity.ZanaMap.StartStopWatch();
+                        if (!_currentActivity.SideArea_ZanaMap.ManuallyPaused)
+                            _currentActivity.SideArea_ZanaMap.StartStopWatch();
                     }
                     else
                     {
                         _isMapZana = false;
 
                         // leave Zana Map
-                        if (_currentActivity.ZanaMap != null)
+                        if (_currentActivity.SideArea_ZanaMap != null)
                         {
                             _isMapZana = false;
-                            _currentActivity.ZanaMap.StopStopWatch();
-                            _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                            _currentActivity.SideArea_ZanaMap.StopStopWatch();
+                            _currentActivity.SideArea_ZanaMap.LastEnded = ev.EventTime;
                             if (!_currentActivity.ManuallyPaused)
                                 _currentActivity.StartStopWatch();
                         }
@@ -2176,6 +2408,7 @@ namespace TraXile
                     {
                         if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
                         {
+                            if(IS_IN_DEBUG_MODE)_currentActivity.DebugEndEventLine = ev.LogLine;
                             FinishActivity(_currentActivity, sTargetArea, actType, ev.EventTime);
                         }
                     }
@@ -2194,19 +2427,19 @@ namespace TraXile
                         // PAUSE TIME
                         if (_defaultMappings.PAUSABLE_ACTIVITY_TYPES.Contains(_currentActivity.Type))
                         {
-                            if (_defaultMappings.CAMP_AREAS.Contains(sTargetArea) || sTargetArea.Contains("Hideout"))
+                            if (_defaultMappings.CAMP_AREAS.Contains(sTargetArea) || (sTargetArea.Contains("Hideout") && !sTargetArea.Contains("Syndicate")))
                             {
                                 _currentActivity.StartPauseTime(ev.EventTime);
                             }
                         }
                     }
 
-                    if (_currentActivity.ZanaMap != null)
+                    if (_currentActivity.SideArea_ZanaMap != null)
                     {
-                        if (sSourceArea == _currentActivity.ZanaMap.Area)
+                        if (sSourceArea == _currentActivity.SideArea_ZanaMap.Area)
                         {
-                            _currentActivity.ZanaMap.StopStopWatch();
-                            _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                            _currentActivity.SideArea_ZanaMap.StopStopWatch();
+                            _currentActivity.SideArea_ZanaMap.LastEnded = ev.EventTime;
                         }
                     }
 
@@ -2232,6 +2465,7 @@ namespace TraXile
                 if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
                 {
                     _currentActivity.DeathCounter = 1;
+                    if (IS_IN_DEBUG_MODE) _currentActivity.DebugEndEventLine = ev.LogLine;
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
                 }
 
@@ -2244,10 +2478,42 @@ namespace TraXile
                 {
                     if (_isMapZana)
                     {
-                        if (_currentActivity.ZanaMap != null)
+                        if (_currentActivity.SideArea_ZanaMap != null)
                         {
-                            _currentActivity.ZanaMap.DeathCounter++;
-                            _currentActivity.ZanaMap.LastEnded = ev.EventTime;
+                            _currentActivity.SideArea_ZanaMap.DeathCounter++;
+                            _currentActivity.SideArea_ZanaMap.LastEnded = ev.EventTime;
+                        }
+                    }
+                    else if (_isMapVaalArea)
+                    {
+                        if (_currentActivity.SideArea_VaalArea != null)
+                        {
+                            _currentActivity.SideArea_VaalArea.DeathCounter++;
+                            _currentActivity.SideArea_VaalArea.LastEnded = ev.EventTime;
+                        }
+                    }
+                    else if (_isMapAbyssArea)
+                    {
+                        if (_currentActivity.SideArea_AbyssArea != null)
+                        {
+                            _currentActivity.SideArea_AbyssArea.DeathCounter++;
+                            _currentActivity.SideArea_AbyssArea.LastEnded = ev.EventTime;
+                        }
+                    }
+                    else if (_isMapLabTrial)
+                    {
+                        if (_currentActivity.SideArea_LabTrial != null)
+                        {
+                            _currentActivity.SideArea_LabTrial.DeathCounter++;
+                            _currentActivity.SideArea_LabTrial.LastEnded = ev.EventTime;
+                        }
+                    }
+                    else if (_isMapLogbookSide)
+                    {
+                        if (_currentActivity.SideArea_LogbookSide != null)
+                        {
+                            _currentActivity.SideArea_LogbookSide.DeathCounter++;
+                            _currentActivity.SideArea_LogbookSide.LastEnded = ev.EventTime;
                         }
                     }
                     else
@@ -2255,10 +2521,7 @@ namespace TraXile
                         _currentActivity.DeathCounter++;
                     }
                 }
-
-
             }
-
         }
 
         /// <summary>
@@ -2276,6 +2539,7 @@ namespace TraXile
                         if (_currentActivity != null)
                         {
                             _log.Info("Abnormal disconnect found in log. Finishing Map.");
+                            if (IS_IN_DEBUG_MODE) _currentActivity.DebugEndEventLine = ev.LogLine;
                             FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                         }
                         break;
@@ -2293,10 +2557,67 @@ namespace TraXile
                             else
                             {
                                 _currentActivity.IsFinished = true;
-                                if (_currentActivity.ZanaMap != null)
+                                if (_currentActivity.SideArea_ZanaMap != null)
                                 {
-                                    _currentActivity.ZanaMap.IsFinished = true;
+                                    if(_currentActivity.SideArea_ZanaMap.LastEnded.Year < 2000)
+                                    {
+                                        _currentActivity.SideArea_ZanaMap = null;
+                                    }
+                                    else
+                                    {
+                                        _currentActivity.SideArea_ZanaMap.IsFinished = true;
+                                    }
+                                    
                                 }
+                                if (_currentActivity.SideArea_VaalArea != null)
+                                {
+                                    if (_currentActivity.SideArea_VaalArea.LastEnded.Year < 2000)
+                                    {
+                                        _currentActivity.SideArea_VaalArea = null;
+                                    }
+                                    else
+                                    {
+                                        _currentActivity.SideArea_VaalArea.IsFinished = true;
+                                    }
+
+                                }
+                                if (_currentActivity.SideArea_LogbookSide != null)
+                                {
+                                    if (_currentActivity.SideArea_LogbookSide.LastEnded.Year < 2000)
+                                    {
+                                        _currentActivity.SideArea_LogbookSide = null;
+                                    }
+                                    else
+                                    {
+                                        _currentActivity.SideArea_LogbookSide.IsFinished = true;
+                                    }
+
+                                }
+                                if (_currentActivity.SideArea_AbyssArea != null)
+                                {
+                                    if (_currentActivity.SideArea_AbyssArea.LastEnded.Year < 2000)
+                                    {
+                                        _currentActivity.SideArea_AbyssArea = null;
+                                    }
+                                    else
+                                    {
+                                        _currentActivity.SideArea_AbyssArea.IsFinished = true;
+                                    }
+
+                                }
+                                if (_currentActivity.SideArea_LabTrial != null)
+                                {
+                                    if (_currentActivity.SideArea_LabTrial.LastEnded.Year < 2000)
+                                    {
+                                        _currentActivity.SideArea_LabTrial = null;
+                                    }
+                                    else
+                                    {
+                                        _currentActivity.SideArea_LabTrial.IsFinished = true;
+                                    }
+
+                                }
+                                if (IS_IN_DEBUG_MODE) _currentActivity.DebugEndEventLine = ev.LogLine;
                                 FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                             }
                         }
@@ -2319,8 +2640,9 @@ namespace TraXile
                         HandlePlayerDiedEvent(ev);
                         break;
                     case EVENT_TYPES.ELDER_KILLED:
+                        _log.Debug("Elder killed on instance: " + _currentActivity.InstanceEndpoint);
                         IncrementStat("ElderKilled", ev.EventTime, 1);
-                        _elderFightActive = false;
+                        _lastElderInstance = ""; //TODO: could be a problem if protaled back to already finished elder fight. But fixes multi fights on same instance...
                         break;
                     case EVENT_TYPES.SHAPER_KILLED:
                         // shaper has 3x the same kill dialogue
@@ -2383,25 +2705,25 @@ namespace TraXile
                         IncrementStat("TrialMasterKilled", ev.EventTime, 1);
                         break;
                     case EVENT_TYPES.VERITANIA_KILLED:
-                        if (_lastEventType != EVENT_TYPES.VERITANIA_KILLED)
+                        if (_lastEventTypeConq != EVENT_TYPES.VERITANIA_KILLED)
                         {
                             IncrementStat("VeritaniaKilled", ev.EventTime, 1);
                         }
                         break;
                     case EVENT_TYPES.DROX_KILLED:
-                        if (_lastEventType != EVENT_TYPES.DROX_KILLED)
+                        if (_lastEventTypeConq != EVENT_TYPES.DROX_KILLED)
                         {
                             IncrementStat("DroxKilled", ev.EventTime, 1);
                         }
                         break;
                     case EVENT_TYPES.BARAN_KILLED:
-                        if (_lastEventType != EVENT_TYPES.BARAN_KILLED)
+                        if (_lastEventTypeConq != EVENT_TYPES.BARAN_KILLED)
                         {
                             IncrementStat("BaranKilled", ev.EventTime, 1);
                         }
                         break;
                     case EVENT_TYPES.HUNTER_KILLED:
-                        if (_lastEventType != EVENT_TYPES.HUNTER_KILLED)
+                        if (_lastEventTypeConq != EVENT_TYPES.HUNTER_KILLED)
                         {
                             IncrementStat("HunterKilled", ev.EventTime, 1);
                         }
@@ -2416,7 +2738,7 @@ namespace TraXile
                         IncrementStat("EinharCaptures", ev.EventTime, 1);
                         break;
                     case EVENT_TYPES.SHAPER_FIGHT_STARTED:
-                        IncrementStat("ShaperTried", ev.EventTime, 1);
+                        //IncrementStat("ShaperTried", ev.EventTime, 1);
                         break;
                     case EVENT_TYPES.PARTYMEMBER_ENTERED_AREA:
                         AddKnownPlayerIfNotExists(ev.LogLine.Split(' ')[8]);
@@ -2431,9 +2753,9 @@ namespace TraXile
 
                         if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
                         {
-                            if (_isMapZana && _currentActivity.ZanaMap != null)
+                            if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
-                                _currentActivity.ZanaMap.AddTag("delirium");
+                                _currentActivity.SideArea_ZanaMap.AddTag("delirium");
                             }
                             else
                             {
@@ -2444,9 +2766,9 @@ namespace TraXile
                     case EVENT_TYPES.BLIGHT_ENCOUNTER:
                         if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
                         {
-                            if (_isMapZana && _currentActivity.ZanaMap != null)
+                            if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
-                                _currentActivity.ZanaMap.AddTag("blight");
+                                _currentActivity.SideArea_ZanaMap.AddTag("blight");
                             }
                             else
                             {
@@ -2457,9 +2779,9 @@ namespace TraXile
                     case EVENT_TYPES.EINHAR_ENCOUNTER:
                         if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
                         {
-                            if (_isMapZana && _currentActivity.ZanaMap != null)
+                            if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
-                                _currentActivity.ZanaMap.AddTag("einhar");
+                                _currentActivity.SideArea_ZanaMap.AddTag("einhar");
                             }
                             else
                             {
@@ -2470,9 +2792,9 @@ namespace TraXile
                     case EVENT_TYPES.INCURSION_ENCOUNTER:
                         if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
                         {
-                            if (_isMapZana && _currentActivity.ZanaMap != null)
+                            if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
-                                _currentActivity.ZanaMap.AddTag("incursion");
+                                _currentActivity.SideArea_ZanaMap.AddTag("incursion");
                             }
                             else
                             {
@@ -2483,9 +2805,9 @@ namespace TraXile
                     case EVENT_TYPES.NIKO_ENCOUNTER:
                         if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
                         {
-                            if (_isMapZana && _currentActivity.ZanaMap != null)
+                            if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
-                                _currentActivity.ZanaMap.AddTag("niko");
+                                _currentActivity.SideArea_ZanaMap.AddTag("niko");
                             }
                             else
                             {
@@ -2502,9 +2824,9 @@ namespace TraXile
                     case EVENT_TYPES.SYNDICATE_ENCOUNTER:
                         if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
                         {
-                            if (_isMapZana && _currentActivity.ZanaMap != null)
+                            if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
-                                _currentActivity.ZanaMap.AddTag("syndicate");
+                                _currentActivity.SideArea_ZanaMap.AddTag("syndicate");
                             }
                             else
                             {
@@ -2542,6 +2864,7 @@ namespace TraXile
                             IncrementStat("LabsFinished", ev.EventTime, 1);
                             IncrementStat("LabsCompleted_" + _currentActivity.Area, ev.EventTime, 1);
                             _currentActivity.Success = true;
+                            if (IS_IN_DEBUG_MODE) _currentActivity.DebugEndEventLine = ev.LogLine;
                             FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                         }
                         break;
@@ -2553,6 +2876,11 @@ namespace TraXile
                             .Split(' ')[0];
                         _nextAreaLevel = Convert.ToInt32(sLvl);
                         _currentAreaLevel = _nextAreaLevel;
+                        // Logbook check for cemetery & vaal temple
+                        if(ev.LogLine.Contains("Expedition"))
+                        {
+                            _nextAreaIsExp = true;
+                        }
                         break;
                     case EVENT_TYPES.EXP_DANNIG_ENCOUNTER:
                         if (_currentActivity != null && !_currentActivity.HasTag("dannig") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
@@ -2675,6 +3003,9 @@ namespace TraXile
                     case EVENT_TYPES.CAMPAIGN_FINISHED:
                         IncrementStat("CampaignFinished", ev.EventTime, 1);
                         break;
+                    case EVENT_TYPES.NEXT_CEMETERY_IS_LOGBOOK:
+                        _nextAreaIsExp = true;
+                        break;
 
                 }
 
@@ -2694,14 +3025,14 @@ namespace TraXile
 
                 if (checkConqTypes.Contains<EVENT_TYPES>(ev.EventType))
                 {
-                    _lastEventType = ev.EventType;
+                    _lastEventTypeConq = ev.EventType;
                 }
 
-                if (!bInit) TextLogEvent(ev);
+                if (!bInit || ev.EventType == EVENT_TYPES.CATARINA_FIGHT_STARTED) TextLogEvent(ev);
             }
             catch (Exception ex)
             {
-                _log.Warn("ParseError -> Ex.Message: " + ex.Message + ", LogLine: " + ev.LogLine);
+                _log.Warn("Error -> Ex.Message: " + ex.Message + ", LogLine: " + ev.LogLine);
                 _log.Debug(ex.ToString());
             }
         }
@@ -2755,15 +3086,24 @@ namespace TraXile
         private void FinishActivity(TrX_TrackedActivity activity, string sNextMap, ACTIVITY_TYPES sNextMapType, DateTime dtNextMapStarted)
         {
             _log.Debug("Finishing activity: " + activity.UniqueID);
-
             _currentActivity.StopStopWatch();
+
+            bool isValid = true;
 
             if (!SAFE_RELOAD_MODE)
             {
                 TimeSpan ts;
                 TimeSpan tsZana;
+                TimeSpan tsVaal;
+                TimeSpan tsAbyss;
+                TimeSpan tsLabTrial;
+                TimeSpan tsLogbookSide;
                 int iSeconds;
                 int iSecondsZana = 0;
+                int iSecondsVaal = 0;
+                int iSecondsAbyss = 0;
+                int iSecondsLabTrial = 0;
+                int iSecondsLogbookSide = 0;
 
 
                 // Filter out invalid labs (discnnect etc)
@@ -2784,8 +3124,7 @@ namespace TraXile
                     }
 
                 }
-
-
+                            
                 if (!_eventQueueInitizalized)
                 {
                     ts = (activity.LastEnded - activity.Started);
@@ -2799,77 +3138,216 @@ namespace TraXile
                         iSeconds = 0;
                     }
 
-                    if (activity.ZanaMap != null)
+                    if (activity.SideArea_ZanaMap != null)
                     {
-                        tsZana = (activity.ZanaMap.LastEnded - activity.ZanaMap.Started);
+                        tsZana = (activity.SideArea_ZanaMap.LastEnded - activity.SideArea_ZanaMap.Started);
                         iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
+                    }
+
+                    if (activity.SideArea_VaalArea != null)
+                    {
+                        tsVaal = (activity.SideArea_VaalArea.LastEnded - activity.SideArea_VaalArea.Started);
+                        iSecondsVaal = Convert.ToInt32(tsVaal.TotalSeconds);
+                    }
+
+                    if (activity.SideArea_LogbookSide != null)
+                    {
+                        tsLogbookSide = (activity.SideArea_LogbookSide.LastEnded - activity.SideArea_LogbookSide.Started);
+                        iSecondsLogbookSide = Convert.ToInt32(tsLogbookSide.TotalSeconds);
+                    }
+
+                    if (activity.SideArea_AbyssArea != null)
+                    {
+                        tsAbyss = (activity.SideArea_AbyssArea.LastEnded - activity.SideArea_AbyssArea.Started);
+                        iSecondsAbyss = Convert.ToInt32(tsAbyss.TotalSeconds);
+                    }
+
+                    if (activity.SideArea_LabTrial != null)
+                    {
+                        tsLabTrial = (activity.SideArea_LabTrial.LastEnded - activity.SideArea_LabTrial.Started);
+                        iSecondsLabTrial = Convert.ToInt32(tsLabTrial.TotalSeconds);
                     }
 
                     // Filter out town activities without end date
                     if (activity.LastEnded.Year < 2000)
                     {
-                        return;
+                        isValid = false;
                     }
 
                     // Filter out 0-second town visits
                     if (activity.Type == ACTIVITY_TYPES.CAMPAIGN && iSeconds == 0)
                     {
-                        return;
+
+                        isValid = false;
                     }
                 }
                 else
                 {
                     ts = activity.StopWatchTimeSpan;
                     iSeconds = Convert.ToInt32(ts.TotalSeconds);
-                    if (activity.ZanaMap != null)
+                    if (activity.SideArea_ZanaMap != null)
                     {
-                        tsZana = activity.ZanaMap.StopWatchTimeSpan;
+                        tsZana = activity.SideArea_ZanaMap.StopWatchTimeSpan;
                         iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
                     }
                 }
 
-                _currentActivity.TotalSeconds = iSeconds;
-                if (!_eventHistory.Contains(_currentActivity))
+                if(isValid)
                 {
-                    _eventHistory.Insert(0, _currentActivity);
-                }
-
-                TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
-                activity.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
-                          tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
-
-                if (!_parsedActivities.Contains(activity.UniqueID))
-                {
-                    AddMapLvItem(activity);
-
-                    // Request GUI Update
-                    _uiFlagActivityList = true;
-
-                    // Save to DB
-                    SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
-                }
-
-
-                if (activity.ZanaMap != null)
-                {
-                    TimeSpan tsZanaMap = TimeSpan.FromSeconds(iSecondsZana);
-                    activity.ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
-                           tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
-                    _eventHistory.Insert(0, _currentActivity.ZanaMap);
-
-                    if (!_parsedActivities.Contains(activity.ZanaMap.UniqueID))
+                    _currentActivity.TotalSeconds = iSeconds;
+                    if (!_eventHistory.Contains(_currentActivity))
                     {
-                        AddMapLvItem(activity.ZanaMap, true);
+                        _eventHistory.Insert(0, _currentActivity);
+                    }
 
-                        //Request GUI Update
+                    TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
+                    activity.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                              tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
+
+                    if (!_parsedActivities.Contains(activity.UniqueID))
+                    {
+                        AddMapLvItem(activity);
+
+                        // Request GUI Update
                         _uiFlagActivityList = true;
 
-                        //Save to DB
-                        SaveToActivityLog(((DateTimeOffset)activity.ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.ZanaMap.Type), activity.ZanaMap.Area, activity.ZanaMap.AreaLevel, iSecondsZana, activity.ZanaMap.DeathCounter, activity.ZanaMap.TrialMasterCount, true, activity.ZanaMap
-                            .Tags, activity.ZanaMap.Success, Convert.ToInt32(activity.ZanaMap.PausedTime));
+                        // Save to DB
+                        SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
                     }
+
+
+                    if (activity.SideArea_ZanaMap != null)
+                    {
+                        TimeSpan tsZanaMap = TimeSpan.FromSeconds(iSecondsZana);
+                        activity.SideArea_ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                               tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
+                        _eventHistory.Insert(0, _currentActivity.SideArea_ZanaMap);
+
+                        if (!_parsedActivities.Contains(activity.SideArea_ZanaMap.UniqueID))
+                        {
+                            AddMapLvItem(activity.SideArea_ZanaMap, true);
+
+                            //Request GUI Update
+                            _uiFlagActivityList = true;
+
+                            //Save to DB
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_ZanaMap.Type), activity.SideArea_ZanaMap.Area, activity.SideArea_ZanaMap.AreaLevel, iSecondsZana, activity.SideArea_ZanaMap.DeathCounter, activity.SideArea_ZanaMap.TrialMasterCount, true, activity.SideArea_ZanaMap
+                                .Tags, activity.SideArea_ZanaMap.Success, Convert.ToInt32(activity.SideArea_ZanaMap.PausedTime));
+                        }
+                    }
+
+                    if (activity.SideArea_VaalArea != null)
+                    {
+                        TimeSpan tsVaalMap = TimeSpan.FromSeconds(iSecondsVaal);
+                        activity.SideArea_VaalArea.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                               tsVaalMap.Hours, tsVaalMap.Minutes, tsVaalMap.Seconds);
+                        _eventHistory.Insert(0, _currentActivity.SideArea_VaalArea);
+
+                        if (!_parsedActivities.Contains(activity.SideArea_VaalArea.UniqueID))
+                        {
+                            AddMapLvItem(activity.SideArea_VaalArea, true);
+
+                            //Request GUI Update
+                            _uiFlagActivityList = true;
+
+                            //Save to DB
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_VaalArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_VaalArea.Type), activity.SideArea_VaalArea.Area, activity.SideArea_VaalArea.AreaLevel, iSecondsVaal, activity.SideArea_VaalArea.DeathCounter, activity.SideArea_VaalArea.TrialMasterCount, true, activity.SideArea_VaalArea
+                                .Tags, activity.SideArea_VaalArea.Success, Convert.ToInt32(activity.SideArea_VaalArea.PausedTime));
+                        }
+                    }
+
+                    if (activity.SideArea_LogbookSide != null)
+                    {
+                        TimeSpan tsLBSide = TimeSpan.FromSeconds(iSecondsLogbookSide);
+                        activity.SideArea_LogbookSide.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                               tsLBSide.Hours, tsLBSide.Minutes, tsLBSide.Seconds);
+                        _eventHistory.Insert(0, _currentActivity.SideArea_LogbookSide);
+
+                        if (!_parsedActivities.Contains(activity.SideArea_LogbookSide.UniqueID))
+                        {
+                            AddMapLvItem(activity.SideArea_LogbookSide, true);
+
+                            //Request GUI Update
+                            _uiFlagActivityList = true;
+
+                            //Save to DB
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LogbookSide.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LogbookSide.Type), activity.SideArea_LogbookSide.Area, activity.SideArea_LogbookSide.AreaLevel, iSecondsVaal, activity.SideArea_LogbookSide.DeathCounter, activity.SideArea_LogbookSide.TrialMasterCount, true, activity.SideArea_LogbookSide
+                                .Tags, activity.SideArea_LogbookSide.Success, Convert.ToInt32(activity.SideArea_LogbookSide.PausedTime));
+                        }
+                    }
+
+                    if (activity.SideArea_AbyssArea != null)
+                    {
+                        TimeSpan tsAbyssMap = TimeSpan.FromSeconds(iSecondsAbyss);
+                        activity.SideArea_AbyssArea.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                               tsAbyssMap.Hours, tsAbyssMap.Minutes, tsAbyssMap.Seconds);
+                        _eventHistory.Insert(0, _currentActivity.SideArea_AbyssArea);
+
+                        if (!_parsedActivities.Contains(activity.SideArea_AbyssArea.UniqueID))
+                        {
+                            AddMapLvItem(activity.SideArea_AbyssArea, true);
+
+                            //Request GUI Update
+                            _uiFlagActivityList = true;
+
+                            //Save to DB
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_AbyssArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_AbyssArea.Type), activity.SideArea_AbyssArea.Area, activity.SideArea_AbyssArea.AreaLevel, iSecondsAbyss, activity.SideArea_AbyssArea.DeathCounter, activity.SideArea_AbyssArea.TrialMasterCount, true, activity.SideArea_AbyssArea
+                                .Tags, activity.SideArea_AbyssArea.Success, Convert.ToInt32(activity.SideArea_AbyssArea.PausedTime));
+                        }
+                    }
+
+                    if (activity.SideArea_LabTrial != null)
+                    {
+                        TimeSpan tsLabTrial2 = TimeSpan.FromSeconds(iSecondsLabTrial);
+                        activity.SideArea_LabTrial.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                               tsLabTrial2.Hours, tsLabTrial2.Minutes, tsLabTrial2.Seconds);
+                        _eventHistory.Insert(0, _currentActivity.SideArea_LabTrial);
+
+                        if (!_parsedActivities.Contains(activity.SideArea_LabTrial.UniqueID))
+                        {
+                            AddMapLvItem(activity.SideArea_LabTrial, true);
+
+                            //Request GUI Update
+                            _uiFlagActivityList = true;
+
+                            //Save to DB
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LabTrial.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LabTrial.Type), activity.SideArea_LabTrial.Area, activity.SideArea_LabTrial.AreaLevel, iSecondsLabTrial, activity.SideArea_LabTrial.DeathCounter, activity.SideArea_LabTrial.TrialMasterCount, true, activity.SideArea_LabTrial
+                                .Tags, activity.SideArea_LabTrial.Success, Convert.ToInt32(activity.SideArea_LabTrial.PausedTime));
+                        }
+                    }
+
+                }
+                else
+                {
+                    _log.Warn(string.Format("Filtered out invalid activity: {0}, Started: {1}, LastEnded: {2}, Type: {3}, Instance: {4}", activity.UniqueID, activity.Started, activity.LastEnded, activity.Type, activity.InstanceEndpoint));
                 }
 
+                if (activity.Type == ACTIVITY_TYPES.HEIST)
+                {
+                    IncrementStat("TotalHeistsDone", activity.Started, 1);
+                    IncrementStat("HeistsFinished_" + activity.Area, activity.Started, 1);
+                }
+                else if (activity.Type == ACTIVITY_TYPES.MAP)
+                {
+                    IncrementStat("TotalMapsDone", activity.Started, 1);
+                    IncrementStat("MapsFinished_" + activity.Area, activity.Started, 1);
+                    IncrementStat("MapTierFinished_T" + activity.MapTier.ToString(), activity.Started, 1);
+
+                    if (activity.SideArea_ZanaMap != null)
+                    {
+                        IncrementStat("TotalMapsDone", activity.SideArea_ZanaMap.Started, 1);
+                        IncrementStat("MapsFinished_" + activity.SideArea_ZanaMap.Area, activity.SideArea_ZanaMap.Started, 1);
+                        IncrementStat("MapTierFinished_T" + activity.SideArea_ZanaMap.MapTier.ToString(), activity.SideArea_ZanaMap.Started, 1);
+                    }
+                }
+                else if (activity.Type == ACTIVITY_TYPES.SIMULACRUM)
+                {
+                    IncrementStat("SimulacrumFinished_" + activity.Area, activity.Started, 1);
+                }
+                else if (activity.Type == ACTIVITY_TYPES.TEMPLE)
+                {
+                    IncrementStat("TemplesDone", activity.Started, 1);
+                }
             }
 
             if (sNextMap != null)
@@ -2883,39 +3361,13 @@ namespace TraXile
                     Started = dtNextMapStarted,
                     TimeStamp = ((DateTimeOffset)dtNextMapStarted).ToUnixTimeSeconds()
                 };
+
                 _nextAreaLevel = 0;
                 _currentActivity.StartStopWatch();
             }
             else
             {
                 _currentActivity = null;
-            }
-
-            if (activity.Type == ACTIVITY_TYPES.HEIST)
-            {
-                IncrementStat("TotalHeistsDone", activity.Started, 1);
-                IncrementStat("HeistsFinished_" + activity.Area, activity.Started, 1);
-            }
-            else if (activity.Type == ACTIVITY_TYPES.MAP)
-            {
-                IncrementStat("TotalMapsDone", activity.Started, 1);
-                IncrementStat("MapsFinished_" + activity.Area, activity.Started, 1);
-                IncrementStat("MapTierFinished_T" + activity.MapTier.ToString(), activity.Started, 1);
-
-                if (activity.ZanaMap != null)
-                {
-                    IncrementStat("TotalMapsDone", activity.ZanaMap.Started, 1);
-                    IncrementStat("MapsFinished_" + activity.ZanaMap.Area, activity.ZanaMap.Started, 1);
-                    IncrementStat("MapTierFinished_T" + activity.ZanaMap.MapTier.ToString(), activity.ZanaMap.Started, 1);
-                }
-            }
-            else if (activity.Type == ACTIVITY_TYPES.SIMULACRUM)
-            {
-                IncrementStat("SimulacrumFinished_" + activity.Area, activity.Started, 1);
-            }
-            else if (activity.Type == ACTIVITY_TYPES.TEMPLE)
-            {
-                IncrementStat("TemplesDone", activity.Started, 1);
             }
 
             if (_eventQueueInitizalized)
@@ -3086,6 +3538,100 @@ namespace TraXile
             _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
         }
 
+        public int GetImageIndex(TrX_TrackedActivity map)
+        {
+            int iIndex = 0;
+            // Calculate Image Index
+            if (map.Type == ACTIVITY_TYPES.MAP)
+            {
+                if (map.MapTier > 0 && map.MapTier <= 5)
+                {
+                    iIndex = 0;
+                }
+                else if (map.MapTier >= 6 && map.MapTier <= 10)
+                {
+                    iIndex = 1;
+                }
+                else if (map.MapTier >= 11)
+                {
+                    iIndex = 2;
+                }
+            }
+            else if (map.Type == ACTIVITY_TYPES.TEMPLE)
+            {
+                iIndex = 3;
+            }
+            else if (map.Type == ACTIVITY_TYPES.HEIST)
+            {
+                iIndex = 4;
+            }
+            else if (map.Type == ACTIVITY_TYPES.ABYSSAL_DEPTHS)
+            {
+                iIndex = 5;
+            }
+            else if (map.Type == ACTIVITY_TYPES.LABYRINTH || map.Type == ACTIVITY_TYPES.LAB_TRIAL)
+            {
+                iIndex = 6;
+            }
+            else if (map.Type == ACTIVITY_TYPES.CAMPAIGN)
+            {
+                iIndex = 7;
+            }
+            else if (map.Type == ACTIVITY_TYPES.LOGBOOK || map.Type == ACTIVITY_TYPES.LOGBOOK_SIDE)
+            {
+                iIndex = 8;
+            }
+            else if (map.Type == ACTIVITY_TYPES.VAAL_SIDEAREA)
+            {
+                iIndex = 9;
+            }
+            else if (map.Type == ACTIVITY_TYPES.CATARINA_FIGHT)
+            {
+                iIndex = 10;
+            }
+            else if (map.Type == ACTIVITY_TYPES.SAFEHOUSE)
+            {
+                iIndex = 11;
+            }
+            else if (map.Type == ACTIVITY_TYPES.DELVE)
+            {
+                iIndex = 12;
+            }
+            else if (map.Type == ACTIVITY_TYPES.MAVEN_INVITATION)
+            {
+                iIndex = 13;
+            }
+            else if (map.Type == ACTIVITY_TYPES.SIRUS_FIGHT)
+            {
+                iIndex = 14;
+            }
+            else if (map.Type == ACTIVITY_TYPES.ATZIRI)
+            {
+                iIndex = 15;
+            }
+            else if (map.Type == ACTIVITY_TYPES.UBER_ATZIRI)
+            {
+                iIndex = 16;
+            }
+            else if (map.Type == ACTIVITY_TYPES.ELDER_FIGHT)
+            {
+                iIndex = 17;
+            }
+            else if (map.Type == ACTIVITY_TYPES.SHAPER_FIGHT)
+            {
+                iIndex = 18;
+            }
+            else if (map.Type == ACTIVITY_TYPES.SIMULACRUM)
+            {
+                iIndex = 19;
+            }
+            else if (map.Type == ACTIVITY_TYPES.MAVEN_FIGHT)
+            {
+                iIndex = 20;
+            }
+            return iIndex;
+        }
+
         /// <summary>
         /// Add listview Item for single activity
         /// </summary>
@@ -3097,7 +3643,7 @@ namespace TraXile
         {
             Invoke((MethodInvoker)delegate
             {
-                ListViewItem lvi = new ListViewItem(map.Started.ToString());
+                ListViewItem lvi = new ListViewItem(" " + map.Started.ToString());
                 string sName = map.Area;
                 string sTier = "";
 
@@ -3121,6 +3667,9 @@ namespace TraXile
                 lvi.SubItems.Add(sTier);
                 lvi.SubItems.Add(map.StopWatchValue.ToString());
                 lvi.SubItems.Add(map.DeathCounter.ToString());
+
+                // Calculate Image Index
+                lvi.ImageIndex = GetImageIndex(map);
 
                 foreach (TrX_ActivityTag t in _tags)
                 {
@@ -3253,7 +3802,7 @@ namespace TraXile
                     labelCurrentAreaLvl.Text = _currentAreaLevel > 0 ? _currentAreaLevel.ToString() : "-";
                     labelLastDeath.Text = _lastDeathTime.Year > 2000 ? _lastDeathTime.ToString() : "-";
 
-                    if (_currentArea.Contains("Hideout"))
+                    if (_currentArea.Contains("Hideout") && !(_currentArea.Contains("Syndicate")))
                     {
                         labelCurrActivity.Text = "In Hideout";
                     }
@@ -3274,7 +3823,7 @@ namespace TraXile
                     {
                         string sTier = "";
 
-
+                        
 
                         if (_currentActivity.Type == ACTIVITY_TYPES.SIMULACRUM)
                         {
@@ -3293,13 +3842,40 @@ namespace TraXile
                             }
                         }
 
-
-                        if (_isMapZana && _currentActivity.ZanaMap != null)
+                        if ((_isMapZana && _currentActivity.SideArea_ZanaMap != null))
                         {
-                            labelStopWatch.Text = _currentActivity.ZanaMap.StopWatchValue.ToString();
-                            labelTrackingArea.Text = _currentActivity.ZanaMap.Area + " (" + sTier + ", Zana)";
-                            labelTrackingDied.Text = _currentActivity.ZanaMap.DeathCounter.ToString();
+                            labelStopWatch.Text = _currentActivity.SideArea_ZanaMap.StopWatchValue.ToString();
+                            labelTrackingArea.Text = _currentActivity.SideArea_ZanaMap.Area + " (" + sTier + ", Zana)";
+                            labelTrackingDied.Text = _currentActivity.SideArea_ZanaMap.DeathCounter.ToString();
                             labelTrackingType.Text = GetStringFromActType(_currentActivity.Type).ToUpper();
+                            pictureBoxStop.Hide();
+                            pictureBox10.Image = imageList2.Images[GetImageIndex(_currentActivity.SideArea_ZanaMap)];
+                        }
+                        else if((_isMapVaalArea && _currentActivity.SideArea_VaalArea != null))
+                        {
+                            labelStopWatch.Text = _currentActivity.SideArea_VaalArea.StopWatchValue.ToString();
+                            labelTrackingArea.Text = _currentActivity.SideArea_VaalArea.Area;
+                            labelTrackingDied.Text = _currentActivity.SideArea_VaalArea.DeathCounter.ToString();
+                            labelTrackingType.Text = GetStringFromActType(_currentActivity.SideArea_VaalArea.Type).ToUpper();
+                            pictureBox10.Image = imageList2.Images[GetImageIndex(_currentActivity.SideArea_VaalArea)];
+                            pictureBoxStop.Hide();
+                        }
+                        else if ((_isMapAbyssArea && _currentActivity.SideArea_AbyssArea != null))
+                        {
+                            labelStopWatch.Text = _currentActivity.SideArea_AbyssArea.StopWatchValue.ToString();
+                            labelTrackingArea.Text = _currentActivity.SideArea_AbyssArea.Area;
+                            labelTrackingDied.Text = _currentActivity.SideArea_AbyssArea.DeathCounter.ToString();
+                            labelTrackingType.Text = GetStringFromActType(_currentActivity.SideArea_AbyssArea.Type).ToUpper();
+                            pictureBox10.Image = imageList2.Images[GetImageIndex(_currentActivity.SideArea_AbyssArea)];
+                            pictureBoxStop.Hide();
+                        }
+                        else if ((_isMapLabTrial && _currentActivity.SideArea_LabTrial != null))
+                        {
+                            labelStopWatch.Text = _currentActivity.SideArea_LabTrial.StopWatchValue.ToString();
+                            labelTrackingArea.Text = _currentActivity.SideArea_LabTrial.Area;
+                            labelTrackingDied.Text = _currentActivity.SideArea_LabTrial.DeathCounter.ToString();
+                            labelTrackingType.Text = GetStringFromActType(_currentActivity.SideArea_LabTrial.Type).ToUpper();
+                            pictureBox10.Image = imageList2.Images[GetImageIndex(_currentActivity.SideArea_LabTrial)];
                             pictureBoxStop.Hide();
                         }
                         else
@@ -3308,6 +3884,7 @@ namespace TraXile
                             labelTrackingArea.Text = _currentActivity.Area + " (" + sTier + ")"; ;
                             labelTrackingType.Text = GetStringFromActType(_currentActivity.Type).ToUpper();
                             labelTrackingDied.Text = _currentActivity.DeathCounter.ToString();
+                            pictureBox10.Image = imageList2.Images[GetImageIndex(_currentActivity)];
                             pictureBoxStop.Show();
                         }
                     }
@@ -3612,6 +4189,13 @@ namespace TraXile
                 { ACTIVITY_TYPES.MAVEN_FIGHT, 0 },
                 { ACTIVITY_TYPES.SIRUS_FIGHT, 0 },
                 { ACTIVITY_TYPES.CAMPAIGN, 0 },
+                { ACTIVITY_TYPES.VAAL_SIDEAREA, 0 },
+                { ACTIVITY_TYPES.ABYSSAL_DEPTHS, 0 },
+                { ACTIVITY_TYPES.LAB_TRIAL, 0 },
+                { ACTIVITY_TYPES.LOGBOOK, 0 },
+                { ACTIVITY_TYPES.LOGBOOK_SIDE, 0 },
+                { ACTIVITY_TYPES.CATARINA_FIGHT, 0 },
+                { ACTIVITY_TYPES.SAFEHOUSE, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -3630,6 +4214,13 @@ namespace TraXile
                 { ACTIVITY_TYPES.MAVEN_FIGHT, 0 },
                 { ACTIVITY_TYPES.SIRUS_FIGHT, 0 },
                 { ACTIVITY_TYPES.CAMPAIGN, 0 },
+                { ACTIVITY_TYPES.VAAL_SIDEAREA, 0 },
+                { ACTIVITY_TYPES.ABYSSAL_DEPTHS, 0 },
+                { ACTIVITY_TYPES.LAB_TRIAL, 0 },
+                { ACTIVITY_TYPES.LOGBOOK, 0 },
+                { ACTIVITY_TYPES.LOGBOOK_SIDE, 0 },
+                { ACTIVITY_TYPES.CATARINA_FIGHT, 0 },
+                { ACTIVITY_TYPES.SAFEHOUSE, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -3648,7 +4239,14 @@ namespace TraXile
                 { ACTIVITY_TYPES.MAVEN_FIGHT, Color.Blue },
                 { ACTIVITY_TYPES.SIRUS_FIGHT, Color.AntiqueWhite },
                 { ACTIVITY_TYPES.OTHER, Color.Gray },
-                { ACTIVITY_TYPES.CAMPAIGN, Color.Turquoise }
+                { ACTIVITY_TYPES.CAMPAIGN, Color.Turquoise },
+                { ACTIVITY_TYPES.VAAL_SIDEAREA, Color.DarkRed },
+                { ACTIVITY_TYPES.ABYSSAL_DEPTHS, Color.LightGreen },
+                { ACTIVITY_TYPES.LAB_TRIAL, Color.DarkTurquoise },
+                { ACTIVITY_TYPES.LOGBOOK, Color.LightBlue },
+                { ACTIVITY_TYPES.LOGBOOK_SIDE, Color.LightBlue },
+                { ACTIVITY_TYPES.CATARINA_FIGHT, Color.Orange },
+                { ACTIVITY_TYPES.SAFEHOUSE, Color.Orange },
             };
 
             double totalCount = 0;
@@ -4681,6 +5279,103 @@ namespace TraXile
             AddUpdateAppSettings("theme", theme);
         }
 
+        private void PauseCurrentActivityOrSide()
+        {
+            if (_currentActivity != null)
+            {
+                if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
+                {
+                    if (!_currentActivity.SideArea_ZanaMap.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_ZanaMap.Pause();
+                    }
+                }
+                else if (_isMapVaalArea && _currentActivity.SideArea_VaalArea != null)
+                {
+                    if (!_currentActivity.SideArea_VaalArea.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_VaalArea.Pause();
+                    }
+                }
+                else if (_isMapAbyssArea && _currentActivity.SideArea_AbyssArea != null)
+                {
+                    if (!_currentActivity.SideArea_AbyssArea.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_AbyssArea.Pause();
+                    }
+                }
+                else if (_isMapLabTrial && _currentActivity.SideArea_LabTrial != null)
+                {
+                    if (!_currentActivity.SideArea_LabTrial.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_LabTrial.Pause();
+                    }
+                }
+                else if (_isMapLogbookSide && _currentActivity.SideArea_LogbookSide != null)
+                {
+                    if (!_currentActivity.SideArea_LogbookSide.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_LogbookSide.Pause();
+                    }
+                }
+                else
+                {
+                    if (!_currentActivity.ManuallyPaused)
+                    {
+                        _currentActivity.Pause();
+                    }
+                }
+            }
+        }
+
+        private void ResumeCurrentActivityOrSide()
+        {
+            if (_currentActivity != null)
+            {
+                if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
+                {
+                    if (_currentActivity.SideArea_ZanaMap.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_ZanaMap.Resume();
+                    }
+                }
+                else if (_isMapVaalArea && _currentActivity.SideArea_VaalArea != null)
+                {
+                    if (_currentActivity.SideArea_VaalArea.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_VaalArea.Resume();
+                    }
+                }
+                else if (_isMapAbyssArea && _currentActivity.SideArea_AbyssArea != null)
+                {
+                    if (_currentActivity.SideArea_AbyssArea.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_AbyssArea.Resume();
+                    }
+                }
+                else if (_isMapLabTrial && _currentActivity.SideArea_LabTrial != null)
+                {
+                    if (_currentActivity.SideArea_LabTrial.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_LabTrial.Resume();
+                    }
+                }
+                else if (_isMapLogbookSide && _currentActivity.SideArea_LogbookSide != null)
+                {
+                    if (_currentActivity.SideArea_LogbookSide.ManuallyPaused)
+                    {
+                        _currentActivity.SideArea_LogbookSide.Resume();
+                    }
+                }
+                else
+                {
+                    if (_currentActivity.ManuallyPaused)
+                    {
+                        _currentActivity.Resume();
+                    }
+                }
+            }
+        }
 
         // =========> EVENT HANDLERS FOR GUI COMPONENTS
         // =======================================================
@@ -4769,44 +5464,14 @@ namespace TraXile
 
         private void pictureBox17_Click(object sender, EventArgs e)
         {
-            if (_currentActivity != null)
-            {
-                if (_isMapZana && _currentActivity.ZanaMap != null)
-                {
-                    if (_currentActivity.ZanaMap.ManuallyPaused)
-                    {
-                        _currentActivity.ZanaMap.Resume();
-                    }
-                }
-                else
-                {
-                    if (_currentActivity.ManuallyPaused)
-                    {
-                        _currentActivity.Resume();
-                    }
-                }
-            }
+            ResumeCurrentActivityOrSide();
         }
+
+       
 
         private void pictureBox18_Click(object sender, EventArgs e)
         {
-            if (_currentActivity != null)
-            {
-                if (_isMapZana && _currentActivity.ZanaMap != null)
-                {
-                    if (!_currentActivity.ZanaMap.ManuallyPaused)
-                    {
-                        _currentActivity.ZanaMap.Pause();
-                    }
-                }
-                else
-                {
-                    if (!_currentActivity.ManuallyPaused)
-                    {
-                        _currentActivity.Pause();
-                    }
-                }
-            }
+            PauseCurrentActivityOrSide();
         }
 
         private void button3_Click(object sender, EventArgs e)

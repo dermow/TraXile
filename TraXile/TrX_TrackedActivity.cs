@@ -7,7 +7,6 @@ namespace TraXile
     public class TrX_TrackedActivity
     {
         private readonly Stopwatch _stopWatch;
-        private TrX_TrackedActivity _zanaMap;
         private readonly List<string> _tagIDs;
         private DateTime _startTime, _lastEndTime, _pauseTimeStart;
         private string _instanceEndpoint;
@@ -30,11 +29,55 @@ namespace TraXile
         private int _totalSeconds;
         private long _activityTimeStamp;
         private string _customStopWatchValue;
+        
+        // Possible side areas
+        private TrX_TrackedActivity _zanaMap;
+        private TrX_TrackedActivity _vaalArea;
+        private TrX_TrackedActivity _abyssArea;
+        private TrX_TrackedActivity _labTrial;
+        private TrX_TrackedActivity _logbbookSide;
 
-        public TrX_TrackedActivity ZanaMap
+        // Debug Info
+        private string _debugStartEventLine;
+        private string _debugEndEventLine;
+
+        public TrX_TrackedActivity()
+        {
+            _stopWatch = new Stopwatch();
+            _zanaMap = null;
+            _vaalArea = null;
+            _logbbookSide = null;
+            _tagIDs = new List<string>();
+        }
+
+        public TrX_TrackedActivity SideArea_ZanaMap
         {
             get { return _zanaMap; }
             set { _zanaMap = value; }
+        }
+
+        public TrX_TrackedActivity SideArea_LogbookSide
+        {
+            get { return _logbbookSide; }
+            set { _logbbookSide = value; }
+        }
+
+        public TrX_TrackedActivity SideArea_VaalArea
+        {
+            get { return _vaalArea; }
+            set { _vaalArea = value; }
+        }
+
+        public TrX_TrackedActivity SideArea_AbyssArea
+        {
+            get { return _abyssArea; }
+            set { _abyssArea = value; }
+        }
+
+        public TrX_TrackedActivity SideArea_LabTrial
+        {
+            get { return _labTrial; }
+            set { _labTrial = value; }
         }
 
         public bool Success
@@ -92,6 +135,18 @@ namespace TraXile
         {
             get { return _areaName.Replace("'", ""); }
             set { _areaName = value; }
+        }
+
+        public string DebugStartEventLine
+        {
+            get { return _debugStartEventLine; }
+            set { _debugStartEventLine = value; }
+        }
+
+        public string DebugEndEventLine
+        {
+            get { return _debugEndEventLine; }
+            set { _debugEndEventLine = value; }
         }
 
         public bool IsFinished
@@ -243,12 +298,7 @@ namespace TraXile
             set { _pausedTime = value; }
         }
 
-        public TrX_TrackedActivity()
-        {
-            _stopWatch = new Stopwatch();
-            _zanaMap = null;
-            _tagIDs = new List<string>();
-        }
+       
 
         public bool HasTag(string s_id)
         {
