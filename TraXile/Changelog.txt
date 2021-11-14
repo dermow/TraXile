@@ -153,3 +153,8 @@
 - New auto tag: vaal-area - Vaal Ara in Map
 - New auto tag: exp-side-area - Side Area in Logbook
 - Added logos for activities
+
+0.8.1
+ - Do not finish activity for campaing if directly after map / lab type of activity. To avoid 
+   finishing maps after char logout / logoin
+ - Supporting maps with highter tier then T16 / max. T19 now.

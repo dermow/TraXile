@@ -1161,7 +1161,7 @@ namespace TraXile
                     _statNamesLong.Add("MapsFinished_" + sName, "Maps done: " + sName);
             }
 
-            for (int i = 0; i <= 16; i++)
+            for (int i = 0; i <= 19; i++)
             {
                 string sShort = "MapTierFinished_T" + i.ToString();
                 string sLong = i > 0 ? ("Maps done: T" + i.ToString()) : "Maps done: Tier unknown";
@@ -2228,11 +2228,28 @@ namespace TraXile
             //Campaign ?
             if (bTargetAreaIsCampaign)
             {
+                // Do not track first camp visit after portal activity
+                // Do not finish when logging in other char
+                bool bFromActivity = bSourceAreaIsMap
+                    || sSourceArea == "Aspirants Trial"
+                    || _defaultMappings.SIMU_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.LOGBOOK_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.TEMPLE_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.ATZIRI_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.CATARINA_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.ELDER_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.MAVEN_FIGHT_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.SAFEHOUSE_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.SHAPER_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.SIRUS_AREAS.Contains(sSourceArea)
+                    || _defaultMappings.UBER_ATZIRI_AREAS.Contains(sSourceArea);
+
                 // Do not track first town visit after login
-                if (!_StartedFlag)
+                if (!_StartedFlag && !bFromActivity)
                 {
                     if (_currentActivity != null)
                     {
+
                         if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
                         {
                             _currentActivity.LastEnded = ev.EventTime;
@@ -4573,7 +4590,7 @@ namespace TraXile
                 countByArea.Add(s, 0);
             }
 
-            for(int i = 0; i <= 16; i++)
+            for(int i = 0; i <= 19; i++)
             {
                 countByTier.Add(i, 0);
             }
@@ -4659,7 +4676,7 @@ namespace TraXile
 
             double[] tierAverages = new double[]
             {
-                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
             };
 
             for (int i = 0; i < 16; i++)
@@ -4694,7 +4711,7 @@ namespace TraXile
             MethodInvoker mi = delegate
             {
                 chartMapTierCount.Series[0].Points.Clear();
-                for (int i = 1; i <= 16; i++)
+                for (int i = 1; i <= 19; i++)
                 {
                     chartMapTierCount.Series[0].Points.AddXY(i, countByTier[i]);
                 }
