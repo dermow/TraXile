@@ -217,6 +217,14 @@ namespace TraXile
                         return 15;
                     case 83:
                         return 16;
+                    case 84:
+                        return 17;
+                    case 85:
+                        return 18;
+                    case 86:
+                        return 19;
+                    case 87:
+                        return 20;
                     default:
                         return 0;
                 }
