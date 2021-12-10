@@ -68,7 +68,8 @@ namespace TraXile
         HEIST_KARST_SPEAK,
         ABNORMAL_DISCONNECT,
         CAMPAIGN_FINISHED,
-        NEXT_CEMETERY_IS_LOGBOOK
+        NEXT_CEMETERY_IS_LOGBOOK,
+        PLAYER_SUICIDE
     }
 
     public class TrX_EventMapping
@@ -99,6 +100,7 @@ namespace TraXile
                 { "has left the area", EVENT_TYPES.PARTYMEMBER_LEFT_AREA },
                 { "Player died", EVENT_TYPES.DEATH_REASON_RECEIVED },
                 { "has been slain", EVENT_TYPES.PLAYER_DIED },
+                { "has committed suicide", EVENT_TYPES.PLAYER_SUICIDE },
                 { "Zana, Master Cartographer: So that was the Elder... what terrible", EVENT_TYPES.ELDER_KILLED },
                 { "The Shaper: I see you, little mouse... you don't belong here. Run along!", EVENT_TYPES.SHAPER_FIGHT_STARTED },
                 { "The Shaper: Irrelevant!", EVENT_TYPES.SHAPER_KILLED },

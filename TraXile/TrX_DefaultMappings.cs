@@ -26,7 +26,9 @@ namespace TraXile
             LOGBOOK_SIDE_AREAS,
             LAB_TRIAL_AREAS,
             CATARINA_AREAS,
-            SAFEHOUSE_AREAS;
+            SAFEHOUSE_AREAS,
+            BREACHSTONE_AREAS;
+
 
         public Dictionary<string, string> WIKI_LINKS;
         public List<ACTIVITY_TYPES> PAUSABLE_ACTIVITY_TYPES;
@@ -36,6 +38,15 @@ namespace TraXile
             WIKI_LINKS = new Dictionary<string, string>
             {
                 {  "Elder", "https://pathofexile.fandom.com/wiki/The_Elder" },
+            };
+
+            BREACHSTONE_AREAS = new List<string>
+            {
+                "Xophs Domain",
+                "Tuls Domain",
+                "Eshs Domain",
+                "Uul-Netols Domain",
+                "Chayulas Domain"
             };
 
             MAP_AREAS = new List<string>
@@ -624,6 +635,7 @@ namespace TraXile
             DEATH_COUNT_ENABLED_AREAS.AddRange(ABYSS_AREAS);
             DEATH_COUNT_ENABLED_AREAS.AddRange(CATARINA_AREAS);
             DEATH_COUNT_ENABLED_AREAS.AddRange(SAFEHOUSE_AREAS);
+            DEATH_COUNT_ENABLED_AREAS.AddRange(BREACHSTONE_AREAS);
         }
     }
 }
