@@ -42,6 +42,7 @@ namespace TraXile
         SAFEHOUSE,
         CATARINA_FIGHT,
         LOGBOOK_SIDE,
+        BREACHSTONE
     }
 
     public partial class Main : Form
@@ -1069,6 +1070,7 @@ namespace TraXile
                 { "SimulacrumStarted", 0 },
                 { "SirusStarted", 0 },
                 { "SirusKilled", 0 },
+                { "Suicides", 0 },
                 { "TemplesDone", 0 },
                 { "TrialMasterStarted", 0 },
                 { "TrialMasterKilled", 0 },
@@ -1122,6 +1124,7 @@ namespace TraXile
                 { "ExpeditionEncounters_Dannig", "Expedition encounters: Dannig" },
                 { "HideoutTimeSec", "Hideout time" },
                 { "CampaignFinished", "Campaign finished" },
+                { "Suicides", "Suicides" }
             };
 
             labs = new List<string>
@@ -1412,6 +1415,8 @@ namespace TraXile
                     return ACTIVITY_TYPES.CATARINA_FIGHT;
                 case "safehouse":
                     return ACTIVITY_TYPES.SAFEHOUSE;
+                case "breachstone":
+                    return ACTIVITY_TYPES.BREACHSTONE;
             }
             return ACTIVITY_TYPES.MAP;
         }
@@ -1800,6 +1805,7 @@ namespace TraXile
             bool bTargetAreaIsLogBookSide = _defaultMappings.LOGBOOK_SIDE_AREAS.Contains(sTargetArea);
             bool bTargetAreaIsCata = _defaultMappings.CATARINA_AREAS.Contains(sTargetArea);
             bool bTargetAreaIsSafehouse = _defaultMappings.SAFEHOUSE_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsBreachStone = _defaultMappings.BREACHSTONE_AREAS.Contains(sTargetArea);
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
             _inAreaSince = ev.EventTime;
@@ -1967,6 +1973,10 @@ namespace TraXile
             else if (bTargetAreaIsSafehouse)
             {
                 actType = ACTIVITY_TYPES.SAFEHOUSE;
+            }
+            else if(bTargetAreaIsBreachStone)
+            {
+                actType = ACTIVITY_TYPES.BREACHSTONE;
             }
                        
             // Special handling for logbook cemetery + vaal temple
@@ -2290,7 +2300,7 @@ namespace TraXile
             }
 
             // PAUSE RESUME Handling
-            if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsCampaign)
+            if (bTargetAreaIsMap || bTargetAreaIsHeist || bTargetAreaIsSimu || bTargetAreaIsCampaign || bTargetAreaIsBreachStone)
             {
                 if (_currentActivity != null)
                 {
@@ -2322,7 +2332,8 @@ namespace TraXile
                 bTargetAreaIsSirusFight ||
                 bTargetAreaIsLogbook ||
                 bTargetAreaIsSafehouse ||
-                bTargetAreaIsCata;
+                bTargetAreaIsCata ||
+                bTargetAreaIsBreachStone;
 
             // Check if opened activity needs to be opened on Mapdevice
             bool isMapDeviceActivity =
@@ -2337,7 +2348,8 @@ namespace TraXile
                 bTargetAreaTemple ||
                 bTargetAreaIsMI ||
                 bTargetAreaIsMavenFight ||
-                bTargetAreaIsLogbook;
+                bTargetAreaIsLogbook ||
+                bTargetAreaIsBreachStone;
 
             if(isMapDeviceActivity)
             {
@@ -2358,7 +2370,7 @@ namespace TraXile
                 {
                     _currentActivity = new TrX_TrackedActivity
                     {
-                        Area = sTargetArea,
+                        Area = bTargetAreaIsBreachStone ? GetBreachStoneName(sTargetArea, _nextAreaLevel) : sTargetArea,
                         Type = actType,
                         AreaLevel = _nextAreaLevel,
                         Started = ev.EventTime,
@@ -2433,10 +2445,17 @@ namespace TraXile
             }
             else // ENTERING AN AREA WHICH IS NOT AN DEFAULT ACTIVITY
             {
+                // Set endtime when logouts
                 if (_currentActivity != null && _currentActivity.Type != ACTIVITY_TYPES.LABYRINTH && _currentActivity.Type != ACTIVITY_TYPES.CAMPAIGN)
                 {
+                    if(_currentActivity.Type == ACTIVITY_TYPES.BREACHSTONE && _defaultMappings.BREACHSTONE_AREAS.Contains(sSourceArea))
+                    {
+                        _currentActivity.StopStopWatch();
+                        _currentActivity.LastEnded = ev.EventTime;
+                    }
+
                     //TEST: Pause when left the source area
-                    if (sSourceArea == _currentActivity.Area)
+                    if (sSourceArea == _currentActivity.Area || _defaultMappings.CAMP_AREAS.Contains(sTargetArea))
                     {
                         _currentActivity.StopStopWatch();
                         _currentActivity.LastEnded = ev.EventTime;
@@ -2654,6 +2673,10 @@ namespace TraXile
                         HandleAreaChangeEvent(ev);
                         break;
                     case EVENT_TYPES.PLAYER_DIED:
+                        HandlePlayerDiedEvent(ev);
+                        break;
+                    case EVENT_TYPES.PLAYER_SUICIDE:
+                        IncrementStat("Suicides", ev.EventTime, 1);
                         HandlePlayerDiedEvent(ev);
                         break;
                     case EVENT_TYPES.ELDER_KILLED:
@@ -3369,9 +3392,11 @@ namespace TraXile
 
             if (sNextMap != null)
             {
-                _currentActivity = new TrX_TrackedActivity
+               _currentActivity = new TrX_TrackedActivity
                 {
-                    Area = sNextMap,
+                    Area = sNextMapType == ACTIVITY_TYPES.BREACHSTONE ? GetBreachStoneName(sNextMap, _nextAreaLevel) : sNextMap,
+                    //Area = "Breachstone",
+                    //Area = sNextMap,
                     Type = sNextMapType,
                     AreaLevel = _nextAreaLevel,
                     InstanceEndpoint = _currentInstanceEndpoint,
@@ -3555,6 +3580,155 @@ namespace TraXile
             _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
         }
 
+        private string GetBreachStoneName(string s_ara, int i_area_level)
+        {
+            string breachLoard = "";
+            string breachStoneQuality = "";
+
+            switch (s_ara)
+            {
+                case "Chayulas Domain":
+                    breachLoard = "Chayulas";
+                    switch (i_area_level)
+                    {
+                        // Normal
+                        case 80:
+                            breachStoneQuality = "";
+                            break;
+                        // Charged
+                        case 81:
+                            breachStoneQuality = "Charged";
+                            break;
+                        // Enriched
+                        case 82:
+                            breachStoneQuality = "Enriched";
+                            break;
+                        // Pure
+                        case 83:
+                            breachStoneQuality = "Pure";
+                            break;
+                        // Flawless
+                        case 84:
+                            breachStoneQuality = "Flawless";
+                            break;
+                    }
+                    break;
+                case "Eshs Domain":
+                    breachLoard = "Eshs";
+                    switch (i_area_level)
+                    {
+                        // Normal
+                        case 70:
+                            breachStoneQuality = "";
+                            break;
+                        // Charged
+                        case 74:
+                            breachStoneQuality = "Charged";
+                            break;
+                        // Enriched
+                        case 79:
+                            breachStoneQuality = "Enriched";
+                            break;
+                        // Pure
+                        case 81:
+                            breachStoneQuality = "Pure";
+                            break;
+                        // Flawless
+                        case 84:
+                            breachStoneQuality = "Flawless";
+                            break;
+                    }
+                    break;
+                case "Xophs Domain":
+                    breachLoard = "Xophs";
+                    switch (i_area_level)
+                    {
+                        // Normal
+                        case 70:
+                            breachStoneQuality = "";
+                            break;
+                        // Charged
+                        case 74:
+                            breachStoneQuality = "Charged";
+                            break;
+                        // Enriched
+                        case 79:
+                            breachStoneQuality = "Enriched";
+                            break;
+                        // Pure
+                        case 81:
+                            breachStoneQuality = "Pure";
+                            break;
+                        // Flawless
+                        case 84:
+                            breachStoneQuality = "Flawless";
+                            break;
+                    }
+                    break;
+                case "Uul-Netols Domain":
+                    breachLoard = "Uul-Netols";
+                    switch (i_area_level)
+                    {
+                        // Normal
+                        case 75:
+                            breachStoneQuality = "";
+                            break;
+                        // Charged
+                        case 78:
+                            breachStoneQuality = "Charged";
+                            break;
+                        // Enriched
+                        case 81:
+                            breachStoneQuality = "Enriched";
+                            break;
+                        // Pure
+                        case 82:
+                            breachStoneQuality = "Pure";
+                            break;
+                        // Flawless
+                        case 84:
+                            breachStoneQuality = "Flawless";
+                            break;
+                    }
+                    break;
+                case "Tuls Domain":
+                    breachLoard = "Tuls";
+                    switch (i_area_level)
+                    {
+                        // Normal
+                        case 70:
+                            breachStoneQuality = "";
+                            break;
+                        // Charged
+                        case 74:
+                            breachStoneQuality = "Charged";
+                            break;
+                        // Enriched
+                        case 79:
+                            breachStoneQuality = "Enriched";
+                            break;
+                        // Pure
+                        case 81:
+                            breachStoneQuality = "Pure";
+                            break;
+                        // Flawless
+                        case 84:
+                            breachStoneQuality = "Flawless";
+                            break;
+                    }
+                    break;
+            }
+            
+            if(string.IsNullOrEmpty(breachStoneQuality))
+            {
+                return string.Format("{0} {1}", breachLoard, "Breachstone");
+            }
+            else
+            {
+                return string.Format("{0} {1} {2}", breachLoard, breachStoneQuality, "Breachstone");
+            }
+        }
+
         public int GetImageIndex(TrX_TrackedActivity map)
         {
             int iIndex = 0;
@@ -3645,6 +3819,140 @@ namespace TraXile
             else if (map.Type == ACTIVITY_TYPES.MAVEN_FIGHT)
             {
                 iIndex = 20;
+            }
+            else if(map.Type == ACTIVITY_TYPES.BREACHSTONE)
+            {
+                if(map.Area.Contains("Chayula"))
+                {
+                    switch (map.AreaLevel)
+                    {
+                        // Normal
+                        case 80:
+                            iIndex = 21;
+                            break;
+                        // Charged
+                        case 81:
+                            iIndex = 41;
+                            break;
+                        // Enriched
+                        case 82:
+                            iIndex = 40;
+                            break;
+                        // Pure
+                        case 83:
+                            iIndex = 39;
+                            break;
+                        // Flawless
+                        case 84:
+                            iIndex = 38;
+                            break;
+                    }
+                }
+                else if(map.Area.Contains("Esh"))
+                {
+                    switch (map.AreaLevel)
+                    {
+                        // Normal
+                        case 70:
+                            iIndex = 22;
+                            break;
+                        // Charged
+                        case 74:
+                            iIndex = 45;
+                            break;
+                        // Enriched
+                        case 79:
+                            iIndex = 44;
+                            break;
+                        // Pure
+                        case 81:
+                            iIndex = 43;
+                            break;
+                        // Flawless
+                        case 84:
+                            iIndex = 42;
+                            break;
+                    }
+                }
+                else if(map.Area.Contains("Xoph"))
+                {
+                    switch (map.AreaLevel)
+                    {
+                        // Normal
+                        case 70:
+                            iIndex = 23;
+                            break;
+                        // Charged
+                        case 74:
+                            iIndex = 37;
+                            break;
+                        // Enriched
+                        case 79:
+                            iIndex = 36;
+                            break;
+                        // Pure
+                        case 81:
+                            iIndex = 35;
+                            break;
+                        // Flawless
+                        case 84:
+                            iIndex =
+                                34;
+                            break;
+                    }
+                }
+                else if(map.Area.Contains("Uul-Netol"))
+                {
+                    switch (map.AreaLevel)
+                    {
+                        // Normal
+                        case 75:
+                            iIndex = 24;
+                            break;
+                        // Charged
+                        case 78:
+                            iIndex = 33;
+                            break;
+                        // Enriched
+                        case 81:
+                            iIndex = 32;
+                            break;
+                        // Pure
+                        case 82:
+                            iIndex = 31;
+                            break;
+                        // Flawless
+                        case 84:
+                            iIndex = 30;
+                            break;
+                    }
+                }
+                else if(map.Area.Contains("Tul"))
+                {
+                    switch (map.AreaLevel)
+                    {
+                        // Normal
+                        case 70:
+                            iIndex = 25;
+                            break;
+                        // Charged
+                        case 74:
+                            iIndex = 29;
+                            break;
+                        // Enriched
+                        case 79:
+                            iIndex = 28;
+                            break;
+                        // Pure
+                        case 81:
+                            iIndex = 27;
+                            break;
+                        // Flawless
+                        case 84:
+                            iIndex = 26;
+                            break;
+                    }
+                }
             }
             return iIndex;
         }
@@ -4213,6 +4521,7 @@ namespace TraXile
                 { ACTIVITY_TYPES.LOGBOOK_SIDE, 0 },
                 { ACTIVITY_TYPES.CATARINA_FIGHT, 0 },
                 { ACTIVITY_TYPES.SAFEHOUSE, 0 },
+                { ACTIVITY_TYPES.BREACHSTONE, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -4238,6 +4547,7 @@ namespace TraXile
                 { ACTIVITY_TYPES.LOGBOOK_SIDE, 0 },
                 { ACTIVITY_TYPES.CATARINA_FIGHT, 0 },
                 { ACTIVITY_TYPES.SAFEHOUSE, 0 },
+                { ACTIVITY_TYPES.BREACHSTONE, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -4263,7 +4573,7 @@ namespace TraXile
                 { ACTIVITY_TYPES.LOGBOOK, Color.LightBlue },
                 { ACTIVITY_TYPES.LOGBOOK_SIDE, Color.LightBlue },
                 { ACTIVITY_TYPES.CATARINA_FIGHT, Color.Orange },
-                { ACTIVITY_TYPES.SAFEHOUSE, Color.Orange },
+                { ACTIVITY_TYPES.BREACHSTONE, Color.PaleVioletRed },
             };
 
             double totalCount = 0;

@@ -11,6 +11,7 @@ namespace TraXile
         private DateTime _startTime, _lastEndTime, _pauseTimeStart;
         private string _instanceEndpoint;
         private string _areaName;
+        private string _origAreaName;
         private ACTIVITY_TYPES _activityType;
         private bool _isZana;
         private int _pauseCount;
@@ -135,6 +136,12 @@ namespace TraXile
         {
             get { return _areaName.Replace("'", ""); }
             set { _areaName = value; }
+        }
+
+        public string AreaOrig
+        {
+            get { return _origAreaName.Replace("'", ""); }
+            set { _origAreaName = value; }
         }
 
         public string DebugStartEventLine
