@@ -31,7 +31,7 @@ namespace TraXile
             labelStopWatch.Text = ta.StopWatchValue;
             labelDeaths.Text = ta.DeathCounter.ToString();
             Text = ta.Type + " Details: " + ta.Area;
-            label9.Text = ta.Type.ToString();
+            label9.Text = ta.Type == ACTIVITY_TYPES.BREACHSTONE ? main.GetBreachStoneName(ta.Area, ta.AreaLevel) : ta.Type.ToString();
             label13.Text = ta.Area.ToString();
 
             if(!main.IS_IN_DEBUG_MODE)

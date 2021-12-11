@@ -2370,7 +2370,7 @@ namespace TraXile
                 {
                     _currentActivity = new TrX_TrackedActivity
                     {
-                        Area = bTargetAreaIsBreachStone ? GetBreachStoneName(sTargetArea, _nextAreaLevel) : sTargetArea,
+                        Area = sTargetArea,
                         Type = actType,
                         AreaLevel = _nextAreaLevel,
                         Started = ev.EventTime,
@@ -3394,9 +3394,7 @@ namespace TraXile
             {
                _currentActivity = new TrX_TrackedActivity
                 {
-                    Area = sNextMapType == ACTIVITY_TYPES.BREACHSTONE ? GetBreachStoneName(sNextMap, _nextAreaLevel) : sNextMap,
-                    //Area = "Breachstone",
-                    //Area = sNextMap,
+                    Area = sNextMap,
                     Type = sNextMapType,
                     AreaLevel = _nextAreaLevel,
                     InstanceEndpoint = _currentInstanceEndpoint,
@@ -3580,7 +3578,7 @@ namespace TraXile
             _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
         }
 
-        private string GetBreachStoneName(string s_ara, int i_area_level)
+        public string GetBreachStoneName(string s_ara, int i_area_level)
         {
             string breachLoard = "";
             string breachStoneQuality = "";
@@ -4167,7 +4165,15 @@ namespace TraXile
                             }
                         }
 
-                        if ((_isMapZana && _currentActivity.SideArea_ZanaMap != null))
+                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.BREACHSTONE)
+                        {
+                            labelStopWatch.Text = _currentActivity.StopWatchValue.ToString();
+                            labelTrackingArea.Text = GetBreachStoneName(_currentActivity.Area, _currentActivity.AreaLevel);
+                            labelTrackingDied.Text = _currentActivity.DeathCounter.ToString();
+                            labelTrackingType.Text = GetStringFromActType(_currentActivity.Type).ToUpper();
+                            pictureBox10.Image = imageList2.Images[GetImageIndex(_currentActivity)];
+                        }
+                        else if ((_isMapZana && _currentActivity.SideArea_ZanaMap != null))
                         {
                             labelStopWatch.Text = _currentActivity.SideArea_ZanaMap.StopWatchValue.ToString();
                             labelTrackingArea.Text = _currentActivity.SideArea_ZanaMap.Area + " (" + sTier + ", Zana)";
