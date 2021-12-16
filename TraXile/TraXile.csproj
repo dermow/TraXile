@@ -209,6 +209,7 @@
       <DependentUpon>FilterScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="TrX_LeagueInfo.cs" />
     <Compile Include="TrX_ListViewManager.cs" />
     <Compile Include="LoadScreen.cs">
       <SubType>Form</SubType>
@@ -234,6 +235,7 @@
       <DependentUpon>SearchHelp.cs</DependentUpon>
     </Compile>
     <Compile Include="TrX_ActivityTag.cs" />
+    <Compile Include="TrX_StatsManager.cs" />
     <Compile Include="TrX_TrackingEvent.cs" />
     <Compile Include="TrX_TrackedActivity.cs" />
     <Compile Include="TrX_SettingsManager.cs" />
