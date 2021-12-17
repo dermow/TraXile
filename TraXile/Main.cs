@@ -4262,6 +4262,7 @@ namespace TraXile
             if (_eventQueueInitizalized)
             {
                 stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
+                stopwatchToolStripMenuItem1.Checked = _stopwatchOverlay.Visible;
                 _loadScreenWindow.Close();
                 Invoke((MethodInvoker)delegate
                 {
