@@ -178,6 +178,12 @@
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="APPINFO.cs" />
+    <Compile Include="StopWatchOverlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StopWatchOverlay.Designer.cs">
+      <DependentUpon>StopWatchOverlay.cs</DependentUpon>
+    </Compile>
     <Compile Include="TrX_DBManager.cs" />
     <Compile Include="TrX_DefaultMappings.cs" />
     <Compile Include="ChatCommandHelp.cs">
@@ -277,6 +283,9 @@
     </Compile>
     <EmbeddedResource Include="SearchHelp.resx">
       <DependentUpon>SearchHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StopWatchOverlay.resx">
+      <DependentUpon>StopWatchOverlay.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

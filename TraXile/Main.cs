@@ -71,6 +71,7 @@ namespace TraXile
         private int _actLogItemCount = 0;
         private string _allStatsSelected;
         private long _oldestTimeStamp = 0;
+        private bool _autoStartsDOne = false;
 
         // GUI Update Flags
         private bool _uiFlagMapDashboard;
@@ -111,7 +112,9 @@ namespace TraXile
         private TrX_StatsManager _myStats;
         private List<TrX_TrackedActivity> _statsDataSource;
         private ConcurrentQueue<TrX_TrackingEvent> _eventQueue;
-        private TrX_TrackedActivity _currentActivity;
+        public TrX_TrackedActivity _currentActivity;
+        private TrX_TrackedActivity _prevActivity;
+        private TrX_TrackedActivity _prevActivityOverlay;
         private EVENT_TYPES _lastEventTypeConq;
         private Thread _logParseThread;
         private Thread _eventThread;
@@ -130,6 +133,7 @@ namespace TraXile
 
         // Other variables
         private LoadScreen _loadScreenWindow;
+        private StopWatchOverlay _stopwatchOverlay;
         private BindingList<string> _backups;
         private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
         private List<string> _parsedActivities;
@@ -139,6 +143,8 @@ namespace TraXile
         private List<TrX_LeagueInfo> _leagues;
         private ILog _log;
         private bool _showHideoutInPie;
+        private int _stopwatchOverlayOpacity;
+        private bool _stopwatchOverlayShowDefault;
         private bool _uiFlagBossDashboard;
 
         /// <summary>
@@ -452,8 +458,8 @@ namespace TraXile
             _defaultMappings = new TrX_DefaultMappings();
             _parsedActivities = new List<string>();
             _leagues = new List<TrX_LeagueInfo>();
-
-
+            _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
+            
             SaveVersion();
             CheckForUpdate();
             _UpdateCheckDone = true;
@@ -1922,6 +1928,7 @@ namespace TraXile
                         MethodInvoker mi = delegate
                         {
                             FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, DateTime.Now);
+                            _prevActivityOverlay = _currentActivity;
                         };
                         Invoke(mi);
                     }
@@ -2044,6 +2051,9 @@ namespace TraXile
                         TimeStamp = lTS,
                         InstanceEndpoint = _currentInstanceEndpoint
                     };
+
+                    _prevActivityOverlay = GetLastActivityByType(ACTIVITY_TYPES.SIMULACRUM);
+
                     _nextAreaLevel = 0;
                 }
             }
@@ -2189,6 +2199,8 @@ namespace TraXile
                     TimeStamp = lTS,
                     InstanceEndpoint = _currentInstanceEndpoint
                 };
+
+                _prevActivityOverlay = GetLastActivityByType(actType);
 
                 IncrementStat("LabsStarted", ev.EventTime, 1);
 
@@ -2375,6 +2387,8 @@ namespace TraXile
                     TimeStamp = lTS,
                     InstanceEndpoint = _currentInstanceEndpoint
                 };
+
+                _prevActivityOverlay = GetLastActivityByType(actType);
             }
 
             // Update Delve level
@@ -2439,6 +2453,8 @@ namespace TraXile
                             InstanceEndpoint = _currentInstanceEndpoint
                         };
                         _currentActivity.StartStopWatch();
+
+                        _prevActivityOverlay = GetLastActivityByType(actType);
                     }
                 }
                 else
@@ -2538,6 +2554,8 @@ namespace TraXile
                         DebugStartEventLine = ev.LogLine
                     };
                     _nextAreaLevel = 0;
+
+                    _prevActivityOverlay = GetLastActivityByType(actType);
                 }
                 else
                 {
@@ -3271,6 +3289,22 @@ namespace TraXile
             return ev.LogLine.Split(new String[] { "Connecting to instance server at " }, StringSplitOptions.None)[1];
         }
 
+        private TrX_TrackedActivity GetLastActivityByType(ACTIVITY_TYPES type)
+        {
+            List<TrX_TrackedActivity> list = new List<TrX_TrackedActivity>();
+
+            foreach(TrX_TrackedActivity act in _eventHistory)
+            {
+                if (act.Type == type)
+                    list.Add(act);
+            }
+
+            if (list.Count > 0)
+                return list[0];
+
+            return null;
+        }
+
         /// <summary>
         /// Finishs the current activity.
         /// </summary>
@@ -3390,6 +3424,8 @@ namespace TraXile
                 if(isValid)
                 {
                     _currentActivity.TotalSeconds = iSeconds;
+                    _prevActivity = _currentActivity;
+
                     if (!_eventHistory.Contains(_currentActivity))
                     {
                         _eventHistory.Insert(0, _currentActivity);
@@ -3547,6 +3583,8 @@ namespace TraXile
 
             if (sNextMap != null)
             {
+                _prevActivityOverlay = GetLastActivityByType(sNextMapType);
+
                _currentActivity = new TrX_TrackedActivity
                 {
                     Area = sNextMap,
@@ -4221,9 +4259,9 @@ namespace TraXile
             ReadBackupList();
             listBoxRestoreBackup.DataSource = _backups;
 
-
             if (_eventQueueInitizalized)
             {
+                stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
                 _loadScreenWindow.Close();
                 Invoke((MethodInvoker)delegate
                 {
@@ -4244,6 +4282,17 @@ namespace TraXile
                                 Environment.NewLine);
 
                         }
+                    }
+
+                    if(!_autoStartsDOne)
+                    {
+                        if(_stopwatchOverlayShowDefault)
+                        {
+                            ActivateStopWatchOverlay();
+
+                        }
+
+                        _autoStartsDOne = true;
                     }
 
                     RenderTagsForTracking();
@@ -4355,6 +4404,8 @@ namespace TraXile
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_currentActivity)];
                             pictureBoxStop.Show();
                         }
+
+                       
                     }
                     else
                     {
@@ -4433,6 +4484,11 @@ namespace TraXile
 
                 });
             }
+
+            _stopwatchOverlay.UpdateStopWatch(labelStopWatch.Text,
+                           _prevActivityOverlay != null ? _prevActivityOverlay.StopWatchValue : "00:00:00",
+                           _currentActivity != null ? GetImageIndex(_currentActivity) : 0,
+                           _prevActivityOverlay != null ? GetImageIndex(_prevActivityOverlay) : 0);
         }
 
         /// <summary>
@@ -4447,12 +4503,17 @@ namespace TraXile
             _timeCapHeist = Convert.ToInt32(ReadSetting("TimeCapHeist", "3600"));
             _labDashboardHideUnknown = Convert.ToBoolean(ReadSetting("dashboard_lab_hide_unknown", "false"));
             _showHideoutInPie = Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true"));
+            _stopwatchOverlayOpacity = Convert.ToInt32(ReadSetting("overlay.stopwatch.opacity", "100"));
+            _stopwatchOverlayShowDefault = Convert.ToBoolean(ReadSetting("overlay.stopwatch.default", "false"));
 
             comboBoxTheme.SelectedItem = ReadSetting("theme", "Dark") == "Dark" ? "Dark" : "Light";
             textBoxMapCap.Text = _timeCapMap.ToString();
             textBoxLabCap.Text = _timeCapLab.ToString();
             textBoxHeistCap.Text = _timeCapHeist.ToString();
             listViewActLog.GridLines = _showGridInActLog;
+            trackBar1.Value = _stopwatchOverlayOpacity;
+            checkBox2.Checked = _stopwatchOverlayShowDefault;
+            label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
         }
 
         /// <summary>
@@ -5826,7 +5887,7 @@ namespace TraXile
             AddUpdateAppSettings("theme", theme);
         }
 
-        private void PauseCurrentActivityOrSide()
+        public void PauseCurrentActivityOrSide()
         {
             if (_currentActivity != null)
             {
@@ -5875,7 +5936,7 @@ namespace TraXile
             }
         }
 
-        private void ResumeCurrentActivityOrSide()
+        public void ResumeCurrentActivityOrSide()
         {
             if (_currentActivity != null)
             {
@@ -6488,15 +6549,61 @@ namespace TraXile
             RenderLabDashboard();
         }
 
+        private void ActivateStopWatchOverlay()
+        {
+            _stopwatchOverlay.Show();
+            _stopwatchOverlay.TopMost = true;
+            _stopwatchOverlay.Opacity = _stopwatchOverlayOpacity / 100.0;
+            _stopwatchOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatch.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatch.y", "0"))));
+        }
+
         private void stopwatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if(_stopwatchOverlay.Visible)
+            {
+                _stopwatchOverlay.Hide();
+            }
+            else
+            {
+                ActivateStopWatchOverlay();
+            }
 
+            stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            _stopwatchOverlay.Opacity = trackBar1.Value > 0 ? (trackBar1.Value / 100.0) : 0;
+            AddUpdateAppSettings("overlay.stopwatch.opacity", trackBar1.Value.ToString());
+            _stopwatchOverlayOpacity = trackBar1.Value;
+            label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
+        }
+
+        private void checkBox2_CheckedChanged_1(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("overlay.stopwatch.default", checkBox2.Checked.ToString());
+            _stopwatchOverlayShowDefault = checkBox2.Checked;
+        }
+
+        private void stopwatchToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (_stopwatchOverlay.Visible)
+            {
+                _stopwatchOverlay.Hide();
+            }
+            else
+            {
+                ActivateStopWatchOverlay();
+            }
+
+            stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
         {
             if (_currentActivity != null)
             {
+                _prevActivityOverlay = _currentActivity;
                 FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
             }
 
@@ -6506,6 +6613,7 @@ namespace TraXile
         {
             if (_currentActivity != null)
             {
+                _prevActivityOverlay = _currentActivity;
                 FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
             }
         }
