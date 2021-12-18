@@ -3,6 +3,10 @@ This tool tracks your Path of Exile activities like Mapping, Labruns, Heists, De
 
 For Installation and Update instructions, just check the Wiki here: 
 
+## Support me
+If you are enjoying the tool, please consider supporting me on Patreon:
+[https://www.patreon.com/dermow](https://www.patreon.com/dermow)
+
 [https://github.com/dermow/TraXile/wiki](https://github.com/dermow/TraXile/wiki)
 
 ## Prerequisites
