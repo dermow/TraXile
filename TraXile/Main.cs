@@ -81,7 +81,6 @@ namespace TraXile
         private bool _uiFlagActivityList;
         private bool _uiFlagAllStatsDashboard;
 
-
         // Core Logic variables
         private string _currentArea;
         private string _currentInstanceEndpoint;
