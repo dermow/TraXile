@@ -5,10 +5,14 @@ For Installation and Update instructions, just check the Wiki here:
 
 [https://github.com/dermow/TraXile/wiki](https://github.com/dermow/TraXile/wiki)
 
-## Support me
-If you are enjoying the tool, please consider supporting me on Patreon:
+## Support
+If you are enjoying the tool, please consider supporting me:
 
+### Patreon
 [https://www.patreon.com/dermow](https://www.patreon.com/dermow)
+
+### Paypal
+[https://paypal.me/dermow](https://paypal.me/dermow)
 
 
 ## Prerequisites
