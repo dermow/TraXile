@@ -118,8 +118,8 @@ namespace TraXile
         public double GetIncrementValue(string stat_name, long ts1, long ts2)
         {
             //Request HO time first
-            string q1 = string.Format("SELECT stat_value FROM tx_stats WHERE stat_name = '{0}' AND timestamp between {1} and {2} ORDER BY timestamp ASC limit 1", stat_name, ts1, ts2);
-            string q2 = string.Format("SELECT stat_value FROM tx_stats WHERE stat_name = '{0}' AND timestamp between {1} and {2} ORDER BY timestamp DESC limit 1", stat_name, ts1, ts2);
+            string q1 = string.Format("SELECT min(stat_value) FROM tx_stats WHERE stat_name = '{0}' AND timestamp between {1} and {2}", stat_name, ts1, ts2);
+            string q2 = string.Format("SELECT max(stat_value) FROM tx_stats WHERE stat_name = '{0}' AND timestamp between {1} and {2}", stat_name, ts1, ts2);
             SqliteDataReader dr1, dr2;
             dr1 = _myDB.GetSQLReader(q1);
             dr2 = _myDB.GetSQLReader(q2);
@@ -129,12 +129,18 @@ namespace TraXile
 
             while (dr1.Read())
             {
-                val1 = dr1.GetInt32(0);
+                if(dr1.GetValue(0) != DBNull.Value)
+                {
+                    val1 = dr1.GetInt32(0);
+                }
             }
 
             while (dr2.Read())
             {
-                val2 = dr2.GetInt32(0);
+                if (dr2.GetValue(0) != DBNull.Value)
+                {
+                    val2 = dr2.GetInt32(0);
+                }
             }
 
             if (val1 == 1)
