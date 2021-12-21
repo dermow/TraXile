@@ -323,13 +323,7 @@ namespace TraXile
 
             if(render)
             {
-                RenderMappingDashboard();
-                RenderHeistDashboard();
-                RenderLabDashboard();
-                RenderGlobalDashboard();
-                RenderAllStatsDashboard();
-                UpdateAllStatsChart();
-                RenderBossingDashboard();
+                RequestDashboardUpdates();
             }
             
         }
@@ -1700,6 +1694,7 @@ namespace TraXile
             {
                 string line;
                 int lineHash = 0;
+                DateTime lastEvTime = new DateTime();
 
                 // Keep file open
                 while (!_exit)
@@ -1761,10 +1756,11 @@ namespace TraXile
                                 try
                                 {
                                     ev.EventTime = DateTime.Parse(line.Split(' ')[0] + " " + line.Split(' ')[1]);
+                                    lastEvTime = ev.EventTime;
                                 }
                                 catch
                                 {
-                                    ev.EventTime = DateTime.Now;
+                                    ev.EventTime = lastEvTime;
                                 }
                                 _dict.Add(lineHash, "init");
 
@@ -1782,6 +1778,7 @@ namespace TraXile
                     _logLinesRead++;
                 }
             }
+            _oldestTimeStamp = _myStats.GetOldestTimeStamp();
         }
 
         /// <summary>
@@ -1901,7 +1898,7 @@ namespace TraXile
                         {
                             AddTagAutoCreate(sArgs, currentAct);
                         };
-                        Invoke(mi);
+                        BeginInvoke(mi);
                     }
                     break;
                 case "untag":
@@ -1911,7 +1908,7 @@ namespace TraXile
                         {
                             RemoveTagFromActivity(sArgs, currentAct);
                         };
-                        Invoke(mi);
+                        BeginInvoke(mi);
 
                     }
                     break;
@@ -1929,7 +1926,7 @@ namespace TraXile
                             FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, DateTime.Now);
                             _prevActivityOverlay = _currentActivity;
                         };
-                        Invoke(mi);
+                        BeginInvoke(mi);
                     }
                     break;
             }
@@ -3604,18 +3601,10 @@ namespace TraXile
 
             if (_eventQueueInitizalized)
             {
-                MethodInvoker mi = delegate
+                if(checkBox3.Checked)
                 {
-                    RenderGlobalDashboard();
-                    RenderHeistDashboard();
-                    RenderLabDashboard();
-                    RenderMappingDashboard();
-                    RenderAllStatsDashboard();
-                    RenderBossingDashboard();
-                };
-                Invoke(mi);
-
-              
+                    RequestDashboardUpdates();
+                }
             }
         }
 
@@ -3710,7 +3699,7 @@ namespace TraXile
         /// <param name="ev"></param>
         private void TextLogEvent(TrX_TrackingEvent ev)
         {
-            Invoke((MethodInvoker)delegate
+            BeginInvoke((MethodInvoker)delegate
             {
                 textBoxLogView.Text += ev.ToString() + Environment.NewLine;
             });
@@ -4158,7 +4147,7 @@ namespace TraXile
         /// <param name="b_display"></param>
         private void AddMapLvItem(TrX_TrackedActivity map, bool bZana = false, int iPos = 0, bool b_display = true)
         {
-            Invoke((MethodInvoker)delegate
+            BeginInvoke((MethodInvoker)delegate
             {
                 ListViewItem lvi = new ListViewItem(" " + map.Started.ToString());
                 string sName = map.Area;
@@ -4304,6 +4293,7 @@ namespace TraXile
                     if (!_listViewInitielaized)
                     {
                         DoSearch();
+                        _oldestTimeStamp = _myStats.GetOldestTimeStamp();
                         _listViewInitielaized = true;
                     }
 
@@ -4415,10 +4405,19 @@ namespace TraXile
                         labelTrackingType.Text = "Enter an ingame activity to auto. start tracking.";
                     }
 
+                    if(_uiFlagAllStatsDashboard || 
+                    _uiFlagBossDashboard || 
+                    _uiFlagGlobalDashboard || 
+                    _uiFlagHeistDashboard || 
+                    _uiFlagLabDashboard || 
+                    _uiFlagMapDashboard)
+                    {
+                        SetTimeRangeFilter();
+                    }
+
                     // MAP Dashbaord
                     if (_uiFlagMapDashboard)
                     {
-                        SetTimeRangeFilter();
                         RenderMappingDashboard();
                         _uiFlagMapDashboard = false;
                     }
@@ -4426,7 +4425,6 @@ namespace TraXile
                     // LAB Dashbaord
                     if (_uiFlagLabDashboard)
                     {
-                        SetTimeRangeFilter();
                         RenderLabDashboard();
                         _uiFlagLabDashboard = false;
                     }
@@ -4434,7 +4432,6 @@ namespace TraXile
                     // HEIST Dashbaord
                     if (_uiFlagHeistDashboard)
                     {
-                        SetTimeRangeFilter();
                         RenderHeistDashboard();
                         _uiFlagHeistDashboard = false;
                     }
@@ -4442,7 +4439,6 @@ namespace TraXile
                     // AllStats Dashbaord
                     if (_uiFlagAllStatsDashboard)
                     {
-                        SetTimeRangeFilter();
                         RenderAllStatsDashboard();
                         _uiFlagAllStatsDashboard = false;
                     }
@@ -4450,15 +4446,13 @@ namespace TraXile
                     //Bossing
                     if(_uiFlagBossDashboard)
                     {
-                        SetTimeRangeFilter();
                         RenderBossingDashboard();
-                        _uiFlagBossDashboard = true;
+                        _uiFlagBossDashboard = false;
                     }
 
                     // Global Dashbaord
                     if (_uiFlagGlobalDashboard)
                     {
-                        SetTimeRangeFilter();
                         RenderGlobalDashboard();
                         _uiFlagGlobalDashboard = false;
 
@@ -4514,6 +4508,7 @@ namespace TraXile
             trackBar1.Value = _stopwatchOverlayOpacity;
             checkBox2.Checked = _stopwatchOverlayShowDefault;
             label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
+            checkBox3.Checked = Convert.ToBoolean(ReadSetting("statistics_auto_refresh", "false"));
         }
 
         /// <summary>
@@ -5006,7 +5001,7 @@ namespace TraXile
                     chartHeistByLevel.Series[0].Points.AddXY(kvp.Key, levelCounts[kvp.Key]);
                 }
             };
-            Invoke(mi);
+            BeginInvoke(mi);
         }
 
         private int LevelToTier(int level)
@@ -5185,39 +5180,30 @@ namespace TraXile
             DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0);
             DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59);
 
-
-            MethodInvoker mi = delegate
+            if(listViewNF1.Items.Count == 0)
             {
-                if(listViewNF1.Items.Count == 0)
+                for(int i = 0; i < _myStats.NumericStats.Keys.Count; i++)
                 {
-                    for(int i = 0; i < _myStats.NumericStats.Keys.Count; i++)
-                    {
-                        string sStatKey = _myStats.NumericStats.Keys.ElementAt(i);
-                        string sStatLong = GetStatLongName(sStatKey);
-
+                    string sStatKey = _myStats.NumericStats.Keys.ElementAt(i);
+                    string sStatLong = GetStatLongName(sStatKey);
                         
-                        ListViewItem lvi = new ListViewItem(sStatLong);
-                        lvi.Name = "allstats_" + sStatKey;
-                        lvi.SubItems.Add(_myStats.GetIncrementValue(sStatKey, ((DateTimeOffset)dt1).ToUnixTimeSeconds(), ((DateTimeOffset)dt2).ToUnixTimeSeconds()).ToString());
-                        _lvmAllStats.AddLvItem(lvi, lvi.Name, true);
-                    }
+                    ListViewItem lvi = new ListViewItem(sStatLong);
+                    lvi.Name = "allstats_" + sStatKey;
+                    lvi.SubItems.Add(_myStats.GetIncrementValue(sStatKey, ((DateTimeOffset)dt1).ToUnixTimeSeconds(), ((DateTimeOffset)dt2).ToUnixTimeSeconds()).ToString());
+                    _lvmAllStats.AddLvItem(lvi, lvi.Name, true);
                 }
-                else
+            }
+            else
+            {
+                for (int i = 0; i < _myStats.NumericStats.Keys.Count; i++)
                 {
-                    for (int i = 0; i < _myStats.NumericStats.Keys.Count; i++)
-                    {
-                        string sStatKey = _myStats.NumericStats.Keys.ElementAt(i);
-                        string sStatLong = GetStatLongName(sStatKey);
+                    string sStatKey = _myStats.NumericStats.Keys.ElementAt(i);
 
-                        ListViewItem lvi = _lvmAllStats.GetLvItem("allstats_" + sStatKey);
-                        _lvmAllStats.GetLvItem("allstats_" + sStatKey).SubItems[1].Text = _myStats.GetIncrementValue(sStatKey, ((DateTimeOffset)dt1).ToUnixTimeSeconds(), ((DateTimeOffset)dt2).ToUnixTimeSeconds()).ToString();
-                    }
+                    // TODO: Optimize performance
+                    _lvmAllStats.GetLvItem("allstats_" + sStatKey).SubItems[1].Text = _myStats.GetIncrementValue(sStatKey, ((DateTimeOffset)dt1).ToUnixTimeSeconds(), ((DateTimeOffset)dt2).ToUnixTimeSeconds()).ToString();
                 }
-            };
+            }
 
-            
-
-            this.Invoke(mi);
         }
 
         private void UpdateAllStatsChart()
@@ -5410,7 +5396,7 @@ namespace TraXile
                     chartMapTierAvgTime.Series[0].Points.AddXY(i + 1, Math.Round(tierAverages[i] / 60, 1));
                 }
             };
-            Invoke(mi);
+            BeginInvoke(mi);
         }
 
         /// <summary>
@@ -5794,6 +5780,7 @@ namespace TraXile
             _uiFlagHeistDashboard = true;
             _uiFlagLabDashboard = true;
             _uiFlagAllStatsDashboard = true;
+            _uiFlagMapDashboard = true;
         }
 
         private void DoSearch()
@@ -6498,23 +6485,27 @@ namespace TraXile
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(comboBox1.SelectedItem.ToString() == "Custom")
+            if(_historyInitialized)
             {
-                dateTimePicker1.Enabled = true;
-                dateTimePicker2.Enabled = true;
-            }
-            else
-            {
-                dateTimePicker1.Enabled = false;
-                dateTimePicker2.Enabled = false;
-                SetTimeRangeFilter(true);
+                if (comboBox1.SelectedItem.ToString() == "Custom")
+                {
+                    dateTimePicker1.Enabled = true;
+                    dateTimePicker2.Enabled = true;
+                }
+                else
+                {
+                    dateTimePicker1.Enabled = false;
+                    dateTimePicker2.Enabled = false;
+                    RequestDashboardUpdates();
+                }
             }
         }
 
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-            SetTimeRangeFilter(true);
+            RequestDashboardUpdates();
+
         }
 
         private void listViewNF1_SelectedIndexChanged(object sender, EventArgs e)
@@ -6597,6 +6588,16 @@ namespace TraXile
             }
 
             stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
+        }
+
+        private void button3_Click_2(object sender, EventArgs e)
+        {
+            RequestDashboardUpdates();
+        }
+
+        private void checkBox3_CheckedChanged_1(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("statistics_auto_refresh", checkBox3.Checked.ToString());
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
