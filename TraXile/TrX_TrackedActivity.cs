@@ -30,7 +30,7 @@ namespace TraXile
         private int _totalSeconds;
         private long _activityTimeStamp;
         private string _customStopWatchValue;
-        
+
         // Possible side areas
         private TrX_TrackedActivity _zanaMap;
         private TrX_TrackedActivity _vaalArea;
@@ -313,7 +313,7 @@ namespace TraXile
             set { _pausedTime = value; }
         }
 
-       
+
 
         public bool HasTag(string s_id)
         {

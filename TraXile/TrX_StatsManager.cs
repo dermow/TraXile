@@ -1,9 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TraXile
 {
@@ -50,12 +47,12 @@ namespace TraXile
             double val = GetCount(stat_name, t1, t2);
 
             results.Add(new KeyValuePair<long, int>(t1, Convert.ToInt32(val)));
-            
 
-            if(ts2 > ts1)
+
+            if (ts2 > ts1)
             {
                 bool fin = false;
-                while(!fin)
+                while (!fin)
                 {
                     curr = curr.AddDays(interval);
                     to = curr.AddHours(24);
@@ -64,7 +61,7 @@ namespace TraXile
                     val = GetCount(stat_name, t1, t2);
                     results.Add(new KeyValuePair<long, int>(t1, Convert.ToInt32(val)));
 
-                    if(t1 > ts2)
+                    if (t1 > ts2)
                     {
                         fin = true;
                     }
@@ -76,14 +73,14 @@ namespace TraXile
             return results;
         }
 
-        public List<KeyValuePair<long,int>> GetTimeSeries(string stat_name, long ts1, long ts2)
+        public List<KeyValuePair<long, int>> GetTimeSeries(string stat_name, long ts1, long ts2)
         {
             List<KeyValuePair<long, int>> results = new List<KeyValuePair<long, int>>();
             string q1 = string.Format("SELECT timestamp, stat_value FROM tx_stats WHERE stat_name = '{0}' AND timestamp between {1} and {2} ORDER BY timestamp ASC", stat_name, ts1, ts2);
             SqliteDataReader dr1;
             dr1 = _myDB.GetSQLReader(q1);
 
-            while(dr1.Read())
+            while (dr1.Read())
             {
                 KeyValuePair<long, int> kvp = new KeyValuePair<long, int>(dr1.GetInt64(0), dr1.GetInt32(1));
                 results.Add(kvp);
@@ -129,7 +126,7 @@ namespace TraXile
 
             while (dr1.Read())
             {
-                if(dr1.GetValue(0) != DBNull.Value)
+                if (dr1.GetValue(0) != DBNull.Value)
                 {
                     val1 = dr1.GetInt32(0);
                 }
@@ -167,7 +164,7 @@ namespace TraXile
             set { _numericStats = value; }
         }
 
-       
+
 
     }
 }

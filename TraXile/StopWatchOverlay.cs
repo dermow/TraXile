@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace TraXile
 {
@@ -64,7 +56,7 @@ namespace TraXile
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if(this.FormBorderStyle == FormBorderStyle.None)
+            if (this.FormBorderStyle == FormBorderStyle.None)
             {
                 this.FormBorderStyle = FormBorderStyle.FixedSingle;
             }
@@ -74,14 +66,14 @@ namespace TraXile
                 _main.AddUpdateAppSettings("overlay.stopwatch.x", this.Location.X.ToString());
                 _main.AddUpdateAppSettings("overlay.stopwatch.y", this.Location.Y.ToString());
             }
-            
+
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if(_main._currentActivity != null)
+            if (_main._currentActivity != null)
             {
-                if(_main._currentActivity.ManuallyPaused)
+                if (_main._currentActivity.ManuallyPaused)
                 {
                     linkLabel2.Text = "Pause";
                     _main.ResumeCurrentActivityOrSide();
@@ -92,7 +84,7 @@ namespace TraXile
                     _main.PauseCurrentActivityOrSide();
                 }
             }
-           
+
 
         }
     }
