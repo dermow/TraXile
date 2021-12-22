@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Windows.Forms;
-using System.Diagnostics;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace TraXile.Updater
 {
@@ -16,7 +16,7 @@ namespace TraXile.Updater
         public Form1()
         {
             InitializeComponent();
-           
+
             //TEST: Create folder in userdata
             _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\TraXile";
 
@@ -36,7 +36,7 @@ namespace TraXile.Updater
             {
                 Log("No target release specified!");
             }
-            
+
 
         }
 
@@ -63,7 +63,7 @@ namespace TraXile.Updater
             if (p.Length > 0)
             {
                 Log("TraXile is running and will be closed now.");
-                foreach(Process pr in p)
+                foreach (Process pr in p)
                 {
                     pr.Kill();
                 }
@@ -72,7 +72,7 @@ namespace TraXile.Updater
             }
 
             Log("Installing to: " + Application.StartupPath);
-            
+
             try
             {
 
@@ -82,16 +82,16 @@ namespace TraXile.Updater
                 bExit = true;
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log("Update failed: " + ex.Message);
             }
-           
-         }
+
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if(!bStarted)
+            if (!bStarted)
             {
                 bStarted = true;
 
@@ -99,16 +99,16 @@ namespace TraXile.Updater
                 {
                     Check();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Log("ERROR: Could not update: " + ex.Message);
                     Log(Environment.NewLine);
                     Log(ex.ToString());
                 }
-                
+
             }
 
-            if(bExit)
+            if (bExit)
             {
                 Application.Exit();
             }
