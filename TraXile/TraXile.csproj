@@ -192,7 +192,7 @@
     <Compile Include="UI\ChatCommandHelp.Designer.cs">
       <DependentUpon>ChatCommandHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomProgressBar.cs">
+    <Compile Include="UI\CustomProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TrX_EventMapping.cs" />
