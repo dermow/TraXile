@@ -27,12 +27,12 @@ namespace TraXile
         /// </summary>
         public TrX_ThemeDark()
         {
-            MainBackGroundColor = Color.FromArgb(15, 15, 15);
+            MainBackGroundColor = Color.Black;
             MainFontColor = Color.White;
-            ListBackColor = Color.FromArgb(15, 15, 15);
+            ListBackColor = Color.Black;
             ChartLabelColor = Color.White;
             ChartSeriesColor = Color.White;
-            ButtonForeColor = Color.FromArgb(15, 15, 15);
+            ButtonForeColor = Color.Black;
             ButtonBackColor = Color.White;
             ButtonBorderColor = Color.DarkGray;
         }
