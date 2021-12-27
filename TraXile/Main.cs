@@ -4300,32 +4300,27 @@ namespace TraXile
                         _listViewInitielaized = true;
                     }
 
-                    labelCurrArea.Text = _currentArea;
-                    labelCurrentAreaLvl.Text = _currentAreaLevel > 0 ? _currentAreaLevel.ToString() : "-";
-                    labelLastDeath.Text = _lastDeathTime.Year > 2000 ? _lastDeathTime.ToString() : "-";
+                    label80.Text = string.Format("{0} (lvl. {1})",_currentArea, _currentAreaLevel);
 
                     if (_currentArea.Contains("Hideout") && !(_currentArea.Contains("Syndicate")))
                     {
-                        labelCurrActivity.Text = "In Hideout";
+                        label102.Text = "In Hideout";
                     }
                     else
                     {
                         if (_currentActivity != null)
                         {
-                            labelCurrActivity.Text = _currentActivity.Type.ToString();
+                            label102.Text = _currentActivity.Type.ToString();
                         }
                         else
                         {
-                            labelCurrActivity.Text = "Nothing";
+                            label102.Text = "Nothing";
                         }
                     }
-
 
                     if (_currentActivity != null)
                     {
                         string sTier = "";
-
-
 
                         if (_currentActivity.Type == ACTIVITY_TYPES.SIMULACRUM)
                         {
@@ -6601,6 +6596,11 @@ namespace TraXile
         private void checkBox3_CheckedChanged_1(object sender, EventArgs e)
         {
             AddUpdateAppSettings("statistics_auto_refresh", checkBox3.Checked.ToString());
+        }
+
+        private void pictureBoxSkull_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void pictureBox19_Click(object sender, EventArgs e)
