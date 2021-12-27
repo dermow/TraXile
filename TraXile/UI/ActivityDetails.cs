@@ -34,7 +34,7 @@ namespace TraXile
             label9.Text = ta.Type == ACTIVITY_TYPES.BREACHSTONE ? main.GetBreachStoneName(ta.Area, ta.AreaLevel) : ta.Type.ToString();
             label13.Text = ta.Area.ToString();
 
-            if(!main.IS_IN_DEBUG_MODE)
+            if (!main.IS_IN_DEBUG_MODE)
             {
                 button3.Hide();
             }

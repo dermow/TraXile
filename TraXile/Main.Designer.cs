@@ -80,19 +80,18 @@ namespace TraXile
             this.pictureBoxPlay = new System.Windows.Forms.PictureBox();
             this.labelStopWatch = new System.Windows.Forms.Label();
             this.pictureBoxStopWatch = new System.Windows.Forms.PictureBox();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.labelCurrArea = new System.Windows.Forms.Label();
-            this.labelCurrActivity = new System.Windows.Forms.Label();
-            this.label52 = new System.Windows.Forms.Label();
-            this.label53 = new System.Windows.Forms.Label();
-            this.label54 = new System.Windows.Forms.Label();
-            this.labelLastDeath = new System.Windows.Forms.Label();
-            this.label67 = new System.Windows.Forms.Label();
-            this.labelCurrentAreaLvl = new System.Windows.Forms.Label();
             this.panelTags = new System.Windows.Forms.Panel();
             this.groupBoxTrackingTags = new System.Windows.Forms.GroupBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.labelAddTagsNote = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.label80 = new System.Windows.Forms.Label();
+            this.label102 = new System.Windows.Forms.Label();
+            this.label82 = new System.Windows.Forms.Label();
+            this.label103 = new System.Windows.Forms.Label();
+            this.label65 = new System.Windows.Forms.Label();
+            this.label78 = new System.Windows.Forms.Label();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.listViewActLog = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -102,15 +101,15 @@ namespace TraXile
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel3 = new System.Windows.Forms.Panel();
-            this.buttonStartSearch = new System.Windows.Forms.Button();
-            this.linkLabelClearSearch = new System.Windows.Forms.LinkLabel();
-            this.linkLabelSearchSyntax = new System.Windows.Forms.LinkLabel();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
-            this.label66 = new System.Windows.Forms.Label();
-            this.buttonReloadActivities = new System.Windows.Forms.Button();
-            this.buttonActivityDetails = new System.Windows.Forms.Button();
-            this.buttonExportActivities = new System.Windows.Forms.Button();
-            this.buttonDeleteActivity = new System.Windows.Forms.Button();
+            this.buttonStartSearch = new System.Windows.Forms.Button();
+            this.btt_DeleteActivity = new System.Windows.Forms.Button();
+            this.linkLabelClearSearch = new System.Windows.Forms.LinkLabel();
+            this.btt_ExportActivities = new System.Windows.Forms.Button();
+            this.linkLabelSearchSyntax = new System.Windows.Forms.LinkLabel();
+            this.btt_ActivityDetails = new System.Windows.Forms.Button();
+            this.btt_ReloadActivities = new System.Windows.Forms.Button();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.comboBoxShowMaxItems = new System.Windows.Forms.ComboBox();
             this.label73 = new System.Windows.Forms.Label();
@@ -441,11 +440,13 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).BeginInit();
-            this.tableLayoutPanel3.SuspendLayout();
             this.panelTags.SuspendLayout();
             this.panel7.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
             this.tabPage8.SuspendLayout();
             this.tableLayoutPanel8.SuspendLayout();
@@ -579,7 +580,7 @@ namespace TraXile
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel5);
             this.splitContainer1.Size = new System.Drawing.Size(1109, 868);
-            this.splitContainer1.SplitterDistance = 477;
+            this.splitContainer1.SplitterDistance = 433;
             this.splitContainer1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -588,19 +589,20 @@ namespace TraXile
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.panel2, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.panelTags, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.panel7, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.panelTags, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.panel7, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 5;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 230F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 341F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 185F));
+            this.tableLayoutPanel2.RowCount = 6;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 137F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 48F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 572F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(477, 868);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(433, 868);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // panel2
@@ -619,12 +621,12 @@ namespace TraXile
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(471, 224);
+            this.panel2.Size = new System.Drawing.Size(427, 131);
             this.panel2.TabIndex = 0;
             // 
             // pictureBox10
             // 
-            this.pictureBox10.Location = new System.Drawing.Point(5, 185);
+            this.pictureBox10.Location = new System.Drawing.Point(131, 91);
             this.pictureBox10.Name = "pictureBox10";
             this.pictureBox10.Size = new System.Drawing.Size(32, 32);
             this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -636,7 +638,7 @@ namespace TraXile
             this.labelTrackingDied.AutoSize = true;
             this.labelTrackingDied.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTrackingDied.ForeColor = System.Drawing.Color.White;
-            this.labelTrackingDied.Location = new System.Drawing.Point(363, 106);
+            this.labelTrackingDied.Location = new System.Drawing.Point(294, 52);
             this.labelTrackingDied.Name = "labelTrackingDied";
             this.labelTrackingDied.Size = new System.Drawing.Size(24, 25);
             this.labelTrackingDied.TabIndex = 8;
@@ -645,19 +647,20 @@ namespace TraXile
             // pictureBoxSkull
             // 
             this.pictureBoxSkull.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxSkull.Image")));
-            this.pictureBoxSkull.Location = new System.Drawing.Point(317, 105);
+            this.pictureBoxSkull.Location = new System.Drawing.Point(248, 52);
             this.pictureBoxSkull.Name = "pictureBoxSkull";
-            this.pictureBoxSkull.Size = new System.Drawing.Size(55, 28);
+            this.pictureBoxSkull.Size = new System.Drawing.Size(44, 28);
             this.pictureBoxSkull.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxSkull.TabIndex = 7;
             this.pictureBoxSkull.TabStop = false;
+            this.pictureBoxSkull.Click += new System.EventHandler(this.pictureBoxSkull_Click);
             // 
             // labelTrackingType
             // 
             this.labelTrackingType.AutoSize = true;
             this.labelTrackingType.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTrackingType.ForeColor = System.Drawing.Color.White;
-            this.labelTrackingType.Location = new System.Drawing.Point(4, 162);
+            this.labelTrackingType.Location = new System.Drawing.Point(170, 91);
             this.labelTrackingType.Name = "labelTrackingType";
             this.labelTrackingType.Size = new System.Drawing.Size(31, 15);
             this.labelTrackingType.TabIndex = 6;
@@ -668,7 +671,7 @@ namespace TraXile
             this.labelTrackingArea.AutoSize = true;
             this.labelTrackingArea.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTrackingArea.ForeColor = System.Drawing.Color.White;
-            this.labelTrackingArea.Location = new System.Drawing.Point(43, 194);
+            this.labelTrackingArea.Location = new System.Drawing.Point(169, 108);
             this.labelTrackingArea.Name = "labelTrackingArea";
             this.labelTrackingArea.Size = new System.Drawing.Size(215, 15);
             this.labelTrackingArea.TabIndex = 5;
@@ -677,9 +680,9 @@ namespace TraXile
             // pictureBoxStop
             // 
             this.pictureBoxStop.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxStop.Image")));
-            this.pictureBoxStop.Location = new System.Drawing.Point(263, 94);
+            this.pictureBoxStop.Location = new System.Drawing.Point(207, 48);
             this.pictureBoxStop.Name = "pictureBoxStop";
-            this.pictureBoxStop.Size = new System.Drawing.Size(48, 50);
+            this.pictureBoxStop.Size = new System.Drawing.Size(35, 35);
             this.pictureBoxStop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxStop.TabIndex = 4;
             this.pictureBoxStop.TabStop = false;
@@ -688,9 +691,9 @@ namespace TraXile
             // pictureBoxPause
             // 
             this.pictureBoxPause.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPause.Image")));
-            this.pictureBoxPause.Location = new System.Drawing.Point(209, 94);
+            this.pictureBoxPause.Location = new System.Drawing.Point(167, 48);
             this.pictureBoxPause.Name = "pictureBoxPause";
-            this.pictureBoxPause.Size = new System.Drawing.Size(48, 50);
+            this.pictureBoxPause.Size = new System.Drawing.Size(35, 35);
             this.pictureBoxPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxPause.TabIndex = 3;
             this.pictureBoxPause.TabStop = false;
@@ -699,9 +702,9 @@ namespace TraXile
             // pictureBoxPlay
             // 
             this.pictureBoxPlay.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPlay.Image")));
-            this.pictureBoxPlay.Location = new System.Drawing.Point(155, 94);
+            this.pictureBoxPlay.Location = new System.Drawing.Point(128, 48);
             this.pictureBoxPlay.Name = "pictureBoxPlay";
-            this.pictureBoxPlay.Size = new System.Drawing.Size(48, 50);
+            this.pictureBoxPlay.Size = new System.Drawing.Size(35, 35);
             this.pictureBoxPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxPlay.TabIndex = 2;
             this.pictureBoxPlay.TabStop = false;
@@ -710,143 +713,31 @@ namespace TraXile
             // labelStopWatch
             // 
             this.labelStopWatch.AutoSize = true;
-            this.labelStopWatch.Font = new System.Drawing.Font("Noto Mono", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStopWatch.Font = new System.Drawing.Font("Noto Mono", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelStopWatch.ForeColor = System.Drawing.Color.White;
-            this.labelStopWatch.Location = new System.Drawing.Point(150, 30);
+            this.labelStopWatch.Location = new System.Drawing.Point(123, 6);
             this.labelStopWatch.Name = "labelStopWatch";
-            this.labelStopWatch.Size = new System.Drawing.Size(257, 57);
+            this.labelStopWatch.Size = new System.Drawing.Size(195, 43);
             this.labelStopWatch.TabIndex = 1;
             this.labelStopWatch.Text = "00:00:00";
             // 
             // pictureBoxStopWatch
             // 
             this.pictureBoxStopWatch.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxStopWatch.Image")));
-            this.pictureBoxStopWatch.Location = new System.Drawing.Point(6, 27);
+            this.pictureBoxStopWatch.Location = new System.Drawing.Point(2, 3);
             this.pictureBoxStopWatch.Name = "pictureBoxStopWatch";
-            this.pictureBoxStopWatch.Size = new System.Drawing.Size(139, 127);
+            this.pictureBoxStopWatch.Size = new System.Drawing.Size(120, 120);
             this.pictureBoxStopWatch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxStopWatch.TabIndex = 0;
             this.pictureBoxStopWatch.TabStop = false;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.58448F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.41552F));
-            this.tableLayoutPanel3.Controls.Add(this.labelCurrArea, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.labelCurrActivity, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.label52, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.label53, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label54, 0, 3);
-            this.tableLayoutPanel3.Controls.Add(this.labelLastDeath, 1, 3);
-            this.tableLayoutPanel3.Controls.Add(this.label67, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.labelCurrentAreaLvl, 1, 2);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 607);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 4;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(471, 179);
-            this.tableLayoutPanel3.TabIndex = 1;
-            // 
-            // labelCurrArea
-            // 
-            this.labelCurrArea.AutoSize = true;
-            this.labelCurrArea.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCurrArea.ForeColor = System.Drawing.Color.White;
-            this.labelCurrArea.Location = new System.Drawing.Point(184, 24);
-            this.labelCurrArea.Name = "labelCurrArea";
-            this.labelCurrArea.Size = new System.Drawing.Size(15, 15);
-            this.labelCurrArea.TabIndex = 5;
-            this.labelCurrArea.Text = "-";
-            // 
-            // labelCurrActivity
-            // 
-            this.labelCurrActivity.AutoSize = true;
-            this.labelCurrActivity.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCurrActivity.ForeColor = System.Drawing.Color.White;
-            this.labelCurrActivity.Location = new System.Drawing.Point(184, 0);
-            this.labelCurrActivity.Name = "labelCurrActivity";
-            this.labelCurrActivity.Size = new System.Drawing.Size(63, 15);
-            this.labelCurrActivity.TabIndex = 4;
-            this.labelCurrActivity.Text = "nothing";
-            // 
-            // label52
-            // 
-            this.label52.AutoSize = true;
-            this.label52.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label52.ForeColor = System.Drawing.Color.White;
-            this.label52.Location = new System.Drawing.Point(3, 0);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(88, 15);
-            this.label52.TabIndex = 0;
-            this.label52.Text = "Activity:";
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label53.ForeColor = System.Drawing.Color.White;
-            this.label53.Location = new System.Drawing.Point(3, 24);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(52, 15);
-            this.label53.TabIndex = 1;
-            this.label53.Text = "Area:";
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label54.ForeColor = System.Drawing.Color.White;
-            this.label54.Location = new System.Drawing.Point(3, 72);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(106, 15);
-            this.label54.TabIndex = 2;
-            this.label54.Text = "Last death:";
-            // 
-            // labelLastDeath
-            // 
-            this.labelLastDeath.AutoSize = true;
-            this.labelLastDeath.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLastDeath.ForeColor = System.Drawing.Color.White;
-            this.labelLastDeath.Location = new System.Drawing.Point(184, 72);
-            this.labelLastDeath.Name = "labelLastDeath";
-            this.labelLastDeath.Size = new System.Drawing.Size(15, 15);
-            this.labelLastDeath.TabIndex = 6;
-            this.labelLastDeath.Text = "-";
-            // 
-            // label67
-            // 
-            this.label67.AutoSize = true;
-            this.label67.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label67.ForeColor = System.Drawing.Color.White;
-            this.label67.Location = new System.Drawing.Point(3, 48);
-            this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(106, 15);
-            this.label67.TabIndex = 7;
-            this.label67.Text = "Area level:";
-            // 
-            // labelCurrentAreaLvl
-            // 
-            this.labelCurrentAreaLvl.AutoSize = true;
-            this.labelCurrentAreaLvl.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCurrentAreaLvl.ForeColor = System.Drawing.Color.White;
-            this.labelCurrentAreaLvl.Location = new System.Drawing.Point(184, 48);
-            this.labelCurrentAreaLvl.Name = "labelCurrentAreaLvl";
-            this.labelCurrentAreaLvl.Size = new System.Drawing.Size(15, 15);
-            this.labelCurrentAreaLvl.TabIndex = 8;
-            this.labelCurrentAreaLvl.Text = "-";
             // 
             // panelTags
             // 
             this.panelTags.Controls.Add(this.groupBoxTrackingTags);
             this.panelTags.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelTags.Location = new System.Drawing.Point(3, 233);
+            this.panelTags.Location = new System.Drawing.Point(3, 188);
             this.panelTags.Name = "panelTags";
-            this.panelTags.Size = new System.Drawing.Size(471, 335);
+            this.panelTags.Size = new System.Drawing.Size(427, 566);
             this.panelTags.TabIndex = 2;
             this.panelTags.SizeChanged += new System.EventHandler(this.panelTags_SizeChanged);
             // 
@@ -858,7 +749,7 @@ namespace TraXile
             this.groupBoxTrackingTags.ForeColor = System.Drawing.Color.Red;
             this.groupBoxTrackingTags.Location = new System.Drawing.Point(0, 0);
             this.groupBoxTrackingTags.Name = "groupBoxTrackingTags";
-            this.groupBoxTrackingTags.Size = new System.Drawing.Size(471, 335);
+            this.groupBoxTrackingTags.Size = new System.Drawing.Size(427, 566);
             this.groupBoxTrackingTags.TabIndex = 0;
             this.groupBoxTrackingTags.TabStop = false;
             this.groupBoxTrackingTags.Text = "Tags";
@@ -867,9 +758,9 @@ namespace TraXile
             // 
             this.panel7.Controls.Add(this.labelAddTagsNote);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel7.Location = new System.Drawing.Point(3, 574);
+            this.panel7.Location = new System.Drawing.Point(3, 760);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(471, 27);
+            this.panel7.Size = new System.Drawing.Size(427, 23);
             this.panel7.TabIndex = 3;
             // 
             // labelAddTagsNote
@@ -883,6 +774,95 @@ namespace TraXile
             this.labelAddTagsNote.TabIndex = 0;
             this.labelAddTagsNote.Text = "* custom tags can be manually added to active map by clicking it";
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.panel6);
+            this.panel1.Controls.Add(this.label65);
+            this.panel1.Controls.Add(this.label78);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 140);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(427, 42);
+            this.panel1.TabIndex = 4;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.label80);
+            this.panel6.Controls.Add(this.label102);
+            this.panel6.Controls.Add(this.label82);
+            this.panel6.Controls.Add(this.label103);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(0, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(427, 42);
+            this.panel6.TabIndex = 8;
+            // 
+            // label80
+            // 
+            this.label80.AutoSize = true;
+            this.label80.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label80.ForeColor = System.Drawing.Color.White;
+            this.label80.Location = new System.Drawing.Point(125, 21);
+            this.label80.Name = "label80";
+            this.label80.Size = new System.Drawing.Size(14, 13);
+            this.label80.TabIndex = 9;
+            this.label80.Text = "-";
+            // 
+            // label102
+            // 
+            this.label102.AutoSize = true;
+            this.label102.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label102.ForeColor = System.Drawing.Color.White;
+            this.label102.Location = new System.Drawing.Point(3, 19);
+            this.label102.Name = "label102";
+            this.label102.Size = new System.Drawing.Size(56, 13);
+            this.label102.TabIndex = 6;
+            this.label102.Text = "nothing";
+            // 
+            // label82
+            // 
+            this.label82.AutoSize = true;
+            this.label82.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label82.ForeColor = System.Drawing.Color.White;
+            this.label82.Location = new System.Drawing.Point(125, 6);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(47, 13);
+            this.label82.TabIndex = 7;
+            this.label82.Text = "Area:";
+            // 
+            // label103
+            // 
+            this.label103.AutoSize = true;
+            this.label103.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label103.ForeColor = System.Drawing.Color.White;
+            this.label103.Location = new System.Drawing.Point(3, 6);
+            this.label103.Name = "label103";
+            this.label103.Size = new System.Drawing.Size(79, 13);
+            this.label103.TabIndex = 5;
+            this.label103.Text = "Activity:";
+            // 
+            // label65
+            // 
+            this.label65.AutoSize = true;
+            this.label65.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label65.ForeColor = System.Drawing.Color.White;
+            this.label65.Location = new System.Drawing.Point(3, 19);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(63, 15);
+            this.label65.TabIndex = 6;
+            this.label65.Text = "nothing";
+            // 
+            // label78
+            // 
+            this.label78.AutoSize = true;
+            this.label78.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label78.ForeColor = System.Drawing.Color.White;
+            this.label78.Location = new System.Drawing.Point(3, 6);
+            this.label78.Name = "label78";
+            this.label78.Size = new System.Drawing.Size(79, 13);
+            this.label78.TabIndex = 5;
+            this.label78.Text = "Activity:";
+            // 
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 1;
@@ -894,10 +874,10 @@ namespace TraXile
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 3;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 87F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(628, 868);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(672, 868);
             this.tableLayoutPanel5.TabIndex = 5;
             // 
             // listViewActLog
@@ -917,10 +897,10 @@ namespace TraXile
             this.listViewActLog.GridLines = true;
             this.listViewActLog.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewActLog.HideSelection = false;
-            this.listViewActLog.Location = new System.Drawing.Point(3, 90);
+            this.listViewActLog.Location = new System.Drawing.Point(3, 93);
             this.listViewActLog.MultiSelect = false;
             this.listViewActLog.Name = "listViewActLog";
-            this.listViewActLog.Size = new System.Drawing.Size(622, 743);
+            this.listViewActLog.Size = new System.Drawing.Size(666, 740);
             this.listViewActLog.SmallImageList = this.imageList1;
             this.listViewActLog.TabIndex = 4;
             this.listViewActLog.UseCompatibleStateImageBehavior = false;
@@ -1003,24 +983,42 @@ namespace TraXile
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.panel3.Controls.Add(this.buttonStartSearch);
-            this.panel3.Controls.Add(this.linkLabelClearSearch);
-            this.panel3.Controls.Add(this.linkLabelSearchSyntax);
-            this.panel3.Controls.Add(this.textBox8);
-            this.panel3.Controls.Add(this.label66);
-            this.panel3.Controls.Add(this.buttonReloadActivities);
-            this.panel3.Controls.Add(this.buttonActivityDetails);
-            this.panel3.Controls.Add(this.buttonExportActivities);
-            this.panel3.Controls.Add(this.buttonDeleteActivity);
+            this.panel3.Controls.Add(this.groupBox10);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(622, 81);
+            this.panel3.Size = new System.Drawing.Size(666, 84);
             this.panel3.TabIndex = 5;
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.textBox8);
+            this.groupBox10.Controls.Add(this.buttonStartSearch);
+            this.groupBox10.Controls.Add(this.btt_DeleteActivity);
+            this.groupBox10.Controls.Add(this.linkLabelClearSearch);
+            this.groupBox10.Controls.Add(this.btt_ExportActivities);
+            this.groupBox10.Controls.Add(this.linkLabelSearchSyntax);
+            this.groupBox10.Controls.Add(this.btt_ActivityDetails);
+            this.groupBox10.Controls.Add(this.btt_ReloadActivities);
+            this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox10.ForeColor = System.Drawing.Color.Red;
+            this.groupBox10.Location = new System.Drawing.Point(0, 0);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(666, 84);
+            this.groupBox10.TabIndex = 11;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Search";
+            // 
+            // textBox8
+            // 
+            this.textBox8.Location = new System.Drawing.Point(8, 19);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(399, 20);
+            this.textBox8.TabIndex = 5;
             // 
             // buttonStartSearch
             // 
-            this.buttonStartSearch.Location = new System.Drawing.Point(479, 15);
+            this.buttonStartSearch.Location = new System.Drawing.Point(413, 17);
             this.buttonStartSearch.Name = "buttonStartSearch";
             this.buttonStartSearch.Size = new System.Drawing.Size(62, 23);
             this.buttonStartSearch.TabIndex = 10;
@@ -1028,13 +1026,27 @@ namespace TraXile
             this.buttonStartSearch.UseVisualStyleBackColor = true;
             this.buttonStartSearch.Click += new System.EventHandler(this.button22_Click);
             // 
+            // btt_DeleteActivity
+            // 
+            this.btt_DeleteActivity.BackColor = System.Drawing.Color.Red;
+            this.btt_DeleteActivity.FlatAppearance.BorderSize = 0;
+            this.btt_DeleteActivity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btt_DeleteActivity.ForeColor = System.Drawing.Color.Black;
+            this.btt_DeleteActivity.Location = new System.Drawing.Point(13, 52);
+            this.btt_DeleteActivity.Name = "btt_DeleteActivity";
+            this.btt_DeleteActivity.Size = new System.Drawing.Size(75, 21);
+            this.btt_DeleteActivity.TabIndex = 0;
+            this.btt_DeleteActivity.Text = "delete";
+            this.btt_DeleteActivity.UseVisualStyleBackColor = false;
+            this.btt_DeleteActivity.Click += new System.EventHandler(this.button3_Click);
+            // 
             // linkLabelClearSearch
             // 
             this.linkLabelClearSearch.AutoSize = true;
             this.linkLabelClearSearch.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabelClearSearch.ForeColor = System.Drawing.Color.Red;
             this.linkLabelClearSearch.LinkColor = System.Drawing.Color.Red;
-            this.linkLabelClearSearch.Location = new System.Drawing.Point(507, 50);
+            this.linkLabelClearSearch.Location = new System.Drawing.Point(441, 52);
             this.linkLabelClearSearch.Name = "linkLabelClearSearch";
             this.linkLabelClearSearch.Size = new System.Drawing.Size(42, 13);
             this.linkLabelClearSearch.TabIndex = 7;
@@ -1042,13 +1054,27 @@ namespace TraXile
             this.linkLabelClearSearch.Text = "Clear";
             this.linkLabelClearSearch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
+            // btt_ExportActivities
+            // 
+            this.btt_ExportActivities.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.btt_ExportActivities.FlatAppearance.BorderSize = 0;
+            this.btt_ExportActivities.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btt_ExportActivities.ForeColor = System.Drawing.Color.Black;
+            this.btt_ExportActivities.Location = new System.Drawing.Point(94, 52);
+            this.btt_ExportActivities.Name = "btt_ExportActivities";
+            this.btt_ExportActivities.Size = new System.Drawing.Size(75, 21);
+            this.btt_ExportActivities.TabIndex = 1;
+            this.btt_ExportActivities.Text = "export";
+            this.btt_ExportActivities.UseVisualStyleBackColor = false;
+            this.btt_ExportActivities.Click += new System.EventHandler(this.button4_Click);
+            // 
             // linkLabelSearchSyntax
             // 
             this.linkLabelSearchSyntax.AutoSize = true;
             this.linkLabelSearchSyntax.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabelSearchSyntax.ForeColor = System.Drawing.Color.Red;
             this.linkLabelSearchSyntax.LinkColor = System.Drawing.Color.Red;
-            this.linkLabelSearchSyntax.Location = new System.Drawing.Point(403, 50);
+            this.linkLabelSearchSyntax.Location = new System.Drawing.Point(337, 52);
             this.linkLabelSearchSyntax.Name = "linkLabelSearchSyntax";
             this.linkLabelSearchSyntax.Size = new System.Drawing.Size(98, 13);
             this.linkLabelSearchSyntax.TabIndex = 6;
@@ -1056,75 +1082,33 @@ namespace TraXile
             this.linkLabelSearchSyntax.Text = "Search syntax";
             this.linkLabelSearchSyntax.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
-            // textBox8
+            // btt_ActivityDetails
             // 
-            this.textBox8.Location = new System.Drawing.Point(74, 17);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(399, 20);
-            this.textBox8.TabIndex = 5;
+            this.btt_ActivityDetails.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.btt_ActivityDetails.FlatAppearance.BorderSize = 0;
+            this.btt_ActivityDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btt_ActivityDetails.ForeColor = System.Drawing.Color.Black;
+            this.btt_ActivityDetails.Location = new System.Drawing.Point(175, 52);
+            this.btt_ActivityDetails.Name = "btt_ActivityDetails";
+            this.btt_ActivityDetails.Size = new System.Drawing.Size(75, 21);
+            this.btt_ActivityDetails.TabIndex = 2;
+            this.btt_ActivityDetails.Text = "details";
+            this.btt_ActivityDetails.UseVisualStyleBackColor = false;
+            this.btt_ActivityDetails.Click += new System.EventHandler(this.button5_Click);
             // 
-            // label66
+            // btt_ReloadActivities
             // 
-            this.label66.AutoSize = true;
-            this.label66.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label66.ForeColor = System.Drawing.Color.White;
-            this.label66.Location = new System.Drawing.Point(5, 19);
-            this.label66.Name = "label66";
-            this.label66.Size = new System.Drawing.Size(63, 15);
-            this.label66.TabIndex = 4;
-            this.label66.Text = "Search:";
-            // 
-            // buttonReloadActivities
-            // 
-            this.buttonReloadActivities.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.buttonReloadActivities.FlatAppearance.BorderSize = 0;
-            this.buttonReloadActivities.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonReloadActivities.Location = new System.Drawing.Point(322, 50);
-            this.buttonReloadActivities.Name = "buttonReloadActivities";
-            this.buttonReloadActivities.Size = new System.Drawing.Size(75, 21);
-            this.buttonReloadActivities.TabIndex = 3;
-            this.buttonReloadActivities.Text = "reload";
-            this.buttonReloadActivities.UseVisualStyleBackColor = false;
-            this.buttonReloadActivities.Click += new System.EventHandler(this.button9_Click);
-            // 
-            // buttonActivityDetails
-            // 
-            this.buttonActivityDetails.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.buttonActivityDetails.FlatAppearance.BorderSize = 0;
-            this.buttonActivityDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonActivityDetails.Location = new System.Drawing.Point(241, 50);
-            this.buttonActivityDetails.Name = "buttonActivityDetails";
-            this.buttonActivityDetails.Size = new System.Drawing.Size(75, 21);
-            this.buttonActivityDetails.TabIndex = 2;
-            this.buttonActivityDetails.Text = "details";
-            this.buttonActivityDetails.UseVisualStyleBackColor = false;
-            this.buttonActivityDetails.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // buttonExportActivities
-            // 
-            this.buttonExportActivities.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.buttonExportActivities.FlatAppearance.BorderSize = 0;
-            this.buttonExportActivities.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonExportActivities.Location = new System.Drawing.Point(160, 50);
-            this.buttonExportActivities.Name = "buttonExportActivities";
-            this.buttonExportActivities.Size = new System.Drawing.Size(75, 21);
-            this.buttonExportActivities.TabIndex = 1;
-            this.buttonExportActivities.Text = "export";
-            this.buttonExportActivities.UseVisualStyleBackColor = false;
-            this.buttonExportActivities.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // buttonDeleteActivity
-            // 
-            this.buttonDeleteActivity.BackColor = System.Drawing.Color.Red;
-            this.buttonDeleteActivity.FlatAppearance.BorderSize = 0;
-            this.buttonDeleteActivity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonDeleteActivity.Location = new System.Drawing.Point(79, 50);
-            this.buttonDeleteActivity.Name = "buttonDeleteActivity";
-            this.buttonDeleteActivity.Size = new System.Drawing.Size(75, 21);
-            this.buttonDeleteActivity.TabIndex = 0;
-            this.buttonDeleteActivity.Text = "delete";
-            this.buttonDeleteActivity.UseVisualStyleBackColor = false;
-            this.buttonDeleteActivity.Click += new System.EventHandler(this.button3_Click);
+            this.btt_ReloadActivities.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btt_ReloadActivities.FlatAppearance.BorderSize = 0;
+            this.btt_ReloadActivities.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btt_ReloadActivities.ForeColor = System.Drawing.Color.Black;
+            this.btt_ReloadActivities.Location = new System.Drawing.Point(256, 52);
+            this.btt_ReloadActivities.Name = "btt_ReloadActivities";
+            this.btt_ReloadActivities.Size = new System.Drawing.Size(75, 21);
+            this.btt_ReloadActivities.TabIndex = 3;
+            this.btt_ReloadActivities.Text = "reload";
+            this.btt_ReloadActivities.UseVisualStyleBackColor = false;
+            this.btt_ReloadActivities.Click += new System.EventHandler(this.button9_Click);
             // 
             // tableLayoutPanel7
             // 
@@ -1141,7 +1125,7 @@ namespace TraXile
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 1;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(622, 26);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(666, 26);
             this.tableLayoutPanel7.TabIndex = 6;
             // 
             // comboBoxShowMaxItems
@@ -4844,14 +4828,17 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).EndInit();
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
             this.panelTags.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.tableLayoutPanel5.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.tableLayoutPanel7.ResumeLayout(false);
             this.tableLayoutPanel7.PerformLayout();
             this.tabPage8.ResumeLayout(false);
@@ -5022,30 +5009,11 @@ namespace TraXile
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label labelTrackingType;
-        private System.Windows.Forms.Label labelTrackingArea;
-        private System.Windows.Forms.PictureBox pictureBoxStop;
-        private System.Windows.Forms.PictureBox pictureBoxPause;
-        private System.Windows.Forms.PictureBox pictureBoxPlay;
-        private System.Windows.Forms.Label labelStopWatch;
-        private System.Windows.Forms.PictureBox pictureBoxStopWatch;
-        private System.Windows.Forms.Label labelTrackingDied;
-        private System.Windows.Forms.PictureBox pictureBoxSkull;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.Label label52;
-        private System.Windows.Forms.Label labelCurrArea;
-        private System.Windows.Forms.Label labelCurrActivity;
-        private System.Windows.Forms.Label label53;
-        private System.Windows.Forms.Label label54;
-        private System.Windows.Forms.Label labelLastDeath;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button buttonDeleteActivity;
-        private System.Windows.Forms.Button buttonExportActivities;
-        private System.Windows.Forms.Button buttonActivityDetails;
-        private System.Windows.Forms.Panel panelTags;
+        private System.Windows.Forms.Button btt_DeleteActivity;
+        private System.Windows.Forms.Button btt_ExportActivities;
+        private System.Windows.Forms.Button btt_ActivityDetails;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage6;
@@ -5055,7 +5023,7 @@ namespace TraXile
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox textBoxLogFilePath;
         private System.Windows.Forms.Label label56;
-        private System.Windows.Forms.Button buttonReloadActivities;
+        private System.Windows.Forms.Button btt_ReloadActivities;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox checkBoxShowGridInAct;
         private System.Windows.Forms.Label label61;
@@ -5091,10 +5059,7 @@ namespace TraXile
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button19;
-        private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Label labelAddTagsNote;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBoxTrackingTags;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Button button20;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
@@ -5107,12 +5072,9 @@ namespace TraXile
         private System.Windows.Forms.ToolStripMenuItem chatCommandsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem1;
         private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.Label label66;
         private System.Windows.Forms.LinkLabel linkLabelSearchSyntax;
         private System.Windows.Forms.LinkLabel linkLabelClearSearch;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
-        private System.Windows.Forms.Label label67;
-        private System.Windows.Forms.Label labelCurrentAreaLvl;
         private System.Windows.Forms.Button buttonRollLog;
         private System.Windows.Forms.Label label72;
         private System.Windows.Forms.Label label71;
@@ -5146,7 +5108,6 @@ namespace TraXile
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.Button button4;
         public System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.PictureBox pictureBox10;
         public System.Windows.Forms.ImageList imageList2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
         private System.Windows.Forms.TabControl tabControl3;
@@ -5346,6 +5307,31 @@ namespace TraXile
         private System.Windows.Forms.ToolStripMenuItem overlaysToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopwatchToolStripMenuItem1;
         private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.PictureBox pictureBox10;
+        private System.Windows.Forms.Label labelTrackingDied;
+        private System.Windows.Forms.PictureBox pictureBoxSkull;
+        private System.Windows.Forms.Label labelTrackingType;
+        private System.Windows.Forms.Label labelTrackingArea;
+        private System.Windows.Forms.PictureBox pictureBoxStop;
+        private System.Windows.Forms.PictureBox pictureBoxPause;
+        private System.Windows.Forms.PictureBox pictureBoxPlay;
+        private System.Windows.Forms.Label labelStopWatch;
+        private System.Windows.Forms.PictureBox pictureBoxStopWatch;
+        private System.Windows.Forms.Panel panelTags;
+        private System.Windows.Forms.GroupBox groupBoxTrackingTags;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label labelAddTagsNote;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Label label80;
+        private System.Windows.Forms.Label label102;
+        private System.Windows.Forms.Label label82;
+        private System.Windows.Forms.Label label103;
+        private System.Windows.Forms.Label label65;
+        private System.Windows.Forms.Label label78;
+        private System.Windows.Forms.GroupBox groupBox10;
     }
 }
 

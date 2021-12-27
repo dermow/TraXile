@@ -161,8 +161,11 @@ namespace TraXile
             foreach (Control cnt in GetAll(control, typeof(Button)))
             {
                 Button btt = (Button)cnt;
-                btt.ForeColor = _buttonForeColor;
-                btt.BackColor = _buttonBackColor;
+                if (!cnt.Name.Contains("btt_"))
+                {
+                    btt.ForeColor = _buttonForeColor;
+                    btt.BackColor = _buttonBackColor;
+                }
                 btt.FlatStyle = FlatStyle.Flat;
                 btt.FlatAppearance.BorderSize = 1;
                 btt.FlatAppearance.BorderColor = _buttonBorderColor;

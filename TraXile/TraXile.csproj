@@ -165,65 +165,65 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutW.cs">
+    <Compile Include="UI\AboutW.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutW.Designer.cs">
+    <Compile Include="UI\AboutW.Designer.cs">
       <DependentUpon>AboutW.cs</DependentUpon>
     </Compile>
-    <Compile Include="ActivityDetails.cs">
+    <Compile Include="UI\ActivityDetails.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ActivityDetails.Designer.cs">
+    <Compile Include="UI\ActivityDetails.Designer.cs">
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="APPINFO.cs" />
-    <Compile Include="StopWatchOverlay.cs">
+    <Compile Include="UI\StopWatchOverlay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="StopWatchOverlay.Designer.cs">
+    <Compile Include="UI\StopWatchOverlay.Designer.cs">
       <DependentUpon>StopWatchOverlay.cs</DependentUpon>
     </Compile>
     <Compile Include="TrX_DBManager.cs" />
     <Compile Include="TrX_DefaultMappings.cs" />
-    <Compile Include="ChatCommandHelp.cs">
+    <Compile Include="UI\ChatCommandHelp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ChatCommandHelp.Designer.cs">
+    <Compile Include="UI\ChatCommandHelp.Designer.cs">
       <DependentUpon>ChatCommandHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomProgressBar.cs">
+    <Compile Include="UI\CustomProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TrX_EventMapping.cs" />
-    <Compile Include="ExportActvityList.cs">
+    <Compile Include="UI\ExportActvityList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExportActvityList.Designer.cs">
+    <Compile Include="UI\ExportActvityList.Designer.cs">
       <DependentUpon>ExportActvityList.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileSelectScreen.cs">
+    <Compile Include="UI\FileSelectScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FileSelectScreen.Designer.cs">
+    <Compile Include="UI\FileSelectScreen.Designer.cs">
       <DependentUpon>FileSelectScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="FilterScreen.cs">
+    <Compile Include="UI\FilterScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FilterScreen.Designer.cs">
+    <Compile Include="UI\FilterScreen.Designer.cs">
       <DependentUpon>FilterScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="TrX_LeagueInfo.cs" />
     <Compile Include="TrX_ListViewManager.cs" />
-    <Compile Include="LoadScreen.cs">
+    <Compile Include="UI\LoadScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoadScreen.Designer.cs">
+    <Compile Include="UI\LoadScreen.Designer.cs">
       <DependentUpon>LoadScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="ListViewNF.cs">
+    <Compile Include="UI\ListViewNF.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Main.cs">
@@ -234,10 +234,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchHelp.cs">
+    <Compile Include="UI\SearchHelp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SearchHelp.Designer.cs">
+    <Compile Include="UI\SearchHelp.Designer.cs">
       <DependentUpon>SearchHelp.cs</DependentUpon>
     </Compile>
     <Compile Include="TrX_ActivityTag.cs" />
@@ -247,25 +247,25 @@
     <Compile Include="TrX_SettingsManager.cs" />
     <Compile Include="TrX_Theme.cs" />
     <Compile Include="TrX_ThemeDefinitions.cs" />
-    <EmbeddedResource Include="AboutW.resx">
+    <EmbeddedResource Include="UI\AboutW.resx">
       <DependentUpon>AboutW.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ActivityDetails.resx">
+    <EmbeddedResource Include="UI\ActivityDetails.resx">
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ChatCommandHelp.resx">
+    <EmbeddedResource Include="UI\ChatCommandHelp.resx">
       <DependentUpon>ChatCommandHelp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExportActvityList.resx">
+    <EmbeddedResource Include="UI\ExportActvityList.resx">
       <DependentUpon>ExportActvityList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FileSelectScreen.resx">
+    <EmbeddedResource Include="UI\FileSelectScreen.resx">
       <DependentUpon>FileSelectScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FilterScreen.resx">
+    <EmbeddedResource Include="UI\FilterScreen.resx">
       <DependentUpon>FilterScreen.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoadScreen.resx">
+    <EmbeddedResource Include="UI\LoadScreen.resx">
       <DependentUpon>LoadScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
@@ -281,10 +281,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SearchHelp.resx">
+    <EmbeddedResource Include="UI\SearchHelp.resx">
       <DependentUpon>SearchHelp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="StopWatchOverlay.resx">
+    <EmbeddedResource Include="UI\StopWatchOverlay.resx">
       <DependentUpon>StopWatchOverlay.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -297,15 +297,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="TraXile_TemporaryKey.pfx" />
+    <None Include="UI\TraXile_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Changelog.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="favicon-32x32.ico" />
     <Content Include="favicon-96x96.ico" />
     <Content Include="version.xml" />
