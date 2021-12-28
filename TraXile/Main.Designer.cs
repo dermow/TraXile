@@ -580,7 +580,7 @@ namespace TraXile
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel5);
             this.splitContainer1.Size = new System.Drawing.Size(1109, 868);
-            this.splitContainer1.SplitterDistance = 433;
+            this.splitContainer1.SplitterDistance = 432;
             this.splitContainer1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -602,7 +602,7 @@ namespace TraXile
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(433, 868);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(432, 868);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // panel2
@@ -621,7 +621,7 @@ namespace TraXile
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(427, 131);
+            this.panel2.Size = new System.Drawing.Size(426, 131);
             this.panel2.TabIndex = 0;
             // 
             // pictureBox10
@@ -737,7 +737,7 @@ namespace TraXile
             this.panelTags.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelTags.Location = new System.Drawing.Point(3, 188);
             this.panelTags.Name = "panelTags";
-            this.panelTags.Size = new System.Drawing.Size(427, 566);
+            this.panelTags.Size = new System.Drawing.Size(426, 566);
             this.panelTags.TabIndex = 2;
             this.panelTags.SizeChanged += new System.EventHandler(this.panelTags_SizeChanged);
             // 
@@ -749,7 +749,7 @@ namespace TraXile
             this.groupBoxTrackingTags.ForeColor = System.Drawing.Color.Red;
             this.groupBoxTrackingTags.Location = new System.Drawing.Point(0, 0);
             this.groupBoxTrackingTags.Name = "groupBoxTrackingTags";
-            this.groupBoxTrackingTags.Size = new System.Drawing.Size(427, 566);
+            this.groupBoxTrackingTags.Size = new System.Drawing.Size(426, 566);
             this.groupBoxTrackingTags.TabIndex = 0;
             this.groupBoxTrackingTags.TabStop = false;
             this.groupBoxTrackingTags.Text = "Tags";
@@ -760,7 +760,7 @@ namespace TraXile
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(3, 760);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(427, 23);
+            this.panel7.Size = new System.Drawing.Size(426, 23);
             this.panel7.TabIndex = 3;
             // 
             // labelAddTagsNote
@@ -782,7 +782,7 @@ namespace TraXile
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 140);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(427, 42);
+            this.panel1.Size = new System.Drawing.Size(426, 42);
             this.panel1.TabIndex = 4;
             // 
             // panel6
@@ -794,7 +794,7 @@ namespace TraXile
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(427, 42);
+            this.panel6.Size = new System.Drawing.Size(426, 42);
             this.panel6.TabIndex = 8;
             // 
             // label80
@@ -877,7 +877,7 @@ namespace TraXile
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(672, 868);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(673, 868);
             this.tableLayoutPanel5.TabIndex = 5;
             // 
             // listViewActLog
@@ -900,7 +900,7 @@ namespace TraXile
             this.listViewActLog.Location = new System.Drawing.Point(3, 93);
             this.listViewActLog.MultiSelect = false;
             this.listViewActLog.Name = "listViewActLog";
-            this.listViewActLog.Size = new System.Drawing.Size(666, 740);
+            this.listViewActLog.Size = new System.Drawing.Size(667, 740);
             this.listViewActLog.SmallImageList = this.imageList1;
             this.listViewActLog.TabIndex = 4;
             this.listViewActLog.UseCompatibleStateImageBehavior = false;
@@ -987,7 +987,7 @@ namespace TraXile
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(666, 84);
+            this.panel3.Size = new System.Drawing.Size(667, 84);
             this.panel3.TabIndex = 5;
             // 
             // groupBox10
@@ -1004,7 +1004,7 @@ namespace TraXile
             this.groupBox10.ForeColor = System.Drawing.Color.Red;
             this.groupBox10.Location = new System.Drawing.Point(0, 0);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(666, 84);
+            this.groupBox10.Size = new System.Drawing.Size(667, 84);
             this.groupBox10.TabIndex = 11;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Search";
@@ -1125,7 +1125,7 @@ namespace TraXile
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 1;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(666, 26);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(667, 26);
             this.tableLayoutPanel7.TabIndex = 6;
             // 
             // comboBoxShowMaxItems

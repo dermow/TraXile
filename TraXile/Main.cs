@@ -14,6 +14,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
+using System.Globalization;
 
 namespace TraXile
 {
@@ -50,6 +51,10 @@ namespace TraXile
         // START FLAGS
         public readonly bool IS_IN_DEBUG_MODE = false;
         public bool SAFE_RELOAD_MODE;
+
+        // Calendar
+        public DateTimeFormatInfo _dtfi;
+        public GregorianCalendar _myCalendar;
 
         // App parameters
         private readonly string _dbPath;
@@ -224,8 +229,8 @@ namespace TraXile
             List<TrX_TrackedActivity> results;
             results = new List<TrX_TrackedActivity>();
 
-            DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, 0, 0, 0);
-            DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, 23, 59, 59);
+            DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, 0, 0, 0, _dtfi.Calendar);
+            DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, 23, 59, 59, _dtfi.Calendar);
 
             _statsDate1 = date1;
             _statsDate2 = date2;
@@ -437,6 +442,10 @@ namespace TraXile
         private void Init()
         {
             Opacity = 0;
+
+            // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
+            _dtfi = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
+            _dtfi.Calendar = new GregorianCalendar();
 
             _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             _log.Info("Application started");
@@ -747,23 +756,23 @@ namespace TraXile
         private void InitLeagueInfo()
         {
             _leagues.Clear();
-            _leagues.Add(new TrX_LeagueInfo("Harbinger", 3, 0, new DateTime(2017, 8, 4, 20, 0, 0), new DateTime(2017, 12, 4, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Abyss", 3, 1, new DateTime(2017, 12, 8, 20, 0, 0), new DateTime(2018, 2, 26, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Bestiary", 3, 2, new DateTime(2018, 3, 2, 20, 0, 0), new DateTime(2018, 5, 28, 22, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Incursion", 3, 3, new DateTime(2018, 6, 1, 20, 0, 0), new DateTime(2018, 8, 27, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Delve", 3, 4, new DateTime(2018, 8, 31, 20, 0, 0), new DateTime(2018, 12, 3, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Betrayal", 3, 5, new DateTime(2018, 12, 7, 20, 0, 0), new DateTime(2019, 3, 4, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Synthesis", 3, 6, new DateTime(2019, 3, 8, 20, 0, 0), new DateTime(2019, 6, 3, 22, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Legion", 3, 7, new DateTime(2019, 6, 7, 20, 0, 0), new DateTime(2019, 9, 3, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Blight", 3, 8, new DateTime(2019, 9, 6, 20, 0, 0), new DateTime(2019, 12, 9, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Metamorph", 3, 9, new DateTime(2019, 12, 13, 20, 0, 0), new DateTime(2020, 3, 9, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Delirium", 3, 10, new DateTime(2020, 3, 13, 20, 0, 0), new DateTime(2020, 6, 15, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Harvest", 3, 11, new DateTime(2020, 6, 19, 20, 0, 0), new DateTime(2020, 9, 14, 22, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Heist", 3, 12, new DateTime(2020, 9, 18, 20, 0, 0), new DateTime(2021, 1, 11, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Ritual", 3, 13, new DateTime(2021, 1, 15, 20, 0, 0), new DateTime(2021, 1, 15, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Ultimatum", 3, 14, new DateTime(2021, 4, 16, 20, 0, 0), new DateTime(2021, 07, 19, 22, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Expedition", 3, 15, new DateTime(2021, 7, 23, 20, 0, 0), new DateTime(2021, 10, 19, 21, 0, 0)));
-            _leagues.Add(new TrX_LeagueInfo("Scourge", 3, 16, new DateTime(2021, 10, 22, 20, 0, 0), new DateTime(2022, 01, 31, 21, 0, 0)));
+            _leagues.Add(new TrX_LeagueInfo("Harbinger", 3, 0, new DateTime(2017, 8, 4, 20, 0, 0), new DateTime(2017, 12, 4, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Abyss", 3, 1, new DateTime(2017, 12, 8, 20, 0, 0), new DateTime(2018, 2, 26, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Bestiary", 3, 2, new DateTime(2018, 3, 2, 20, 0, 0), new DateTime(2018, 5, 28, 22, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Incursion", 3, 3, new DateTime(2018, 6, 1, 20, 0, 0), new DateTime(2018, 8, 27, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Delve", 3, 4, new DateTime(2018, 8, 31, 20, 0, 0), new DateTime(2018, 12, 3, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Betrayal", 3, 5, new DateTime(2018, 12, 7, 20, 0, 0), new DateTime(2019, 3, 4, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Synthesis", 3, 6, new DateTime(2019, 3, 8, 20, 0, 0), new DateTime(2019, 6, 3, 22, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Legion", 3, 7, new DateTime(2019, 6, 7, 20, 0, 0), new DateTime(2019, 9, 3, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Blight", 3, 8, new DateTime(2019, 9, 6, 20, 0, 0), new DateTime(2019, 12, 9, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Metamorph", 3, 9, new DateTime(2019, 12, 13, 20, 0, 0), new DateTime(2020, 3, 9, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Delirium", 3, 10, new DateTime(2020, 3, 13, 20, 0, 0), new DateTime(2020, 6, 15, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Harvest", 3, 11, new DateTime(2020, 6, 19, 20, 0, 0), new DateTime(2020, 9, 14, 22, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Heist", 3, 12, new DateTime(2020, 9, 18, 20, 0, 0), new DateTime(2021, 1, 11, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Ritual", 3, 13, new DateTime(2021, 1, 15, 20, 0, 0), new DateTime(2021, 1, 15, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Ultimatum", 3, 14, new DateTime(2021, 4, 16, 20, 0, 0), new DateTime(2021, 07, 19, 22, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Expedition", 3, 15, new DateTime(2021, 7, 23, 20, 0, 0), new DateTime(2021, 10, 19, 21, 0, 0, _dtfi.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Scourge", 3, 16, new DateTime(2021, 10, 22, 20, 0, 0), new DateTime(2022, 01, 31, 21, 0, 0, _dtfi.Calendar)));
 
             List<TrX_LeagueInfo> litmp = new List<TrX_LeagueInfo>();
             litmp.AddRange(_leagues);
@@ -1684,7 +1693,6 @@ namespace TraXile
         private void ParseLogFile()
         {
             _log.Info("Started logfile parsing. Last hash was " + _lastHash.ToString());
-
             _logLinesTotal = Convert.ToDouble(GetLogFileLineCount());
 
             var fs = new FileStream(SettingPoeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -1755,7 +1763,8 @@ namespace TraXile
                                 };
                                 try
                                 {
-                                    ev.EventTime = DateTime.Parse(line.Split(' ')[0] + " " + line.Split(' ')[1]);
+                                    DateTime dt = DateTime.Parse(line.Split(' ')[0] + " " + line.Split(' ')[1], _dtfi);
+                                    ev.EventTime = dt;
                                     lastEvTime = ev.EventTime;
                                 }
                                 catch
@@ -5057,8 +5066,8 @@ namespace TraXile
 
         private void RenderBossingDashboard()
         {
-            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0);
-            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59);
+            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dtfi.Calendar);
+            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59, _dtfi.Calendar);
             long ts1 = ((DateTimeOffset)dt1).ToUnixTimeSeconds();
             long ts2 = ((DateTimeOffset)dt2).ToUnixTimeSeconds();
 
@@ -5175,8 +5184,8 @@ namespace TraXile
 
         private void RenderAllStatsDashboard()
         {
-            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0);
-            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59);
+            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dtfi.Calendar);
+            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59, _dtfi.Calendar);
 
             if (listViewNF1.Items.Count == 0)
             {
@@ -5206,8 +5215,8 @@ namespace TraXile
 
         private void UpdateAllStatsChart()
         {
-            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0);
-            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59);
+            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dtfi.Calendar);
+            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59, _dtfi.Calendar);
 
             int interval = 1;
             double days = (dt2 - dt1).TotalDays;
