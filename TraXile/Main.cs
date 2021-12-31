@@ -229,8 +229,9 @@ namespace TraXile
             List<TrX_TrackedActivity> results;
             results = new List<TrX_TrackedActivity>();
 
-            DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, 0, 0, 0, _dtfi.Calendar);
-            DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, 23, 59, 59, _dtfi.Calendar);
+            DateTime date1, date2;
+            date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, 0, 0, 0, _dtfi.Calendar);
+            date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, 23, 59, 59, _dtfi.Calendar);
 
             _statsDate1 = date1;
             _statsDate2 = date2;
