@@ -60,7 +60,6 @@ namespace TraXile
         private readonly string _dbPath;
         private readonly string _cachePath;
         private readonly string _myAppData;
-        private bool _exit;
         private bool _listViewInitielaized;
         private bool _showGridInActLog;
         private bool _restoreMode;
@@ -101,8 +100,6 @@ namespace TraXile
         private int _nextAreaLevel;
         private int _currentAreaLevel;
         private int _lastHash = 0;
-        private double _logLinesTotal;
-        private double _logLinesRead;
         private bool _historyInitialized;
         private Dictionary<int, string> _dict;
         private Dictionary<string, string> _statNamesLong;
@@ -110,7 +107,6 @@ namespace TraXile
         private List<string> labs;
         private List<TrX_ActivityTag> _tags;
         private List<TrX_TrackedActivity> _eventHistory;
-        private TrX_EventMapping _eventMapping;
         private TrX_DefaultMappings _defaultMappings;
         private TrX_DBManager _myDB;
         private TrX_StatsManager _myStats;
@@ -120,10 +116,7 @@ namespace TraXile
         private TrX_TrackedActivity _prevActivity;
         private TrX_TrackedActivity _prevActivityOverlay;
         private EVENT_TYPES _lastEventTypeConq;
-        private Thread _logParseThread;
-        private Thread _eventThread;
         private DateTime _inAreaSince;
-        private DateTime _lastDeathTime;
         private DateTime _initStartTime;
         private DateTime _initEndTime;
         private DateTime _statsDate1;
@@ -459,8 +452,6 @@ namespace TraXile
             _lvmActlog = new TrX_ListViewManager(listViewActLog);
             _lvmAllStats = new TrX_ListViewManager(listViewNF1);
             comboBox1.SelectedIndex = 0;
-
-            _eventMapping = new TrX_EventMapping();
             _defaultMappings = new TrX_DefaultMappings();
             _parsedActivities = new List<string>();
             _leagues = new List<TrX_LeagueInfo>();
@@ -734,21 +725,8 @@ namespace TraXile
             }
 
             // Init log parser
-            _parser = new TrX_ClientTxtParser(SettingPoeLogFilePath, ref _log, _lastHash);
-
-            // Thread for Log Parsing and Enqueuing
-            _logParseThread = new Thread(new ThreadStart(LogParsing))
-            {
-                IsBackground = true
-            };
-            _logParseThread.Start();
-
-            // Thread for Queue processing / Dequeuing
-            _eventThread = new Thread(new ThreadStart(EventHandling))
-            {
-                IsBackground = true
-            };
-            _eventThread.Start();
+            _parser = new TrX_ClientTxtParser(SettingPoeLogFilePath, ref _log, this, _lastHash);
+            _parser.OnInizialized += _parser_OnInizialized;
 
             // Request initial Dashboard update
             _uiFlagLabDashboard = true;
@@ -758,6 +736,23 @@ namespace TraXile
             _uiFlagGlobalDashboard = true;
             _uiFlagActivityList = true;
             _uiFlagAllStatsDashboard = true;
+        }
+
+        private void _parser_OnInizialized()
+        {
+            _currentActivity = null;
+            _isMapZana = false;
+            _initEndTime = DateTime.Now;
+            TimeSpan tsInitDuration = (_initEndTime - _initStartTime);
+            _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_READY)
+            {
+                EventTime = DateTime.Now,
+                LogLine = "Application initialized in "
+                  + Math.Round(tsInitDuration.TotalSeconds, 2) + " seconds."
+            });
+            _lastHash = _parser.LastHash;
+            SAFE_RELOAD_MODE = false;
+            _eventQueueInitizalized = true;
         }
 
         private void InitLeagueInfo()
@@ -1661,162 +1656,6 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Main method for log parsing thread
-        /// </summary>
-        private void LogParsing()
-        {
-            while (true)
-            {
-                Thread.Sleep(1000);
-                if (SettingPoeLogFilePath != null)
-                {
-                    ParseLogFile();
-
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get line count from Client.txt. Used for progress calculation
-        /// </summary>
-        /// <returns></returns>
-        private int GetLogFileLineCount()
-        {
-            int iCount = 0;
-            FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            TextReader reader1 = new StreamReader(fs1);
-            while ((reader1.ReadLine()) != null)
-            {
-                iCount++;
-            }
-            reader1.Close();
-            return iCount;
-        }
-
-
-        /// <summary>
-        /// Parse the logfile
-        /// </summary>
-        private void ParseLogFile()
-        {
-            _log.Info("Started logfile parsing. Last hash was " + _lastHash.ToString());
-            _logLinesTotal = Convert.ToDouble(GetLogFileLineCount());
-
-            var fs = new FileStream(SettingPoeLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            bool bNewContent = _lastHash == 0;
-
-            using (StreamReader reader = new StreamReader(fs))
-            {
-                string line;
-                int lineHash = 0;
-                DateTime lastEvTime = new DateTime();
-
-                // Keep file open
-                while (!_exit)
-                {
-                    line = reader.ReadLine();
-
-                    if (line == null)
-                    {
-                        if (!_eventQueueInitizalized)
-                        {
-                            _currentActivity = null;
-                            _isMapZana = false;
-                            _initEndTime = DateTime.Now;
-                            TimeSpan tsInitDuration = (_initEndTime - _initStartTime);
-                            _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_READY)
-                            {
-                                EventTime = DateTime.Now,
-                                LogLine = "Application initialized in "
-                                  + Math.Round(tsInitDuration.TotalSeconds, 2) + " seconds."
-                            });
-                            _lastHash = lineHash;
-                            SAFE_RELOAD_MODE = false;
-                        }
-                        _eventQueueInitizalized = true;
-                        bNewContent = true;
-
-                        Thread.Sleep(100);
-                        continue;
-                    }
-
-                    lineHash = line.GetHashCode();
-
-                    if (_dict.ContainsKey(lineHash))
-                        continue;
-
-                    if (lineHash == _lastHash || _lastHash == 0)
-                    {
-                        bNewContent = true;
-                    }
-
-                    if (!bNewContent)
-                    {
-                        _logLinesRead++;
-                        continue;
-                    }
-
-                    _lastHash = lineHash;
-
-                    foreach (KeyValuePair<string, EVENT_TYPES> kv in _eventMapping.MAP)
-                    {
-                        if (line.Contains(kv.Key))
-                        {
-                            if (!_dict.ContainsKey(lineHash))
-                            {
-                                TrX_TrackingEvent ev = new TrX_TrackingEvent(kv.Value)
-                                {
-                                    LogLine = line
-                                };
-                                try
-                                {
-                                    DateTime dt = DateTime.Parse(line.Split(' ')[0] + " " + line.Split(' ')[1], _dtfi);
-                                    ev.EventTime = dt;
-                                    lastEvTime = ev.EventTime;
-                                }
-                                catch
-                                {
-                                    ev.EventTime = lastEvTime;
-                                }
-                                _dict.Add(lineHash, "init");
-
-                                if (!_eventQueueInitizalized)
-                                {
-                                    HandleSingleEvent(ev, true);
-                                }
-                                else
-                                {
-                                    _eventQueue.Enqueue(ev);
-                                }
-                            }
-                        }
-                    }
-                    _logLinesRead++;
-                }
-            }
-            _oldestTimeStamp = _myStats.GetOldestTimeStamp();
-        }
-
-        /// <summary>
-        /// Handle events - Read Queue
-        /// </summary>
-        private void EventHandling()
-        {
-            while (true)
-            {
-                Thread.Sleep(1);
-
-                if (_eventQueueInitizalized)
-                {
-                    while (_eventQueue.TryDequeue(out TrX_TrackingEvent deqEvent))
-                    {
-                        HandleSingleEvent(deqEvent);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Check if a given area is a Map.
         /// </summary>
         /// <param name="sArea"></param>
@@ -2687,7 +2526,6 @@ namespace TraXile
             if (!_knownPlayerNames.Contains(sPlayerName))
             {
                 IncrementStat("TotalKilledCount", ev.EventTime, 1);
-                _lastDeathTime = DateTime.Now;
 
                 // Lab?
                 if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
@@ -2757,7 +2595,7 @@ namespace TraXile
         /// </summary>
         /// <param name="ev"></param>
         /// <param name="bInit"></param>
-        private void HandleSingleEvent(TrX_TrackingEvent ev, bool bInit = false)
+        public void HandleSingleEvent(TrX_TrackingEvent ev, bool bInit = false)
         {
             try
             {
@@ -3691,10 +3529,10 @@ namespace TraXile
         private void SaveStatsCache()
         {
             // DB
-            _myDB.DoNonQuery(string.Format("UPDATE tx_kvstore SET value='{0}' where key='last_hash'", _lastHash));
+            _myDB.DoNonQuery(string.Format("UPDATE tx_kvstore SET value='{0}' where key='last_hash'", _parser.LastHash));
 
             StreamWriter wrt = new StreamWriter(_cachePath);
-            wrt.WriteLine("last;" + _lastHash.ToString());
+            wrt.WriteLine("last;" + _parser.LastHash.ToString());
             foreach (KeyValuePair<string, int> kvp in _myStats.NumericStats)
             {
                 wrt.WriteLine(kvp.Key + ";" + kvp.Value);
@@ -4408,15 +4246,13 @@ namespace TraXile
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_currentActivity)];
                             pictureBoxStop.Show();
                         }
-
-
                     }
                     else
                     {
                         labelTrackingDied.Text = "0";
                         labelTrackingArea.Text = "-";
                         labelStopWatch.Text = "00:00:00";
-                        labelTrackingType.Text = "Enter an ingame activity to auto. start tracking.";
+                        labelTrackingType.Text = "-";
                     }
 
                     if (_uiFlagAllStatsDashboard ||
@@ -4541,7 +4377,6 @@ namespace TraXile
         /// </summary>
         private void Exit()
         {
-            _exit = true;
             if (_currentActivity != null)
                 FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
             _log.Info("Exitting.");
@@ -5622,8 +5457,8 @@ namespace TraXile
                 if (!_eventQueueInitizalized)
                 {
                     Hide();
-                    if (_logLinesRead > 0)
-                        dProgress = (_logLinesRead / _logLinesTotal) * 100;
+                    if (_parser.LogLinesRead > 0)
+                        dProgress = ((double)_parser.LogLinesRead / (double)_parser.LogLinesTotal) * 100;
                     _loadScreenWindow.progressBar.Value = Convert.ToInt32(dProgress);
                     _loadScreenWindow.progressLabel.Text = "Parsing logfile. This could take a while the first time.";
                     _loadScreenWindow.progressLabel2.Text = Math.Round(dProgress, 2).ToString() + "%";
