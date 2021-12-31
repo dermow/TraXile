@@ -131,6 +131,9 @@ namespace TraXile
         private string _lastShaperInstance;
         private string _lastElderInstance;
 
+        // Log Parser
+        TrX_ClientTxtParser _parser;
+
         // Hideout time
         private DateTime _hoStart;
         private bool _trackingHO;
@@ -729,6 +732,9 @@ namespace TraXile
             {
                 ReadActivityLogFromSQLite();
             }
+
+            // Init log parser
+            _parser = new TrX_ClientTxtParser(SettingPoeLogFilePath, ref _log, _lastHash);
 
             // Thread for Log Parsing and Enqueuing
             _logParseThread = new Thread(new ThreadStart(LogParsing))

@@ -2,7 +2,7 @@
 
 namespace TraXile
 {
-    class TrX_TrackingEvent
+    public class TrX_TrackingEvent
     {
         private readonly EVENT_TYPES _eventType;
         private string _logLine;
