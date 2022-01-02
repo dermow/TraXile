@@ -3,10 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using log4net;
 
 namespace TraXile
@@ -86,7 +83,7 @@ namespace TraXile
         /// <summary>
         /// DateTimeFormat to use for all time calculations
         /// </summary>
-        private DateTimeFormatInfo _dtfi;
+        private DateTimeFormatInfo _dateTimeFormatInfo;
 
         /// <summary>
         /// Main class
@@ -108,8 +105,8 @@ namespace TraXile
             _linesRead = 0;
             _totalLines = 0;
             _main = m;
-            _dtfi = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
-            _dtfi.Calendar = new GregorianCalendar();
+            _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
+            _dateTimeFormatInfo.Calendar = new GregorianCalendar();
             _eventMapping = new TrX_EventMapping();
             _eventQueue = new ConcurrentQueue<TrX_TrackingEvent>();
             _parsingThread = new Thread(new ThreadStart(ParseLogFile));
@@ -200,7 +197,7 @@ namespace TraXile
 
                                 try
                                 {
-                                    ev.EventTime = DateTime.Parse(line.Split(' ')[0] + " " + line.Split(' ')[1], _dtfi);
+                                    ev.EventTime = DateTime.Parse(line.Split(' ')[0] + " " + line.Split(' ')[1], _dateTimeFormatInfo);
                                     lastEvTime = ev.EventTime;
                                 }
                                 catch
