@@ -4,7 +4,7 @@ using System;
 
 namespace TraXile
 {
-    class TrX_DBManager
+    public class TrX_DBManager
     {
         private SqliteConnection _dbConnection;
         private readonly string _dbPath;

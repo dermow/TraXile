@@ -653,7 +653,6 @@ namespace TraXile
             this.pictureBoxSkull.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxSkull.TabIndex = 7;
             this.pictureBoxSkull.TabStop = false;
-            this.pictureBoxSkull.Click += new System.EventHandler(this.pictureBoxSkull_Click);
             // 
             // labelTrackingType
             // 
@@ -686,7 +685,7 @@ namespace TraXile
             this.pictureBoxStop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxStop.TabIndex = 4;
             this.pictureBoxStop.TabStop = false;
-            this.pictureBoxStop.Click += new System.EventHandler(this.pictureBox19_Click);
+            this.pictureBoxStop.Click += new System.EventHandler(this.pictureBoxStop_Click);
             // 
             // pictureBoxPause
             // 
@@ -4661,7 +4660,6 @@ namespace TraXile
             this.pictureBox15.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox15.TabIndex = 23;
             this.pictureBox15.TabStop = false;
-            this.pictureBox15.Click += new System.EventHandler(this.pictureBox15_Click_1);
             // 
             // label51
             // 

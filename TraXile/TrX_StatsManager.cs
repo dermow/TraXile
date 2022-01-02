@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TraXile
 {
-    class TrX_StatsManager
+    public class TrX_StatsManager
     {
         private TrX_DBManager _myDB;
         private Dictionary<string, int> _numericStats;

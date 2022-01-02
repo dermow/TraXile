@@ -55,7 +55,7 @@ namespace TraXile
                 label10.Text = "unknown";
             }
 
-            foreach (TrX_ActivityTag tag in main.Tags)
+            foreach (TrX_ActivityTag tag in main.Logic.Tags)
             {
                 if (!tag.IsDefault)
                 {

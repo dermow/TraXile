@@ -165,6 +165,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TrX_CoreLogic.cs" />
     <Compile Include="UI\AboutW.cs">
       <SubType>Form</SubType>
     </Compile>
