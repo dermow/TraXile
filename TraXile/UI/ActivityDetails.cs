@@ -126,6 +126,7 @@ namespace TraXile
                     _trackedActivity.RemoveTag(tag.ID);
                     RenderTags(true);
                     _mainWindow.ResetMapHistory();
+                    _mainWindow.RequestHistoryUpdate();
                     _mainWindow.RequestDashboardUpdates();
                 }
 
@@ -139,6 +140,7 @@ namespace TraXile
                 _mainWindow.AddTagAutoCreate(comboBox1.Text, _trackedActivity);
                 RenderTags(true);
                 _mainWindow.ResetMapHistory();
+                _mainWindow.RequestHistoryUpdate();
                 _mainWindow.RequestDashboardUpdates();
             }
         }
