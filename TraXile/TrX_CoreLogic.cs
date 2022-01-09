@@ -16,8 +16,16 @@ namespace TraXile
     /// History initizalized event handler
     /// </summary>
     public delegate void Trx_GenericEventHandler(TrX_CoreLogicGenericEventArgs e);
+
+    /// <summary>
+    /// Event handler for activity based events
+    /// </summary>
+    /// <param name="e"></param>
     public delegate void TrX_ActivityEventHandler(TrX_CoreLogicActivityEventArgs e);
 
+    /// <summary>
+    /// Event args for generic events
+    /// </summary>
     public class TrX_CoreLogicGenericEventArgs : EventArgs
     {
         TrX_CoreLogic _logic;
@@ -32,6 +40,9 @@ namespace TraXile
         }
     }
 
+    /// <summary>
+    /// Event args for Activity based events
+    /// </summary>
     public class TrX_CoreLogicActivityEventArgs : EventArgs
     {
         TrX_CoreLogic _logic;
@@ -53,6 +64,9 @@ namespace TraXile
         }
     }
 
+    /// <summary>
+    /// Core parsing logic
+    /// </summary>
     public class TrX_CoreLogic
     {
         // START FLAGS
@@ -60,7 +74,7 @@ namespace TraXile
         public bool SAFE_RELOAD_MODE;
 
         // Calendar
-        public DateTimeFormatInfo _dtfi;
+        public DateTimeFormatInfo _dateTimeFormatInfo;
         public GregorianCalendar _myCalendar;
 
         // App parameters
@@ -75,7 +89,6 @@ namespace TraXile
         private string _currentArea;
         private string _currentInstanceEndpoint;
         private string _lastSimuEndpoint;
-        private string _failedRestoreReason = "";
         private bool _eventQueueInitizalized;
         private bool _isMapZana;
         private bool _isMapVaalArea;
@@ -129,98 +142,7 @@ namespace TraXile
         public event TrX_ActivityEventHandler OnActivityFinished;
         public event Trx_GenericEventHandler OnTagsUpdated;
 
-        // PROPERTIES
-        public List<TrX_ActivityTag> Tags
-        {
-            get { return _tags; }
-            set { _tags = value; }
-        }
 
-        public TrX_TrackedActivity CurrentActivity
-        {
-            get { return _currentActivity; }
-        }
-
-        public List<TrX_TrackedActivity> ActivityHistory
-        {
-            get { return _eventHistory; }
-        }
-
-        public string ClientTxtPath
-        {
-            get { return _clientTxtPath; }
-            set { _clientTxtPath = value; }
-        }
-
-        public bool EventQueueInitialized
-        {
-            get { return _eventQueueInitizalized; }
-        }
-
-        public double LogLinesTotal
-        {
-            get { return _logLinesTotal; }
-        }
-
-        public double LogLinesRead
-        {
-            get { return _logLinesRead; }
-        }
-
-        public bool IsMapZana
-        {
-            get { return _isMapZana; }
-        }
-
-        public bool IsMapVaalArea
-        {
-            get { return _isMapVaalArea; }
-        }
-
-        public bool IsMapLogbookSide
-        {
-            get { return _isMapLogbookSide; }
-        }
-
-        public bool IsMapLabTrial
-        {
-            get { return _isMapLabTrial; }
-        }
-
-        public bool IsMapAbyssArea
-        {
-            get { return _isMapAbyssArea; }
-        }
-
-        public string CurrentArea
-        {
-            get { return _currentArea; }
-        }
-
-        public int CurrentAreaLevel
-        {
-            get { return _currentAreaLevel; }
-        }
-
-        public TrX_TrackedActivity OverlayPrevActivity
-        {
-            get { return _prevActivityOverlay; }
-        }
-
-        public TrX_DBManager Database
-        {
-            get { return _myDB; }
-        }
-
-        public TrX_StatsManager Stats
-        {
-            get { return _myStats; }
-        }
-
-        public Dictionary<string,string> StatNamesLong
-        {
-            get { return _statNamesLong; }
-        }
 
         /// <summary>
         /// Main Window Constructor
@@ -275,20 +197,13 @@ namespace TraXile
         private void Init()
         {
             // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
-            _dtfi = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
-            _dtfi.Calendar = new GregorianCalendar();
-
+            _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
+            _dateTimeFormatInfo.Calendar = new GregorianCalendar();
             _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             _log.Info("Application started");
-
-            _mySettings.LoadFromXml();
-
             _eventMapping = new TrX_EventMapping();
             _defaultMappings = new TrX_DefaultMappings();
             _parsedActivities = new List<string>();
-
-            SaveVersion();
-
             _dict = new Dictionary<int, string>();
             _eventQueue = new ConcurrentQueue<TrX_TrackingEvent>();
             _eventHistory = new List<TrX_TrackedActivity>();
@@ -301,10 +216,13 @@ namespace TraXile
             _initStartTime = DateTime.Now;
             _myDB = new TrX_DBManager(_myAppData + @"\data.db", ref _log);
             _myStats = new TrX_StatsManager(_myDB);
-            InitDefaultTags();
-
             _lastEventTypeConq = EVENT_TYPES.APP_STARTED;
+
+            InitDefaultTags();
             InitNumStats();
+            ReadKnownPlayers();
+            LoadCustomTags();
+            SaveVersion();
 
             _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
 
@@ -327,11 +245,7 @@ namespace TraXile
                     _myDB.DoNonQuery("DELETE FROM tx_stats WHERE timestamp > 0");
                     SAFE_RELOAD_MODE = true;
                 }
-
             }
-
-            ReadKnownPlayers();
-            LoadCustomTags();
 
             if (!_historyInitialized)
             {
@@ -351,6 +265,36 @@ namespace TraXile
                 IsBackground = true
             };
             _eventThread.Start();
+        }
+
+        /// <summary>
+        /// Stop logic
+        /// </summary>
+        /// <param name="timeout">timeout to wait for exit</param>
+        public void Stop(int timeout = 2000)
+        {
+            _exit = true;
+            int i = 0;
+
+            // Wait for threads to finish
+            while (_eventThread.IsAlive || _logParseThread.IsAlive)
+            {
+                Thread.Sleep(1);
+                i++;
+                if (i > timeout)
+                {
+                    break;
+                }
+            }
+
+            if (_eventThread.IsAlive)
+            {
+                _eventThread.Abort();
+            }
+            if (_logParseThread.IsAlive)
+            {
+                _logParseThread.Abort();
+            }
         }
 
         /// <summary>
@@ -938,8 +882,6 @@ namespace TraXile
                     return ACTIVITY_TYPES.HEIST;
                 case "simulacrum":
                     return ACTIVITY_TYPES.SIMULACRUM;
-                case "blighted_map":
-                    return ACTIVITY_TYPES.BLIGHTED_MAP;
                 case "labyrinth":
                     return ACTIVITY_TYPES.LABYRINTH;
                 case "delve":
@@ -1053,7 +995,7 @@ namespace TraXile
         /// </summary>
         private void LogParsing()
         {
-            while (true)
+            while (!_exit)
             {
                 Thread.Sleep(1000);
                 if (_clientTxtPath != null)
@@ -1163,7 +1105,7 @@ namespace TraXile
                                 };
                                 try
                                 {
-                                    DateTime dt = DateTime.Parse(line.Split(' ')[0] + " " + line.Split(' ')[1], _dtfi);
+                                    DateTime dt = DateTime.Parse(line.Split(' ')[0] + " " + line.Split(' ')[1], _dateTimeFormatInfo);
                                     ev.EventTime = dt;
                                     lastEvTime = ev.EventTime;
                                 }
@@ -1195,7 +1137,7 @@ namespace TraXile
         /// </summary>
         private void EventHandling()
         {
-            while (true)
+            while (!_exit)
             {
                 Thread.Sleep(1);
 
@@ -1321,7 +1263,7 @@ namespace TraXile
                 case "finish":
                     if (currentAct != null && !_isMapZana)
                     {
-                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, DateTime.Now);
+                        FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, DateTime.Now);
                     }
                     break;
             }
@@ -2960,7 +2902,7 @@ namespace TraXile
             {
                 _currentActivity = null;
             }
-          
+
         }
 
         /// <summary>
@@ -3350,7 +3292,7 @@ namespace TraXile
             return iIndex;
         }
 
-       
+
 
         /// <summary>
         /// Find matching activity to Item name
@@ -3388,18 +3330,6 @@ namespace TraXile
                 .Replace(".", "").Trim();
             return sArea.Replace("'", "");
         }
-       
-
-        /// <summary>
-        /// Read single setting
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="s_default"></param>
-        /// <returns></returns>
-        public string ReadSetting(string key, string s_default = null)
-        {
-            return _mySettings.ReadSetting(key, s_default);
-        }
 
         /// <summary>
         /// Exit
@@ -3413,7 +3343,7 @@ namespace TraXile
             Application.Exit();
         }
 
-     
+
 
         private int LevelToTier(int level)
         {
@@ -3484,39 +3414,6 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Create a TraXile backup
-        /// </summary>
-        /// <param name="s_name"></param>
-        private void CreateBackup(string s_name)
-        {
-            string sBackupDir = _myAppData + @"/backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
-            System.IO.Directory.CreateDirectory(sBackupDir);
-
-            if (System.IO.File.Exists(_clientTxtPath))
-                System.IO.File.Copy(_clientTxtPath, sBackupDir + @"/Client.txt");
-            if (System.IO.File.Exists(_cachePath))
-                System.IO.File.Copy(_cachePath, sBackupDir + @"/stats.cache");
-            if (System.IO.File.Exists(_dbPath))
-                System.IO.File.Copy(_dbPath, sBackupDir + @"/data.db");
-            if (System.IO.File.Exists("TraXile.exe.config"))
-                System.IO.File.Copy("TraXile.exe.config", sBackupDir + @"/TraXile.exe.config");
-        }
-
-        /// <summary>
-        /// Fully reset the application
-        /// </summary>
-        private void DoFullReset()
-        {
-            // Make logfile empty
-            FileStream fs1 = new FileStream(_clientTxtPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-            fs1.Close();
-            ResetStats();
-            ClearActivityLog();
-            _lastHash = 0;
-            File.Delete(_cachePath);
-        }
-
-        /// <summary>
         /// Export Activity log to CSV
         /// </summary>
         /// <param name="sPath"></param>
@@ -3544,26 +3441,6 @@ namespace TraXile
             wrt.Close();
         }
 
-
-      
-
-        /// <summary>
-        /// Check if a tag with given ID exists
-        /// </summary>
-        /// <param name="s_id"></param>
-        /// <returns></returns>
-        private bool CheckTagExists(string s_id)
-        {
-            foreach (TrX_ActivityTag tag in _tags)
-            {
-                if (tag.ID == s_id)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         /// <summary>
         /// Add a new tag
         /// </summary>
@@ -3571,7 +3448,7 @@ namespace TraXile
         private void AddTag(TrX_ActivityTag tag)
         {
             _tags.Add(tag);
-            _myDB.DoNonQuery("INSERT INTO tx_logic.Tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) VALUES "
+            _myDB.DoNonQuery("INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) VALUES "
                 + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom', " + (tag.ShowInListView ? "1" : "0") + ")");
             // Trigger event
             OnTagsUpdated(new TrX_CoreLogicGenericEventArgs(this));
@@ -3746,6 +3623,99 @@ namespace TraXile
                     }
                 }
             }
+        }
+
+        // PROPERTIES
+        public List<TrX_ActivityTag> Tags
+        {
+            get { return _tags; }
+            set { _tags = value; }
+        }
+
+        public TrX_TrackedActivity CurrentActivity
+        {
+            get { return _currentActivity; }
+        }
+
+        public List<TrX_TrackedActivity> ActivityHistory
+        {
+            get { return _eventHistory; }
+        }
+
+        public string ClientTxtPath
+        {
+            get { return _clientTxtPath; }
+            set { _clientTxtPath = value; }
+        }
+
+        public bool EventQueueInitialized
+        {
+            get { return _eventQueueInitizalized; }
+        }
+
+        public double LogLinesTotal
+        {
+            get { return _logLinesTotal; }
+        }
+
+        public double LogLinesRead
+        {
+            get { return _logLinesRead; }
+        }
+
+        public bool IsMapZana
+        {
+            get { return _isMapZana; }
+        }
+
+        public bool IsMapVaalArea
+        {
+            get { return _isMapVaalArea; }
+        }
+
+        public bool IsMapLogbookSide
+        {
+            get { return _isMapLogbookSide; }
+        }
+
+        public bool IsMapLabTrial
+        {
+            get { return _isMapLabTrial; }
+        }
+
+        public bool IsMapAbyssArea
+        {
+            get { return _isMapAbyssArea; }
+        }
+
+        public string CurrentArea
+        {
+            get { return _currentArea; }
+        }
+
+        public int CurrentAreaLevel
+        {
+            get { return _currentAreaLevel; }
+        }
+
+        public TrX_TrackedActivity OverlayPrevActivity
+        {
+            get { return _prevActivityOverlay; }
+        }
+
+        public TrX_DBManager Database
+        {
+            get { return _myDB; }
+        }
+
+        public TrX_StatsManager Stats
+        {
+            get { return _myStats; }
+        }
+
+        public Dictionary<string, string> StatNamesLong
+        {
+            get { return _statNamesLong; }
         }
 
     }

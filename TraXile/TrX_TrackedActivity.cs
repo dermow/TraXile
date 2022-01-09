@@ -51,6 +51,19 @@ namespace TraXile
             _tagIDs = new List<string>();
         }
 
+        public string GetCappedStopwatchValue(int cap)
+        {
+            TimeSpan ts;
+            string s;
+            ts = TimeSpan.FromSeconds(_totalSeconds > cap ? cap : _totalSeconds);
+            s = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+            if(_totalSeconds > cap)
+            {
+                s += " (cap)";
+            }
+            return s;
+        }
+
         public TrX_TrackedActivity SideArea_ZanaMap
         {
             get { return _zanaMap; }

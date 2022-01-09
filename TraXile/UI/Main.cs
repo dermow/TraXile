@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,7 +12,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
-using System.Globalization;
 
 namespace TraXile
 {
@@ -21,7 +21,6 @@ namespace TraXile
         HEIST,
         LABYRINTH,
         SIMULACRUM,
-        BLIGHTED_MAP,
         DELVE,
         TEMPLE,
         MAVEN_INVITATION,
@@ -66,9 +65,7 @@ namespace TraXile
         private bool _showGridInStats;
         private bool _UpdateCheckDone;
         private bool _restoreOk = true;
-        private int _timeCapLab = 3600;
-        private int _timeCapMap = 3600;
-        private int _timeCapHeist = 3600;
+        private string _failedRestoreReason;
         private int _actLogItemCount = 0;
         private string _allStatsSelected;
         private long _oldestTimeStamp = 0;
@@ -88,7 +85,7 @@ namespace TraXile
         private DateTime _inAreaSince;
         private DateTime _statsDate1;
         private DateTime _statsDate2;
-       
+
         // Other variables
         private LoadScreen _loadScreenWindow;
         private StopWatchOverlay _stopwatchOverlay;
@@ -104,6 +101,7 @@ namespace TraXile
         private bool _stopwatchOverlayShowDefault;
         private bool _uiFlagBossDashboard;
         private TrX_DefaultMappings _defaultMappings;
+        private Dictionary<ACTIVITY_TYPES, int> _timeCaps;
 
         /// <summary>
         /// Setting Property for LogFilePath
@@ -117,6 +115,11 @@ namespace TraXile
         public TrX_CoreLogic Logic
         {
             get { return _logic; }
+        }
+
+        public Dictionary<ACTIVITY_TYPES, int> TimeCaps
+        {
+            get { return _timeCaps; }
         }
 
         /// <summary>
@@ -404,14 +407,15 @@ namespace TraXile
             {
                 _restoreMode = true;
                 _restoreOk = false;
+                _failedRestoreReason = ex.Message;
                 _log.Error("FailedRestore -> " + ex.Message);
                 _log.Debug(ex.ToString());
             }
 
             _logic = new TrX_CoreLogic(SettingPoeLogFilePath);
-            _logic.OnHistoryInitialized += _logic_OnHistoryInitialized;
-            _logic.OnActivityFinished += _logic_OnActivityFinished;
-            _logic.OnTagsUpdated += _logic_OnTagsUpdated;
+            _logic.OnHistoryInitialized += logic_OnHistoryInitialized;
+            _logic.OnActivityFinished += logic_OnActivityFinished;
+            _logic.OnTagsUpdated += logic_OnTagsUpdated;
 
             _lvmActlog = new TrX_ListViewManager(listViewActLog);
             _lvmAllStats = new TrX_ListViewManager(listViewNF1);
@@ -595,6 +599,18 @@ namespace TraXile
             _statsDate1 = DateTime.Now.AddYears(-100);
             _statsDate2 = DateTime.Now.AddDays(1);
 
+            dataGridView1.ForeColor = Color.Black;
+
+            _timeCaps = new Dictionary<ACTIVITY_TYPES, int>();
+
+            int cap;
+            foreach (ACTIVITY_TYPES t in (((ACTIVITY_TYPES[])Enum.GetValues(typeof(ACTIVITY_TYPES)))))
+            {
+                cap = Convert.ToInt32(_mySettings.ReadSetting(string.Format("TimeCap{0}", TrX_Helpers.CapitalFirstLetter(t.ToString())), "3600"));
+                _timeCaps.Add(t, cap);
+                dataGridView1.Rows.Add(new string[] { t.ToString(),  cap.ToString()});
+            }
+
             Text = APPINFO.NAME;
 
             if (IS_IN_DEBUG_MODE)
@@ -637,12 +653,14 @@ namespace TraXile
             sb.AppendLine("This action resets all data and reloads the current Client.txt");
             toolTip1.SetToolTip(pictureBox11, sb.ToString());
             toolTip1.ToolTipTitle = buttonReloadLogfile.Text;
+            toolTip1.AutoPopDelay = 30000;
 
             sb.Clear();
             sb.AppendLine("This action changes the path to the Client.txt, resets all data ");
             sb.AppendLine("and reloads the logfile with the new path");
             toolTip2.SetToolTip(pictureBox17, sb.ToString());
             toolTip2.ToolTipTitle = buttonChangeLogReload.Text;
+            toolTip2.AutoPopDelay = 30000;
 
             sb.Clear();
             sb.AppendLine("With this action all statistics will be set to 0, all entries in history ");
@@ -650,28 +668,44 @@ namespace TraXile
             sb.AppendLine("created. Path of Exile needs to be closed first!");
             toolTip3.SetToolTip(pictureBox18, sb.ToString());
             toolTip3.ToolTipTitle = buttonFullReset.Text;
+            toolTip3.AutoPopDelay = 30000;
 
             sb.Clear();
             sb.AppendLine("Roll (rename) your current Client.txt (if it gets too big) so that you can safely delete it. ");
-            sb.AppendLine("Keeping all data in TraXile. Path of Exile needs to be closed first!" );
+            sb.AppendLine("Keeping all data in TraXile. Path of Exile needs to be closed first!");
             toolTip4.SetToolTip(pictureBox19, sb.ToString());
             toolTip4.ToolTipTitle = buttonRollLog.Text;
+            toolTip4.AutoPopDelay = 30000;
 
             sb.Clear();
-            sb.AppendLine("You can set time caps (in seconds) for each activity type. Activities that take longer are capped to this value.");
-            sb.AppendLine("This does not affect the values in your activity history but only calculations in dashboards.");
+            sb.AppendLine("You can set time caps (in seconds) for all activity types. Activities that take longer are capped to this value.");
+            sb.AppendLine("This is used to filter out very long idle times.");
             toolTip5.SetToolTip(pictureBox20, sb.ToString());
             toolTip5.ToolTipTitle = "Time caps";
+            toolTip5.AutoPopDelay = 30000;
+
+            sb.Clear();
+            sb.AppendLine("Creates a backup of your current database, config and Client.txt");
+            toolTip6.SetToolTip(pictureBox22, sb.ToString());
+            toolTip6.ToolTipTitle = "Create Backup";
+            toolTip6.AutoPopDelay = 30000;
+
+            sb.Clear();
+            sb.AppendLine("Restores TraXile to the state of a previously created backup. Application will be restarted. Path of Exile needs");
+            sb.AppendLine("to be closed first!");
+            toolTip7.SetToolTip(pictureBox23, sb.ToString());
+            toolTip7.ToolTipTitle = "Restore Backup";
+            toolTip7.AutoPopDelay = 30000;
         }
 
-        private void _logic_OnTagsUpdated(TrX_CoreLogicGenericEventArgs e)
+        private void logic_OnTagsUpdated(TrX_CoreLogicGenericEventArgs e)
         {
             // PLACEHOLDER
         }
 
-        private void _logic_OnActivityFinished(TrX_CoreLogicActivityEventArgs e)
+        private void logic_OnActivityFinished(TrX_CoreLogicActivityEventArgs e)
         {
-            if(e.Logic.EventQueueInitialized)
+            if (e.Logic.EventQueueInitialized)
             {
                 AddMapLvItem(e.Activity);
                 RequestDashboardUpdates();
@@ -679,7 +713,7 @@ namespace TraXile
             }
         }
 
-        private void _logic_OnHistoryInitialized(TrX_CoreLogicGenericEventArgs e)
+        private void logic_OnHistoryInitialized(TrX_CoreLogicGenericEventArgs e)
         {
             MethodInvoker mi = delegate
             {
@@ -718,7 +752,7 @@ namespace TraXile
                 comboBox1.Items.Add(string.Format("League: {0} ({1})", li.Name, li.Version));
             }
         }
-               
+
         /// <summary>
         /// Save the current GUI Layout to config
         /// </summary>
@@ -761,7 +795,7 @@ namespace TraXile
                 Height = iHeight;
             }
         }
-            
+
 
         /// <summary>
         /// Render the taglist for Config Tab
@@ -1054,6 +1088,44 @@ namespace TraXile
             _log.Info("Stats cleared.");
         }
 
+        private void InitLogFileReload()
+        {
+            // Stop UP updates
+            timer1.Stop();
+
+            // Stop core logic
+            _logic.Stop();
+
+            // Terminiate db connection
+            _logic.Database.Close();
+
+            // Delete Database
+            try
+            {
+                File.Delete(_logic.Database.DatabasePath);
+            }
+            catch (Exception ex)
+            {
+                _log.Error("cannot delete database file: " + ex.Message);
+                _log.Debug(ex.ToString());
+            }
+
+            // Delete Stats Cache
+            try
+            {
+                File.Delete(_cachePath);
+            }
+            catch (Exception ex)
+            {
+                _log.Error("cannot delete cache file: " + ex.Message);
+                _log.Debug(ex.ToString());
+            }
+
+            // Restart
+            Application.Restart();
+
+        }
+
         /// <summary>
         /// Clear the activity log
         /// </summary>
@@ -1102,7 +1174,7 @@ namespace TraXile
         {
             _logic.Database.DoNonQuery("delete from tx_activity_log where timestamp = " + l_timestamp.ToString());
         }
-        
+
         /// <summary>
         /// Simply save the current app version to VERSION.txt
         /// </summary>
@@ -1112,7 +1184,7 @@ namespace TraXile
             wrt.WriteLine(APPINFO.VERSION);
             wrt.Close();
         }
-       
+
         /// <summary>
         /// Reset and reload the Activity-History ListView
         /// </summary>
@@ -1152,7 +1224,7 @@ namespace TraXile
                 }
             }
 
-           AddActivityLvItems();
+            AddActivityLvItems();
         }
 
         /// <summary>
@@ -1584,7 +1656,7 @@ namespace TraXile
                 lvi.SubItems.Add(GetStringFromActType(map.Type));
                 lvi.SubItems.Add(map.Area);
                 lvi.SubItems.Add(sTier);
-                lvi.SubItems.Add(map.StopWatchValue.ToString());
+                lvi.SubItems.Add(map.GetCappedStopwatchValue(_timeCaps[map.Type]));
                 lvi.SubItems.Add(map.DeathCounter.ToString());
 
                 // Calculate Image Index
@@ -1668,9 +1740,9 @@ namespace TraXile
                         {
                             MessageBox.Show("Error restoring from backup: " +
                                 Environment.NewLine +
-                                Environment.NewLine + 
+                                Environment.NewLine +
+                                _failedRestoreReason +
                                 Environment.NewLine);
-
                         }
                     }
 
@@ -1698,7 +1770,7 @@ namespace TraXile
                         _listViewInitielaized = true;
                     }
 
-                    label80.Text = string.Format("{0} (lvl. {1})",_logic.CurrentArea, _logic.CurrentAreaLevel);
+                    label80.Text = string.Format("{0} (lvl. {1})", _logic.CurrentArea, _logic.CurrentAreaLevel);
 
                     if (_logic.CurrentArea.Contains("Hideout") && !(_logic.CurrentArea.Contains("Syndicate")))
                     {
@@ -1790,8 +1862,6 @@ namespace TraXile
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity)];
                             pictureBoxStop.Show();
                         }
-
-
                     }
                     else
                     {
@@ -1888,18 +1958,15 @@ namespace TraXile
         {
             _showGridInActLog = Convert.ToBoolean(ReadSetting("ActivityLogShowGrid"));
             _showGridInStats = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
-            _timeCapLab = Convert.ToInt32(ReadSetting("TimeCapLab", "3600"));
-            _timeCapMap = Convert.ToInt32(ReadSetting("TimeCapMap", "3600"));
-            _timeCapHeist = Convert.ToInt32(ReadSetting("TimeCapHeist", "3600"));
             _labDashboardHideUnknown = Convert.ToBoolean(ReadSetting("dashboard_lab_hide_unknown", "false"));
             _showHideoutInPie = Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true"));
             _stopwatchOverlayOpacity = Convert.ToInt32(ReadSetting("overlay.stopwatch.opacity", "100"));
             _stopwatchOverlayShowDefault = Convert.ToBoolean(ReadSetting("overlay.stopwatch.default", "false"));
 
             comboBoxTheme.SelectedItem = ReadSetting("theme", "Dark") == "Dark" ? "Dark" : "Light";
-            textBoxMapCap.Text = _timeCapMap.ToString();
-            textBoxLabCap.Text = _timeCapLab.ToString();
-            textBoxHeistCap.Text = _timeCapHeist.ToString();
+            //textBoxMapCap.Text = _timeCapMap.ToString();
+            //textBoxLabCap.Text = _timeCapLab.ToString();
+            //textBoxHeistCap.Text = _timeCapHeist.ToString();
             listViewActLog.GridLines = _showGridInActLog;
             trackBar1.Value = _stopwatchOverlayOpacity;
             checkBox2.Checked = _stopwatchOverlayShowDefault;
@@ -1995,13 +2062,13 @@ namespace TraXile
                             // Average
                             iCount++;
 
-                            if (act.TotalSeconds < _timeCapLab)
+                            if (act.TotalSeconds < _timeCaps[ACTIVITY_TYPES.LABYRINTH])
                             {
                                 iSum += act.TotalSeconds;
                             }
                             else
                             {
-                                iSum += _timeCapLab;
+                                iSum += _timeCaps[ACTIVITY_TYPES.LABYRINTH];
                             }
 
                             // Top 
@@ -2162,20 +2229,7 @@ namespace TraXile
 
             foreach (TrX_TrackedActivity act in _statsDataSource)
             {
-                int iCap = 3600;
-
-                switch (act.Type)
-                {
-                    case ACTIVITY_TYPES.MAP:
-                        iCap = _timeCapMap;
-                        break;
-                    case ACTIVITY_TYPES.LABYRINTH:
-                        iCap = _timeCapLab;
-                        break;
-                    case ACTIVITY_TYPES.HEIST:
-                        iCap = _timeCapHeist;
-                        break;
-                }
+                int iCap = _timeCaps[act.Type];
 
                 typeListCount[act.Type]++;
 
@@ -2377,13 +2431,13 @@ namespace TraXile
                     {
                         iCount++;
 
-                        if (act.TotalSeconds < _timeCapHeist)
+                        if (act.TotalSeconds < _timeCaps[ACTIVITY_TYPES.HEIST])
                         {
                             iSum += act.TotalSeconds;
                         }
                         else
                         {
-                            iSum += _timeCapHeist;
+                            iSum += _timeCaps[ACTIVITY_TYPES.HEIST];
                         }
 
                     }
@@ -2707,13 +2761,13 @@ namespace TraXile
                 {
                     if (act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i + 1))
                     {
-                        if (act.TotalSeconds < _timeCapMap)
+                        if (act.TotalSeconds < _timeCaps[ACTIVITY_TYPES.MAP])
                         {
                             iSum += act.TotalSeconds;
                         }
                         else
                         {
-                            iSum += _timeCapMap;
+                            iSum += _timeCaps[ACTIVITY_TYPES.MAP];
                         }
 
                         iCount++;
@@ -2797,9 +2851,7 @@ namespace TraXile
             // Make logfile empty
             FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             fs1.Close();
-            ResetStats();
-            ClearActivityLog();
-            File.Delete(_cachePath);
+            InitLogFileReload();
         }
 
         /// <summary>
@@ -2858,6 +2910,7 @@ namespace TraXile
             File.Copy(sPath + @"/stats.cache", _cachePath + ".restore");
             File.Copy(sPath + @"/data.db", _dbPath + ".restore");
             File.Copy(sPath + @"/Client.txt", Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore");
+            File.Copy(sPath + @"/config.xml", _myAppData + @"/config.xml.restore");
             _log.Info("Backup restore successfully prepared! Restarting Application");
             Application.Restart();
         }
@@ -2879,7 +2932,15 @@ namespace TraXile
             {
                 File.Delete(_dbPath);
                 File.Move(_dbPath + ".restore", _dbPath);
-                _log.Info("BackupRestored -> Source: _data.db.restore, Destination: data.db");
+                _log.Info("BackupRestored -> Source: _data.db.restore, Destination: " + _dbPath);
+                _restoreMode = true;
+            }
+
+            if (File.Exists(_myAppData + @"\config.xml.restore"))
+            {
+                File.Delete(_myAppData + @"\config.xml");
+                File.Move(_myAppData + @"\config.xml.restore", _myAppData + @"\config.xml");
+                _log.Info("BackupRestored -> Source: config.xml.restore, Destination: " + _myAppData + @"\config.xml");
                 _restoreMode = true;
             }
 
@@ -2943,10 +3004,7 @@ namespace TraXile
         /// <param name="e"></param>
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(SettingPoeLogFilePath) || !_UpdateCheckDone)
-            {
-            }
-            else
+            if (!String.IsNullOrEmpty(SettingPoeLogFilePath) || !_UpdateCheckDone)
             {
                 double dProgress = 0;
                 if (!_logic.EventQueueInitialized)
@@ -3447,8 +3505,7 @@ namespace TraXile
             DialogResult dr = MessageBox.Show(sb.ToString(), "Warning", MessageBoxButtons.YesNo); ;
             if (dr == DialogResult.Yes)
             {
-                ClearActivityLog();
-                ReloadLogFile();
+                InitLogFileReload();
             }
         }
 
@@ -3462,7 +3519,7 @@ namespace TraXile
                 if (dr2 == DialogResult.OK)
                 {
                     AddUpdateAppSettings("poe_logfile_path", ofd.FileName);
-                    ReloadLogFile();
+                    InitLogFileReload();
                 }
             }
         }
@@ -3740,40 +3797,33 @@ namespace TraXile
             RenderLabDashboard();
         }
 
+        private void SaveTimeCaps()
+        {
+            ACTIVITY_TYPES type;
+            int value;
+            string sett;
+
+            foreach(DataGridViewRow row in dataGridView1.Rows)
+            {
+                type = (ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), row.Cells[0].Value.ToString());
+                value = Convert.ToInt32(row.Cells[1].Value);
+                sett = string.Format("TimeCap{0}", TrX_Helpers.CapitalFirstLetter(type.ToString()));
+                _timeCaps[type] = value;
+                _mySettings.AddOrUpdateSetting(sett, value.ToString());
+            }
+
+            _mySettings.WriteToXml();
+        }
+
         private void button23_Click(object sender, EventArgs e)
         {
             try
             {
-                int iMap = Convert.ToInt32(textBoxMapCap.Text);
-                int iHeist = Convert.ToInt32(textBoxHeistCap.Text);
-                int iLab = Convert.ToInt32(textBoxLabCap.Text);
-
-                if (iMap > 0 && iHeist > 0 && iLab > 0)
-                {
-                    _timeCapMap = iMap;
-                    _timeCapLab = iLab;
-                    _timeCapHeist = iHeist;
-
-                    AddUpdateAppSettings("TimeCapMap", _timeCapMap.ToString());
-                    AddUpdateAppSettings("TimeCapLab", _timeCapLab.ToString());
-                    AddUpdateAppSettings("TimeCapHeist", _timeCapHeist.ToString());
-
-                    RenderGlobalDashboard();
-                    RenderMappingDashboard();
-                    RenderHeistDashboard();
-                    RenderLabDashboard();
-                    RenderBossingDashboard();
-                }
-                else
-                {
-                    MessageBox.Show("Time cap values must be greater than 0");
-                }
-
+                SaveTimeCaps();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                _log.Error(ex.ToString());
-                MessageBox.Show("Invalid format for time cap. Only integers are supported");
+                MessageBox.Show("Invalid input: " + ex.Message);
             }
         }
 

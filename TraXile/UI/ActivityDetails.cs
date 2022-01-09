@@ -28,7 +28,7 @@ namespace TraXile
                 labelType.Text += " (Zana)";
             }
             labelArea.Text = ta.Area;
-            labelStopWatch.Text = ta.StopWatchValue;
+            labelStopWatch.Text = ta.GetCappedStopwatchValue(main.TimeCaps[ta.Type]);
             labelDeaths.Text = ta.DeathCounter.ToString();
             Text = ta.Type + " Details: " + ta.Area;
             label9.Text = ta.Type == ACTIVITY_TYPES.BREACHSTONE ? main.GetBreachStoneName(ta.Area, ta.AreaLevel) : ta.Type.ToString();

@@ -199,5 +199,23 @@ namespace TraXile
 
         }
 
+        public void Close()
+        {
+            try
+            {
+                _dbConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Cannot close database connection: " + ex.Message);
+                _log.Debug(ex.ToString());
+            }
+        }
+
+        public string DatabasePath
+        {
+            get { return _dbPath; }
+        }
+
     }
 }
