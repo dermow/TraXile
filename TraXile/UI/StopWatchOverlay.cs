@@ -4,7 +4,7 @@ namespace TraXile
 {
     public partial class StopWatchOverlay : Form
     {
-        private Main _main;
+        private readonly Main _main;
         private ImageList _images;
 
         public StopWatchOverlay(Main main, ImageList images)

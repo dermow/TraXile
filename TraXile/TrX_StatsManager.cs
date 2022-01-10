@@ -6,7 +6,7 @@ namespace TraXile
 {
     public class TrX_StatsManager
     {
-        private TrX_DBManager _myDB;
+        private readonly TrX_DBManager _myDB;
         private Dictionary<string, int> _numericStats;
 
         public TrX_StatsManager(TrX_DBManager db)
@@ -34,7 +34,7 @@ namespace TraXile
         {
             List<KeyValuePair<long, int>> results = new List<KeyValuePair<long, int>>();
             DateTime start = DateTimeOffset.FromUnixTimeSeconds(ts1).DateTime;
-            DateTime end = DateTimeOffset.FromUnixTimeSeconds(ts2).DateTime;
+           // DateTime end = DateTimeOffset.FromUnixTimeSeconds(ts2).DateTime;
 
             DateTime curr = new DateTime(start.Year, start.Month, start.Day, 0, 0, 0);
             DateTime to = curr.AddHours(24);

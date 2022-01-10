@@ -28,7 +28,7 @@ namespace TraXile
     /// </summary>
     public class TrX_CoreLogicGenericEventArgs : EventArgs
     {
-        TrX_CoreLogic _logic;
+        private readonly TrX_CoreLogic _logic;
         public TrX_CoreLogicGenericEventArgs(TrX_CoreLogic logic)
         {
             _logic = logic;
@@ -45,8 +45,8 @@ namespace TraXile
     /// </summary>
     public class TrX_CoreLogicActivityEventArgs : EventArgs
     {
-        TrX_CoreLogic _logic;
-        TrX_TrackedActivity _activity;
+        private readonly TrX_CoreLogic _logic;
+        private readonly TrX_TrackedActivity _activity;
         public TrX_CoreLogicActivityEventArgs(TrX_CoreLogic logic, TrX_TrackedActivity activity)
         {
             _logic = logic;
@@ -78,8 +78,8 @@ namespace TraXile
         public GregorianCalendar _myCalendar;
 
         // App parameters
-        private readonly string _dbPath;
         private readonly string _cachePath;
+
         private readonly string _myAppData;
         private bool _exit;
         private bool _StartedFlag = false;
@@ -102,7 +102,6 @@ namespace TraXile
         private double _logLinesTotal;
         private double _logLinesRead;
         private bool _historyInitialized;
-        private long _oldestTimeStamp;
         private Dictionary<int, string> _dict;
         private Dictionary<string, string> _statNamesLong;
         private List<string> _knownPlayerNames;
@@ -113,10 +112,8 @@ namespace TraXile
         private TrX_DefaultMappings _defaultMappings;
         private TrX_DBManager _myDB;
         private TrX_StatsManager _myStats;
-        private List<TrX_TrackedActivity> _statsDataSource;
         private ConcurrentQueue<TrX_TrackingEvent> _eventQueue;
         public TrX_TrackedActivity _currentActivity;
-        private TrX_TrackedActivity _prevActivity;
         private TrX_TrackedActivity _prevActivityOverlay;
         private EVENT_TYPES _lastEventTypeConq;
         private Thread _logParseThread;
@@ -132,7 +129,6 @@ namespace TraXile
 
         // Other variables
         private List<string> _parsedActivities;
-        private readonly TrX_SettingsManager _mySettings;
         private ILog _log;
 
         private string _clientTxtPath;
@@ -170,24 +166,8 @@ namespace TraXile
                 SAFE_RELOAD_MODE = true;
                 File.Delete(_myAppData + @"\IS_SAFE_RELOAD");
             }
-
-            _dbPath = _myAppData + @"\data.db";
             _cachePath = _myAppData + @"\stats.cache";
-            _mySettings = new TrX_SettingsManager(_myAppData + @"\config.xml");
-
             Init();
-        }
-
-        private int FindEventLogIndexByID(string id)
-        {
-            foreach (TrX_TrackedActivity act in _eventHistory)
-            {
-                if (act.UniqueID == id)
-                {
-                    return _eventHistory.IndexOf(act);
-                }
-            }
-            return -1;
         }
 
         /// <summary>
@@ -212,7 +192,6 @@ namespace TraXile
             _eventQueueInitizalized = false;
             _lastSimuEndpoint = "";
             _tags = new List<TrX_ActivityTag>();
-            _statsDataSource = new List<TrX_TrackedActivity>();
             _initStartTime = DateTime.Now;
             _myDB = new TrX_DBManager(_myAppData + @"\data.db", ref _log);
             _myStats = new TrX_StatsManager(_myDB);
@@ -712,24 +691,7 @@ namespace TraXile
                     _statNamesLong.Add("SimulacrumFinished_" + sName, "Simulacrum done: " + sName);
             }
         }
-
-
-        /// <summary>
-        /// Get longname for a stat
-        /// </summary>
-        /// <param name="s_key"></param>
-        /// <returns></returns>
-        private string GetStatLongName(string s_key)
-        {
-            if (_statNamesLong.ContainsKey(s_key))
-            {
-                return _statNamesLong[s_key];
-            }
-            else
-            {
-                return s_key;
-            }
-        }
+       
 
         /// <summary>
         /// Reset stats
@@ -754,28 +716,7 @@ namespace TraXile
 
             _log.Info("Stats cleared.");
         }
-
-        /// <summary>
-        /// Clear the activity log
-        /// </summary>
-        private void ClearActivityLog()
-        {
-            _eventHistory.Clear();
-            _myDB.DoNonQuery("drop table tx_activity_log");
-            _myDB.DoNonQuery("create table if not exists tx_activity_log " +
-                 "(timestamp int, " +
-                 "act_type text, " +
-                 "act_area text, " +
-                 "act_stopwatch int, " +
-                 "act_deathcounter int," +
-                 "act_ulti_rounds int," +
-                 "act_is_zana int," +
-                 "act_tags" + ")");
-
-            InitNumStats();
-            _log.Info("Activity log cleared.");
-        }
-
+       
         /// <summary>
         /// Track known players. Needed to find out if death events are for your own 
         /// char or not. If a player name enters your area, It could not be you :)
@@ -789,15 +730,6 @@ namespace TraXile
                 _myDB.DoNonQuery("insert into tx_known_players (player_name) VALUES ('" + s_name + "')");
                 _log.Info("KnownPlayerAdded -> name: " + s_name);
             }
-        }
-
-        /// <summary>
-        /// Delete entry from activity log
-        /// </summary>
-        /// <param name="l_timestamp"></param>
-        private void DeleteActLogEntry(long l_timestamp)
-        {
-            _myDB.DoNonQuery("delete from tx_activity_log where timestamp = " + l_timestamp.ToString());
         }
 
         /// <summary>
@@ -985,9 +917,6 @@ namespace TraXile
             }
             _historyInitialized = true;
 
-            // Get oldest TS
-            _oldestTimeStamp = _myStats.GetOldestTimeStamp();
-
         }
 
         /// <summary>
@@ -1117,7 +1046,7 @@ namespace TraXile
 
                                 if (!_eventQueueInitizalized)
                                 {
-                                    HandleSingleEvent(ev, true);
+                                    HandleSingleEvent(ev);
                                 }
                                 else
                                 {
@@ -1129,7 +1058,6 @@ namespace TraXile
                     _logLinesRead++;
                 }
             }
-            _oldestTimeStamp = _myStats.GetOldestTimeStamp();
         }
 
         /// <summary>
@@ -1217,7 +1145,7 @@ namespace TraXile
         {
             _log.Info("ChatCommand -> " + s_command);
             string[] spl = s_command.Split(' ');
-            string sMain = "";
+            string sMain;
             string sArgs = "";
 
             sMain = spl[0];
@@ -2074,7 +2002,7 @@ namespace TraXile
         /// </summary>
         /// <param name="ev"></param>
         /// <param name="bInit"></param>
-        private void HandleSingleEvent(TrX_TrackingEvent ev, bool bInit = false)
+        private void HandleSingleEvent(TrX_TrackingEvent ev)
         {
             try
             {
@@ -2752,7 +2680,6 @@ namespace TraXile
                 if (isValid)
                 {
                     _currentActivity.TotalSeconds = iSeconds;
-                    _prevActivity = _currentActivity;
 
                     if (!_eventHistory.Contains(_currentActivity))
                     {
@@ -3292,23 +3219,6 @@ namespace TraXile
             return iIndex;
         }
 
-
-
-        /// <summary>
-        /// Find matching activity to Item name
-        /// </summary>
-        /// <param name="s_name"></param>
-        /// <returns></returns>
-        private TrX_TrackedActivity GetActivityFromListItemName(string s_name)
-        {
-            foreach (TrX_TrackedActivity ta in _eventHistory)
-            {
-                if (ta.UniqueID == s_name)
-                    return ta;
-            }
-            return null;
-        }
-
         /// <summary>
         /// Convert an activity type to string
         /// </summary>
@@ -3329,73 +3239,6 @@ namespace TraXile
             string sArea = ev.LogLine.Split(new string[] { "You have entered" }, StringSplitOptions.None)[1]
                 .Replace(".", "").Trim();
             return sArea.Replace("'", "");
-        }
-
-        /// <summary>
-        /// Exit
-        /// </summary>
-        private void Exit()
-        {
-            _exit = true;
-            if (_currentActivity != null)
-                FinishActivity(_currentActivity, null, _currentActivity.Type, DateTime.Now);
-            _log.Info("Exitting.");
-            Application.Exit();
-        }
-
-
-
-        private int LevelToTier(int level)
-        {
-            switch (level)
-            {
-                case 68:
-                    return 1;
-                case 69:
-                    return 2;
-                case 70:
-                    return 3;
-                case 71:
-                    return 4;
-                case 72:
-                    return 5;
-                case 73:
-                    return 6;
-                case 74:
-                    return 7;
-                case 75:
-                    return 8;
-                case 76:
-                    return 9;
-                case 77:
-                    return 10;
-                case 78:
-                    return 11;
-                case 79:
-                    return 12;
-                case 80:
-                    return 13;
-                case 81:
-                    return 14;
-                case 82:
-                    return 15;
-                case 83:
-                    return 16;
-                default:
-                    return 0;
-            }
-        }
-
-        private string TierToName(int tier)
-        {
-            if (tier == 0)
-            {
-                return "Unknown";
-            }
-            else
-            {
-                return "T" + tier;
-            }
         }
 
         /// <summary>
@@ -3717,6 +3560,5 @@ namespace TraXile
         {
             get { return _statNamesLong; }
         }
-
     }
 }
