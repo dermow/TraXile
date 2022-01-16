@@ -2600,6 +2600,11 @@ namespace TraXile
             return ev.LogLine.Split(new String[] { "Connecting to instance server at " }, StringSplitOptions.None)[1];
         }
 
+        /// <summary>
+        /// Get most recent activity with given type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         private TrX_TrackedActivity GetLastActivityByType(ACTIVITY_TYPES type)
         {
             List<TrX_TrackedActivity> list = new List<TrX_TrackedActivity>();
