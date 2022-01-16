@@ -31,7 +31,7 @@ namespace TraXile
             labelStopWatch.Text = ta.GetCappedStopwatchValue(main.TimeCaps[ta.Type]);
             labelDeaths.Text = ta.DeathCounter.ToString();
             Text = ta.Type + " Details: " + ta.Area;
-            label9.Text = ta.Type == ACTIVITY_TYPES.BREACHSTONE ? main.GetBreachStoneName(ta.Area, ta.AreaLevel) : ta.Type.ToString();
+            label9.Text = ta.Type == ACTIVITY_TYPES.BREACHSTONE ? main.Logic.GetBreachStoneName(ta.Area, ta.AreaLevel) : ta.Type.ToString();
             label13.Text = ta.Area.ToString();
 
             if (!main.IS_IN_DEBUG_MODE)
@@ -167,8 +167,6 @@ namespace TraXile
         private void button3_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(_trackedActivity.DebugStartEventLine);
-            sb.AppendLine(_trackedActivity.DebugEndEventLine);
             sb.AppendLine(_trackedActivity.LastEnded.ToString());
             sb.Append(_trackedActivity.InstanceEndpoint);
 

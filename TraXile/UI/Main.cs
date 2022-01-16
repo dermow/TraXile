@@ -42,6 +42,9 @@ namespace TraXile
         BREACHSTONE
     }
 
+    /// <summary>
+    /// Main UI
+    /// </summary>
     public partial class Main : Form
     {
         // Core logic
@@ -49,119 +52,154 @@ namespace TraXile
 
         // START FLAGS
         public readonly bool IS_IN_DEBUG_MODE = false;
-        public bool SAFE_RELOAD_MODE;
 
         // Calendar
         public DateTimeFormatInfo _dateTimeFormatInfo;
 
         // App parameters
-        private readonly string _dbPath;
-        private readonly string _cachePath;
-        private readonly string _myAppData;
         private bool _listViewInitielaized;
-        private bool _showGridInActLog;
-        private bool _restoreMode;
-        private bool _uiFlagLabDashboard;
-        private bool _showGridInStats;
-        private bool _UpdateCheckDone;
-        private bool _restoreOk = true;
-        private string _failedRestoreReason;
-        private int _actLogItemCount = 0;
-        private string _allStatsSelected;
-        private long _oldestTimeStamp = 0;
-        private bool _autoStartsDOne = false;
 
-        // GUI Update Flags
-        private bool _uiFlagMapDashboard;
+        // Wether or not show the grid in listviess
+        private bool _showGridInActLog;
+
+        // Startup switch if a backup should be restored
+        private bool _restoreMode;
+        
+        // Wether or not show grid in statistics
+        private bool _showGridInStats;
+
+        // Indicates if update check is already done
+        private bool _UpdateCheckDone;
+
+        // Indicates if last backup restore was succesful
+        private bool _restoreOk = true;
+
+        // Reason for last backup restore failure (if any)
+        private string _failedRestoreReason;
+
+        // Number of items in activity log
+        private int _actLogItemCount = 0;
+
+        // ID of the current selected stats entry
+        private string _allStatsSelected;
+
+        // Timestamp of the oldes entry in DB
+        private long _oldestTimeStamp = 0;
+
+        // Indicates if all autostarts are done (overlay)
+        private bool _autoStartsDone = false;
+
+        // Wether or not show Unknown labs levels in Dashboard
         private bool _labDashboardHideUnknown;
+
+        // UI Update Flag: Lab Dashboard
+        private bool _uiFlagLabDashboard;
+
+        // UI Update Flag: Map Dashboard
+        private bool _uiFlagMapDashboard;
+
+        // UI Update Flag: Global Dashboard
         private bool _uiFlagGlobalDashboard;
+
+        // UI Update Flag: Heist Dashboard
         private bool _uiFlagHeistDashboard;
+
+        // UI Update Flag: Activity List
         private bool _uiFlagActivityList;
+
+        // UI Update Flag: All stats Dashboard
         private bool _uiFlagAllStatsDashboard;
 
-        // Core Logic variables
+        // UI Update Flag: Boss Dashboard
+        private bool _uiFlagBossDashboard;
+
+        // List of lab names
         private List<string> labs;
+
+        // Current datasource for statistics (used for filters)
         private List<TrX_TrackedActivity> _statsDataSource;
+
+        // Timestamp of entering the current ares
         private DateTime _inAreaSince;
+
+        // Start date for statistic filter
         private DateTime _statsDate1;
+
+        // End date for statistic filter
         private DateTime _statsDate2;
 
-        // Other variables
+        // Windows: Load screen
         private LoadScreen _loadScreenWindow;
+
+        // Window: Overlay
         private StopWatchOverlay _stopwatchOverlay;
+
+        // List of available backups
         private BindingList<string> _backups;
+
+        // Mapping of tags to labels
         private Dictionary<string, Label> _tagLabels, _tagLabelsConfig;
+
+        // Settings manager
         private readonly TrX_SettingsManager _mySettings;
-        private TrX_ListViewManager _lvmActlog, _lvmAllStats;
+
+        // Listview Manager: Activity log
+        private TrX_ListViewManager _lvmActlog;
+        
+        // ListView Manager: All stats
+        private TrX_ListViewManager _lvmAllStats;
+
+        // Current theme
         private TrX_Theme _myTheme;
+
+        // List of League Info objects
         private List<TrX_LeagueInfo> _leagues;
+
+        // Logger
         private ILog _log;
+
+        // Wether or not to show hideout time in pie chart
         private bool _showHideoutInPie;
+
+        // Visibility of the stopwatch overlay windows
         private int _stopwatchOverlayOpacity;
+
+        // Show stopwatch overlay by default?
         private bool _stopwatchOverlayShowDefault;
-        private bool _uiFlagBossDashboard;
+        
+        // Default mappings
         private TrX_DefaultMappings _defaultMappings;
+
+        // Time cap parameters for each activity type
         private Dictionary<ACTIVITY_TYPES, int> _timeCaps;
 
-        /// <summary>
-        /// Setting Property for LogFilePath
-        /// </summary>
-        public string SettingPoeLogFilePath
-        {
-            get { return ReadSetting("poe_logfile_path", null); }
-            set { AddUpdateAppSettings("poe_logfile_path", value); _logic.ClientTxtPath = value; }
-        }
+        // Property: Core logic to be accessible
+        public TrX_CoreLogic Logic => _logic;
 
-        public TrX_CoreLogic Logic
-        {
-            get { return _logic; }
-        }
-
-        public Dictionary<ACTIVITY_TYPES, int> TimeCaps
-        {
-            get { return _timeCaps; }
-        }
+        // Property: Timecaps to be accessible
+        public Dictionary<ACTIVITY_TYPES, int> TimeCaps => _timeCaps;
 
         /// <summary>
         /// Main Window Constructor
         /// </summary>
         public Main()
         {
-            if (File.Exists(Application.StartupPath + @"\DEBUG_MODE_ON.txt"))
+            // Initialize Settings
+            _mySettings = new TrX_SettingsManager(TrX_AppInfo.CONFIG_PATH);
+
+            // Create Appdata if not existing
+            if (!Directory.Exists(TrX_AppInfo.APPDATA_PATH))
             {
-                IS_IN_DEBUG_MODE = true;
+                Directory.CreateDirectory(TrX_AppInfo.APPDATA_PATH);
             }
 
-            if (IS_IN_DEBUG_MODE)
-            {
-                _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME + "_Debug";
-                Text += "!!!!! DEBUG MODE ON !!!!!!";
-            }
-            else
-            {
-                _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
-            }
-
-            if (File.Exists(_myAppData + @"\IS_SAFE_RELOAD"))
-            {
-                SAFE_RELOAD_MODE = true;
-                File.Delete(_myAppData + @"\IS_SAFE_RELOAD");
-            }
-
-            _dbPath = _myAppData + @"\data.db";
-            _cachePath = _myAppData + @"\stats.cache";
-            _mySettings = new TrX_SettingsManager(_myAppData + @"\config.xml");
-
-            if (!Directory.Exists(_myAppData))
-            {
-                Directory.CreateDirectory(_myAppData);
-            }
-
+            // Invisible till initialization complete
             Visible = false;
-            InitializeComponent();
 
+            InitializeComponent();
             Init();
 
+            // Set Theme
             if (ReadSetting("theme", "Dark") == "Light")
             {
                 _myTheme = new TrX_ThemeLight();
@@ -175,6 +213,12 @@ namespace TraXile
 
         }
 
+        /// <summary>
+        /// Filter the activitylist by tie range
+        /// </summary>
+        /// <param name="dt1">Start date/time</param>
+        /// <param name="dt2">End date/time</param>
+        /// <returns>List of filtered activities</returns>
         private List<TrX_TrackedActivity> FilterActivitiesByTimeRange(DateTime dt1, DateTime dt2)
         {
             List<TrX_TrackedActivity> results;
@@ -197,6 +241,11 @@ namespace TraXile
             return results;
         }
 
+        /// <summary>
+        /// Get LeagueInfo object by league name
+        /// </summary>
+        /// <param name="name">League name</param>
+        /// <returns>League info object or null</returns>
         private TrX_LeagueInfo GetLeagueByName(string name)
         {
             foreach (TrX_LeagueInfo li in _leagues)
@@ -207,6 +256,10 @@ namespace TraXile
             return null;
         }
 
+        /// <summary>
+        /// Apply the current timerange filter to the UI
+        /// </summary>
+        /// <param name="render">update dashboards?</param>
         private void SetTimeRangeFilter(bool render = false)
         {
             if (comboBox1.SelectedItem == null || _statsDataSource == null)
@@ -223,7 +276,8 @@ namespace TraXile
             }
             else if (comboBox1.SelectedItem.ToString().Contains("League:"))
             {
-                string sLeague = comboBox1.SelectedItem.ToString().Split(' ')[1];
+                string sLeague = comboBox1.SelectedItem.ToString().Split(new string[] { "League: " }, StringSplitOptions.None)[1]
+                    .Split(new string[] { " (" }, StringSplitOptions.None)[0];
                 TrX_LeagueInfo li = GetLeagueByName(sLeague);
 
                 DateTime dt1 = li.Start;
@@ -281,6 +335,11 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Find an activity entry by ID
+        /// </summary>
+        /// <param name="id">UniqueID of the activity</param>
+        /// <returns>Index of the activity</returns>
         private int FindEventLogIndexByID(string id)
         {
             foreach (TrX_TrackedActivity act in _logic.ActivityHistory)
@@ -321,11 +380,11 @@ namespace TraXile
                     sbChanges.AppendLine(" - " + xn.InnerText);
                 }
 
-                _log.Info(string.Format("UpdateCheck -> My version: {0}, Remote version: {1}", APPINFO.VERSION, sVersion));
+                _log.Info(string.Format("UpdateCheck -> My version: {0}, Remote version: {1}", TrX_AppInfo.VERSION, sVersion));
 
-                int MyMajor = Convert.ToInt32(APPINFO.VERSION.Split('.')[0]);
-                int MyMinor = Convert.ToInt32(APPINFO.VERSION.Split('.')[1]);
-                int MyPatch = Convert.ToInt32(APPINFO.VERSION.Split('.')[2]);
+                int MyMajor = Convert.ToInt32(TrX_AppInfo.VERSION.Split('.')[0]);
+                int MyMinor = Convert.ToInt32(TrX_AppInfo.VERSION.Split('.')[1]);
+                int MyPatch = Convert.ToInt32(TrX_AppInfo.VERSION.Split('.')[2]);
 
                 int RemoteMajor = Convert.ToInt32(sVersion.Split('.')[0]);
                 int RemoteMinor = Convert.ToInt32(sVersion.Split('.')[1]);
@@ -349,14 +408,13 @@ namespace TraXile
                 {
                     _log.Info("UpdateCheck -> New version available");
                     StringBuilder sbMessage = new StringBuilder();
-                    sbMessage.AppendLine(string.Format("There is a new version for TraXile available ({0} => {1})", APPINFO.VERSION, sVersion));
+                    sbMessage.AppendLine(string.Format("There is a new version for TraXile available ({0} => {1})", TrX_AppInfo.VERSION, sVersion));
                     sbMessage.AppendLine();
                     sbMessage.AppendLine(string.Format("Changelog: ", sVersion));
                     sbMessage.AppendLine("===========");
                     sbMessage.AppendLine(sbChanges.ToString());
                     sbMessage.AppendLine();
                     sbMessage.AppendLine("Do you want to update now?");
-
 
                     if (MessageBox.Show(sbMessage.ToString(), "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
@@ -365,14 +423,14 @@ namespace TraXile
                             Arguments = sVersion,
                             FileName = Application.StartupPath + @"\TraXile.Updater.exe"
                         };
-                        Process.Start(psi);
+                        Process.Start(psi).WaitForExit();
                     }
                 }
                 else
                 {
                     _log.Info("UpdateCheck -> Already up to date :)");
                     if (b_notify_ok)
-                        MessageBox.Show("Your version: " + APPINFO.VERSION
+                        MessageBox.Show("Your version: " + TrX_AppInfo.VERSION
                             + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine + Environment.NewLine
                             + "Your version is already up to date :)");
                 }
@@ -385,11 +443,12 @@ namespace TraXile
 
         /// <summary>
         /// Do main initialization
-        /// ONLY CALL ONCE! S
         /// </summary>
         private void Init()
         {
             Opacity = 0;
+
+            _logic = new TrX_CoreLogic();
 
             // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
             _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
@@ -398,7 +457,9 @@ namespace TraXile
             _log.Info("Application started");
             _mySettings.LoadFromXml();
             _defaultMappings = new TrX_DefaultMappings();
+            _loadScreenWindow = new LoadScreen();
 
+            // Backup restore mode?
             try
             {
                 DoBackupRestoreIfPrepared();
@@ -412,33 +473,44 @@ namespace TraXile
                 _log.Debug(ex.ToString());
             }
 
-            _logic = new TrX_CoreLogic(SettingPoeLogFilePath);
-            _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
-            _logic.OnActivityFinished += Logic_OnActivityFinished;
-            _logic.OnTagsUpdated += Logic_OnTagsUpdated;
-
-            _lvmActlog = new TrX_ListViewManager(listViewActLog);
-            _lvmAllStats = new TrX_ListViewManager(listViewNF1);
-            comboBox1.SelectedIndex = 0;
-
-            _leagues = new List<TrX_LeagueInfo>();
-            _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
-
             SaveVersion();
             CheckForUpdate();
             _UpdateCheckDone = true;
+            
+            _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
+            _logic.OnActivityFinished += Logic_OnActivityFinished;
+            _logic.OnTagsUpdated += Logic_OnTagsUpdated;
+            _logic.Start();
+
+            _lvmActlog = new TrX_ListViewManager(listViewActLog);
+            _lvmAllStats = new TrX_ListViewManager(listViewNF1);
+          
+            _leagues = new List<TrX_LeagueInfo>();
+            _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
+            
             ReadSettings();
+            _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
+
+            if (String.IsNullOrEmpty(_logic.ClientTxtPath))
+            {
+                FileSelectScreen fs = new FileSelectScreen(this)
+                {
+                    StartPosition = FormStartPosition.CenterParent,
+                    ShowInTaskbar = false
+                };
+                fs.ShowDialog();
+                _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
+            }
 
             comboBoxShowMaxItems.SelectedItem = ReadSetting("actlog.maxitems", "500");
-
+            comboBox1.SelectedIndex = 0;
             listViewActLog.Columns[0].Width = 120;
             listViewActLog.Columns[1].Width = 50;
             listViewActLog.Columns[2].Width = 110;
             listViewActLog.Columns[3].Width = 100;
             listViewActLog.Columns[4].Width = 50;
-
             listViewTop10Maps.Columns[0].Width = 300;
-
+            
             chart1.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
             chart1.ChartAreas[0].AxisX.LineColor = Color.Red;
             chart1.ChartAreas[0].AxisY.LineColor = Color.Red;
@@ -611,29 +683,14 @@ namespace TraXile
                 dataGridView1.Rows.Add(new string[] { t.ToString(),  cap.ToString()});
             }
 
-            Text = APPINFO.NAME;
-
-            if (IS_IN_DEBUG_MODE)
-            {
-                Text += " ---> !!!!! DEBUG MODE !!!!!";
-            }
-
-            if (String.IsNullOrEmpty(SettingPoeLogFilePath))
-            {
-                FileSelectScreen fs = new FileSelectScreen(this)
-                {
-                    StartPosition = FormStartPosition.CenterParent,
-                    ShowInTaskbar = false
-                };
-                fs.ShowDialog();
-            }
-
+            Text = TrX_AppInfo.NAME;
             _loadScreenWindow = new LoadScreen
             {
                 StartPosition = FormStartPosition.CenterScreen,
                 FormBorderStyle = FormBorderStyle.None
             };
             _loadScreenWindow.Show(this);
+
             InitLeagueInfo();
             ResetMapHistory();
             LoadLayout();
@@ -696,13 +753,25 @@ namespace TraXile
             toolTip7.SetToolTip(pictureBox23, sb.ToString());
             toolTip7.ToolTipTitle = "Restore Backup";
             toolTip7.AutoPopDelay = 30000;
+
+            // Start UI Thread
+            timer1.Enabled = true;
+            timer1.Start();
         }
 
+        /// <summary>
+        /// Eventhandler
+        /// </summary>
+        /// <param name="e"></param>
         private void Logic_OnTagsUpdated(TrX_CoreLogicGenericEventArgs e)
         {
             // PLACEHOLDER
         }
 
+        /// <summary>
+        /// Eventhandler
+        /// </summary>
+        /// <param name="e"></param>
         private void Logic_OnActivityFinished(TrX_CoreLogicActivityEventArgs e)
         {
             if (e.Logic.EventQueueInitialized)
@@ -713,6 +782,10 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Eventhandler
+        /// </summary>
+        /// <param name="e"></param>
         private void Logic_OnHistoryInitialized(TrX_CoreLogicGenericEventArgs e)
         {
             MethodInvoker mi = delegate
@@ -722,6 +795,9 @@ namespace TraXile
             BeginInvoke(mi);
         }
 
+        /// <summary>
+        /// Setup league info list
+        /// </summary>
         private void InitLeagueInfo()
         {
             _leagues.Clear();
@@ -742,6 +818,7 @@ namespace TraXile
             _leagues.Add(new TrX_LeagueInfo("Ultimatum", 3, 14, new DateTime(2021, 4, 16, 20, 0, 0), new DateTime(2021, 07, 19, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Expedition", 3, 15, new DateTime(2021, 7, 23, 20, 0, 0), new DateTime(2021, 10, 19, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Scourge", 3, 16, new DateTime(2021, 10, 22, 20, 0, 0), new DateTime(2022, 01, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Siege of the Atlas", 3, 17, new DateTime(2022, 02, 04, 20, 0, 0), new DateTime(2022, 05, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
 
             List<TrX_LeagueInfo> litmp = new List<TrX_LeagueInfo>();
             litmp.AddRange(_leagues);
@@ -1113,7 +1190,7 @@ namespace TraXile
             // Delete Stats Cache
             try
             {
-                File.Delete(_cachePath);
+                File.Delete(TrX_AppInfo.CACHE_PATH);
             }
             catch (Exception ex)
             {
@@ -1131,13 +1208,13 @@ namespace TraXile
         /// </summary>
         private void ReadBackupList()
         {
-            if (Directory.Exists(_myAppData + @"\backups"))
+            if (Directory.Exists(TrX_AppInfo.APPDATA_PATH + @"\backups"))
             {
-                foreach (string s in Directory.GetDirectories(_myAppData + @"\backups"))
+                foreach (string s in Directory.GetDirectories(TrX_AppInfo.APPDATA_PATH + @"\backups"))
                 {
                     foreach (string s2 in Directory.GetDirectories(s))
                     {
-                        string s_name = s2.Replace(_myAppData, "");
+                        string s_name = s2.Replace(TrX_AppInfo.APPDATA_PATH, "");
 
                         if (!_backups.Contains(s_name))
                             _backups.Add(s_name);
@@ -1160,8 +1237,8 @@ namespace TraXile
         /// </summary>
         private void SaveVersion()
         {
-            StreamWriter wrt = new StreamWriter(_myAppData + @"\VERSION.txt");
-            wrt.WriteLine(APPINFO.VERSION);
+            StreamWriter wrt = new StreamWriter(TrX_AppInfo.APPDATA_PATH + @"\VERSION.txt");
+            wrt.WriteLine(TrX_AppInfo.VERSION);
             wrt.Close();
         }
 
@@ -1221,160 +1298,10 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Get the full name of a breachstone
+        /// Get matching image indax for an activity
         /// </summary>
-        /// <param name="s_ara"></param>
-        /// <param name="i_area_level"></param>
-        /// <returns></returns>
-        public string GetBreachStoneName(string s_ara, int i_area_level)
-        {
-            string breachLoard = "";
-            string breachStoneQuality = "";
-
-            switch (s_ara)
-            {
-                case "Chayulas Domain":
-                    breachLoard = "Chayulas";
-                    switch (i_area_level)
-                    {
-                        // Normal
-                        case 80:
-                            breachStoneQuality = "";
-                            break;
-                        // Charged
-                        case 81:
-                            breachStoneQuality = "Charged";
-                            break;
-                        // Enriched
-                        case 82:
-                            breachStoneQuality = "Enriched";
-                            break;
-                        // Pure
-                        case 83:
-                            breachStoneQuality = "Pure";
-                            break;
-                        // Flawless
-                        case 84:
-                            breachStoneQuality = "Flawless";
-                            break;
-                    }
-                    break;
-                case "Eshs Domain":
-                    breachLoard = "Eshs";
-                    switch (i_area_level)
-                    {
-                        // Normal
-                        case 70:
-                            breachStoneQuality = "";
-                            break;
-                        // Charged
-                        case 74:
-                            breachStoneQuality = "Charged";
-                            break;
-                        // Enriched
-                        case 79:
-                            breachStoneQuality = "Enriched";
-                            break;
-                        // Pure
-                        case 81:
-                            breachStoneQuality = "Pure";
-                            break;
-                        // Flawless
-                        case 84:
-                            breachStoneQuality = "Flawless";
-                            break;
-                    }
-                    break;
-                case "Xophs Domain":
-                    breachLoard = "Xophs";
-                    switch (i_area_level)
-                    {
-                        // Normal
-                        case 70:
-                            breachStoneQuality = "";
-                            break;
-                        // Charged
-                        case 74:
-                            breachStoneQuality = "Charged";
-                            break;
-                        // Enriched
-                        case 79:
-                            breachStoneQuality = "Enriched";
-                            break;
-                        // Pure
-                        case 81:
-                            breachStoneQuality = "Pure";
-                            break;
-                        // Flawless
-                        case 84:
-                            breachStoneQuality = "Flawless";
-                            break;
-                    }
-                    break;
-                case "Uul-Netols Domain":
-                    breachLoard = "Uul-Netols";
-                    switch (i_area_level)
-                    {
-                        // Normal
-                        case 75:
-                            breachStoneQuality = "";
-                            break;
-                        // Charged
-                        case 78:
-                            breachStoneQuality = "Charged";
-                            break;
-                        // Enriched
-                        case 81:
-                            breachStoneQuality = "Enriched";
-                            break;
-                        // Pure
-                        case 82:
-                            breachStoneQuality = "Pure";
-                            break;
-                        // Flawless
-                        case 84:
-                            breachStoneQuality = "Flawless";
-                            break;
-                    }
-                    break;
-                case "Tuls Domain":
-                    breachLoard = "Tuls";
-                    switch (i_area_level)
-                    {
-                        // Normal
-                        case 70:
-                            breachStoneQuality = "";
-                            break;
-                        // Charged
-                        case 74:
-                            breachStoneQuality = "Charged";
-                            break;
-                        // Enriched
-                        case 79:
-                            breachStoneQuality = "Enriched";
-                            break;
-                        // Pure
-                        case 81:
-                            breachStoneQuality = "Pure";
-                            break;
-                        // Flawless
-                        case 84:
-                            breachStoneQuality = "Flawless";
-                            break;
-                    }
-                    break;
-            }
-
-            if (string.IsNullOrEmpty(breachStoneQuality))
-            {
-                return string.Format("{0} {1}", breachLoard, "Breachstone");
-            }
-            else
-            {
-                return string.Format("{0} {1} {2}", breachLoard, breachStoneQuality, "Breachstone");
-            }
-        }
-
+        /// <param name="map">Activity</param>
+        /// <returns>numeric index in image list to use</returns>
         public int GetImageIndex(TrX_TrackedActivity map)
         {
             int iIndex = 0;
@@ -1726,7 +1653,7 @@ namespace TraXile
                         }
                     }
 
-                    if (!_autoStartsDOne)
+                    if (!_autoStartsDone)
                     {
                         if (_stopwatchOverlayShowDefault)
                         {
@@ -1734,7 +1661,7 @@ namespace TraXile
 
                         }
 
-                        _autoStartsDOne = true;
+                        _autoStartsDone = true;
                     }
 
                     RenderTagsForTracking();
@@ -1792,7 +1719,7 @@ namespace TraXile
                         if (_logic.CurrentActivity != null && _logic.CurrentActivity.Type == ACTIVITY_TYPES.BREACHSTONE)
                         {
                             labelStopWatch.Text = _logic.CurrentActivity.StopWatchValue.ToString();
-                            labelTrackingArea.Text = GetBreachStoneName(_logic.CurrentActivity.Area, _logic.CurrentActivity.AreaLevel);
+                            labelTrackingArea.Text = _logic.GetBreachStoneName(_logic.CurrentActivity.Area, _logic.CurrentActivity.AreaLevel);
                             labelTrackingDied.Text = _logic.CurrentActivity.DeathCounter.ToString();
                             labelTrackingType.Text = GetStringFromActType(_logic.CurrentActivity.Type).ToUpper();
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity)];
@@ -2313,7 +2240,7 @@ namespace TraXile
             Dictionary<string, int> countByArea = new Dictionary<string, int>();
 
             // MAP AREAS
-            foreach (string s in _defaultMappings.HEIST_AREAS)
+            foreach (string s in _defaultMappings.HeistAreas)
             {
                 countByArea.Add(s, 0);
             }
@@ -2443,6 +2370,9 @@ namespace TraXile
             BeginInvoke(mi);
         }
 
+        /// <summary>
+        /// Update bossing dashboard
+        /// </summary>
         private void RenderBossingDashboard()
         {
             DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dateTimeFormatInfo.Calendar);
@@ -2557,6 +2487,9 @@ namespace TraXile
             BeginInvoke(mi);
         }
 
+        /// <summary>
+        /// Update All-Stats Dashboard
+        /// </summary>
         private void RenderAllStatsDashboard()
         {
             DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dateTimeFormatInfo.Calendar);
@@ -2589,6 +2522,9 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Update chart in all stats dashboard
+        /// </summary>
         private void UpdateAllStatsChart()
         {
             DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dateTimeFormatInfo.Calendar);
@@ -2630,6 +2566,9 @@ namespace TraXile
             BeginInvoke(mi);
         }
 
+        /// <summary>
+        /// Update the mapping dashboard
+        /// </summary>
         public void RenderMappingDashboard()
         {
             List<KeyValuePair<string, int>> tmpList = new List<KeyValuePair<string, int>>();
@@ -2640,7 +2579,7 @@ namespace TraXile
             Dictionary<int, int> countByTier = new Dictionary<int, int>();
 
             // MAP AREAS
-            foreach (string s in _defaultMappings.MAP_AREAS)
+            foreach (string s in _defaultMappings.MapAreas)
             {
                 countByArea.Add(s, 0);
             }
@@ -2812,17 +2751,17 @@ namespace TraXile
         /// <param name="s_name"></param>
         private void CreateBackup(string s_name)
         {
-            string sBackupDir = _myAppData + @"/backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+            string sBackupDir = TrX_AppInfo.APPDATA_PATH + @"/backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
             System.IO.Directory.CreateDirectory(sBackupDir);
 
-            if (System.IO.File.Exists(SettingPoeLogFilePath))
-                System.IO.File.Copy(SettingPoeLogFilePath, sBackupDir + @"/Client.txt");
-            if (System.IO.File.Exists(_cachePath))
-                System.IO.File.Copy(_cachePath, sBackupDir + @"/stats.cache");
-            if (System.IO.File.Exists(_dbPath))
-                System.IO.File.Copy(_dbPath, sBackupDir + @"/data.db");
-            if (System.IO.File.Exists(_myAppData + @"\config.xml"))
-                System.IO.File.Copy(_myAppData + @"\config.xml", sBackupDir + @"/config.xml");
+            if (System.IO.File.Exists(_logic.ClientTxtPath))
+                System.IO.File.Copy(_logic.ClientTxtPath, sBackupDir + @"/Client.txt");
+            if (System.IO.File.Exists(TrX_AppInfo.CACHE_PATH))
+                System.IO.File.Copy(TrX_AppInfo.CACHE_PATH, sBackupDir + @"/stats.cache");
+            if (System.IO.File.Exists(TrX_AppInfo.DB_PATH))
+                System.IO.File.Copy(TrX_AppInfo.DB_PATH, sBackupDir + @"/data.db");
+            if (System.IO.File.Exists(TrX_AppInfo.APPDATA_PATH + @"\config.xml"))
+                System.IO.File.Copy(TrX_AppInfo.APPDATA_PATH + @"\config.xml", sBackupDir + @"/config.xml");
         }
 
         /// <summary>
@@ -2831,7 +2770,7 @@ namespace TraXile
         private void DoFullReset()
         {
             // Make logfile empty
-            FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            FileStream fs1 = new FileStream(_logic.ClientTxtPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             fs1.Close();
             InitLogFileReload();
         }
@@ -2845,6 +2784,10 @@ namespace TraXile
             OpenChildWindow(new ActivityDetails(ta, this));
         }
 
+        /// <summary>
+        /// Open child window and apply theme to i´t
+        /// </summary>
+        /// <param name="form">Form to open</param>
         private void OpenChildWindow(Form form)
         {
             form.StartPosition = FormStartPosition.Manual;
@@ -2889,10 +2832,10 @@ namespace TraXile
         /// <param name="sPath"></param>
         private void PrepareBackupRestore(string sPath)
         {
-            File.Copy(sPath + @"/stats.cache", _cachePath + ".restore");
-            File.Copy(sPath + @"/data.db", _dbPath + ".restore");
-            File.Copy(sPath + @"/Client.txt", Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore");
-            File.Copy(sPath + @"/config.xml", _myAppData + @"/config.xml.restore");
+            File.Copy(sPath + @"/stats.cache", TrX_AppInfo.CACHE_PATH + ".restore");
+            File.Copy(sPath + @"/data.db", TrX_AppInfo.DB_PATH + ".restore");
+            File.Copy(sPath + @"/Client.txt", Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore");
+            File.Copy(sPath + @"/config.xml", TrX_AppInfo.APPDATA_PATH + @"/config.xml.restore");
             _log.Info("Backup restore successfully prepared! Restarting Application");
             Application.Restart();
         }
@@ -2902,38 +2845,38 @@ namespace TraXile
         /// </summary>
         private void DoBackupRestoreIfPrepared()
         {
-            if (File.Exists(_cachePath + ".restore"))
+            if (File.Exists(TrX_AppInfo.CACHE_PATH + ".restore"))
             {
-                File.Delete(_cachePath);
-                File.Move(_cachePath + ".restore", _cachePath);
-                _log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: " + _cachePath);
+                File.Delete(TrX_AppInfo.CACHE_PATH);
+                File.Move(TrX_AppInfo.CACHE_PATH + ".restore", TrX_AppInfo.CACHE_PATH);
+                _log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: " + TrX_AppInfo.CACHE_PATH);
                 _restoreMode = true;
             }
 
-            if (File.Exists(_dbPath + ".restore"))
+            if (File.Exists(TrX_AppInfo.DB_PATH + ".restore"))
             {
-                File.Delete(_dbPath);
-                File.Move(_dbPath + ".restore", _dbPath);
-                _log.Info("BackupRestored -> Source: _data.db.restore, Destination: " + _dbPath);
+                File.Delete(TrX_AppInfo.DB_PATH);
+                File.Move(TrX_AppInfo.DB_PATH + ".restore", TrX_AppInfo.DB_PATH);
+                _log.Info("BackupRestored -> Source: _data.db.restore, Destination: " + TrX_AppInfo.DB_PATH);
                 _restoreMode = true;
             }
 
-            if (File.Exists(_myAppData + @"\config.xml.restore"))
+            if (File.Exists(TrX_AppInfo.APPDATA_PATH + @"\config.xml.restore"))
             {
-                File.Delete(_myAppData + @"\config.xml");
-                File.Move(_myAppData + @"\config.xml.restore", _myAppData + @"\config.xml");
-                _log.Info("BackupRestored -> Source: config.xml.restore, Destination: " + _myAppData + @"\config.xml");
+                File.Delete(TrX_AppInfo.APPDATA_PATH + @"\config.xml");
+                File.Move(TrX_AppInfo.APPDATA_PATH + @"\config.xml.restore", TrX_AppInfo.APPDATA_PATH + @"\config.xml");
+                _log.Info("BackupRestored -> Source: config.xml.restore, Destination: " + TrX_AppInfo.APPDATA_PATH + @"\config.xml");
                 _restoreMode = true;
             }
 
             try
             {
-                if (File.Exists(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore"))
+                if (File.Exists(Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore"))
                 {
-                    File.Delete(SettingPoeLogFilePath);
-                    File.Move(Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore", SettingPoeLogFilePath);
-                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt.restore" +
-                        ", Destination: " + Directory.GetParent(SettingPoeLogFilePath) + @"/_Client.txt");
+                    File.Delete(_logic.ClientTxtPath);
+                    File.Move(Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore", _logic.ClientTxtPath);
+                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore" +
+                        ", Destination: " + Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt");
                     _restoreMode = true;
                 }
 
@@ -2986,7 +2929,7 @@ namespace TraXile
         /// <param name="e"></param>
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(SettingPoeLogFilePath) || !_UpdateCheckDone)
+            if (!String.IsNullOrEmpty(_logic.ClientTxtPath) || !_UpdateCheckDone)
             {
                 double dProgress = 0;
                 if (!_logic.EventQueueInitialized)
@@ -3050,6 +2993,11 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Remove a tag from a given activity
+        /// </summary>
+        /// <param name="s_id"></param>
+        /// <param name="act"></param>
         public void RemoveTagFromActivity(string s_id, TrX_TrackedActivity act)
         {
             TrX_ActivityTag tag = GetTagByID(s_id);
@@ -3069,6 +3017,14 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Update a tag definition in UI and database
+        /// </summary>
+        /// <param name="s_id"></param>
+        /// <param name="s_display_name"></param>
+        /// <param name="s_forecolor"></param>
+        /// <param name="s_backcolor"></param>
+        /// <param name="b_show_in_hist"></param>
         private void UpdateTag(string s_id, string s_display_name, string s_forecolor, string s_backcolor, bool b_show_in_hist)
         {
             int iTagIndex = GetTagIndex(s_id);
@@ -3090,6 +3046,11 @@ namespace TraXile
             RequestHistoryUpdate();
         }
 
+        /// <summary>
+        /// Get index of a given tag in list
+        /// </summary>
+        /// <param name="s_id"></param>
+        /// <returns></returns>
         private int GetTagIndex(string s_id)
         {
             for (int i = 0; i < _logic.Tags.Count; i++)
@@ -3102,6 +3063,12 @@ namespace TraXile
             return -1;
         }
 
+        /// <summary>
+        /// Check if a tag name is valid
+        /// </summary>
+        /// <param name="s_name"></param>
+        /// <param name="b_showmessage"></param>
+        /// <returns></returns>
         public bool ValidateTagName(string s_name, bool b_showmessage = false)
         {
             bool bValid = true;
@@ -3126,6 +3093,10 @@ namespace TraXile
             return bValid;
         }
 
+        /// <summary>
+        /// Delete a given tag from UI and database
+        /// </summary>
+        /// <param name="s_id"></param>
         private void DeleteTag(string s_id)
         {
             int iIndex = GetTagIndex(s_id);
@@ -3153,17 +3124,27 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Delete a backup
+        /// </summary>
+        /// <param name="s_path"></param>
         private void DeleteBackup(string s_path)
         {
             Directory.Delete(s_path, true);
             _backups.Remove(listBoxRestoreBackup.SelectedItem.ToString());
         }
 
+        /// <summary>
+        /// Request update of history listview
+        /// </summary>
         public void RequestHistoryUpdate()
         {
             _uiFlagActivityList = true;
         }
 
+        /// <summary>
+        /// Request updates for all Dashboards
+        /// </summary>
         public void RequestDashboardUpdates()
         {
             _uiFlagBossDashboard = true;
@@ -3174,6 +3155,9 @@ namespace TraXile
             _uiFlagMapDashboard = true;
         }
 
+        /// <summary>
+        /// Excecute the search in activity list
+        /// </summary>
         private void DoSearch()
         {
             if (textBox8.Text == String.Empty)
@@ -3265,6 +3249,9 @@ namespace TraXile
             AddUpdateAppSettings("theme", theme);
         }
 
+        /// <summary>
+        /// Pause the current activity
+        /// </summary>
         public void PauseCurrentActivityOrSide()
         {
             if (_logic.CurrentActivity != null)
@@ -3314,6 +3301,9 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Resume current activity
+        /// </summary>
         public void ResumeCurrentActivityOrSide()
         {
             if (_logic.CurrentActivity != null)
@@ -3581,7 +3571,7 @@ namespace TraXile
                 dr = MessageBox.Show("Do you really want to restore the selected Backup? The Application will be restarted. Please make sure that your PathOfExile Client is not running.", "Warning", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.Yes)
                 {
-                    PrepareBackupRestore(_myAppData + listBoxRestoreBackup.SelectedItem.ToString());
+                    PrepareBackupRestore(TrX_AppInfo.APPDATA_PATH + listBoxRestoreBackup.SelectedItem.ToString());
                 }
             }
         }
@@ -3667,7 +3657,7 @@ namespace TraXile
             DialogResult dr = MessageBox.Show("Do you really want to delete the selected Backup?", "Warning", MessageBoxButtons.YesNo);
             if (dr == DialogResult.Yes)
             {
-                DeleteBackup(_myAppData + listBoxRestoreBackup.SelectedItem.ToString());
+                DeleteBackup(TrX_AppInfo.APPDATA_PATH + listBoxRestoreBackup.SelectedItem.ToString());
             }
         }
 
@@ -3733,9 +3723,9 @@ namespace TraXile
                 try
                 {
                     string sDt = DateTime.Now.ToString("yyyy-MM-dd-H-m-s");
-                    string sBaseDir = new FileInfo(SettingPoeLogFilePath).DirectoryName;
-                    File.Copy(SettingPoeLogFilePath, sBaseDir + @"\Client." + sDt + ".txt");
-                    FileStream fs1 = new FileStream(SettingPoeLogFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                    string sBaseDir = new FileInfo(_logic.ClientTxtPath).DirectoryName;
+                    File.Copy(_logic.ClientTxtPath, sBaseDir + @"\Client." + sDt + ".txt");
+                    FileStream fs1 = new FileStream(_logic.ClientTxtPath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
                     MessageBox.Show("Client.txt rolled and cleared successful. The Application will be restarted now.");
                     Application.Restart();
                 }
@@ -3748,7 +3738,7 @@ namespace TraXile
 
         private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start(APPINFO.WIKI_URL);
+            Process.Start(TrX_AppInfo.WIKI_URL);
         }
 
         private void button22_Click(object sender, EventArgs e)
@@ -3811,7 +3801,7 @@ namespace TraXile
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            Process.Start(APPINFO.WIKI_URL_SETTINGS);
+            Process.Start(TrX_AppInfo.WIKI_URL_SETTINGS);
         }
 
         private void button2_Click_1(object sender, EventArgs e)
@@ -3835,7 +3825,7 @@ namespace TraXile
             DialogResult dr = MessageBox.Show(sb.ToString(), "Warning", MessageBoxButtons.YesNo); ;
             if (dr == DialogResult.Yes)
             {
-                File.Create(_myAppData + @"\IS_SAFE_RELOAD");
+                File.Create(TrX_AppInfo.APPDATA_PATH + @"\IS_SAFE_RELOAD");
                 ReloadLogFile();
             }
         }

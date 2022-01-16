@@ -4,14 +4,8 @@ namespace TraXile
 {
     class TrX_TrackingEvent
     {
-        private readonly EVENT_TYPES _eventType;
+        // Matched lin in Client.txt
         private string _logLine;
-        private DateTime _eventStartTime;
-
-        public TrX_TrackingEvent(EVENT_TYPES evType)
-        {
-            this._eventType = evType;
-        }
         public string LogLine
         {
             get
@@ -24,11 +18,8 @@ namespace TraXile
             }
         }
 
-        public override string ToString()
-        {
-            return "TrackedEvent -> Time: " + _eventStartTime + ", Type: " + _eventType.ToString() + ", MatchedLine: '" + _logLine + "'";
-        }
-
+        // Start time of the event
+        private DateTime _eventStartTime;
         public DateTime EventTime
         {
             get
@@ -41,12 +32,28 @@ namespace TraXile
             }
         }
 
-        public EVENT_TYPES EventType
+        // Type of the event
+        private readonly EVENT_TYPES _eventType;
+        public EVENT_TYPES EventType => _eventType;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="evType"></param>
+        public TrX_TrackingEvent(EVENT_TYPES evType)
         {
-            get
-            {
-                return this._eventType;
-            }
+            this._eventType = evType;
         }
+
+        /// <summary>
+        /// ToString
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return "TrackedEvent -> Time: " + _eventStartTime + ", Type: " + _eventType.ToString() + ", MatchedLine: '" + _logLine + "'";
+        }
+
+
     }
 }

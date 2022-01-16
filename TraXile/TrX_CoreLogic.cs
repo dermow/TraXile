@@ -34,10 +34,7 @@ namespace TraXile
             _logic = logic;
         }
 
-        public TrX_CoreLogic Logic
-        {
-            get { return _logic; }
-        }
+        public TrX_CoreLogic Logic => _logic;
     }
 
     /// <summary>
@@ -53,15 +50,8 @@ namespace TraXile
             _activity = activity;
         }
 
-        public TrX_CoreLogic Logic
-        {
-            get { return _logic; }
-        }
-
-        public TrX_TrackedActivity Activity
-        {
-            get { return _activity; }
-        }
+        public TrX_CoreLogic Logic => _logic;
+        public TrX_TrackedActivity Activity => _activity;
     }
 
     /// <summary>
@@ -69,104 +59,179 @@ namespace TraXile
     /// </summary>
     public class TrX_CoreLogic
     {
-        // START FLAGS
-        public readonly bool IS_IN_DEBUG_MODE = false;
-        public bool SAFE_RELOAD_MODE;
-
-        // Calendar
-        public DateTimeFormatInfo _dateTimeFormatInfo;
-        public GregorianCalendar _myCalendar;
-
-        // App parameters
-        private readonly string _cachePath;
-
-        private readonly string _myAppData;
-        private bool _exit;
-        private bool _StartedFlag = false;
-        private bool _nextAreaIsExp = false;
-
-        // Core Logic variables
-        private string _currentArea;
-        private string _currentInstanceEndpoint;
-        private string _lastSimuEndpoint;
-        private bool _eventQueueInitizalized;
-        private bool _isMapZana;
-        private bool _isMapVaalArea;
-        private bool _isMapAbyssArea;
-        private bool _isMapLabTrial;
-        private bool _isMapLogbookSide;
-        private int _shaperKillsInFight;
-        private int _nextAreaLevel;
-        private int _currentAreaLevel;
-        private int _lastHash = 0;
-        private double _logLinesTotal;
-        private double _logLinesRead;
-        private bool _historyInitialized;
-        private Dictionary<int, string> _dict;
-        private Dictionary<string, string> _statNamesLong;
-        private List<string> _knownPlayerNames;
-        private List<string> labs;
-        private List<TrX_ActivityTag> _tags;
-        private List<TrX_TrackedActivity> _eventHistory;
-        private TrX_EventMapping _eventMapping;
-        private TrX_DefaultMappings _defaultMappings;
-        private TrX_DBManager _myDB;
-        private TrX_StatsManager _myStats;
-        private ConcurrentQueue<TrX_TrackingEvent> _eventQueue;
-        public TrX_TrackedActivity _currentActivity;
-        private TrX_TrackedActivity _prevActivityOverlay;
-        private EVENT_TYPES _lastEventTypeConq;
-        private Thread _logParseThread;
-        private Thread _eventThread;
-        private DateTime _initStartTime;
-        private DateTime _initEndTime;
-        private string _lastShaperInstance;
-        private string _lastElderInstance;
-
-        // Hideout time
-        private DateTime _hoStart;
-        private bool _trackingHO;
-
-        // Other variables
-        private List<string> _parsedActivities;
-        private ILog _log;
-
-        private string _clientTxtPath;
-
-        // Events
+        // Event: initialization of history is finished
         public event Trx_GenericEventHandler OnHistoryInitialized;
+
+        // Event: called when an activity is finished
         public event TrX_ActivityEventHandler OnActivityFinished;
+
+        // Event: called when tags are changed
         public event Trx_GenericEventHandler OnTagsUpdated;
 
+        // DateTime format info for enforcing specific calendar info
+        public DateTimeFormatInfo _dateTimeFormatInfo;
 
+        // Exit switch
+        private bool _exit;
+
+        // Flag if logic has been started 
+        private bool _StartedFlag = false;
+
+        // Flag if next area is an expedition area
+        private bool _nextAreaIsExp = false;
+
+        // IP and port of the current instance, for identifiing activity changes
+        private string _currentInstanceEndpoint;
+
+        // Last known endoint of simulacrum
+        private string _lastSimuEndpoint;
+
+        // Shaper kills in current fight: helper counter
+        private int _shaperKillsInFight;
+
+        // Level of the next area
+        private int _nextAreaLevel;
+
+        // Hash code of the last known logfile line
+        private int _lastHash = 0;
+
+        // Flag if history is initialized (logfile read finished)
+        private bool _historyInitialized;
+        
+        // Dictionary of known hashes
+        private Dictionary<int, string> _dict;
+        
+        // List of known player names (used for death calc)
+        private List<string> _knownPlayerNames;
+        
+        // List of lab names
+        private List<string> labs;
+        
+        // Event mapping (Logpattern <-> Event Type)
+        private TrX_EventMapping _eventMapping;
+        
+        // Default mappings
+        private TrX_DefaultMappings _defaultMappings;
+        
+        // EventQ
+        private ConcurrentQueue<TrX_TrackingEvent> _eventQueue;
+        
+        // Last event type regarding conquerors
+        private EVENT_TYPES _lastEventTypeConq;
+
+        // Thread for logfile parsing
+        private Thread _logParseThread;
+
+        // Thrad for handling events generated by log parse Thread
+        private Thread _eventThread;
+
+        // Time of app init start
+        private DateTime _initStartTime;
+
+        // Time of app init end
+        private DateTime _initEndTime;
+
+        // Last instance of Shaper fight
+        private string _lastShaperInstance;
+
+        // Last instance of Elder fight
+        private string _lastElderInstance;
+
+        // DateTime of the current Hideout tracking block
+        private DateTime _hoStart;
+
+        // Flag if tracking of a hideout block is currently active
+        private bool _trackingHO;
+
+        // ID list of already parsed Activities
+        private List<string> _parsedActivities;
+
+        // Log handler
+        private ILog _log;
+
+        // Path to Client.txt file
+        private string _clientTxtPath;
+
+        // Property: List of Tags
+        private List<TrX_ActivityTag> _tags;
+        public List<TrX_ActivityTag> Tags => _tags;
+
+        // Property: Current Activity
+        public TrX_TrackedActivity _currentActivity;
+        public TrX_TrackedActivity CurrentActivity => _currentActivity;
+
+        // Property: Event History
+        private List<TrX_TrackedActivity> _eventHistory;
+        public List<TrX_TrackedActivity> ActivityHistory => _eventHistory;
+
+        // Property: EventQ initialized
+        private bool _eventQueueInitizalized;
+        public bool EventQueueInitialized => _eventQueueInitizalized;
+
+        // Property: LogLines total 
+        private double _logLinesTotal;
+        public double LogLinesTotal => _logLinesTotal;
+
+        // Property: LogLines read
+        private double _logLinesRead;
+        public double LogLinesRead => _logLinesRead;
+
+        // Property: Is current map zana
+        private bool _isMapZana;
+        public bool IsMapZana => _isMapZana;
+
+        // Property: Is current map vaal area
+        private bool _isMapVaalArea;
+        public bool IsMapVaalArea => _isMapVaalArea;
+
+        // Property: Is current map logbook
+        private bool _isMapLogbookSide;
+        public bool IsMapLogbookSide => _isMapLogbookSide;
+
+        // Property: Is current map labtrial
+        private bool _isMapLabTrial;
+        public bool IsMapLabTrial => _isMapLabTrial;
+
+        // Property: Is current area abyss area
+        private bool _isMapAbyssArea;
+        public bool IsMapAbyssArea => _isMapAbyssArea;
+
+        // Property: Current Area
+        private string _currentArea;
+        public string CurrentArea => _currentArea;
+
+        // Property: Current Area Level
+        private int _currentAreaLevel;
+        public int CurrentAreaLevel => _currentAreaLevel;
+
+        // Property: Previous activity in overlay
+        private TrX_TrackedActivity _prevActivityOverlay;
+        public TrX_TrackedActivity OverlayPrevActivity => _prevActivityOverlay;
+
+        // Property: DB Manager
+        private TrX_DBManager _myDB;
+        public TrX_DBManager Database => _myDB;
+
+        // Property: Statistics manager
+        private TrX_StatsManager _myStats;
+        public TrX_StatsManager Stats => _myStats;
+
+        // Property: Long stat names
+        private Dictionary<string, string> _statNamesLong;
+        public Dictionary<string, string> StatNamesLong => _statNamesLong;
+
+        // Property: Path to Client.txt
+        public string ClientTxtPath
+        {
+            get { return _clientTxtPath; }
+            set { _clientTxtPath = value; }
+        }
 
         /// <summary>
         /// Main Window Constructor
         /// </summary>
-        public TrX_CoreLogic(string logpath)
+        public TrX_CoreLogic()
         {
-            _clientTxtPath = logpath;
-
-            if (File.Exists(Application.StartupPath + @"\DEBUG_MODE_ON.txt"))
-            {
-                IS_IN_DEBUG_MODE = true;
-            }
-
-            if (IS_IN_DEBUG_MODE)
-            {
-                _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME + "_Debug";
-            }
-            else
-            {
-                _myAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\" + APPINFO.NAME;
-            }
-
-            if (File.Exists(_myAppData + @"\IS_SAFE_RELOAD"))
-            {
-                SAFE_RELOAD_MODE = true;
-                File.Delete(_myAppData + @"\IS_SAFE_RELOAD");
-            }
-            _cachePath = _myAppData + @"\stats.cache";
             Init();
         }
 
@@ -193,7 +258,7 @@ namespace TraXile
             _lastSimuEndpoint = "";
             _tags = new List<TrX_ActivityTag>();
             _initStartTime = DateTime.Now;
-            _myDB = new TrX_DBManager(_myAppData + @"\data.db", ref _log);
+            _myDB = new TrX_DBManager(TrX_AppInfo.DB_PATH, ref _log);
             _myStats = new TrX_StatsManager(_myDB);
             _lastEventTypeConq = EVENT_TYPES.APP_STARTED;
 
@@ -222,7 +287,6 @@ namespace TraXile
 
                     // Drop statistic values and enable stat_reload mode
                     _myDB.DoNonQuery("DELETE FROM tx_stats WHERE timestamp > 0");
-                    SAFE_RELOAD_MODE = true;
                 }
             }
 
@@ -236,13 +300,20 @@ namespace TraXile
             {
                 IsBackground = true
             };
-            _logParseThread.Start();
 
             // Thread for Queue processing / Dequeuing
             _eventThread = new Thread(new ThreadStart(EventHandling))
             {
                 IsBackground = true
             };
+        }
+
+        /// <summary>
+        /// Start logfile parsing and event handling
+        /// </summary>
+        public void Start()
+        {
+            _logParseThread.Start();
             _eventThread.Start();
         }
 
@@ -281,9 +352,9 @@ namespace TraXile
         /// </summary>
         private bool ReadStatsCache()
         {
-            if (File.Exists(_cachePath))
+            if (File.Exists(TrX_AppInfo.CACHE_PATH))
             {
-                StreamReader r = new StreamReader(_cachePath);
+                StreamReader r = new StreamReader(TrX_AppInfo.CACHE_PATH);
 
                 try
                 {
@@ -343,7 +414,7 @@ namespace TraXile
             // DB
             _myDB.DoNonQuery(string.Format("UPDATE tx_kvstore SET value='{0}' where key='last_hash'", _lastHash));
 
-            StreamWriter wrt = new StreamWriter(_cachePath);
+            StreamWriter wrt = new StreamWriter(TrX_AppInfo.CACHE_PATH);
             wrt.WriteLine("last;" + _lastHash.ToString());
             foreach (KeyValuePair<string, int> kvp in _myStats.NumericStats)
             {
@@ -645,7 +716,7 @@ namespace TraXile
                 "Advanced Uber-Lab"
             };
 
-            foreach (string s in _defaultMappings.HEIST_AREAS)
+            foreach (string s in _defaultMappings.HeistAreas)
             {
                 string sName = s.Replace("'", "");
                 if (!_myStats.NumericStats.ContainsKey("HeistsFinished_" + sName))
@@ -663,7 +734,7 @@ namespace TraXile
                     _statNamesLong.Add("LabsCompleted_" + sName, "Labs completed: " + sName);
             }
 
-            foreach (string s in _defaultMappings.MAP_AREAS)
+            foreach (string s in _defaultMappings.MapAreas)
             {
                 string sName = s.Replace("'", "");
                 if (!_myStats.NumericStats.ContainsKey("MapsFinished_" + sName))
@@ -682,7 +753,7 @@ namespace TraXile
                     _statNamesLong.Add(sShort, sLong);
             }
 
-            foreach (string s in _defaultMappings.SIMU_AREAS)
+            foreach (string s in _defaultMappings.SimulacrumAreas)
             {
                 string sName = s.Replace("'", "");
                 if (!_myStats.NumericStats.ContainsKey("SimulacrumFinished_" + sName))
@@ -990,7 +1061,6 @@ namespace TraXile
                                   + Math.Round(tsInitDuration.TotalSeconds, 2) + " seconds."
                             });
                             _lastHash = lineHash;
-                            SAFE_RELOAD_MODE = false;
 
                             // Trigger ready event
                             OnHistoryInitialized(new TrX_CoreLogicGenericEventArgs(this));
@@ -1022,7 +1092,7 @@ namespace TraXile
 
                     _lastHash = lineHash;
 
-                    foreach (KeyValuePair<string, EVENT_TYPES> kv in _eventMapping.MAP)
+                    foreach (KeyValuePair<string, EVENT_TYPES> kv in _eventMapping.Mapping)
                     {
                         if (line.Contains(kv.Key))
                         {
@@ -1100,7 +1170,7 @@ namespace TraXile
                 }
             }
 
-            foreach (string s in _defaultMappings.MAP_AREAS)
+            foreach (string s in _defaultMappings.MapAreas)
             {
                 if (s.Trim().Equals(sArea.Trim()))
                     return true;
@@ -1129,7 +1199,7 @@ namespace TraXile
                 }
             }
 
-            foreach (string s in _defaultMappings.HEIST_AREAS)
+            foreach (string s in _defaultMappings.HeistAreas)
             {
                 if (s.Trim().Equals(sArea.Trim()))
                     return true;
@@ -1207,32 +1277,32 @@ namespace TraXile
             string sTargetArea = GetAreaNameFromEvent(ev);
             string sAreaName = GetAreaNameFromEvent(ev);
             bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea);
-            bool bSourceAreaIsVaal = _defaultMappings.VAAL_AREAS.Contains(sSourceArea);
-            bool bSourceAreaIsAbyss = _defaultMappings.ABYSS_AREAS.Contains(sSourceArea);
+            bool bSourceAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sSourceArea);
+            bool bSourceAreaIsAbyss = _defaultMappings.AbyssalAreas.Contains(sSourceArea);
             bool bSourceAreaIsLabTrial = sSourceArea.Contains("Trial of");
-            bool bSourceAreaIsLogbookSide = _defaultMappings.LOGBOOK_SIDE_AREAS.Contains(sSourceArea);
+            bool bSourceAreaIsLogbookSide = _defaultMappings.LogbookSideAreas.Contains(sSourceArea);
             bool bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea);
             bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
             bool bTargetAreaIsSimu = false;
-            bool bTargetAreaMine = _defaultMappings.DELVE_AREAS.Contains(sTargetArea);
-            bool bTargetAreaTemple = _defaultMappings.TEMPLE_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsLab = _defaultMappings.LAB_START_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsMI = _defaultMappings.MAVEN_INV_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsAtziri = _defaultMappings.ATZIRI_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsUberAtziri = _defaultMappings.UBER_ATZIRI_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsElder = _defaultMappings.ELDER_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsShaper = _defaultMappings.SHAPER_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsSirusFight = _defaultMappings.SIRUS_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsMavenFight = _defaultMappings.MAVEN_FIGHT_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsCampaign = _defaultMappings.CAMPAIGN_AREAS.Contains(sTargetArea);
+            bool bTargetAreaMine = _defaultMappings.DelveAreas.Contains(sTargetArea);
+            bool bTargetAreaTemple = _defaultMappings.TempleAreas.Contains(sTargetArea);
+            bool bTargetAreaIsLab = _defaultMappings.LabyrinthStartAreas.Contains(sTargetArea);
+            bool bTargetAreaIsMI = _defaultMappings.MavenInvitationAreas.Contains(sTargetArea);
+            bool bTargetAreaIsAtziri = _defaultMappings.AtziriAreas.Contains(sTargetArea);
+            bool bTargetAreaIsUberAtziri = _defaultMappings.UberAtziriAreas.Contains(sTargetArea);
+            bool bTargetAreaIsElder = _defaultMappings.ElderAreas.Contains(sTargetArea);
+            bool bTargetAreaIsShaper = _defaultMappings.ShaperAreas.Contains(sTargetArea);
+            bool bTargetAreaIsSirusFight = _defaultMappings.SirusAreas.Contains(sTargetArea);
+            bool bTargetAreaIsMavenFight = _defaultMappings.MavenFightAreas.Contains(sTargetArea);
+            bool bTargetAreaIsCampaign = _defaultMappings.CampaignAreas.Contains(sTargetArea);
             bool bTargetAreaIsLabTrial = sTargetArea.Contains("Trial of");
-            bool bTargetAreaIsAbyssal = _defaultMappings.ABYSS_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsVaal = _defaultMappings.VAAL_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsLogbook = _defaultMappings.LOGBOOK_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsLogBookSide = _defaultMappings.LOGBOOK_SIDE_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsCata = _defaultMappings.CATARINA_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsSafehouse = _defaultMappings.SAFEHOUSE_AREAS.Contains(sTargetArea);
-            bool bTargetAreaIsBreachStone = _defaultMappings.BREACHSTONE_AREAS.Contains(sTargetArea);
+            bool bTargetAreaIsAbyssal = _defaultMappings.AbyssalAreas.Contains(sTargetArea);
+            bool bTargetAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sTargetArea);
+            bool bTargetAreaIsLogbook = _defaultMappings.LogbookAreas.Contains(sTargetArea);
+            bool bTargetAreaIsLogBookSide = _defaultMappings.LogbookSideAreas.Contains(sTargetArea);
+            bool bTargetAreaIsCata = _defaultMappings.CatarinaFightAreas.Contains(sTargetArea);
+            bool bTargetAreaIsSafehouse = _defaultMappings.SyndicateSafehouseAreas.Contains(sTargetArea);
+            bool bTargetAreaIsBreachStone = _defaultMappings.BreachstoneDomainAreas.Contains(sTargetArea);
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
             IncrementStat("AreaChanges", ev.EventTime, 1);
 
@@ -1256,7 +1326,7 @@ namespace TraXile
             }
 
             // Track the very first activity
-            if ((!sTargetArea.Contains("Hideout")) && (!_defaultMappings.CAMP_AREAS.Contains(sTargetArea)))
+            if ((!sTargetArea.Contains("Hideout")) && (!_defaultMappings.CampAreas.Contains(sTargetArea)))
             {
                 _StartedFlag = false;
             }
@@ -1292,7 +1362,7 @@ namespace TraXile
             }
 
             //Simu?
-            if (_defaultMappings.SIMU_AREAS.Contains(sAreaName))
+            if (_defaultMappings.SimulacrumAreas.Contains(sAreaName))
             {
                 bTargetAreaIsSimu = true;
                 if (_currentInstanceEndpoint != _lastSimuEndpoint)
@@ -1443,8 +1513,6 @@ namespace TraXile
                 // Finish activity
                 if (_currentActivity != null)
                 {
-                    if (IS_IN_DEBUG_MODE)
-                        _currentActivity.DebugEndEventLine = ev.LogLine;
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                 }
 
@@ -1475,10 +1543,8 @@ namespace TraXile
             //Lab cancelled?
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
             {
-                if (sTargetArea.Contains("Hideout") || _defaultMappings.CAMP_AREAS.Contains(sTargetArea))
+                if (sTargetArea.Contains("Hideout") || _defaultMappings.CampAreas.Contains(sTargetArea))
                 {
-                    if (IS_IN_DEBUG_MODE)
-                        _currentActivity.DebugEndEventLine = ev.LogLine;
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
                 }
             }
@@ -1634,8 +1700,6 @@ namespace TraXile
                 // Finish activity
                 if (_currentActivity != null)
                 {
-                    if (IS_IN_DEBUG_MODE)
-                        _currentActivity.DebugEndEventLine = ev.LogLine;
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                 }
 
@@ -1663,8 +1727,6 @@ namespace TraXile
             // End Delving?
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE && !bTargetAreaMine)
             {
-                if (IS_IN_DEBUG_MODE)
-                    _currentActivity.DebugEndEventLine = ev.LogLine;
                 FinishActivity(_currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
             }
 
@@ -1676,17 +1738,17 @@ namespace TraXile
                 // Do not finish when logging in other char
                 bool bFromActivity = bSourceAreaIsMap
                     || sSourceArea == "Aspirants Trial"
-                    || _defaultMappings.SIMU_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.LOGBOOK_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.TEMPLE_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.ATZIRI_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.CATARINA_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.ELDER_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.MAVEN_FIGHT_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.SAFEHOUSE_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.SHAPER_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.SIRUS_AREAS.Contains(sSourceArea)
-                    || _defaultMappings.UBER_ATZIRI_AREAS.Contains(sSourceArea);
+                    || _defaultMappings.SimulacrumAreas.Contains(sSourceArea)
+                    || _defaultMappings.LogbookAreas.Contains(sSourceArea)
+                    || _defaultMappings.TempleAreas.Contains(sSourceArea)
+                    || _defaultMappings.AtziriAreas.Contains(sSourceArea)
+                    || _defaultMappings.CatarinaFightAreas.Contains(sSourceArea)
+                    || _defaultMappings.ElderAreas.Contains(sSourceArea)
+                    || _defaultMappings.MavenFightAreas.Contains(sSourceArea)
+                    || _defaultMappings.SyndicateSafehouseAreas.Contains(sSourceArea)
+                    || _defaultMappings.ShaperAreas.Contains(sSourceArea)
+                    || _defaultMappings.SirusAreas.Contains(sSourceArea)
+                    || _defaultMappings.UberAtziriAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
                 if (!_StartedFlag && !bFromActivity)
@@ -1697,8 +1759,6 @@ namespace TraXile
                         if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
                         {
                             _currentActivity.LastEnded = ev.EventTime;
-                            if (IS_IN_DEBUG_MODE)
-                                _currentActivity.DebugEndEventLine = ev.LogLine;
                             FinishActivity(_currentActivity, sTargetArea, ACTIVITY_TYPES.CAMPAIGN, ev.EventTime);
                         }
                     }
@@ -1740,7 +1800,7 @@ namespace TraXile
             {
                 if (_currentActivity != null)
                 {
-                    if (_defaultMappings.CAMP_AREAS.Contains(sSourceArea) || sSourceArea.Contains("Hideout"))
+                    if (_defaultMappings.CampAreas.Contains(sSourceArea) || sSourceArea.Contains("Hideout"))
                     {
                         if (sTargetArea == _currentActivity.Area && _currentInstanceEndpoint == _currentActivity.InstanceEndpoint)
                         {
@@ -1812,7 +1872,6 @@ namespace TraXile
                         Started = ev.EventTime,
                         TimeStamp = lTS,
                         InstanceEndpoint = _currentInstanceEndpoint,
-                        DebugStartEventLine = ev.LogLine
                     };
                     _nextAreaLevel = 0;
 
@@ -1875,7 +1934,6 @@ namespace TraXile
                     {
                         if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
                         {
-                            if (IS_IN_DEBUG_MODE) _currentActivity.DebugEndEventLine = ev.LogLine;
                             FinishActivity(_currentActivity, sTargetArea, actType, ev.EventTime);
                         }
                     }
@@ -1886,22 +1944,22 @@ namespace TraXile
                 // Set endtime when logouts
                 if (_currentActivity != null && _currentActivity.Type != ACTIVITY_TYPES.LABYRINTH && _currentActivity.Type != ACTIVITY_TYPES.CAMPAIGN)
                 {
-                    if (_currentActivity.Type == ACTIVITY_TYPES.BREACHSTONE && _defaultMappings.BREACHSTONE_AREAS.Contains(sSourceArea))
+                    if (_currentActivity.Type == ACTIVITY_TYPES.BREACHSTONE && _defaultMappings.BreachstoneDomainAreas.Contains(sSourceArea))
                     {
                         _currentActivity.StopStopWatch();
                         _currentActivity.LastEnded = ev.EventTime;
                     }
 
                     //TEST: Pause when left the source area
-                    if (sSourceArea == _currentActivity.Area || _defaultMappings.CAMP_AREAS.Contains(sTargetArea))
+                    if (sSourceArea == _currentActivity.Area || _defaultMappings.CampAreas.Contains(sTargetArea))
                     {
                         _currentActivity.StopStopWatch();
                         _currentActivity.LastEnded = ev.EventTime;
 
                         // PAUSE TIME
-                        if (_defaultMappings.PAUSABLE_ACTIVITY_TYPES.Contains(_currentActivity.Type))
+                        if (_defaultMappings.PausableActivityTypes.Contains(_currentActivity.Type))
                         {
-                            if (_defaultMappings.CAMP_AREAS.Contains(sTargetArea) || (sTargetArea.Contains("Hideout") && !sTargetArea.Contains("Syndicate")))
+                            if (_defaultMappings.CampAreas.Contains(sTargetArea) || (sTargetArea.Contains("Hideout") && !sTargetArea.Contains("Syndicate")))
                             {
                                 _currentActivity.StartPauseTime(ev.EventTime);
                             }
@@ -1938,11 +1996,10 @@ namespace TraXile
                 if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
                 {
                     _currentActivity.DeathCounter = 1;
-                    if (IS_IN_DEBUG_MODE) _currentActivity.DebugEndEventLine = ev.LogLine;
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
                 }
 
-                if (!_defaultMappings.DEATH_COUNT_ENABLED_AREAS.Contains(_currentArea))
+                if (!_defaultMappings.DeathCountEnabledAreas.Contains(_currentArea))
                 {
                     return;
                 }
@@ -2012,7 +2069,6 @@ namespace TraXile
                         if (_currentActivity != null)
                         {
                             _log.Info("Abnormal disconnect found in log. Finishing Map.");
-                            if (IS_IN_DEBUG_MODE) _currentActivity.DebugEndEventLine = ev.LogLine;
                             FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                         }
                         break;
@@ -2090,7 +2146,6 @@ namespace TraXile
                                     }
 
                                 }
-                                if (IS_IN_DEBUG_MODE) _currentActivity.DebugEndEventLine = ev.LogLine;
                                 FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                             }
                         }
@@ -2341,7 +2396,6 @@ namespace TraXile
                             IncrementStat("LabsFinished", ev.EventTime, 1);
                             IncrementStat("LabsCompleted_" + _currentActivity.Area, ev.EventTime, 1);
                             _currentActivity.Success = true;
-                            if (IS_IN_DEBUG_MODE) _currentActivity.DebugEndEventLine = ev.LogLine;
                             FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                         }
                         break;
@@ -2569,14 +2623,14 @@ namespace TraXile
         /// <param name="sNextMap">next map to start. Set to null if there is none</param>
         /// <param name="sNextMapType"></param>
         /// <param name="dtNextMapStarted"></param>
-        public void FinishActivity(TrX_TrackedActivity activity, string sNextMap, ACTIVITY_TYPES sNextMapType, DateTime dtNextMapStarted)
+        public void FinishActivity(TrX_TrackedActivity activity, string sNextMap, ACTIVITY_TYPES sNextMapType, DateTime dtNextMapStarted, bool stats_only = false)
         {
             _log.Debug("Finishing activity: " + activity.UniqueID);
             _currentActivity.StopStopWatch();
 
             bool isValid = true;
 
-            if (!SAFE_RELOAD_MODE)
+            if (!stats_only)
             {
                 TimeSpan ts;
                 TimeSpan tsZana;
@@ -2837,11 +2891,17 @@ namespace TraXile
         /// </summary>
         private void SaveVersion()
         {
-            StreamWriter wrt = new StreamWriter(_myAppData + @"\VERSION.txt");
-            wrt.WriteLine(APPINFO.VERSION);
+            StreamWriter wrt = new StreamWriter(TrX_AppInfo.VERSION_FILE_PATH);
+            wrt.WriteLine(TrX_AppInfo.VERSION);
             wrt.Close();
         }
 
+        /// <summary>
+        /// Get name of a given Breachstone
+        /// </summary>
+        /// <param name="s_ara"></param>
+        /// <param name="i_area_level"></param>
+        /// <returns></returns>
         public string GetBreachStoneName(string s_ara, int i_area_level)
         {
             string breachLoard = "";
@@ -3468,97 +3528,6 @@ namespace TraXile
             }
         }
 
-        // PROPERTIES
-        public List<TrX_ActivityTag> Tags
-        {
-            get { return _tags; }
-            set { _tags = value; }
-        }
-
-        public TrX_TrackedActivity CurrentActivity
-        {
-            get { return _currentActivity; }
-        }
-
-        public List<TrX_TrackedActivity> ActivityHistory
-        {
-            get { return _eventHistory; }
-        }
-
-        public string ClientTxtPath
-        {
-            get { return _clientTxtPath; }
-            set { _clientTxtPath = value; }
-        }
-
-        public bool EventQueueInitialized
-        {
-            get { return _eventQueueInitizalized; }
-        }
-
-        public double LogLinesTotal
-        {
-            get { return _logLinesTotal; }
-        }
-
-        public double LogLinesRead
-        {
-            get { return _logLinesRead; }
-        }
-
-        public bool IsMapZana
-        {
-            get { return _isMapZana; }
-        }
-
-        public bool IsMapVaalArea
-        {
-            get { return _isMapVaalArea; }
-        }
-
-        public bool IsMapLogbookSide
-        {
-            get { return _isMapLogbookSide; }
-        }
-
-        public bool IsMapLabTrial
-        {
-            get { return _isMapLabTrial; }
-        }
-
-        public bool IsMapAbyssArea
-        {
-            get { return _isMapAbyssArea; }
-        }
-
-        public string CurrentArea
-        {
-            get { return _currentArea; }
-        }
-
-        public int CurrentAreaLevel
-        {
-            get { return _currentAreaLevel; }
-        }
-
-        public TrX_TrackedActivity OverlayPrevActivity
-        {
-            get { return _prevActivityOverlay; }
-        }
-
-        public TrX_DBManager Database
-        {
-            get { return _myDB; }
-        }
-
-        public TrX_StatsManager Stats
-        {
-            get { return _myStats; }
-        }
-
-        public Dictionary<string, string> StatNamesLong
-        {
-            get { return _statNamesLong; }
-        }
+       
     }
 }

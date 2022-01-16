@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TraXile
+﻿namespace TraXile
 {
     public static class TrX_Helpers
     {
@@ -15,13 +9,8 @@ namespace TraXile
         /// <returns></returns>
         public static string CapitalFirstLetter(string input)
         {
-            string firstChar;
-            string rest;
-
             input = input.ToLower();
-            firstChar = input.Substring(0, 1);
-            rest = input.Substring(1, input.Length - 1);
-            return string.Format("{0}{1}", firstChar.ToUpper(), rest);
+            return string.Format("{0}{1}", input[0].ToString().ToUpper(), input.Substring(1, input.Length - 1));
         }
     }
 }

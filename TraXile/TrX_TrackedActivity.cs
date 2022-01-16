@@ -6,111 +6,73 @@ namespace TraXile
 {
     public class TrX_TrackedActivity
     {
-        private readonly Stopwatch _stopWatch;
-        private readonly List<string> _tagIDs;
-        private DateTime _startTime, _lastEndTime, _pauseTimeStart;
-        private string _instanceEndpoint;
-        private string _areaName;
-        private string _origAreaName;
-        private ACTIVITY_TYPES _activityType;
-        private bool _isZana;
-        private int _pauseCount;
-        private bool _isManuallyPaused;
-        private bool _trialMasterSuccess;
-        private bool _trialMasterFull;
-        private bool _finished;
-        private bool _success;
-        private int _trialMasterCount;
-        private int _deathCounter;
-        private int _areaLevel;
-        private int _portalsUsed;
-        private int _trialCount;
-        private double _pausedTime;
+        // Start of the pause time
+        private DateTime _pauseTimeStart;
+
+        // Is paused?
         private bool _paused;
-        private int _totalSeconds;
-        private long _activityTimeStamp;
-        private string _customStopWatchValue;
 
-        // Possible side areas
+        // Sub-Activity: Zana-Map
         private TrX_TrackedActivity _zanaMap;
-        private TrX_TrackedActivity _vaalArea;
-        private TrX_TrackedActivity _abyssArea;
-        private TrX_TrackedActivity _labTrial;
-        private TrX_TrackedActivity _logbbookSide;
-
-        // Debug Info
-        private string _debugStartEventLine;
-        private string _debugEndEventLine;
-
-        public TrX_TrackedActivity()
-        {
-            _stopWatch = new Stopwatch();
-            _zanaMap = null;
-            _vaalArea = null;
-            _logbbookSide = null;
-            _tagIDs = new List<string>();
-        }
-
-        public string GetCappedStopwatchValue(int cap)
-        {
-            TimeSpan ts;
-            string s;
-            ts = TimeSpan.FromSeconds(_totalSeconds > cap ? cap : _totalSeconds);
-            s = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
-            if(_totalSeconds > cap)
-            {
-                s += " (cap)";
-            }
-            return s;
-        }
-
         public TrX_TrackedActivity SideArea_ZanaMap
         {
             get { return _zanaMap; }
             set { _zanaMap = value; }
         }
 
+        // Sub-Activity: Logbook Side
+        private TrX_TrackedActivity _logbbookSide;
         public TrX_TrackedActivity SideArea_LogbookSide
         {
             get { return _logbbookSide; }
             set { _logbbookSide = value; }
         }
 
+        // Sub-Activity: Vaal-Sidearea
+        private TrX_TrackedActivity _vaalArea;
         public TrX_TrackedActivity SideArea_VaalArea
         {
             get { return _vaalArea; }
             set { _vaalArea = value; }
         }
 
+        // Sub-Activity: Abyssal Dephts
+        private TrX_TrackedActivity _abyssArea;
         public TrX_TrackedActivity SideArea_AbyssArea
         {
             get { return _abyssArea; }
             set { _abyssArea = value; }
         }
 
+        // Sub-Activity: Lab trial
+        private TrX_TrackedActivity _labTrial;
         public TrX_TrackedActivity SideArea_LabTrial
         {
             get { return _labTrial; }
             set { _labTrial = value; }
         }
 
+        // Activity finished successful?
+        private bool _success;
         public bool Success
         {
             get { return _success; }
             set { _success = value; }
         }
 
-        public TimeSpan StopWatchTimeSpan
-        {
-            get { return _stopWatch.Elapsed; }
-        }
+        // Stopwatch
+        private readonly Stopwatch _stopWatch;
+        public TimeSpan StopWatchTimeSpan => _stopWatch.Elapsed;
 
+        // Custom stopwatch value
+        private string _customStopWatchValue;
         public string CustomStopWatchValue
         {
             get { return _customStopWatchValue; }
             set { _customStopWatchValue = value; }
         }
 
+        // Stopwatch Value
         public string StopWatchValue
         {
             get
@@ -128,77 +90,95 @@ namespace TraXile
             }
         }
 
+        // Total Seconds
+        private int _totalSeconds;
         public int TotalSeconds
         {
             get { return _totalSeconds; }
             set { _totalSeconds = value; }
         }
 
+        // Count of Izaro-Fights
+        private int _trialCount;
         public int TrialCount
         {
             get { return _trialCount; }
             set { _trialCount = value; }
         }
 
+        // Activity Type
+        private ACTIVITY_TYPES _activityType;
         public ACTIVITY_TYPES Type
         {
             get { return _activityType; }
             set { _activityType = value; }
         }
+
+        // Name of the current area
+        private string _areaName;
         public string Area
         {
             get { return _areaName.Replace("'", ""); }
             set { _areaName = value; }
         }
 
+        // Original area name (if overwritten)
+        private string _origAreaName;
         public string AreaOrig
         {
             get { return _origAreaName.Replace("'", ""); }
             set { _origAreaName = value; }
         }
 
-        public string DebugStartEventLine
-        {
-            get { return _debugStartEventLine; }
-            set { _debugStartEventLine = value; }
-        }
-
-        public string DebugEndEventLine
-        {
-            get { return _debugEndEventLine; }
-            set { _debugEndEventLine = value; }
-        }
-
+        // Is finished?
+        private bool _finished;
         public bool IsFinished
         {
             get { return _finished; }
             set { _finished = value; }
         }
 
+        // Is Zana-Map?
+        private bool _isZana;
         public bool IsZana
         {
             get { return _isZana; }
             set { _isZana = value; }
         }
 
+        // Time activity was paused in seconds
+        private double _pausedTime;
+        public double PausedTime
+        {
+            get { return _pausedTime; }
+            set { _pausedTime = value; }
+        }
+
+        // Number of Deaths
+        private int _deathCounter;
         public int DeathCounter
         {
             get { return _deathCounter; }
             set { _deathCounter = value; }
         }
 
+        // Area level
+        private int _areaLevel;
         public int AreaLevel
         {
             get { return _areaLevel; }
             set { _areaLevel = value; }
         }
 
+        // Number of portals used
+        private int _portalsUsed;
         public int PortalsUsed
         {
             get { return _portalsUsed; }
             set { _portalsUsed = value; }
         }
 
+        // Tier of thet current area
         public int MapTier
         {
             get
@@ -251,37 +231,46 @@ namespace TraXile
             }
         }
 
+        // Unique ID of this activity
         public string UniqueID
         {
             get { return string.Format("{0}_{1}", _activityTimeStamp, _areaName); }
         }
 
-
-
+        // Is the activity manually paused?
+        private bool _isManuallyPaused;
         public bool ManuallyPaused
         {
             get { return _isManuallyPaused; }
             set { _isManuallyPaused = value; }
         }
 
+        // Instance Endpoint of this activity
+        private string _instanceEndpoint;
         public string InstanceEndpoint
         {
             get { return _instanceEndpoint; }
             set { _instanceEndpoint = value; }
         }
 
+        // Time the activity has been started
+        private DateTime _startTime;
         public DateTime Started
         {
             get { return _startTime; }
             set { _startTime = value; }
         }
 
+        // Time the activity was last ended
+        private DateTime _lastEndTime;
         public DateTime LastEnded
         {
             get { return _lastEndTime; }
             set { _lastEndTime = value; }
         }
 
+        // Count of Trialmaster Rounds
+        private int _trialMasterCount;
         public int TrialMasterCount
         {
             get
@@ -292,42 +281,73 @@ namespace TraXile
             set { _trialMasterCount = value; }
         }
 
+        // Trial master finished successful`?
+        private bool _trialMasterSuccess;
         public bool TrialMasterSuccess
         {
             get { return _trialMasterSuccess; }
             set { _trialMasterSuccess = value; }
         }
 
+        // All Trialmaster rounds finished?
+        private bool _trialMasterFull;
         public bool TrialMasterFullFinished
         {
             get { return _trialMasterFull; }
             set { _trialMasterFull = value; }
         }
 
+        // Unix timesatmp of activity start
+        private long _activityTimeStamp;
         public long TimeStamp
         {
             get { return _activityTimeStamp; }
             set { _activityTimeStamp = value; }
         }
 
-        public List<string> Tags
+        // List of tags for this activity
+        private readonly List<string> _tagIDs;
+        public List<string> Tags => _tagIDs;
+
+        // number of pauses
+        private int _pauseCount;
+        public int PauseCount => _pauseCount;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TrX_TrackedActivity()
         {
-            get { return _tagIDs; }
+            _stopWatch = new Stopwatch();
+            _zanaMap = null;
+            _vaalArea = null;
+            _logbbookSide = null;
+            _tagIDs = new List<string>();
         }
 
-        public int PauseCount
+        /// <summary>
+        /// Get stopwatch value after caps are applied
+        /// </summary>
+        /// <param name="cap"></param>
+        /// <returns></returns>
+        public string GetCappedStopwatchValue(int cap)
         {
-            get { return _pauseCount; }
+            TimeSpan ts;
+            string s;
+            ts = TimeSpan.FromSeconds(_totalSeconds > cap ? cap : _totalSeconds);
+            s = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+            if(_totalSeconds > cap)
+            {
+                s += " (cap)";
+            }
+            return s;
         }
-
-        public double PausedTime
-        {
-            get { return _pausedTime; }
-            set { _pausedTime = value; }
-        }
-
-
-
+        
+        /// <summary>
+        ///  Check if this activity has a specific tag
+        /// </summary>
+        /// <param name="s_id"></param>
+        /// <returns></returns>
         public bool HasTag(string s_id)
         {
             foreach (string tag in _tagIDs)
@@ -338,6 +358,10 @@ namespace TraXile
             return false;
         }
 
+        /// <summary>
+        /// Start pause time
+        /// </summary>
+        /// <param name="dt"></param>
         public void StartPauseTime(DateTime dt)
         {
             if (!_paused)
@@ -347,6 +371,10 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// End and calculate pause time
+        /// </summary>
+        /// <param name="dt"></param>
         public void EndPauseTime(DateTime dt)
         {
             if (_paused)
@@ -358,12 +386,20 @@ namespace TraXile
             _paused = false;
         }
 
+        /// <summary>
+        /// Remove a given tag from this activity
+        /// </summary>
+        /// <param name="s_id"></param>
         public void RemoveTag(string s_id)
         {
             if (HasTag(s_id))
                 _tagIDs.Remove(s_id);
         }
 
+        /// <summary>
+        /// Add a specific tag to this activity
+        /// </summary>
+        /// <param name="s_id"></param>
         public void AddTag(string s_id)
         {
             if (!_tagIDs.Contains(s_id))
@@ -372,6 +408,10 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Return activity as string
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format(
@@ -402,7 +442,9 @@ namespace TraXile
                 );
         }
 
-
+        /// <summary>
+        /// Pause this activity
+        /// </summary>
         public void Pause()
         {
             _isManuallyPaused = true;
@@ -410,6 +452,9 @@ namespace TraXile
                 _stopWatch.Stop();
         }
 
+        /// <summary>
+        /// Resume this activity
+        /// </summary>
         public void Resume()
         {
             _isManuallyPaused = false;
@@ -417,17 +462,20 @@ namespace TraXile
                 _stopWatch.Start();
         }
 
+        /// <summary>
+        /// Start the Stopwatch
+        /// </summary>
         public void StartStopWatch()
         {
             _stopWatch.Start();
         }
 
+        /// <summary>
+        /// Stop the stopwatch
+        /// </summary>
         public void StopStopWatch()
         {
             _stopWatch.Stop();
         }
-
-
-
     }
 }

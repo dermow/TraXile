@@ -179,7 +179,7 @@
     <Compile Include="UI\ActivityDetails.Designer.cs">
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </Compile>
-    <Compile Include="APPINFO.cs" />
+    <Compile Include="TrX_AppInfo.cs" />
     <Compile Include="UI\StopWatchOverlay.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -290,9 +290,6 @@
     <EmbeddedResource Include="UI\StopWatchOverlay.resx">
       <DependentUpon>StopWatchOverlay.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="UI\Main.Eventhandlers.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

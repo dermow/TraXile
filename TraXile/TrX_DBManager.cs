@@ -10,6 +10,8 @@ namespace TraXile
         private readonly string _dbPath;
         private readonly ILog _log;
 
+        public string DatabasePath => _dbPath;
+
         public TrX_DBManager(string s_file, ref ILog log)
         {
             _dbPath = s_file;
@@ -212,10 +214,7 @@ namespace TraXile
             }
         }
 
-        public string DatabasePath
-        {
-            get { return _dbPath; }
-        }
+        
 
     }
 }
