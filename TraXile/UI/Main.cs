@@ -1167,7 +1167,7 @@ namespace TraXile
 
         private void InitLogFileReload()
         {
-            // Stop UP updates
+            // Stop UI updates
             timer1.Stop();
 
             // Stop core logic
@@ -1251,11 +1251,11 @@ namespace TraXile
             _lvmActlog.Columns.Clear();
 
             ColumnHeader
-                chTime = new ColumnHeader() { Name = "actlog_time", Text = "Time", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_time.width", "60")) },
-                chType = new ColumnHeader() { Name = "actlog_type", Text = "Type", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_type.width", "60")) },
-                chArea = new ColumnHeader() { Name = "actlog_area", Text = "Area", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_area.width", "60")) },
+                chTime = new ColumnHeader() { Name = "actlog_time", Text = "Time", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_time.width", "150")) },
+                chType = new ColumnHeader() { Name = "actlog_type", Text = "Type", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_type.width", "100")) },
+                chArea = new ColumnHeader() { Name = "actlog_area", Text = "Area", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_area.width", "205")) },
                 chLvl = new ColumnHeader() { Name = "actlog_lvl", Text = "Level/Tier", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_lvl.width", "60")) },
-                chStopwatch = new ColumnHeader() { Name = "actlog_stopwatch", Text = "Stopwatch", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_stopwatch.width", "60")) },
+                chStopwatch = new ColumnHeader() { Name = "actlog_stopwatch", Text = "Stopwatch", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_stopwatch.width", "100")) },
                 chDeath = new ColumnHeader() { Name = "actlog_death", Text = "Deaths", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_death.width", "60")) };
 
 
@@ -1265,7 +1265,6 @@ namespace TraXile
             _lvmActlog.Columns.Add(chLvl);
             _lvmActlog.Columns.Add(chStopwatch);
             _lvmActlog.Columns.Add(chDeath);
-
 
             foreach (TrX_ActivityTag tag in _logic.Tags)
             {
@@ -1589,6 +1588,12 @@ namespace TraXile
                 _actLogItemCount = _lvmActlog.CurrentItemCount;
 
             });
+
+            // Side areas
+            foreach(TrX_TrackedActivity act in map.GetSubActivities())
+            {
+                AddMapLvItem(act);
+            }
         }
 
         /// <summary>
@@ -1721,7 +1726,7 @@ namespace TraXile
                             labelStopWatch.Text = _logic.CurrentActivity.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.GetBreachStoneName(_logic.CurrentActivity.Area, _logic.CurrentActivity.AreaLevel);
                             labelTrackingDied.Text = _logic.CurrentActivity.DeathCounter.ToString();
-                            labelTrackingType.Text = GetStringFromActType(_logic.CurrentActivity.Type).ToUpper();
+                            labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.Type));
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity)];
                         }
                         else if ((_logic.IsMapZana && _logic.CurrentActivity.SideArea_ZanaMap != null))
@@ -1729,7 +1734,7 @@ namespace TraXile
                             labelStopWatch.Text = _logic.CurrentActivity.SideArea_ZanaMap.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_ZanaMap.Area + " (" + sTier + ", Zana)";
                             labelTrackingDied.Text = _logic.CurrentActivity.SideArea_ZanaMap.DeathCounter.ToString();
-                            labelTrackingType.Text = GetStringFromActType(_logic.CurrentActivity.Type).ToUpper();
+                            labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.Type));
                             pictureBoxStop.Hide();
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_ZanaMap)];
                         }
@@ -1738,7 +1743,7 @@ namespace TraXile
                             labelStopWatch.Text = _logic.CurrentActivity.SideArea_VaalArea.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_VaalArea.Area;
                             labelTrackingDied.Text = _logic.CurrentActivity.SideArea_VaalArea.DeathCounter.ToString();
-                            labelTrackingType.Text = GetStringFromActType(_logic.CurrentActivity.SideArea_VaalArea.Type).ToUpper();
+                            labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_VaalArea.Type));
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_VaalArea)];
                             pictureBoxStop.Hide();
                         }
@@ -1747,7 +1752,7 @@ namespace TraXile
                             labelStopWatch.Text = _logic.CurrentActivity.SideArea_AbyssArea.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_AbyssArea.Area;
                             labelTrackingDied.Text = _logic.CurrentActivity.SideArea_AbyssArea.DeathCounter.ToString();
-                            labelTrackingType.Text = GetStringFromActType(_logic.CurrentActivity.SideArea_AbyssArea.Type).ToUpper();
+                            labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_AbyssArea.Type));
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_AbyssArea)];
                             pictureBoxStop.Hide();
                         }
@@ -1756,7 +1761,7 @@ namespace TraXile
                             labelStopWatch.Text = _logic.CurrentActivity.SideArea_LabTrial.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_LabTrial.Area;
                             labelTrackingDied.Text = _logic.CurrentActivity.SideArea_LabTrial.DeathCounter.ToString();
-                            labelTrackingType.Text = GetStringFromActType(_logic.CurrentActivity.SideArea_LabTrial.Type).ToUpper();
+                            labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_LabTrial.Type));
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_LabTrial)];
                             pictureBoxStop.Hide();
                         }
@@ -1764,7 +1769,7 @@ namespace TraXile
                         {
                             labelStopWatch.Text = _logic.CurrentActivity.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.Area + " (" + sTier + ")"; ;
-                            labelTrackingType.Text = GetStringFromActType(_logic.CurrentActivity.Type).ToUpper();
+                            labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.Type));
                             labelTrackingDied.Text = _logic.CurrentActivity.DeathCounter.ToString();
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity)];
                             pictureBoxStop.Show();
@@ -1775,7 +1780,7 @@ namespace TraXile
                         labelTrackingDied.Text = "0";
                         labelTrackingArea.Text = "-";
                         labelStopWatch.Text = "00:00:00";
-                        labelTrackingType.Text = "Enter an ingame activity to auto. start tracking.";
+                        labelTrackingType.Text = "-";
                     }
 
                     if (_uiFlagAllStatsDashboard ||
