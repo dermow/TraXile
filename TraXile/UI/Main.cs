@@ -818,7 +818,7 @@ namespace TraXile
             _leagues.Add(new TrX_LeagueInfo("Ultimatum", 3, 14, new DateTime(2021, 4, 16, 20, 0, 0), new DateTime(2021, 07, 19, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Expedition", 3, 15, new DateTime(2021, 7, 23, 20, 0, 0), new DateTime(2021, 10, 19, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Scourge", 3, 16, new DateTime(2021, 10, 22, 20, 0, 0), new DateTime(2022, 01, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Siege of the Atlas", 3, 17, new DateTime(2022, 02, 04, 20, 0, 0), new DateTime(2022, 05, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
+         //   _leagues.Add(new TrX_LeagueInfo("Siege of the Atlas", 3, 17, new DateTime(2022, 02, 04, 20, 0, 0), new DateTime(2022, 05, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
 
             List<TrX_LeagueInfo> litmp = new List<TrX_LeagueInfo>();
             litmp.AddRange(_leagues);
@@ -1226,10 +1226,10 @@ namespace TraXile
         /// <summary>
         /// Delete entry from activity log
         /// </summary>
-        /// <param name="l_timestamp"></param>
-        private void DeleteActLogEntry(long l_timestamp)
+        /// <param name="timestamp"></param>
+        private void DeleteActLogEntry(long timestamp)
         {
-            _logic.Database.DoNonQuery("delete from tx_activity_log where timestamp = " + l_timestamp.ToString());
+            _logic.Database.DoNonQuery("delete from tx_activity_log where timestamp = " + timestamp.ToString());
         }
 
         /// <summary>
@@ -1237,9 +1237,9 @@ namespace TraXile
         /// </summary>
         private void SaveVersion()
         {
-            StreamWriter wrt = new StreamWriter(TrX_AppInfo.APPDATA_PATH + @"\VERSION.txt");
-            wrt.WriteLine(TrX_AppInfo.VERSION);
-            wrt.Close();
+            StreamWriter streamWriter = new StreamWriter(TrX_AppInfo.APPDATA_PATH + @"\VERSION.txt");
+            streamWriter.WriteLine(TrX_AppInfo.VERSION);
+            streamWriter.Close();
         }
 
         /// <summary>
@@ -2813,20 +2813,12 @@ namespace TraXile
             TrX_TrackedActivity tm;
 
             //Write headline
-            string sLine = "time;type;area;area_level;stopwatch;death_counter";
+            string sLine = TrX_TrackedActivity.GetCSVHeadline();
             wrt.WriteLine(sLine);
 
             for (int i = 0; i < _logic.ActivityHistory.Count; i++)
             {
-                tm = _logic.ActivityHistory[i];
-                sLine = "";
-                sLine += tm.Started;
-                sLine += ";" + tm.Type;
-                sLine += ";" + tm.Area;
-                sLine += ";" + tm.AreaLevel;
-                sLine += ";" + tm.StopWatchValue;
-                sLine += ";" + tm.DeathCounter;
-                wrt.WriteLine(sLine);
+                wrt.WriteLine(_logic.ActivityHistory[i].ToCSVLine());
             }
             wrt.Close();
         }

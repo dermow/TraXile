@@ -28,13 +28,14 @@ namespace TraXile
     /// </summary>
     public class TrX_CoreLogicGenericEventArgs : EventArgs
     {
+        // Core logic
         private readonly TrX_CoreLogic _logic;
+        public TrX_CoreLogic Logic => _logic;
+
         public TrX_CoreLogicGenericEventArgs(TrX_CoreLogic logic)
         {
             _logic = logic;
         }
-
-        public TrX_CoreLogic Logic => _logic;
     }
 
     /// <summary>
@@ -42,16 +43,19 @@ namespace TraXile
     /// </summary>
     public class TrX_CoreLogicActivityEventArgs : EventArgs
     {
+        // Core logic
         private readonly TrX_CoreLogic _logic;
+        public TrX_CoreLogic Logic => _logic;
+
+        // Activity
         private readonly TrX_TrackedActivity _activity;
+        public TrX_TrackedActivity Activity => _activity;
+
         public TrX_CoreLogicActivityEventArgs(TrX_CoreLogic logic, TrX_TrackedActivity activity)
         {
             _logic = logic;
             _activity = activity;
         }
-
-        public TrX_CoreLogic Logic => _logic;
-        public TrX_TrackedActivity Activity => _activity;
     }
 
     /// <summary>
@@ -762,7 +766,6 @@ namespace TraXile
                     _statNamesLong.Add("SimulacrumFinished_" + sName, "Simulacrum done: " + sName);
             }
         }
-       
 
         /// <summary>
         /// Reset stats
@@ -1023,7 +1026,6 @@ namespace TraXile
             return iCount;
         }
 
-
         /// <summary>
         /// Parse the logfile
         /// </summary>
@@ -1068,8 +1070,7 @@ namespace TraXile
                         _eventQueueInitizalized = true;
 
                         bNewContent = true;
-
-                        SaveStatsCache();
+                        
                         Thread.Sleep(100);
                         continue;
                     }
@@ -1304,8 +1305,8 @@ namespace TraXile
             bool bTargetAreaIsSafehouse = _defaultMappings.SyndicateSafehouseAreas.Contains(sTargetArea);
             bool bTargetAreaIsBreachStone = _defaultMappings.BreachstoneDomainAreas.Contains(sTargetArea);
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
-            IncrementStat("AreaChanges", ev.EventTime, 1);
 
+            IncrementStat("AreaChanges", ev.EventTime, 1);
 
             // Calculate Instance change based statistics:
             // ===========================================
@@ -1527,9 +1528,7 @@ namespace TraXile
                 };
 
                 _prevActivityOverlay = GetLastActivityByType(actType);
-
                 IncrementStat("LabsStarted", ev.EventTime, 1);
-
             }
 
             //Aspirants Trial entered
@@ -2559,6 +2558,7 @@ namespace TraXile
                     _lastEventTypeConq = ev.EventType;
                 }
 
+                SaveStatsCache();
             }
             catch (Exception ex)
             {
@@ -2721,7 +2721,6 @@ namespace TraXile
                     // Filter out 0-second town visits
                     if (activity.Type == ACTIVITY_TYPES.CAMPAIGN && iSeconds == 0)
                     {
-
                         isValid = false;
                     }
                 }

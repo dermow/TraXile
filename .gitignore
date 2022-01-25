@@ -5,6 +5,7 @@
 
 # custom
 *.dll
+notes/
 
 # User-specific files
 *.rsuser

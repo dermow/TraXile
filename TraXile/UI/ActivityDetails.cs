@@ -145,11 +145,6 @@ namespace TraXile
             }
         }
 
-        private void ActivityDetails_FormClosed(object sender, FormClosedEventArgs e)
-        {
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             if (!_isDeleteMode)

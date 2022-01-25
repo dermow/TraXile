@@ -4329,7 +4329,7 @@ namespace TraXile
             // stopwatchToolStripMenuItem
             // 
             this.stopwatchToolStripMenuItem.Name = "stopwatchToolStripMenuItem";
-            this.stopwatchToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.stopwatchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.stopwatchToolStripMenuItem.Text = "Stopwatch";
             this.stopwatchToolStripMenuItem.Click += new System.EventHandler(this.stopwatchToolStripMenuItem_Click);
             // 

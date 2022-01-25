@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace TraXile
 {
@@ -477,5 +478,76 @@ namespace TraXile
         {
             _stopWatch.Stop();
         }
+
+        /// <summary>
+        /// GetCSV Headline
+        /// </summary>
+        /// <returns></returns>
+        public static string GetCSVHeadline()
+        {
+            return "time; type; area; area_level; stopwatch (seconds); death_counter; tags";
+        }
+
+        /// <summary>
+        /// Get Activity Data as CSV
+        /// </summary>
+        /// <returns></returns>
+        public string ToCSVLine()
+        {
+            string output;
+            string tags;
+            output = "{0};{1};{2};{3};{4};{5};{6}";
+            tags = "";
+
+            for(int i = 0; i < _tagIDs.Count; i++)
+            {
+                tags += _tagIDs[i];
+                if(i < (_tagIDs.Count-1))
+                {
+                    tags += ",";
+                }
+            }
+
+            return string.Format(output, _startTime, _activityType, _areaName, _areaLevel, _totalSeconds, _deathCounter, tags);
+        }
+
+        /// <summary>
+        /// Get all sub activities if any
+        /// </summary>
+        /// <returns></returns>
+        public List<TrX_TrackedActivity> GetSubActivities()
+        {
+            List<TrX_TrackedActivity> results;
+            results = new List<TrX_TrackedActivity>();
+
+            if(_logbbookSide != null)
+            {
+                results.Add(_logbbookSide);
+            }
+
+            if(_zanaMap != null)
+            {
+                results.Add(_zanaMap);
+            }
+
+            if(_labTrial != null)
+            {
+                results.Add(_labTrial);
+            }
+
+            if(_vaalArea != null)
+            {
+                results.Add(_vaalArea);
+            }
+
+            if(_abyssArea != null)
+            {
+                results.Add(_abyssArea);
+            }
+
+            return results;
+        }
+
+      
     }
 }
