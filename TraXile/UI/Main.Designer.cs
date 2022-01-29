@@ -70,16 +70,24 @@ namespace TraXile
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.pictureBox10 = new System.Windows.Forms.PictureBox();
-            this.labelTrackingDied = new System.Windows.Forms.Label();
-            this.pictureBoxSkull = new System.Windows.Forms.PictureBox();
-            this.labelTrackingType = new System.Windows.Forms.Label();
-            this.labelTrackingArea = new System.Windows.Forms.Label();
+            this.tableLayoutPanelStopWatchArea1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.pictureBoxStopWatch = new System.Windows.Forms.PictureBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelStopWatch = new System.Windows.Forms.Label();
+            this.tableLayoutPanel27 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel20 = new System.Windows.Forms.Panel();
             this.pictureBoxStop = new System.Windows.Forms.PictureBox();
             this.pictureBoxPause = new System.Windows.Forms.PictureBox();
             this.pictureBoxPlay = new System.Windows.Forms.PictureBox();
-            this.labelStopWatch = new System.Windows.Forms.Label();
-            this.pictureBoxStopWatch = new System.Windows.Forms.PictureBox();
+            this.panel21 = new System.Windows.Forms.Panel();
+            this.pictureBoxSkull = new System.Windows.Forms.PictureBox();
+            this.labelTrackingDied = new System.Windows.Forms.Label();
+            this.tableLayoutPanel28 = new System.Windows.Forms.TableLayoutPanel();
+            this.pictureBox10 = new System.Windows.Forms.PictureBox();
+            this.tableLayoutPanel29 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelTrackingArea = new System.Windows.Forms.Label();
+            this.labelTrackingType = new System.Windows.Forms.Label();
             this.panelTags = new System.Windows.Forms.Panel();
             this.groupBoxTrackingTags = new System.Windows.Forms.GroupBox();
             this.panel7 = new System.Windows.Forms.Panel();
@@ -131,6 +139,9 @@ namespace TraXile
             this.tabPage12 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel26 = new System.Windows.Forms.TableLayoutPanel();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.listViewNF1 = new TraXile.ListViewNF();
+            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label100 = new System.Windows.Forms.Label();
             this.panel19 = new System.Windows.Forms.Panel();
             this.button6 = new System.Windows.Forms.Button();
@@ -371,8 +382,6 @@ namespace TraXile
             this.label38 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBoxLogView = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -422,17 +431,6 @@ namespace TraXile
             this.toolTip5 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip6 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip7 = new System.Windows.Forms.ToolTip(this.components);
-            this.tableLayoutPanelStopWatchArea1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel27 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel20 = new System.Windows.Forms.Panel();
-            this.panel21 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel28 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel29 = new System.Windows.Forms.TableLayoutPanel();
-            this.listViewNF1 = new TraXile.ListViewNF();
-            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             tabControlMain = new System.Windows.Forms.TabControl();
             tabControlMain.SuspendLayout();
             this.tabPageTracking.SuspendLayout();
@@ -442,12 +440,20 @@ namespace TraXile
             this.splitContainer1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).BeginInit();
+            this.tableLayoutPanelStopWatchArea1.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).BeginInit();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel27.SuspendLayout();
+            this.panel20.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).BeginInit();
+            this.panel21.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).BeginInit();
+            this.tableLayoutPanel28.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
+            this.tableLayoutPanel29.SuspendLayout();
             this.panelTags.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -543,7 +549,6 @@ namespace TraXile
             this.tabPage13.SuspendLayout();
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            this.tabPage2.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
@@ -551,14 +556,6 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            this.tableLayoutPanelStopWatchArea1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
-            this.tableLayoutPanel27.SuspendLayout();
-            this.panel20.SuspendLayout();
-            this.panel21.SuspendLayout();
-            this.tableLayoutPanel28.SuspendLayout();
-            this.tableLayoutPanel29.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControlMain
@@ -567,7 +564,6 @@ namespace TraXile
             tabControlMain.Controls.Add(this.tabPageTracking);
             tabControlMain.Controls.Add(this.tabPage8);
             tabControlMain.Controls.Add(this.tabPage3);
-            tabControlMain.Controls.Add(this.tabPage2);
             tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             tabControlMain.HotTrack = true;
             tabControlMain.ImeMode = System.Windows.Forms.ImeMode.KatakanaHalf;
@@ -639,57 +635,99 @@ namespace TraXile
             this.panel2.Size = new System.Drawing.Size(343, 156);
             this.panel2.TabIndex = 0;
             // 
-            // pictureBox10
+            // tableLayoutPanelStopWatchArea1
             // 
-            this.pictureBox10.Location = new System.Drawing.Point(3, 3);
-            this.pictureBox10.Name = "pictureBox10";
-            this.pictureBox10.Size = new System.Drawing.Size(31, 27);
-            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox10.TabIndex = 9;
-            this.pictureBox10.TabStop = false;
+            this.tableLayoutPanelStopWatchArea1.ColumnCount = 1;
+            this.tableLayoutPanelStopWatchArea1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanelStopWatchArea1.Controls.Add(this.tableLayoutPanel1, 0, 0);
+            this.tableLayoutPanelStopWatchArea1.Controls.Add(this.tableLayoutPanel28, 0, 1);
+            this.tableLayoutPanelStopWatchArea1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelStopWatchArea1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanelStopWatchArea1.Name = "tableLayoutPanelStopWatchArea1";
+            this.tableLayoutPanelStopWatchArea1.RowCount = 2;
+            this.tableLayoutPanelStopWatchArea1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75F));
+            this.tableLayoutPanelStopWatchArea1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanelStopWatchArea1.Size = new System.Drawing.Size(343, 156);
+            this.tableLayoutPanelStopWatchArea1.TabIndex = 10;
             // 
-            // labelTrackingDied
+            // tableLayoutPanel1
             // 
-            this.labelTrackingDied.AutoSize = true;
-            this.labelTrackingDied.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTrackingDied.ForeColor = System.Drawing.Color.White;
-            this.labelTrackingDied.Location = new System.Drawing.Point(53, 8);
-            this.labelTrackingDied.Name = "labelTrackingDied";
-            this.labelTrackingDied.Size = new System.Drawing.Size(24, 25);
-            this.labelTrackingDied.TabIndex = 8;
-            this.labelTrackingDied.Text = "0";
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.pictureBoxStopWatch, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(337, 111);
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // pictureBoxSkull
+            // pictureBoxStopWatch
             // 
-            this.pictureBoxSkull.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxSkull.Image")));
-            this.pictureBoxSkull.Location = new System.Drawing.Point(3, 5);
-            this.pictureBoxSkull.Name = "pictureBoxSkull";
-            this.pictureBoxSkull.Size = new System.Drawing.Size(44, 28);
-            this.pictureBoxSkull.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxSkull.TabIndex = 7;
-            this.pictureBoxSkull.TabStop = false;
+            this.pictureBoxStopWatch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxStopWatch.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxStopWatch.Image")));
+            this.pictureBoxStopWatch.Location = new System.Drawing.Point(3, 3);
+            this.pictureBoxStopWatch.Name = "pictureBoxStopWatch";
+            this.pictureBoxStopWatch.Size = new System.Drawing.Size(94, 105);
+            this.pictureBoxStopWatch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxStopWatch.TabIndex = 0;
+            this.pictureBoxStopWatch.TabStop = false;
             // 
-            // labelTrackingType
+            // tableLayoutPanel3
             // 
-            this.labelTrackingType.AutoSize = true;
-            this.labelTrackingType.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTrackingType.ForeColor = System.Drawing.Color.White;
-            this.labelTrackingType.Location = new System.Drawing.Point(3, 0);
-            this.labelTrackingType.Name = "labelTrackingType";
-            this.labelTrackingType.Size = new System.Drawing.Size(31, 13);
-            this.labelTrackingType.TabIndex = 6;
-            this.labelTrackingType.Text = "Map";
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.labelStopWatch, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel27, 0, 1);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(103, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(229, 105);
+            this.tableLayoutPanel3.TabIndex = 1;
             // 
-            // labelTrackingArea
+            // labelStopWatch
             // 
-            this.labelTrackingArea.AutoSize = true;
-            this.labelTrackingArea.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTrackingArea.ForeColor = System.Drawing.Color.White;
-            this.labelTrackingArea.Location = new System.Drawing.Point(3, 13);
-            this.labelTrackingArea.Name = "labelTrackingArea";
-            this.labelTrackingArea.Size = new System.Drawing.Size(215, 14);
-            this.labelTrackingArea.TabIndex = 5;
-            this.labelTrackingArea.Text = "Rewritten Distant Memories";
+            this.labelStopWatch.AutoSize = true;
+            this.labelStopWatch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelStopWatch.Font = new System.Drawing.Font("Noto Mono", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStopWatch.ForeColor = System.Drawing.Color.White;
+            this.labelStopWatch.Location = new System.Drawing.Point(3, 0);
+            this.labelStopWatch.Name = "labelStopWatch";
+            this.labelStopWatch.Size = new System.Drawing.Size(223, 52);
+            this.labelStopWatch.TabIndex = 1;
+            this.labelStopWatch.Text = "00:00:00";
+            this.labelStopWatch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tableLayoutPanel27
+            // 
+            this.tableLayoutPanel27.ColumnCount = 2;
+            this.tableLayoutPanel27.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 57.3991F));
+            this.tableLayoutPanel27.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.6009F));
+            this.tableLayoutPanel27.Controls.Add(this.panel20, 0, 0);
+            this.tableLayoutPanel27.Controls.Add(this.panel21, 1, 0);
+            this.tableLayoutPanel27.Location = new System.Drawing.Point(3, 55);
+            this.tableLayoutPanel27.Name = "tableLayoutPanel27";
+            this.tableLayoutPanel27.RowCount = 1;
+            this.tableLayoutPanel27.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel27.Size = new System.Drawing.Size(223, 47);
+            this.tableLayoutPanel27.TabIndex = 2;
+            // 
+            // panel20
+            // 
+            this.panel20.Controls.Add(this.pictureBoxStop);
+            this.panel20.Controls.Add(this.pictureBoxPause);
+            this.panel20.Controls.Add(this.pictureBoxPlay);
+            this.panel20.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel20.Location = new System.Drawing.Point(3, 3);
+            this.panel20.Name = "panel20";
+            this.panel20.Size = new System.Drawing.Size(121, 41);
+            this.panel20.TabIndex = 0;
             // 
             // pictureBoxStop
             // 
@@ -724,29 +762,96 @@ namespace TraXile
             this.pictureBoxPlay.TabStop = false;
             this.pictureBoxPlay.Click += new System.EventHandler(this.pictureBox17_Click);
             // 
-            // labelStopWatch
+            // panel21
             // 
-            this.labelStopWatch.AutoSize = true;
-            this.labelStopWatch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelStopWatch.Font = new System.Drawing.Font("Noto Mono", 27.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelStopWatch.ForeColor = System.Drawing.Color.White;
-            this.labelStopWatch.Location = new System.Drawing.Point(3, 0);
-            this.labelStopWatch.Name = "labelStopWatch";
-            this.labelStopWatch.Size = new System.Drawing.Size(223, 52);
-            this.labelStopWatch.TabIndex = 1;
-            this.labelStopWatch.Text = "00:00:00";
-            this.labelStopWatch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.panel21.Controls.Add(this.pictureBoxSkull);
+            this.panel21.Controls.Add(this.labelTrackingDied);
+            this.panel21.Location = new System.Drawing.Point(130, 3);
+            this.panel21.Name = "panel21";
+            this.panel21.Size = new System.Drawing.Size(90, 41);
+            this.panel21.TabIndex = 1;
             // 
-            // pictureBoxStopWatch
+            // pictureBoxSkull
             // 
-            this.pictureBoxStopWatch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxStopWatch.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxStopWatch.Image")));
-            this.pictureBoxStopWatch.Location = new System.Drawing.Point(3, 3);
-            this.pictureBoxStopWatch.Name = "pictureBoxStopWatch";
-            this.pictureBoxStopWatch.Size = new System.Drawing.Size(94, 105);
-            this.pictureBoxStopWatch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxStopWatch.TabIndex = 0;
-            this.pictureBoxStopWatch.TabStop = false;
+            this.pictureBoxSkull.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxSkull.Image")));
+            this.pictureBoxSkull.Location = new System.Drawing.Point(3, 5);
+            this.pictureBoxSkull.Name = "pictureBoxSkull";
+            this.pictureBoxSkull.Size = new System.Drawing.Size(44, 28);
+            this.pictureBoxSkull.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxSkull.TabIndex = 7;
+            this.pictureBoxSkull.TabStop = false;
+            // 
+            // labelTrackingDied
+            // 
+            this.labelTrackingDied.AutoSize = true;
+            this.labelTrackingDied.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTrackingDied.ForeColor = System.Drawing.Color.White;
+            this.labelTrackingDied.Location = new System.Drawing.Point(53, 8);
+            this.labelTrackingDied.Name = "labelTrackingDied";
+            this.labelTrackingDied.Size = new System.Drawing.Size(24, 25);
+            this.labelTrackingDied.TabIndex = 8;
+            this.labelTrackingDied.Text = "0";
+            // 
+            // tableLayoutPanel28
+            // 
+            this.tableLayoutPanel28.ColumnCount = 2;
+            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.81761F));
+            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 94.18239F));
+            this.tableLayoutPanel28.Controls.Add(this.pictureBox10, 0, 0);
+            this.tableLayoutPanel28.Controls.Add(this.tableLayoutPanel29, 1, 0);
+            this.tableLayoutPanel28.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel28.Location = new System.Drawing.Point(3, 120);
+            this.tableLayoutPanel28.Name = "tableLayoutPanel28";
+            this.tableLayoutPanel28.RowCount = 1;
+            this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel28.Size = new System.Drawing.Size(337, 33);
+            this.tableLayoutPanel28.TabIndex = 1;
+            // 
+            // pictureBox10
+            // 
+            this.pictureBox10.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox10.Name = "pictureBox10";
+            this.pictureBox10.Size = new System.Drawing.Size(13, 27);
+            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox10.TabIndex = 9;
+            this.pictureBox10.TabStop = false;
+            // 
+            // tableLayoutPanel29
+            // 
+            this.tableLayoutPanel29.ColumnCount = 1;
+            this.tableLayoutPanel29.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel29.Controls.Add(this.labelTrackingArea, 0, 1);
+            this.tableLayoutPanel29.Controls.Add(this.labelTrackingType, 0, 0);
+            this.tableLayoutPanel29.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel29.Location = new System.Drawing.Point(22, 3);
+            this.tableLayoutPanel29.Name = "tableLayoutPanel29";
+            this.tableLayoutPanel29.RowCount = 2;
+            this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel29.Size = new System.Drawing.Size(312, 27);
+            this.tableLayoutPanel29.TabIndex = 10;
+            // 
+            // labelTrackingArea
+            // 
+            this.labelTrackingArea.AutoSize = true;
+            this.labelTrackingArea.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTrackingArea.ForeColor = System.Drawing.Color.White;
+            this.labelTrackingArea.Location = new System.Drawing.Point(3, 13);
+            this.labelTrackingArea.Name = "labelTrackingArea";
+            this.labelTrackingArea.Size = new System.Drawing.Size(215, 14);
+            this.labelTrackingArea.TabIndex = 5;
+            this.labelTrackingArea.Text = "Rewritten Distant Memories";
+            // 
+            // labelTrackingType
+            // 
+            this.labelTrackingType.AutoSize = true;
+            this.labelTrackingType.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTrackingType.ForeColor = System.Drawing.Color.White;
+            this.labelTrackingType.Location = new System.Drawing.Point(3, 0);
+            this.labelTrackingType.Name = "labelTrackingType";
+            this.labelTrackingType.Size = new System.Drawing.Size(31, 13);
+            this.labelTrackingType.TabIndex = 6;
+            this.labelTrackingType.Text = "Map";
             // 
             // panelTags
             // 
@@ -1400,6 +1505,32 @@ namespace TraXile
             this.chart1.Size = new System.Drawing.Size(1083, 211);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
+            // 
+            // listViewNF1
+            // 
+            this.listViewNF1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader23,
+            this.columnHeader24});
+            this.listViewNF1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewNF1.FullRowSelect = true;
+            this.listViewNF1.HideSelection = false;
+            this.listViewNF1.Location = new System.Drawing.Point(3, 275);
+            this.listViewNF1.Name = "listViewNF1";
+            this.listViewNF1.Size = new System.Drawing.Size(1083, 513);
+            this.listViewNF1.TabIndex = 1;
+            this.listViewNF1.UseCompatibleStateImageBehavior = false;
+            this.listViewNF1.View = System.Windows.Forms.View.Details;
+            this.listViewNF1.SelectedIndexChanged += new System.EventHandler(this.listViewNF1_SelectedIndexChanged);
+            // 
+            // columnHeader23
+            // 
+            this.columnHeader23.Text = "Stat";
+            this.columnHeader23.Width = 200;
+            // 
+            // columnHeader24
+            // 
+            this.columnHeader24.Text = "Value";
+            this.columnHeader24.Width = 150;
             // 
             // label100
             // 
@@ -4266,31 +4397,6 @@ namespace TraXile
             this.trackBar1.TabIndex = 0;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.textBoxLogView);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1115, 874);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "EventLog";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // textBoxLogView
-            // 
-            this.textBoxLogView.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
-            this.textBoxLogView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxLogView.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxLogView.ForeColor = System.Drawing.Color.White;
-            this.textBoxLogView.Location = new System.Drawing.Point(3, 3);
-            this.textBoxLogView.Multiline = true;
-            this.textBoxLogView.Name = "textBoxLogView";
-            this.textBoxLogView.ReadOnly = true;
-            this.textBoxLogView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxLogView.Size = new System.Drawing.Size(1109, 868);
-            this.textBoxLogView.TabIndex = 0;
-            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -4329,7 +4435,7 @@ namespace TraXile
             // stopwatchToolStripMenuItem
             // 
             this.stopwatchToolStripMenuItem.Name = "stopwatchToolStripMenuItem";
-            this.stopwatchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stopwatchToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.stopwatchToolStripMenuItem.Text = "Stopwatch";
             this.stopwatchToolStripMenuItem.Click += new System.EventHandler(this.stopwatchToolStripMenuItem_Click);
             // 
@@ -4703,141 +4809,6 @@ namespace TraXile
             // 
             this.toolTip1.ToolTipTitle = "Reload Logfile (Full)";
             // 
-            // tableLayoutPanelStopWatchArea1
-            // 
-            this.tableLayoutPanelStopWatchArea1.ColumnCount = 1;
-            this.tableLayoutPanelStopWatchArea1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanelStopWatchArea1.Controls.Add(this.tableLayoutPanel1, 0, 0);
-            this.tableLayoutPanelStopWatchArea1.Controls.Add(this.tableLayoutPanel28, 0, 1);
-            this.tableLayoutPanelStopWatchArea1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelStopWatchArea1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanelStopWatchArea1.Name = "tableLayoutPanelStopWatchArea1";
-            this.tableLayoutPanelStopWatchArea1.RowCount = 2;
-            this.tableLayoutPanelStopWatchArea1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75F));
-            this.tableLayoutPanelStopWatchArea1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanelStopWatchArea1.Size = new System.Drawing.Size(343, 156);
-            this.tableLayoutPanelStopWatchArea1.TabIndex = 10;
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.pictureBoxStopWatch, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(636, 111);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.labelStopWatch, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel27, 0, 1);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(103, 3);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(229, 105);
-            this.tableLayoutPanel3.TabIndex = 1;
-            // 
-            // tableLayoutPanel27
-            // 
-            this.tableLayoutPanel27.ColumnCount = 2;
-            this.tableLayoutPanel27.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 57.3991F));
-            this.tableLayoutPanel27.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.6009F));
-            this.tableLayoutPanel27.Controls.Add(this.panel20, 0, 0);
-            this.tableLayoutPanel27.Controls.Add(this.panel21, 1, 0);
-            this.tableLayoutPanel27.Location = new System.Drawing.Point(3, 55);
-            this.tableLayoutPanel27.Name = "tableLayoutPanel27";
-            this.tableLayoutPanel27.RowCount = 1;
-            this.tableLayoutPanel27.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel27.Size = new System.Drawing.Size(223, 47);
-            this.tableLayoutPanel27.TabIndex = 2;
-            // 
-            // panel20
-            // 
-            this.panel20.Controls.Add(this.pictureBoxStop);
-            this.panel20.Controls.Add(this.pictureBoxPause);
-            this.panel20.Controls.Add(this.pictureBoxPlay);
-            this.panel20.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel20.Location = new System.Drawing.Point(3, 3);
-            this.panel20.Name = "panel20";
-            this.panel20.Size = new System.Drawing.Size(121, 41);
-            this.panel20.TabIndex = 0;
-            // 
-            // panel21
-            // 
-            this.panel21.Controls.Add(this.pictureBoxSkull);
-            this.panel21.Controls.Add(this.labelTrackingDied);
-            this.panel21.Location = new System.Drawing.Point(130, 3);
-            this.panel21.Name = "panel21";
-            this.panel21.Size = new System.Drawing.Size(90, 41);
-            this.panel21.TabIndex = 1;
-            // 
-            // tableLayoutPanel28
-            // 
-            this.tableLayoutPanel28.ColumnCount = 2;
-            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.81761F));
-            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 94.18239F));
-            this.tableLayoutPanel28.Controls.Add(this.pictureBox10, 0, 0);
-            this.tableLayoutPanel28.Controls.Add(this.tableLayoutPanel29, 1, 0);
-            this.tableLayoutPanel28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel28.Location = new System.Drawing.Point(3, 120);
-            this.tableLayoutPanel28.Name = "tableLayoutPanel28";
-            this.tableLayoutPanel28.RowCount = 1;
-            this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel28.Size = new System.Drawing.Size(636, 33);
-            this.tableLayoutPanel28.TabIndex = 1;
-            // 
-            // tableLayoutPanel29
-            // 
-            this.tableLayoutPanel29.ColumnCount = 1;
-            this.tableLayoutPanel29.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel29.Controls.Add(this.labelTrackingArea, 0, 1);
-            this.tableLayoutPanel29.Controls.Add(this.labelTrackingType, 0, 0);
-            this.tableLayoutPanel29.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel29.Location = new System.Drawing.Point(40, 3);
-            this.tableLayoutPanel29.Name = "tableLayoutPanel29";
-            this.tableLayoutPanel29.RowCount = 2;
-            this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel29.Size = new System.Drawing.Size(593, 27);
-            this.tableLayoutPanel29.TabIndex = 10;
-            // 
-            // listViewNF1
-            // 
-            this.listViewNF1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader23,
-            this.columnHeader24});
-            this.listViewNF1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewNF1.FullRowSelect = true;
-            this.listViewNF1.HideSelection = false;
-            this.listViewNF1.Location = new System.Drawing.Point(3, 275);
-            this.listViewNF1.Name = "listViewNF1";
-            this.listViewNF1.Size = new System.Drawing.Size(1083, 513);
-            this.listViewNF1.TabIndex = 1;
-            this.listViewNF1.UseCompatibleStateImageBehavior = false;
-            this.listViewNF1.View = System.Windows.Forms.View.Details;
-            this.listViewNF1.SelectedIndexChanged += new System.EventHandler(this.listViewNF1_SelectedIndexChanged);
-            // 
-            // columnHeader23
-            // 
-            this.columnHeader23.Text = "Stat";
-            this.columnHeader23.Width = 200;
-            // 
-            // columnHeader24
-            // 
-            this.columnHeader24.Text = "Value";
-            this.columnHeader24.Width = 150;
-            // 
             // Main
             // 
             this.AcceptButton = this.buttonStartSearch;
@@ -4863,12 +4834,23 @@ namespace TraXile
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).EndInit();
+            this.tableLayoutPanelStopWatchArea1.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).EndInit();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            this.tableLayoutPanel27.ResumeLayout(false);
+            this.panel20.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStop)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).EndInit();
+            this.panel21.ResumeLayout(false);
+            this.panel21.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).EndInit();
+            this.tableLayoutPanel28.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
+            this.tableLayoutPanel29.ResumeLayout(false);
+            this.tableLayoutPanel29.PerformLayout();
             this.panelTags.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
@@ -5003,8 +4985,6 @@ namespace TraXile
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox16)).EndInit();
@@ -5013,17 +4993,6 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.tableLayoutPanelStopWatchArea1.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
-            this.tableLayoutPanel27.ResumeLayout(false);
-            this.panel20.ResumeLayout(false);
-            this.panel21.ResumeLayout(false);
-            this.panel21.PerformLayout();
-            this.tableLayoutPanel28.ResumeLayout(false);
-            this.tableLayoutPanel29.ResumeLayout(false);
-            this.tableLayoutPanel29.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5034,8 +5003,6 @@ namespace TraXile
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TextBox textBoxLogView;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;

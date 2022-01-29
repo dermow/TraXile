@@ -213,8 +213,8 @@ namespace TraXile
         public TrX_TrackedActivity OverlayPrevActivity => _prevActivityOverlay;
 
         // Property: DB Manager
-        private TrX_DBManager _myDB;
-        public TrX_DBManager Database => _myDB;
+        private TrX_DataBackend _dataBackend;
+        public TrX_DataBackend Database => _dataBackend;
 
         // Property: Statistics manager
         private TrX_StatsManager _myStats;
@@ -262,8 +262,8 @@ namespace TraXile
             _lastSimuEndpoint = "";
             _tags = new List<TrX_ActivityTag>();
             _initStartTime = DateTime.Now;
-            _myDB = new TrX_DBManager(TrX_AppInfo.DB_PATH, ref _log);
-            _myStats = new TrX_StatsManager(_myDB);
+            _dataBackend = new TrX_DataBackend(TrX_AppInfo.DB_PATH, ref _log);
+            _myStats = new TrX_StatsManager(_dataBackend);
             _lastEventTypeConq = EVENT_TYPES.APP_STARTED;
 
             InitDefaultTags();
@@ -274,25 +274,40 @@ namespace TraXile
 
             _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
 
-            if (ReadStatsCache() == false) // when stats cache could not be reasd
+            // Since 0.9.2 stats cache is DB only, do first import if file is still existing
+            if(File.Exists(TrX_AppInfo.CACHE_PATH))
             {
-                _log.Info("unable to load stats.cache -> trying to restore from DB");
-                try
-                {
-                    RestoreStatsCacheFromDB();
-                }
-                // SEVERE ERROR DURING RESTORE -> This should never happen
-                // It means, stats.cache AND kvstore in db is corrupted
-                catch (Exception ex)
-                {
-                    _log.Fatal(string.Format("Unable to restore stats.cache from DB: {0}", ex.Message));
-                    _log.Debug(ex.ToString());
-                    _log.Info("Forcing full logfile reload for stats.");
+                // Import is only needed when last hash is not in kvstore
+                string last = _dataBackend.GetKVStoreValue("last_hash");
 
-                    // Drop statistic values and enable stat_reload mode
-                    _myDB.DoNonQuery("DELETE FROM tx_stats WHERE timestamp > 0");
+                last = null;
+                if(string.IsNullOrEmpty(last))
+                {
+                    _log.Info("File 'stats.cache' found wich is deprecated -> importing to database.");
+
+                    string firstLine;
+                    firstLine = File.ReadAllLines(TrX_AppInfo.CACHE_PATH).First();
+
+                    if(!string.IsNullOrEmpty(firstLine))
+                    {
+                        try
+                        {
+                            int hash = Convert.ToInt32(firstLine.Split(';')[1]);
+                            _dataBackend.SetKVStoreValue("last_hash", hash.ToString());
+                            _log.Info("Successfully imported stats.cache to database.");
+
+                            File.Delete(TrX_AppInfo.CACHE_PATH);
+                        }
+                        catch(Exception ex)
+                        {
+                            _log.Warn("Error importing last hash from file, skipping.");
+                            _log.Debug(ex.ToString());
+                        }
+                    }
                 }
             }
+
+            ReadStatsCache();
 
             if (!_historyInitialized)
             {
@@ -356,87 +371,12 @@ namespace TraXile
         /// </summary>
         private bool ReadStatsCache()
         {
-            if (File.Exists(TrX_AppInfo.CACHE_PATH))
-            {
-                StreamReader r = new StreamReader(TrX_AppInfo.CACHE_PATH);
+            SqliteDataReader dataReader;
 
-                try
-                {
-                    string line;
-                    string statID;
-                    int statValue;
-                    int iLine = 0;
-                    while ((line = r.ReadLine()) != null)
-                    {
-                        if (iLine == 0)
-                        {
-                            _lastHash = Convert.ToInt32(line.Split(';')[1]);
-                        }
-                        else
-                        {
-                            statID = line.Split(';')[0];
-                            statValue = Convert.ToInt32(line.Split(';')[1]);
-                            if (_myStats.NumericStats.ContainsKey(statID))
-                            {
-                                _myStats.NumericStats[line.Split(';')[0]] = statValue;
-                                _log.Info("StatsCacheRead -> " + statID + "=" + statValue.ToString());
-                            }
-                            else
-                            {
-                                _log.Warn("StatsCacheRead -> Unknown stat '" + statID + "' in stats.cache, maybe from an older version.");
-                            }
+            // Read last hash
+            _lastHash = Convert.ToInt32(_dataBackend.GetKVStoreValue("last_hash"));
 
-                        }
-
-                        iLine++;
-                    }
-                    r.Close();
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-                finally
-                {
-                    r.Close();
-                }
-            }
-            else
-            {
-                return true;
-            }
-
-        }
-
-
-        /// <summary>
-        /// Write the statistics cache
-        /// </summary>
-        private void SaveStatsCache()
-        {
-            // DB
-            _myDB.DoNonQuery(string.Format("UPDATE tx_kvstore SET value='{0}' where key='last_hash'", _lastHash));
-
-            StreamWriter wrt = new StreamWriter(TrX_AppInfo.CACHE_PATH);
-            wrt.WriteLine("last;" + _lastHash.ToString());
-            foreach (KeyValuePair<string, int> kvp in _myStats.NumericStats)
-            {
-                wrt.WriteLine(kvp.Key + ";" + kvp.Value);
-            }
-            wrt.Close();
-        }
-
-
-        // Self-Healing for stats.cache
-        private void RestoreStatsCacheFromDB()
-        {
-            SqliteDataReader dr1 = _myDB.GetSQLReader("select value from tx_kvstore where key='last_hash'");
-            while (dr1.Read())
-            {
-                _lastHash = Convert.ToInt32(dr1.GetString(0));
-            }
-
+            // Read last stat vaules
             List<string> stats = new List<string>();
             foreach (KeyValuePair<string, int> kvp in _myStats.NumericStats)
             {
@@ -445,16 +385,25 @@ namespace TraXile
 
             foreach (string s in stats)
             {
-                SqliteDataReader dr2 = _myDB.GetSQLReader(string.Format("select stat_value from tx_stats where stat_name ='{0}' order by timestamp desc limit 1", s));
-                while (dr2.Read())
+                dataReader = _dataBackend.GetSQLReader(string.Format("select stat_value from tx_stats where stat_name ='{0}' order by timestamp desc limit 1", s));
+                while (dataReader.Read())
                 {
-                    _myStats.NumericStats[s] = dr2.GetInt32(0);
+                    _myStats.NumericStats[s] = dataReader.GetInt32(0);
                 }
             }
 
-            _log.Info("stats.cache successfully restored.");
+            return true;
         }
 
+        /// <summary>
+        /// Write the statistics cache
+        /// </summary>
+        private void SaveStatsCache()
+        {
+            // DB
+            _dataBackend.SetKVStoreValue("last_hash", _lastHash.ToString());
+        }
+        
         /// <summary>
         ///  Initialize all default tags
         /// </summary>
@@ -495,7 +444,7 @@ namespace TraXile
             {
                 try
                 {
-                    _myDB.DoNonQuery("insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) values " +
+                    _dataBackend.DoNonQuery("insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) values " +
                                   "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default', " + (tag.ShowInListView ? "1" : "0") + ")", false);
                     _log.Info("Default tag '" + tag.ID + "' added to database");
                 }
@@ -519,7 +468,7 @@ namespace TraXile
         private void LoadCustomTags()
         {
             SqliteDataReader sqlReader;
-            sqlReader = _myDB.GetSQLReader("SELECT * FROM tx_tags ORDER BY tag_id DESC");
+            sqlReader = _dataBackend.GetSQLReader("SELECT * FROM tx_tags ORDER BY tag_id DESC");
 
             while (sqlReader.Read())
             {
@@ -780,8 +729,8 @@ namespace TraXile
         /// </summary>
         private void ClearStatsDB()
         {
-            _myDB.DoNonQuery("drop table tx_stats");
-            _myDB.DoNonQuery("create table if not exists tx_stats " +
+            _dataBackend.DoNonQuery("drop table tx_stats");
+            _dataBackend.DoNonQuery("create table if not exists tx_stats " +
                 "(timestamp int, " +
                 "stat_name text, " +
                 "stat_value int)");
@@ -801,7 +750,7 @@ namespace TraXile
             if (!_knownPlayerNames.Contains(s_name))
             {
                 _knownPlayerNames.Add(s_name);
-                _myDB.DoNonQuery("insert into tx_known_players (player_name) VALUES ('" + s_name + "')");
+                _dataBackend.DoNonQuery("insert into tx_known_players (player_name) VALUES ('" + s_name + "')");
                 _log.Info("KnownPlayerAdded -> name: " + s_name);
             }
         }
@@ -812,7 +761,7 @@ namespace TraXile
         private void ReadKnownPlayers()
         {
             SqliteDataReader sqlReader;
-            sqlReader = _myDB.GetSQLReader("SELECT * FROM tx_known_players");
+            sqlReader = _dataBackend.GetSQLReader("SELECT * FROM tx_known_players");
 
             while (sqlReader.Read())
             {
@@ -845,7 +794,7 @@ namespace TraXile
                     sTags += "|";
             }
 
-            _myDB.DoNonQuery("insert into tx_activity_log " +
+            _dataBackend.DoNonQuery("insert into tx_activity_log " +
                "(timestamp, " +
                "act_type, " +
                "act_area, " +
@@ -936,7 +885,7 @@ namespace TraXile
         private void ReadActivityLogFromSQLite()
         {
             SqliteDataReader sqlReader;
-            sqlReader = _myDB.GetSQLReader("SELECT * FROM tx_activity_log ORDER BY timestamp DESC");
+            sqlReader = _dataBackend.GetSQLReader("SELECT * FROM tx_activity_log ORDER BY timestamp DESC");
 
             string[] arrTags;
 
@@ -3355,7 +3304,7 @@ namespace TraXile
         private void AddTag(TrX_ActivityTag tag)
         {
             _tags.Add(tag);
-            _myDB.DoNonQuery("INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) VALUES "
+            _dataBackend.DoNonQuery("INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) VALUES "
                 + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom', " + (tag.ShowInListView ? "1" : "0") + ")");
             // Trigger event
             OnTagsUpdated(new TrX_CoreLogicGenericEventArgs(this));
@@ -3398,7 +3347,7 @@ namespace TraXile
                         if (i < (act.Tags.Count - 1))
                             sTags += "|";
                     }
-                    _myDB.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
+                    _dataBackend.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
                 }
             }
         }
@@ -3417,7 +3366,7 @@ namespace TraXile
                     sTags += act.Tags[i];
                     if (i < (act.Tags.Count - 1))
                         sTags += "|";
-                    _myDB.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
+                    _dataBackend.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
                 }
             }
         }

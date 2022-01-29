@@ -7,7 +7,7 @@ namespace TraXile
     public class TrX_StatsManager
     {
         // Database manager
-        private readonly TrX_DBManager _myDB;
+        private readonly TrX_DataBackend _myDB;
 
         // Numeric stats dictionary
         private Dictionary<string, int> _numericStats;
@@ -21,7 +21,7 @@ namespace TraXile
         /// Constructor
         /// </summary>
         /// <param name="db"></param>
-        public TrX_StatsManager(TrX_DBManager db)
+        public TrX_StatsManager(TrX_DataBackend db)
         {
             _myDB = db;
             _numericStats = new Dictionary<string, int>();
@@ -64,11 +64,9 @@ namespace TraXile
 
             long t1 = ((DateTimeOffset)curr).ToUnixTimeSeconds();
             long t2 = ((DateTimeOffset)to).ToUnixTimeSeconds();
-
             double val = GetCount(stat_name, t1, t2);
 
             results.Add(new KeyValuePair<long, int>(t1, Convert.ToInt32(val)));
-
 
             if (ts2 > ts1)
             {
@@ -89,8 +87,6 @@ namespace TraXile
 
                 }
             }
-
-
             return results;
         }
 

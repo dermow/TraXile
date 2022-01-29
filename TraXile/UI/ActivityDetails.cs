@@ -19,6 +19,7 @@ namespace TraXile
             _isDeleteMode = false;
             this.Icon = Icon.FromHandle(((Bitmap)main.imageList1.Images[main.GetImageIndex(ta)]).GetHicon());
             pictureBox1.Image = main.imageList2.Images[main.GetImageIndex(ta)];
+            label8.Hide();
 
             labelTime.Text = ta.Started.ToString();
             labelType.Text = ta.Type.ToString();
@@ -151,11 +152,12 @@ namespace TraXile
             {
                 _isDeleteMode = true;
                 label8.ForeColor = Color.Red;
+                label8.Show();
             }
             else
             {
                 _isDeleteMode = false;
-                label8.ForeColor = Color.Black;
+                label8.Hide();
             }
         }
 

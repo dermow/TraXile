@@ -186,7 +186,7 @@
     <Compile Include="UI\StopWatchOverlay.Designer.cs">
       <DependentUpon>StopWatchOverlay.cs</DependentUpon>
     </Compile>
-    <Compile Include="TrX_DBManager.cs" />
+    <Compile Include="TrX_DataBackend.cs" />
     <Compile Include="TrX_DefaultMappings.cs" />
     <Compile Include="UI\ChatCommandHelp.cs">
       <SubType>Form</SubType>

@@ -4,15 +4,24 @@ using System;
 
 namespace TraXile
 {
-    public class TrX_DBManager
+    public class TrX_DataBackend
     {
+        // SQLite connector
         private SqliteConnection _dbConnection;
-        private readonly string _dbPath;
+
+        // Log
         private readonly ILog _log;
 
+        // DB Path
+        private readonly string _dbPath;
         public string DatabasePath => _dbPath;
 
-        public TrX_DBManager(string s_file, ref ILog log)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="s_file"></param>
+        /// <param name="log"></param>
+        public TrX_DataBackend(string s_file, ref ILog log)
         {
             _dbPath = s_file;
             _log = log;
@@ -20,6 +29,9 @@ namespace TraXile
             Patch();
         }
 
+        /// <summary>
+        /// Initialize
+        /// </summary>
         private void Init()
         {
             _dbConnection = new SqliteConnection("Data Source=" + _dbPath);
@@ -79,6 +91,9 @@ namespace TraXile
             Patch();
         }
 
+        /// <summary>
+        /// Apply DB patches
+        /// </summary>
         public void Patch()
         {
             SqliteCommand cmd;
@@ -162,6 +177,96 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Set KV value, add if not existing
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void SetKVStoreValue(string key, string value)
+        {
+            string query;
+            if(!CheckIfKVEntryExists(key))
+            {
+                query = string.Format("INSERT INTO tx_kvstore (key, value) VALUES ('{0}', '{1}')", key, value);
+            }
+            else
+            {
+                query = string.Format("UPDATE tx_kvstore SET value = '{0}' WHERE key = '{1}'", value, key);
+            }
+            DoNonQuery(query, true);
+        }
+
+        /// <summary>
+        /// Check if KV store has entry with specific key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool CheckIfKVEntryExists(string key)
+        {
+            SqliteDataReader reader;
+            reader = GetSQLReader(string.Format("SELECT COUNT(*) FROM tx_kvstore WHERE key = '{0}'", key));
+            while(reader.Read())
+            {
+                if(reader.GetInt32(0) > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Get Value from KV Store
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string GetKVStoreValue(string key)
+        {
+            string val;
+
+            try
+            {
+                val = GetSingleValue(string.Format("SELECT value FROM tx_kvstore WHERE key = '{0}'", key));
+            }
+            catch(Exception ex)
+            {
+                _log.Error(ex.Message);
+                _log.Debug(ex.ToString());
+                val = null;
+            }
+
+            return val;
+        }
+
+        /// <summary>
+        /// Get Single value returned by query
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public string GetSingleValue(string query)
+        {
+            SqliteDataReader reader;
+
+            try
+            {
+                reader = GetSQLReader(query);
+                while(reader.Read())
+                {
+                    return reader.GetString(0);
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                return null; 
+            }
+        }
+
+        /// <summary>
+        /// Get SQL Reader for query
+        /// </summary>
+        /// <param name="s_query"></param>
+        /// <returns></returns>
         public SqliteDataReader GetSQLReader(string s_query)
         {
             SqliteCommand cmd;
@@ -180,6 +285,11 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Excecute non query
+        /// </summary>
+        /// <param name="s_query"></param>
+        /// <param name="b_log_error"></param>
         public void DoNonQuery(string s_query, bool b_log_error = true)
         {
             SqliteCommand cmd;
@@ -201,6 +311,9 @@ namespace TraXile
 
         }
 
+        /// <summary>
+        /// Close DB
+        /// </summary>
         public void Close()
         {
             try
@@ -213,8 +326,6 @@ namespace TraXile
                 _log.Debug(ex.ToString());
             }
         }
-
-        
 
     }
 }
