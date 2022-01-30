@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
@@ -97,6 +98,7 @@ namespace TraXile
 
         // UI Update Flag: Map Dashboard
         private bool _uiFlagMapDashboard;
+        private bool _uiFlagStatisticsChart;
 
         // UI Update Flag: Global Dashboard
         private bool _uiFlagGlobalDashboard;
@@ -172,6 +174,7 @@ namespace TraXile
 
         // Time cap parameters for each activity type
         private Dictionary<ACTIVITY_TYPES, int> _timeCaps;
+        private bool _exitting;
 
         // Property: Core logic to be accessible
         public TrX_CoreLogic Logic => _logic;
@@ -184,6 +187,8 @@ namespace TraXile
         /// </summary>
         public Main()
         {
+            Thread.CurrentThread.Name = "MainThread";
+
             // Initialize Settings
             _mySettings = new TrX_SettingsManager(TrX_AppInfo.CONFIG_PATH);
 
@@ -446,6 +451,9 @@ namespace TraXile
         /// </summary>
         private void Init()
         {
+            _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            _log.Info("Application started");
+
             Opacity = 0;
 
             _logic = new TrX_CoreLogic();
@@ -453,11 +461,12 @@ namespace TraXile
             // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
             _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
             _dateTimeFormatInfo.Calendar = new GregorianCalendar();
-            _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            _log.Info("Application started");
+
             _mySettings.LoadFromXml();
             _defaultMappings = new TrX_DefaultMappings();
             _loadScreenWindow = new LoadScreen();
+
+            ReadSettings();
 
             // Backup restore mode?
             try
@@ -488,7 +497,7 @@ namespace TraXile
             _leagues = new List<TrX_LeagueInfo>();
             _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
             
-            ReadSettings();
+            
             _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
 
             if (String.IsNullOrEmpty(_logic.ClientTxtPath))
@@ -1845,6 +1854,13 @@ namespace TraXile
                         }
                     }
 
+                    // All stats chart
+                    if(_uiFlagStatisticsChart)
+                    {
+                        UpdateAllStatsChart();
+                        _uiFlagStatisticsChart = false;
+                    }
+
                     // Activity List
                     if (_uiFlagActivityList)
                     {
@@ -1902,10 +1918,14 @@ namespace TraXile
         /// </summary>
         private void Exit()
         {
-            if (_logic.CurrentActivity != null)
-                _logic.FinishActivity(_logic.CurrentActivity, null, _logic.CurrentActivity.Type, DateTime.Now);
-            _log.Info("Exitting.");
-            Application.Exit();
+            if(!_exitting)
+            {
+                if (_logic.CurrentActivity != null)
+                    _logic.FinishActivity(_logic.CurrentActivity, null, _logic.CurrentActivity.Type, DateTime.Now);
+                _exitting = true;
+                _log.Info("Exitting.");
+                Application.Exit();
+            }
         }
 
         /// <summary>
@@ -2868,7 +2888,7 @@ namespace TraXile
 
             try
             {
-                if (File.Exists(Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore"))
+                if (!string.IsNullOrEmpty(_logic.ClientTxtPath) && File.Exists(Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore"))
                 {
                     File.Delete(_logic.ClientTxtPath);
                     File.Move(Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore", _logic.ClientTxtPath);
@@ -3150,6 +3170,7 @@ namespace TraXile
             _uiFlagLabDashboard = true;
             _uiFlagAllStatsDashboard = true;
             _uiFlagMapDashboard = true;
+            _uiFlagStatisticsChart = true;
         }
 
         /// <summary>

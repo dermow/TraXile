@@ -249,7 +249,6 @@ namespace TraXile
             _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
             _dateTimeFormatInfo.Calendar = new GregorianCalendar();
             _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            _log.Info("Application started");
             _eventMapping = new TrX_EventMapping();
             _defaultMappings = new TrX_DefaultMappings();
             _parsedActivities = new List<string>();
@@ -317,14 +316,18 @@ namespace TraXile
             // Thread for Log Parsing and Enqueuing
             _logParseThread = new Thread(new ThreadStart(LogParsing))
             {
+                Name = "ParserThread",
                 IsBackground = true
             };
 
             // Thread for Queue processing / Dequeuing
             _eventThread = new Thread(new ThreadStart(EventHandling))
             {
+                Name = "WorkerThread",
                 IsBackground = true
             };
+
+            _log.Info("Core logic initialized.");
         }
 
         /// <summary>
@@ -334,6 +337,7 @@ namespace TraXile
         {
             _logParseThread.Start();
             _eventThread.Start();
+            _log.Info("Core logic started.");
         }
 
         /// <summary>
@@ -444,17 +448,13 @@ namespace TraXile
             {
                 try
                 {
-                    _dataBackend.DoNonQuery("insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) values " +
+                    _dataBackend.DoNonQueryNoErrorHandling("insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) values " +
                                   "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default', " + (tag.ShowInListView ? "1" : "0") + ")", false);
                     _log.Info("Default tag '" + tag.ID + "' added to database");
                 }
                 catch (SqliteException e)
                 {
-                    if (e.Message.Contains("SQLite Error 19"))
-                    {
-                        _log.Info("Default tag '" + tag.ID + "' already in database, nothing todo");
-                    }
-                    else
+                    if (!e.Message.Contains("SQLite Error 19"))
                     {
                         _log.Error(e.ToString());
                     }
@@ -1011,6 +1011,7 @@ namespace TraXile
                                 LogLine = "Application initialized in "
                                   + Math.Round(tsInitDuration.TotalSeconds, 2) + " seconds."
                             });
+                            _log.Info(string.Format("Initialized in {0} seconds.", tsInitDuration.TotalSeconds));
                             _lastHash = lineHash;
 
                             // Trigger ready event
@@ -2611,11 +2612,10 @@ namespace TraXile
                     // Labs must be successfull or death counter 1
                     if (activity.Success != true && activity.DeathCounter == 0)
                     {
-                        _log.Info("Filtered out lab run [time=" + activity.Started + ", area: " + activity.Area + "]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
+                        _log.Warn("Filtered out lab run [time=" + activity.Started + ", area: " + activity.Area + "]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
                         _currentActivity = null;
                         return;
                     }
-
                 }
 
                 if (!_eventQueueInitizalized)

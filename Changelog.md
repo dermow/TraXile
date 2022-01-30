@@ -10,3 +10,4 @@
 * Default column sizes for activity history optimized
 * CSV export format optimized
 * Eventlog Tab removed
+* Fixed a bug where the "All stats chart" was not updated on time change of time filter

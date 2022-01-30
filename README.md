@@ -1,58 +1,43 @@
 # TraXile
-This tool tracks your Path of Exile activities like Mapping, Labruns, Heists, Delving... for you. 
 
-For Installation and Update instructions, just check the Wiki here: 
+## Description
+This tool tracks your activities in Path of Exile and helps you to analyze your playstyle. The core features are:
 
-[https://github.com/dermow/TraXile/wiki](https://github.com/dermow/TraXile/wiki)
+* Time tracking for all activities like: Maps, Heists, Labs...
+* Auto tagging of activities with notes like: Zana, Blight-Encounter, Expedition...
+* Custom tagging of activities 
+* Data visualization in Dashboards and Charts
 
-## Support
-If you are enjoying the tool, please consider supporting me:
+## Support me
+I am developing this tool completely in my spare time. So if you are enjoying it, each small financial support is much
+appreciated. 
 
-### Patreon
-[https://www.patreon.com/dermow](https://www.patreon.com/dermow)
+* [Paypal](https://paypal.me/dermow)
+* [Patreon](https://www.patreon.com/dermow)
 
-### Paypal
-[https://paypal.me/dermow](https://paypal.me/dermow)
+## Installation
 
+### Initial
+If you don´t have TraXile already installed, just go to the [latest release](https://github.com/dermow/TraXile/releases/latest), download the Setup.msi and start it.
 
-## Prerequisites
-- This application is build for Windows and requires the .NET Framework (tested with 4.5).
+### Updates
+If you already have TraXile installed, the tool will notify you if there is a newer version. It will be downloaded and installed automaticaly if you choose to do so.
 
-## Screenshots
+## How does it work?
+TraXile reads your Path of Exile log (Client.txt) and calculates all data based on this.
 
-### Map Tracking
-![Preview image](https://i.imgur.com/2hxd2Pt.png)
-
-### Statistics
-![Preview image](https://i.imgur.com/j30r2Q3.png)
-
-### Dashboards
-![Preview image](https://i.imgur.com/9TbcMAj.png)
-
-![Preview image](https://i.imgur.com/Sg1QxK7.png)
-
-## Features
-* Live tracking of your map runs and other activities
-* Calculation of statistics
-* Bossing Info
-
-## How it works
-All we need is the path to your game logfile (Client.txt). TraXile will read the whole file the first time. After that it is live
-tracking your logfile for updates.
-
-## Questions?
-Check out the [FAQ](https://github.com/dermow/TraXile/wiki/FAQ).
-
-## Special thanks goes to:
-* [Esturnat](https://de.pathofexile.com/account/view-profile/Esturnat2) for the name "TraXile", great testing and ideas.
-* [Mr__Khan](https://www.twitch.tv/mr__khan) for great support in testing, labyrinth-features and feedback
-* [seibmich](https://github.com/seibmich) for the logo design
-
-## Virus Warnings
-As I am not using a Code signing certificate, some virus scanners (e.g. Windows defender) will trigger an alert. You can start it anyway. This is not a virus :-)
+## FAQ
+Further questions? Please visit the [FAQ](https://github.com/dermow/TraXile/wiki/FAQ).
 
 ## Bug or feature request?
-Please submit an issue here on GitHub!
+If something is not working as expected, or you have an idea for a new feature, feel free to open an issue [here](https://github.com/dermow/TraXile/issues).
 
-## License
-This work is licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/3.0/ or 
+## Screenshots
+![Preview image](https://i.imgur.com/b420C50.png)
+![Preview image](https://i.imgur.com/3DLy78p.png)
+![Preview image](https://i.imgur.com/g94Klfp.png)
+![Preview image](https://i.imgur.com/u3F5GXS.png)
+![Preview image](https://i.imgur.com/wV81gaw.png)
+![Preview image](https://i.imgur.com/cReydvX.png)
+![Preview image](https://i.imgur.com/Kcw9tTn.png)
+![Preview image](https://i.imgur.com/Vn2Tl6c.png)

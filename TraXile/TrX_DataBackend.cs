@@ -312,6 +312,19 @@ namespace TraXile
         }
 
         /// <summary>
+        /// Excecute non query
+        /// </summary>
+        /// <param name="s_query"></param>
+        /// <param name="b_log_error"></param>
+        public void DoNonQueryNoErrorHandling(string s_query, bool b_log_error = true)
+        {
+            SqliteCommand cmd;
+            cmd = _dbConnection.CreateCommand();
+            cmd.CommandText = s_query;
+            cmd.ExecuteNonQuery();
+        }
+
+        /// <summary>
         /// Close DB
         /// </summary>
         public void Close()
