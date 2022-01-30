@@ -455,17 +455,7 @@ namespace TraXile
             _log.Info("Application started");
 
             Opacity = 0;
-
-            _logic = new TrX_CoreLogic();
-
-            // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
-            _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
-            _dateTimeFormatInfo.Calendar = new GregorianCalendar();
-
             _mySettings.LoadFromXml();
-            _defaultMappings = new TrX_DefaultMappings();
-            _loadScreenWindow = new LoadScreen();
-
             ReadSettings();
 
             // Backup restore mode?
@@ -481,6 +471,15 @@ namespace TraXile
                 _log.Error("FailedRestore -> " + ex.Message);
                 _log.Debug(ex.ToString());
             }
+
+            _logic = new TrX_CoreLogic();
+
+            // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
+            _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
+            _dateTimeFormatInfo.Calendar = new GregorianCalendar();
+            _defaultMappings = new TrX_DefaultMappings();
+            _loadScreenWindow = new LoadScreen();
+
 
             SaveVersion();
             CheckForUpdate();
@@ -1196,20 +1195,8 @@ namespace TraXile
                 _log.Debug(ex.ToString());
             }
 
-            // Delete Stats Cache
-            try
-            {
-                File.Delete(TrX_AppInfo.CACHE_PATH);
-            }
-            catch (Exception ex)
-            {
-                _log.Error("cannot delete cache file: " + ex.Message);
-                _log.Debug(ex.ToString());
-            }
-
             // Restart
             Application.Restart();
-
         }
 
         /// <summary>
@@ -2849,7 +2836,6 @@ namespace TraXile
         /// <param name="sPath"></param>
         private void PrepareBackupRestore(string sPath)
         {
-            File.Copy(sPath + @"/stats.cache", TrX_AppInfo.CACHE_PATH + ".restore");
             File.Copy(sPath + @"/data.db", TrX_AppInfo.DB_PATH + ".restore");
             File.Copy(sPath + @"/Client.txt", Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore");
             File.Copy(sPath + @"/config.xml", TrX_AppInfo.APPDATA_PATH + @"/config.xml.restore");
@@ -2862,14 +2848,6 @@ namespace TraXile
         /// </summary>
         private void DoBackupRestoreIfPrepared()
         {
-            if (File.Exists(TrX_AppInfo.CACHE_PATH + ".restore"))
-            {
-                File.Delete(TrX_AppInfo.CACHE_PATH);
-                File.Move(TrX_AppInfo.CACHE_PATH + ".restore", TrX_AppInfo.CACHE_PATH);
-                _log.Info("BackupRestored -> Source: _stats.cache.restore, Destination: " + TrX_AppInfo.CACHE_PATH);
-                _restoreMode = true;
-            }
-
             if (File.Exists(TrX_AppInfo.DB_PATH + ".restore"))
             {
                 File.Delete(TrX_AppInfo.DB_PATH);
@@ -2888,12 +2866,15 @@ namespace TraXile
 
             try
             {
-                if (!string.IsNullOrEmpty(_logic.ClientTxtPath) && File.Exists(Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore"))
+                string clientTxtPath;
+                clientTxtPath = _mySettings.ReadSetting("poe_logfile_path", null);
+
+                if (!string.IsNullOrEmpty(clientTxtPath) && File.Exists(Directory.GetParent(clientTxtPath) + @"/_Client.txt.restore"))
                 {
-                    File.Delete(_logic.ClientTxtPath);
-                    File.Move(Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore", _logic.ClientTxtPath);
-                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore" +
-                        ", Destination: " + Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt");
+                    File.Delete(clientTxtPath);
+                    File.Move(Directory.GetParent(clientTxtPath) + @"/_Client.txt.restore", clientTxtPath);
+                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(clientTxtPath) + @"/_Client.txt.restore" +
+                        ", Destination: " + Directory.GetParent(clientTxtPath) + @"/_Client.txt");
                     _restoreMode = true;
                 }
 
