@@ -9,7 +9,7 @@ namespace TraXile
         public LoadScreen()
         {
             InitializeComponent();
-            this.Text = APPINFO.NAME + " " + APPINFO.VERSION;
+            this.Text = TrX_AppInfo.NAME + " " + TrX_AppInfo.VERSION;
             progressBar1.SetState(2);
         }
 

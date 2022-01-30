@@ -7,15 +7,28 @@ namespace TraXile
 {
     class TrX_SettingsManager
     {
+        // Patah to XML file
         readonly string _xmlPath;
+
+        // Key value store
         readonly Dictionary<string, string> kvStore;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="file_path"></param>
         public TrX_SettingsManager(string file_path)
         {
             kvStore = new Dictionary<string, string>();
             _xmlPath = file_path;
         }
 
+        /// <summary>
+        /// Read setting of return default value
+        /// </summary>
+        /// <param name="s_key"></param>
+        /// <param name="s_default"></param>
+        /// <returns></returns>
         public string ReadSetting(string s_key, string s_default = null)
         {
             if (kvStore.ContainsKey(s_key))
@@ -28,6 +41,11 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Add or update a setting
+        /// </summary>
+        /// <param name="s_key"></param>
+        /// <param name="s_value"></param>
         public void AddOrUpdateSetting(string s_key, string s_value)
         {
             if (kvStore.ContainsKey(s_key))
@@ -40,6 +58,9 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Load settings from file
+        /// </summary>
         public void LoadFromXml()
         {
             if (File.Exists(_xmlPath))
@@ -54,6 +75,9 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Write settings to file
+        /// </summary>
         public void WriteToXml()
         {
             XmlTextWriter wrt = new XmlTextWriter(_xmlPath, Encoding.UTF8);

@@ -4,7 +4,7 @@ namespace TraXile
 {
     public partial class StopWatchOverlay : Form
     {
-        private Main _main;
+        private readonly Main _main;
         private ImageList _images;
 
         public StopWatchOverlay(Main main, ImageList images)
@@ -15,9 +15,9 @@ namespace TraXile
             pictureBox1.Image = images.Images[0];
             pictureBox2.Image = images.Images[0];
 
-            if (_main._currentActivity != null)
+            if (_main.Logic.CurrentActivity != null)
             {
-                if (_main._currentActivity.ManuallyPaused)
+                if (_main.Logic.CurrentActivity.ManuallyPaused)
                 {
                     linkLabel2.Text = "Resume";
                 }
@@ -35,9 +35,9 @@ namespace TraXile
             pictureBox1.Image = _images.Images[image_idx];
             pictureBox2.Image = _images.Images[image_idx_prev];
 
-            if (_main._currentActivity != null)
+            if (_main.Logic.CurrentActivity != null)
             {
-                if (_main._currentActivity.ManuallyPaused)
+                if (_main.Logic.CurrentActivity.ManuallyPaused)
                 {
                     linkLabel2.Text = "Resume";
                 }
@@ -71,9 +71,9 @@ namespace TraXile
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (_main._currentActivity != null)
+            if (_main.Logic.CurrentActivity != null)
             {
-                if (_main._currentActivity.ManuallyPaused)
+                if (_main.Logic.CurrentActivity.ManuallyPaused)
                 {
                     linkLabel2.Text = "Pause";
                     _main.ResumeCurrentActivityOrSide();

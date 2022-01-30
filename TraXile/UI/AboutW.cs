@@ -7,8 +7,8 @@ namespace TraXile
         public AboutW()
         {
             InitializeComponent();
-            label2.Text = APPINFO.VERSION;
-            label1.Text = "Build: " + APPINFO.BUILDTIME.ToString();
+            label2.Text = TrX_AppInfo.VERSION;
+            label1.Text = "Build: " + TrX_AppInfo.BUILDTIME.ToString();
             linkLabel1.Text = "https://github.com/dermow/TraXile/releases/latest";
             linkLabel2.Text = "https://github.com/dermow/TraXile/issues";
         }

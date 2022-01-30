@@ -74,22 +74,20 @@ namespace TraXile
 
     public class TrX_EventMapping
     {
-        public List<string> SKIP { get; set; }
+        // Mapping dictionary
+        private Dictionary<string, EVENT_TYPES> _mapping;
+        public Dictionary<string, EVENT_TYPES> Mapping => _mapping;
 
-        public Dictionary<string, EVENT_TYPES> MAP;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public TrX_EventMapping()
         {
-            SKIP = new List<string>
-            {
-                "] [",
-            };
-
-            MAP = new Dictionary<string, EVENT_TYPES>
+            _mapping = new Dictionary<string, EVENT_TYPES>
             {
                 { "You have entered", EVENT_TYPES.ENTERED_AREA },
                
-               // Startup
+                // Startup
                 {"***** LOG FILE OPENING *****", EVENT_TYPES.POE_CLIENT_START },
 
                 // System Commands
@@ -112,7 +110,6 @@ namespace TraXile
                 { "Zana, Master Cartographer: I'm sorry... Sirus... This was all my fault. I'm sorry. I'm so, so sorry.", EVENT_TYPES.SIRUS_KILLED },
                 { "Sirus, Awakener of Worlds: Did you really think this would work?", EVENT_TYPES.SIRUS_FIGHT_STARTED },
                 { " is now level ", EVENT_TYPES.LEVELUP },
-
                 
                 // Veritania Fight Events
                 { "You and I both know this isn't over.", EVENT_TYPES.VERITANIA_KILLED },
@@ -395,7 +392,6 @@ namespace TraXile
 
                 // Disconnect
                 { "Abnormal disconnect: An unexpected disconnection occurred.", EVENT_TYPES.ABNORMAL_DISCONNECT },
-
             };
         }
 

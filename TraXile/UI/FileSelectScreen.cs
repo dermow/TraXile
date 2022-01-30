@@ -10,7 +10,7 @@ namespace TraXile
         public FileSelectScreen(Main fParent)
         {
             _mainWindow = fParent;
-            this.Text = APPINFO.NAME + " " + APPINFO.VERSION;
+            this.Text = TrX_AppInfo.NAME + " " + TrX_AppInfo.VERSION;
             InitializeComponent();
             label1.Text = "TraXile is reading your Path of Exile lofgile (Client.txt) to keep track of your activities" + Environment.NewLine +
                 "Please select the path to your current Logfile (normally found in <PoE_Install_Dir>/Logs/Client.txt)";
@@ -21,7 +21,6 @@ namespace TraXile
             OpenFileDialog ofd = new OpenFileDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                this._mainWindow.SettingPoeLogFilePath = ofd.FileName;
                 this._mainWindow.AddUpdateAppSettings("poe_logfile_path", ofd.FileName);
                 this.Close();
             }

@@ -19,6 +19,7 @@ namespace TraXile
             _isDeleteMode = false;
             this.Icon = Icon.FromHandle(((Bitmap)main.imageList1.Images[main.GetImageIndex(ta)]).GetHicon());
             pictureBox1.Image = main.imageList2.Images[main.GetImageIndex(ta)];
+            label8.Hide();
 
             labelTime.Text = ta.Started.ToString();
             labelType.Text = ta.Type.ToString();
@@ -28,10 +29,10 @@ namespace TraXile
                 labelType.Text += " (Zana)";
             }
             labelArea.Text = ta.Area;
-            labelStopWatch.Text = ta.StopWatchValue;
+            labelStopWatch.Text = ta.GetCappedStopwatchValue(main.TimeCaps[ta.Type]);
             labelDeaths.Text = ta.DeathCounter.ToString();
             Text = ta.Type + " Details: " + ta.Area;
-            label9.Text = ta.Type == ACTIVITY_TYPES.BREACHSTONE ? main.GetBreachStoneName(ta.Area, ta.AreaLevel) : ta.Type.ToString();
+            label9.Text = ta.Type == ACTIVITY_TYPES.BREACHSTONE ? main.Logic.GetBreachStoneName(ta.Area, ta.AreaLevel) : ta.Type.ToString();
             label13.Text = ta.Area.ToString();
 
             if (!main.IS_IN_DEBUG_MODE)
@@ -55,7 +56,7 @@ namespace TraXile
                 label10.Text = "unknown";
             }
 
-            foreach (TrX_ActivityTag tag in main.Tags)
+            foreach (TrX_ActivityTag tag in main.Logic.Tags)
             {
                 if (!tag.IsDefault)
                 {
@@ -126,6 +127,7 @@ namespace TraXile
                     _trackedActivity.RemoveTag(tag.ID);
                     RenderTags(true);
                     _mainWindow.ResetMapHistory();
+                    _mainWindow.RequestHistoryUpdate();
                     _mainWindow.RequestDashboardUpdates();
                 }
 
@@ -139,13 +141,9 @@ namespace TraXile
                 _mainWindow.AddTagAutoCreate(comboBox1.Text, _trackedActivity);
                 RenderTags(true);
                 _mainWindow.ResetMapHistory();
+                _mainWindow.RequestHistoryUpdate();
                 _mainWindow.RequestDashboardUpdates();
             }
-        }
-
-        private void ActivityDetails_FormClosed(object sender, FormClosedEventArgs e)
-        {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -154,19 +152,18 @@ namespace TraXile
             {
                 _isDeleteMode = true;
                 label8.ForeColor = Color.Red;
+                label8.Show();
             }
             else
             {
                 _isDeleteMode = false;
-                label8.ForeColor = Color.Black;
+                label8.Hide();
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(_trackedActivity.DebugStartEventLine);
-            sb.AppendLine(_trackedActivity.DebugEndEventLine);
             sb.AppendLine(_trackedActivity.LastEnded.ToString());
             sb.Append(_trackedActivity.InstanceEndpoint);
 

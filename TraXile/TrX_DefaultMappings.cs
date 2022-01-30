@@ -4,43 +4,121 @@ namespace TraXile
 {
     class TrX_DefaultMappings
     {
-        public List<string> MAP_AREAS,
-            HEIST_AREAS,
-            SIMU_AREAS,
-            CAMP_AREAS,
-            SIRUS_AREAS,
-            ATZIRI_AREAS,
-            UBER_ATZIRI_AREAS,
-            ELDER_AREAS,
-            SHAPER_AREAS,
-            TEMPLE_AREAS,
-            DEATH_COUNT_ENABLED_AREAS,
-            MAVEN_FIGHT_AREAS,
-            MAVEN_INV_AREAS,
-            LAB_START_AREAS,
-            DELVE_AREAS,
-            CAMPAIGN_AREAS,
-            ABYSS_AREAS,
-            VAAL_AREAS,
-            LOGBOOK_AREAS,
-            LOGBOOK_SIDE_AREAS,
-            LAB_TRIAL_AREAS,
-            CATARINA_AREAS,
-            SAFEHOUSE_AREAS,
-            BREACHSTONE_AREAS;
+        // Map areas
+        private List<string> _mapAreas;
+        public List<string> MapAreas => _mapAreas;
 
+        // Heist contract areas
+        private List<string> _heistAreas;
+        public List<string> HeistAreas => _heistAreas;
 
-        public Dictionary<string, string> WIKI_LINKS;
-        public List<ACTIVITY_TYPES> PAUSABLE_ACTIVITY_TYPES;
+        // Simulacrum areas
+        private List<string> _simuAreas;
+        public List<string> SimulacrumAreas => _simuAreas;
 
+        // Camps
+        private List<string> _campAreas;
+        public List<string> CampAreas => _campAreas;
+
+        // Sirus fight
+        private List<string> _sirusAreas;
+        public List<string> SirusAreas => _sirusAreas;
+
+        // Atziri fight
+        private List<string> _atziriAreas;
+        public List<string> AtziriAreas => _atziriAreas;
+
+        // Uber Atziri areas
+        private List<string> _uberAtziriAreas;
+        public List<string> UberAtziriAreas => _uberAtziriAreas;
+
+        // Elder fight areas
+        private List<string> _elderAreas;
+        public List<string> ElderAreas => _elderAreas;
+
+        // Shaper fight areas
+        private List<string> _shaperAreas;
+        public List<string> ShaperAreas => _shaperAreas;
+
+        // Temple areas
+        private List<string> _templeAreas;
+        public List<string> TempleAreas => _templeAreas;
+
+        // Areas with death count
+        private List<string> _deathCountEnabledAreas;
+        public List<string> DeathCountEnabledAreas => _deathCountEnabledAreas;
+
+        // Maven fight areas
+        private List<string> _mavenFightAreas;
+        public List<string> MavenFightAreas => _mavenFightAreas;
+
+        // maven invitation areas
+        private List<string> _mavenInvitationAreas;
+        public List<string> MavenInvitationAreas => _mavenInvitationAreas;
+
+        // Lab start areas
+        private List<string> _labStartAreas;
+        public List<string> LabyrinthStartAreas => _labStartAreas;
+
+        // Delve areas
+        private List<string> _delveAreas;
+        public List<string> DelveAreas => _delveAreas;
+
+        // Campaign areas
+        private List<string> _campaignAreas;
+        public List<string> CampaignAreas => _campaignAreas;
+
+        // Abyss areas
+        private List<string> _abyssAreas;
+        public List<string> AbyssalAreas => _abyssAreas;
+
+        // Vaal side areas
+        private List<string> _vaalSideAreas;
+        public List<string> VaalSideAreas => _vaalSideAreas;
+
+        // Logbook areas
+        private List<string> _logbookAreas;
+        public List<string> LogbookAreas => _logbookAreas;
+
+        // Logbook side areas
+        private List<string> _logbookSideAreas;
+        public List<string> LogbookSideAreas => _logbookSideAreas;
+
+        // Lab trials
+        private List<string> _labTrialAreas;
+        public List<string> LabTrialAreas => _labTrialAreas;
+
+        // Catarina fight areas
+        private List<string> _catarinaFightAreas;
+        public List<string> CatarinaFightAreas => _catarinaFightAreas;
+
+        // Safhouse areas
+        private List<string> _safehouseAreas;
+        public List<string> SyndicateSafehouseAreas => _safehouseAreas;
+
+        // Breachstones
+        private List<string> _breachstoneAreas;
+        public List<string> BreachstoneDomainAreas => _breachstoneAreas;
+
+        // List with links to poe wiki
+        private Dictionary<string, string> _wikiLinks;
+        public Dictionary<string, string> WikiLinks => _wikiLinks;
+
+        // Activity types with pause allowed
+        private List<ACTIVITY_TYPES> _pausableActivityTypes;
+        public List<ACTIVITY_TYPES> PausableActivityTypes => _pausableActivityTypes;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public TrX_DefaultMappings()
         {
-            WIKI_LINKS = new Dictionary<string, string>
+            _wikiLinks = new Dictionary<string, string>
             {
                 {  "Elder", "https://pathofexile.fandom.com/wiki/The_Elder" },
             };
 
-            BREACHSTONE_AREAS = new List<string>
+            _breachstoneAreas = new List<string>
             {
                 "Xophs Domain",
                 "Tuls Domain",
@@ -49,7 +127,7 @@ namespace TraXile
                 "Chayulas Domain"
             };
 
-            MAP_AREAS = new List<string>
+            _mapAreas = new List<string>
             {
                 "Academy",
                 "Acid Caverns",
@@ -233,7 +311,7 @@ namespace TraXile
                 "Whakawairua Tuahu",
             };
 
-            HEIST_AREAS = new List<string>
+            _heistAreas = new List<string>
             {
                 "Bunker",
                 "Laboratory",
@@ -246,7 +324,7 @@ namespace TraXile
                 "Underbelly",
             };
 
-            SIMU_AREAS = new List<string>
+            _simuAreas = new List<string>
             {
                "Lunacys Watch",
                "The Bridge Enraptured",
@@ -255,7 +333,7 @@ namespace TraXile
                "Oriath Delusion"
             };
 
-            CAMP_AREAS = new List<string>
+            _campAreas = new List<string>
             {
                "Lioneyes Watch",
                "The Forest Encampment",
@@ -268,59 +346,59 @@ namespace TraXile
                "Karui Shores"
             };
 
-            SIRUS_AREAS = new List<string>
+            _sirusAreas = new List<string>
             {
                 "Eye of the Storm"
             };
 
-            TEMPLE_AREAS = new List<string>
+            _templeAreas = new List<string>
             {
                 "The Temple of Atzoatl"
             };
 
-            ATZIRI_AREAS = new List<string>
+            _atziriAreas = new List<string>
             {
                 "The Apex of Sacrifice"
             };
 
-            UBER_ATZIRI_AREAS = new List<string>
+            _uberAtziriAreas = new List<string>
             {
                 "The Alluring Abyss"
             };
 
-            SHAPER_AREAS = new List<string>
+            _shaperAreas = new List<string>
             {
                 "The Shapers Realm"
             };
 
-            ELDER_AREAS = new List<string>
+            _elderAreas = new List<string>
             {
                 "Absence of Value and Meaning"
             };
 
-            MAVEN_FIGHT_AREAS = new List<string>
+            _mavenFightAreas = new List<string>
             {
                 "Absence of Mercy and Empathy"
             };
 
-            MAVEN_INV_AREAS = new List<string>
+            _mavenInvitationAreas = new List<string>
             {
                 "The Mavens Crucible"
             };
 
-            DELVE_AREAS = new List<string>
+            _delveAreas = new List<string>
             {
                 "Azurite Mine"
             };
 
-            LAB_START_AREAS = new List<string>
+            _labStartAreas = new List<string>
             {
                 "Estate Path",
                 "Estate Walkways",
                 "Estate Crossing"
             };
 
-            CAMPAIGN_AREAS = new List<string>
+            _campaignAreas = new List<string>
             {
                 "The Twilight Strand",
                 "The Coast",
@@ -477,12 +555,12 @@ namespace TraXile
                 "Oriath Docks",
             };
 
-            ABYSS_AREAS = new List<string>
+            _abyssAreas = new List<string>
             {
                 "Abyssal Depths"
             };
 
-            VAAL_AREAS = new List<string>
+            _vaalSideAreas = new List<string>
             {
                 "Abandoned Dam",
                 "Ancient Catacomb",
@@ -541,7 +619,7 @@ namespace TraXile
                 "Suffocating Fissure",
             };
 
-            LOGBOOK_AREAS = new List<string>
+            _logbookAreas = new List<string>
             {
                 "Battleground Graves",
                 "Bluffs",
@@ -560,7 +638,7 @@ namespace TraXile
                 "Volcanic Island",
             };
 
-            LOGBOOK_SIDE_AREAS = new List<string>
+            _logbookSideAreas = new List<string>
             {
                 "Chittering Chamber",
                 "Forgotten Grotto",
@@ -573,7 +651,7 @@ namespace TraXile
                 "Spectral Hollow",
             };
 
-            LAB_TRIAL_AREAS = new List<string>
+            _labTrialAreas = new List<string>
             {
                 "Trial of Piercing Truth",
                 "Trial of Swirling Fear",
@@ -583,17 +661,17 @@ namespace TraXile
                 "Trial of Stinging Doubt",
             };
 
-            CATARINA_AREAS = new List<string>
+            _catarinaFightAreas = new List<string>
             {
                 "Masterminds Lair"
             };
 
-            SAFEHOUSE_AREAS = new List<string>
+            _safehouseAreas = new List<string>
             {
                 "Syndicate Hideout"
             };
 
-            PAUSABLE_ACTIVITY_TYPES = new List<ACTIVITY_TYPES>
+            _pausableActivityTypes = new List<ACTIVITY_TYPES>
             {
                 ACTIVITY_TYPES.MAP,
                 ACTIVITY_TYPES.HEIST,
@@ -614,42 +692,28 @@ namespace TraXile
             };
 
             // Map areas with enabled death counter
-            DEATH_COUNT_ENABLED_AREAS = new List<string>();
-            DEATH_COUNT_ENABLED_AREAS.AddRange(SIMU_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(MAP_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(HEIST_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(SIRUS_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(TEMPLE_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(ATZIRI_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(SHAPER_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(ELDER_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(UBER_ATZIRI_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(MAVEN_INV_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(MAVEN_FIGHT_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(DELVE_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(CAMPAIGN_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(LOGBOOK_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(LOGBOOK_SIDE_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(LAB_TRIAL_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(VAAL_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(ABYSS_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(CATARINA_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(SAFEHOUSE_AREAS);
-            DEATH_COUNT_ENABLED_AREAS.AddRange(BREACHSTONE_AREAS);
+            _deathCountEnabledAreas = new List<string>();
+            _deathCountEnabledAreas.AddRange(SimulacrumAreas);
+            _deathCountEnabledAreas.AddRange(MapAreas);
+            _deathCountEnabledAreas.AddRange(HeistAreas);
+            _deathCountEnabledAreas.AddRange(SirusAreas);
+            _deathCountEnabledAreas.AddRange(TempleAreas);
+            _deathCountEnabledAreas.AddRange(AtziriAreas);
+            _deathCountEnabledAreas.AddRange(ShaperAreas);
+            _deathCountEnabledAreas.AddRange(ElderAreas);
+            _deathCountEnabledAreas.AddRange(UberAtziriAreas);
+            _deathCountEnabledAreas.AddRange(MavenInvitationAreas);
+            _deathCountEnabledAreas.AddRange(MavenFightAreas);
+            _deathCountEnabledAreas.AddRange(DelveAreas);
+            _deathCountEnabledAreas.AddRange(CampaignAreas);
+            _deathCountEnabledAreas.AddRange(LogbookAreas);
+            _deathCountEnabledAreas.AddRange(LogbookSideAreas);
+            _deathCountEnabledAreas.AddRange(LabTrialAreas);
+            _deathCountEnabledAreas.AddRange(VaalSideAreas);
+            _deathCountEnabledAreas.AddRange(AbyssalAreas);
+            _deathCountEnabledAreas.AddRange(CatarinaFightAreas);
+            _deathCountEnabledAreas.AddRange(SyndicateSafehouseAreas);
+            _deathCountEnabledAreas.AddRange(BreachstoneDomainAreas);
         }
     }
 }
-
-
-/*
-  bool bTargetAreaMine = sTargetArea == "Azurite Mine";
-            bool bTargetAreaTemple = sTargetArea == "The Temple of Atzoatl";
-            bool bTargetAreaIsLab = sTargetArea == "Estate Path" || sTargetArea == "Estate Walkways" || sTargetArea == "Estate Crossing";
-            bool bTargetAreaIsMI = sTargetArea == "The Mavens Crucible";
-            bool bTargetAreaIsAtziri = sTargetArea == "The Apex of Sacrifice";
-            bool bTargetAreaIsUberAtziri = sTargetArea == "The Alluring Abyss";
-            bool bTargetAreaIsElder = sTargetArea == "Absence of Value and Meaning";
-            bool bTargetAreaIsShaper = sTargetArea == "The Shapers Realm";
-            bool bTargetAreaIsSirusFight = sTargetArea == "Eye of the Storm";
-            bool bTargetAreaIsMavenFight = sTargetArea == "Absence of Mercy and Empathy";
-*/
