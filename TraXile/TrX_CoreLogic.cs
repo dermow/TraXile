@@ -2508,7 +2508,10 @@ namespace TraXile
                     _lastEventTypeConq = ev.EventType;
                 }
 
-                SaveStatsCache();
+                if(_eventQueueInitizalized)
+                {
+                    SaveStatsCache();
+                }
             }
             catch (Exception ex)
             {
