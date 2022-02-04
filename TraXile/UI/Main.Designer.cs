@@ -431,6 +431,7 @@ namespace TraXile
             this.toolTip5 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip6 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip7 = new System.Windows.Forms.ToolTip(this.components);
+            this.label46 = new System.Windows.Forms.Label();
             tabControlMain = new System.Windows.Forms.TabControl();
             tabControlMain.SuspendLayout();
             this.tabPageTracking.SuspendLayout();
@@ -1356,14 +1357,16 @@ namespace TraXile
             this.tableLayoutPanel24.Controls.Add(this.label89, 1, 0);
             this.tableLayoutPanel24.Controls.Add(this.listView1, 1, 3);
             this.tableLayoutPanel24.Controls.Add(this.panel9, 1, 2);
+            this.tableLayoutPanel24.Controls.Add(this.label46, 1, 4);
             this.tableLayoutPanel24.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel24.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel24.Name = "tableLayoutPanel24";
-            this.tableLayoutPanel24.RowCount = 4;
+            this.tableLayoutPanel24.RowCount = 5;
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-            this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 287F));
+            this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 278F));
+            this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanel24.Size = new System.Drawing.Size(1089, 791);
             this.tableLayoutPanel24.TabIndex = 0;
             // 
@@ -1381,7 +1384,7 @@ namespace TraXile
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chartGlobalDashboard.Series.Add(series1);
-            this.chartGlobalDashboard.Size = new System.Drawing.Size(1073, 441);
+            this.chartGlobalDashboard.Size = new System.Drawing.Size(1073, 421);
             this.chartGlobalDashboard.TabIndex = 0;
             this.chartGlobalDashboard.Text = "chart8";
             // 
@@ -1408,9 +1411,9 @@ namespace TraXile
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(13, 507);
+            this.listView1.Location = new System.Drawing.Point(13, 487);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(1073, 281);
+            this.listView1.Size = new System.Drawing.Size(1073, 272);
             this.listView1.TabIndex = 2;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -1439,7 +1442,7 @@ namespace TraXile
             // 
             this.panel9.Controls.Add(this.checkBox1);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel9.Location = new System.Drawing.Point(13, 480);
+            this.panel9.Location = new System.Drawing.Point(13, 460);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(1073, 21);
             this.panel9.TabIndex = 3;
@@ -4809,6 +4812,17 @@ namespace TraXile
             // 
             this.toolTip1.ToolTipTitle = "Reload Logfile (Full)";
             // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label46.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label46.Location = new System.Drawing.Point(13, 762);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(203, 20);
+            this.label46.TabIndex = 4;
+            this.label46.Text = "Total activity time: 0d 0h 0m";
+            // 
             // Main
             // 
             this.AcceptButton = this.buttonStartSearch;
@@ -5365,6 +5379,7 @@ namespace TraXile
         private System.Windows.Forms.Panel panel21;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel28;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel29;
+        private System.Windows.Forms.Label label46;
     }
 }
 
