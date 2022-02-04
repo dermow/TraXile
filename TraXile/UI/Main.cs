@@ -1553,12 +1553,12 @@ namespace TraXile
                     sTier = map.AreaLevel.ToString();
                 }
 
-                if (bZana)
-                    sName += " (Zana)";
-                lvi.SubItems.Add(GetStringFromActType(map.Type));
+                bool isZana = map.Tags.Contains("zana-map");
+
+                lvi.SubItems.Add(TrX_Helpers.CapitalFirstLetter(map.Type.ToString()));
                 lvi.SubItems.Add(map.Area);
                 lvi.SubItems.Add(sTier);
-                lvi.SubItems.Add(map.GetCappedStopwatchValue(_timeCaps[map.Type]));
+                lvi.SubItems.Add(isZana ? map.CustomStopWatchValue : map.GetCappedStopwatchValue(_timeCaps[map.Type]));
                 lvi.SubItems.Add(map.DeathCounter.ToString());
 
                 // Calculate Image Index
@@ -2238,6 +2238,8 @@ namespace TraXile
 
                 listView1.Items.Add(lvi);
             }
+
+            label46.Text = String.Format("Total play time: {0} hours", Math.Round(totalCount / 60 / 60, 2));
         }
 
         /// <summary>

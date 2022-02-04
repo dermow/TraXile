@@ -8,7 +8,7 @@ namespace TraXile
     static class TrX_AppInfo
     {
         // Application Version
-        public static string VERSION = "0.9.4";
+        public static string VERSION = "0.9.5";
 
         // Application Name
         public static string NAME = "TraXile";
