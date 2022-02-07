@@ -664,6 +664,9 @@ namespace TraXile
             chartGlobalDashboard.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
             chartGlobalDashboard.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
+            pictureBox10.Image = imageList2.Images[0];
+            labelTrackingType.Text = "not tracking";
+
             var ca = chart1.ChartAreas["ChartArea1"].CursorX;
             ca.IsUserEnabled = true;
             ca.IsUserSelectionEnabled = true;
@@ -1774,7 +1777,7 @@ namespace TraXile
                     else
                     {
                         labelTrackingDied.Text = "0";
-                        labelTrackingArea.Text = "-";
+                        labelTrackingArea.Text = "not tracking";
                         labelStopWatch.Text = "00:00:00";
                         labelTrackingType.Text = "-";
                     }
