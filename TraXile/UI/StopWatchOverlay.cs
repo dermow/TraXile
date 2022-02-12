@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace TraXile
 {
@@ -86,6 +87,14 @@ namespace TraXile
             }
 
 
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if(_main.Logic.CurrentActivity != null)
+            {
+                _main.Logic.FinishActivity(_main.Logic.CurrentActivity, null, ACTIVITY_TYPES.MAP, new DateTime());
+            }
         }
     }
 }

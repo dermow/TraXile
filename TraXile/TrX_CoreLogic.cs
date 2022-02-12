@@ -1482,11 +1482,9 @@ namespace TraXile
             }
 
             //Aspirants Trial entered
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH && sTargetArea == "Aspirants Trial")
             {
-                if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH && sTargetArea == "Aspirants Trial")
-                {
-                    _currentActivity.TrialCount++;
-                }
+                _currentActivity.TrialCount++;
             }
 
             //Lab cancelled?
@@ -2613,7 +2611,7 @@ namespace TraXile
                     }
 
                     // Labs must be successfull or death counter 1
-                    if (activity.Success != true && activity.DeathCounter == 0)
+                    if ((activity.Success != true && activity.DeathCounter == 0) && activity.TrialCount < 3)
                     {
                         _log.Warn("Filtered out lab run [time=" + activity.Started + ", area: " + activity.Area + "]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
                         _currentActivity = null;
