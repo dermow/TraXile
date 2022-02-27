@@ -72,6 +72,12 @@ namespace TraXile
         // Event: called when tags are changed
         public event Trx_GenericEventHandler OnTagsUpdated;
 
+        // Event: Lab enchants received
+        public event Trx_LabbieEventHandler LabEnchantsReceived;
+
+        // Event: Activity started
+        public event TrX_ActivityEventHandler OnActivityStarted;
+
         // DateTime format info for enforcing specific calendar info
         public DateTimeFormatInfo _dateTimeFormatInfo;
 
@@ -162,7 +168,11 @@ namespace TraXile
 
         // Property: Current Activity
         public TrX_TrackedActivity _currentActivity;
-        public TrX_TrackedActivity CurrentActivity => _currentActivity;
+        public TrX_TrackedActivity CurrentActivity
+        {
+            get { return _currentActivity; }
+            set { _currentActivity = value; }
+        }
 
         // Property: Event History
         private List<TrX_TrackedActivity> _eventHistory;
@@ -212,6 +222,14 @@ namespace TraXile
         private TrX_TrackedActivity _prevActivityOverlay;
         public TrX_TrackedActivity OverlayPrevActivity => _prevActivityOverlay;
 
+        // Property: Previous activity in overlay
+        private TrX_TrackedLabrun _currentLabRun;
+        public TrX_TrackedLabrun CurrentLab
+        {
+            get { return _currentLabRun; }
+            set { _currentLabRun = value; }
+        }
+
         // Property: DB Manager
         private TrX_DataBackend _dataBackend;
         public TrX_DataBackend Database => _dataBackend;
@@ -223,6 +241,14 @@ namespace TraXile
         // Property: Long stat names
         private Dictionary<string, string> _statNamesLong;
         public Dictionary<string, string> StatNamesLong => _statNamesLong;
+
+        // Labbie Connector
+        private TrX_LabbieConnector _labbieConnector;
+        public TrX_LabbieConnector LabbieConnector => _labbieConnector;
+
+        // Lab History
+        private List<TrX_TrackedLabrun> _labHistory;
+        public List<TrX_TrackedLabrun> LabHistory => _labHistory;
 
         // Property: Path to Client.txt
         public string ClientTxtPath
@@ -238,6 +264,8 @@ namespace TraXile
         {
             Init();
         }
+
+        
 
         /// <summary>
         /// Do main initialization
@@ -264,6 +292,9 @@ namespace TraXile
             _dataBackend = new TrX_DataBackend(TrX_AppInfo.DB_PATH, ref _log);
             _myStats = new TrX_StatsManager(_dataBackend);
             _lastEventTypeConq = EVENT_TYPES.APP_STARTED;
+            _labbieConnector = new TrX_LabbieConnector(_dataBackend, ref _log);
+            _labbieConnector.EnchantsReceived += _labbieConnector_EnchantsReceived;
+            _labHistory = new List<TrX_TrackedLabrun>();
 
             InitDefaultTags();
             InitNumStats();
@@ -331,12 +362,164 @@ namespace TraXile
         }
 
         /// <summary>
+        /// Event handler: Received labbie enchants
+        /// </summary>
+        /// <param name="e"></param>
+        private void _labbieConnector_EnchantsReceived(TrX_LabbieEventArgs e)
+        {
+            // Log enchants
+            foreach(TrX_LabEnchant en in e.Enchants)
+            {
+                _log.Info(string.Format("Received enchante from Labbie: {0}:  {1}", en.ID, en.Text));
+                en.EnchantInfo = GetEnchantInfo(en.ID);
+            }
+
+            if(_currentLabRun != null)
+            {
+                _currentLabRun.Enchants.AddRange(e.Enchants);
+                PauseCurrentActivityOrSide();
+                LabEnchantsReceived(e);
+            }
+        }
+
+        /// <summary>
+        /// Save a list of enchant notes
+        /// </summary>
+        /// <param name="list"></param>
+        public void SaveEnchantNoteList(List<TrX_EnchantNote> list)
+        {
+            foreach(TrX_EnchantNote note in list)
+            {
+                string query;
+                query = string.Format("INSERT INTO tx_enchant_notes (lab_timestamp, enchant_id, enchant_note) VALUES ({0}, {1}, '{2}')"
+                    , note.LabTimeStamp, note.EnchantID, note.Note);
+
+                try
+                {
+                    _dataBackend.DoNonQuery(query);
+                }
+                catch(Exception ex)
+                {
+                    _log.Error("Could not save enchant notes: " + ex.Message);
+                    _log.Debug(ex);
+                }
+            }
+        }
+
+       
+
+        /// <summary>
+        /// Get several informations about an enchant
+        /// </summary>
+        /// <param name="enchantID"></param>
+        public TrX_EnchantInfo GetEnchantInfo(int enchantID)
+        {
+            List<string> history;
+            TrX_EnchantInfo info;
+            SqliteDataReader reader;
+            info = new TrX_EnchantInfo(enchantID);
+            history = new List<string>();
+
+            try
+            {
+                // Get notes
+                reader = _dataBackend.GetSQLReader("SELECT * FROM tx_enchant_notes WHERE enchant_id = " + enchantID);
+                TrX_EnchantNote note;
+                while (reader.Read())
+                {
+                    note = new TrX_EnchantNote(enchantID, reader.GetString(2), reader.GetInt32(0));
+                    info.EnchantNotes.Add(note);
+                }
+
+                // Get found count
+                string res = _dataBackend.GetSingleValue(string.Format(
+                    "SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {0} AND action = 'found'", enchantID));
+                if (res != null)
+                {
+                    info.Found = Convert.ToInt32(res);
+                }
+                else
+                {
+                    info.Found = 0;
+                }
+
+                // Get taken count
+                res = _dataBackend.GetSingleValue(string.Format(
+                    "SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {0} AND action = 'taken'", enchantID));
+                if (res != null)
+                {
+                    info.Taken = Convert.ToInt32(res);
+                }
+                else
+                {
+                    info.Taken = 0;
+                }
+
+                // Get taken count
+                res = _dataBackend.GetSingleValue(string.Format(
+                    "SELECT MAX(lab_timestamp) FROM tx_enchant_history WHERE enchant_id = {0}", enchantID));
+                if (res != null)
+                {
+                    info.LastFound = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt32(res)).DateTime;
+                }
+                else
+                {
+                    info.LastFound = new DateTime();
+                }
+
+                // Get history
+                reader = _dataBackend.GetSQLReader(string.Format(
+                    "SELECT * FROM tx_enchant_history WHERE enchant_id = {0}", enchantID));
+                while (reader.Read())
+                {
+                    info.History.Add(string.Format("{0}: {1}", DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(0)).DateTime, reader.GetString(2)));
+                }
+            }
+            catch(Exception ex)
+            {
+                _log.Error("Error getting enchant info object for enchant " + enchantID + ": " + ex.Message);
+                _log.Debug(ex.ToString());
+            }
+            
+
+            return info;
+        }
+
+        /// <summary>
+        /// Save the current labrun
+        /// </summary>
+        public void SaveCurrentLabRun()
+        {
+            if(_currentLabRun != null)
+            {
+                foreach(TrX_LabEnchant e in _currentLabRun.Enchants)
+                {
+                    _dataBackend.DoNonQuery("INSERT INTO tx_enchant_history (lab_timestamp, enchant_id, action) " +
+                        "VALUES (" + _currentLabRun.TimeStamp.ToString() + ", " + e.ID.ToString() + ", 'found')");
+                }
+                foreach (TrX_LabEnchant e in _currentLabRun.EnchantsTaken)
+                {
+                    _dataBackend.DoNonQuery("INSERT INTO tx_enchant_history (lab_timestamp, enchant_id, action) " +
+                        "VALUES (" + _currentLabRun.TimeStamp.ToString() + ", " + e.ID.ToString() + ", 'taken')");
+                }
+
+                _labHistory.Insert(0, _currentLabRun);
+            }
+        }
+
+        /// <summary>
         /// Start logfile parsing and event handling
         /// </summary>
         public void Start()
         {
             _logParseThread.Start();
             _eventThread.Start();
+
+            if(_labbieConnector.LabbieLogPath != null)
+            {
+                _labbieConnector.Start();
+            }
+
             _log.Info("Core logic started.");
         }
 
@@ -894,19 +1077,58 @@ namespace TraXile
                 TimeSpan ts = TimeSpan.FromSeconds(sqlReader.GetInt32(3));
                 string sType = sqlReader.GetString(1);
                 ACTIVITY_TYPES aType = GetActTypeFromString(sType);
+                TrX_TrackedActivity map;
 
-                TrX_TrackedActivity map = new TrX_TrackedActivity
+                if(aType == ACTIVITY_TYPES.LABYRINTH)
                 {
-                    Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
-                    TimeStamp = sqlReader.GetInt32(0),
-                    CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds),
-                    TotalSeconds = Convert.ToInt32(ts.TotalSeconds),
-                    Type = aType,
-                    Area = sqlReader.GetString(2),
-                    DeathCounter = sqlReader.GetInt32(4),
-                    TrialMasterCount = sqlReader.GetInt32(5),
-                    PausedTime = sqlReader.GetDouble(10)
-                };
+                    map = new TrX_TrackedLabrun
+                    {
+                        Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
+                        TimeStamp = sqlReader.GetInt32(0),
+                        CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds),
+                        TotalSeconds = Convert.ToInt32(ts.TotalSeconds),
+                        Type = aType,
+                        Area = sqlReader.GetString(2),
+                        DeathCounter = sqlReader.GetInt32(4),
+                        TrialMasterCount = sqlReader.GetInt32(5),
+                        PausedTime = sqlReader.GetDouble(10)
+                    };
+
+                    // Get Enchants
+                    SqliteDataReader subReader;
+                    string query = "SELECT * FROM tx_enchant_history WHERE lab_timestamp = " + map.TimeStamp.ToString();
+                    subReader = _dataBackend.GetSQLReader(query);
+
+                    while(subReader.Read())
+                    {
+                        TrX_LabEnchant en = _labbieConnector.GetEnchantByID(subReader.GetInt32(1));
+                        _log.Info("Adding enchant to lab: " + en.Text);
+                        if(subReader.GetString(2) == "taken")
+                        {
+                            ((TrX_TrackedLabrun)map).EnchantsTaken.Add(en);
+                        }
+                        else
+                        {
+                            ((TrX_TrackedLabrun)map).Enchants.Add(en);
+                        }
+                    }
+                }
+                else
+                {
+                    map = new TrX_TrackedActivity
+                    {
+                        Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
+                        TimeStamp = sqlReader.GetInt32(0),
+                        CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds),
+                        TotalSeconds = Convert.ToInt32(ts.TotalSeconds),
+                        Type = aType,
+                        Area = sqlReader.GetString(2),
+                        DeathCounter = sqlReader.GetInt32(4),
+                        TrialMasterCount = sqlReader.GetInt32(5),
+                        PausedTime = sqlReader.GetDouble(10)
+                    };
+                }
+               
 
                 try
                 {
@@ -936,6 +1158,11 @@ namespace TraXile
                 {
                     _eventHistory.Add(map);
                     _parsedActivities.Add(map.UniqueID);
+
+                    if(map.Type == ACTIVITY_TYPES.LABYRINTH)
+                    {
+                        _labHistory.Add((TrX_TrackedLabrun)map);
+                    }
                 }
             }
             _historyInitialized = true;
@@ -953,7 +1180,6 @@ namespace TraXile
                 if (_clientTxtPath != null)
                 {
                     ParseLogFile();
-
                 }
             }
         }
@@ -1016,6 +1242,8 @@ namespace TraXile
 
                             // Trigger ready event
                             OnHistoryInitialized(new TrX_CoreLogicGenericEventArgs(this));
+
+                            SaveStatsCache();
                         }
                         _eventQueueInitizalized = true;
 
@@ -1467,7 +1695,7 @@ namespace TraXile
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                 }
 
-                _currentActivity = new TrX_TrackedActivity
+                _currentActivity = new TrX_TrackedLabrun
                 {
                     Area = sLabName,
                     AreaLevel = _nextAreaLevel,
@@ -1478,13 +1706,15 @@ namespace TraXile
                 };
 
                 _prevActivityOverlay = GetLastActivityByType(actType);
+                _currentLabRun = (TrX_TrackedLabrun)_currentActivity;
                 IncrementStat("LabsStarted", ev.EventTime, 1);
+                OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
             }
 
             //Aspirants Trial entered
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH && sTargetArea == "Aspirants Trial")
             {
-                _currentActivity.TrialCount++;
+                ((TrX_TrackedLabrun)_currentActivity).TrialCount++;
             }
 
             //Lab cancelled?
@@ -1660,6 +1890,7 @@ namespace TraXile
                 };
 
                 _prevActivityOverlay = GetLastActivityByType(actType);
+                OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
             }
 
             // Update Delve level
@@ -1723,6 +1954,7 @@ namespace TraXile
                         _currentActivity.StartStopWatch();
 
                         _prevActivityOverlay = GetLastActivityByType(actType);
+                        OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
                     }
                 }
                 else
@@ -1821,8 +2053,8 @@ namespace TraXile
                         InstanceEndpoint = _currentInstanceEndpoint,
                     };
                     _nextAreaLevel = 0;
-
                     _prevActivityOverlay = GetLastActivityByType(actType);
+                    OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
                 }
                 else
                 {
@@ -2343,7 +2575,7 @@ namespace TraXile
                             IncrementStat("LabsFinished", ev.EventTime, 1);
                             IncrementStat("LabsCompleted_" + _currentActivity.Area, ev.EventTime, 1);
                             _currentActivity.Success = true;
-                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                            PauseCurrentActivityOrSide();
                         }
                         break;
                     case EVENT_TYPES.LAB_START_INFO_RECEIVED:
@@ -2611,7 +2843,7 @@ namespace TraXile
                     }
 
                     // Labs must be successfull or death counter 1
-                    if ((activity.Success != true && activity.DeathCounter == 0) && activity.TrialCount < 3)
+                    if ((activity.Success != true && activity.DeathCounter == 0) && ((TrX_TrackedLabrun)activity).TrialCount < 3)
                     {
                         _log.Warn("Filtered out lab run [time=" + activity.Started + ", area: " + activity.Area + "]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
                         _currentActivity = null;
@@ -2832,6 +3064,8 @@ namespace TraXile
 
                 _nextAreaLevel = 0;
                 _currentActivity.StartStopWatch();
+                OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
+
             }
             else
             {

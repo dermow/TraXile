@@ -66,7 +66,6 @@ namespace TraXile
             cmd.CommandText = "create unique index if not exists tx_tag_id on tx_tags(tag_id)";
             cmd.ExecuteNonQuery();
 
-
             cmd = _dbConnection.CreateCommand();
             cmd.CommandText = "create table if not exists tx_stats " +
                 "(timestamp int, " +
@@ -86,8 +85,30 @@ namespace TraXile
                 "(" +
                 "player_name )";
             cmd.ExecuteNonQuery();
-            // InitDefaultTags();
 
+            cmd = _dbConnection.CreateCommand();
+            cmd.CommandText = "create table if not exists tx_lab_enchants " +
+                "(" +
+                "enchant_id integer primary key autoincrement," +
+                "enchant_text text)";
+            cmd.ExecuteNonQuery();
+
+            cmd = _dbConnection.CreateCommand();
+            cmd.CommandText = "create table if not exists tx_enchant_history " +
+                "(" +
+                "lab_timestamp integer, " +
+                "enchant_id integer, " + 
+                "action text)";
+            cmd.ExecuteNonQuery();
+
+            cmd = _dbConnection.CreateCommand();
+            cmd.CommandText = "create table if not exists tx_enchant_notes " +
+                "(" +
+                "lab_timestamp integer, " +
+                "enchant_id integer, " +
+                "enchant_note text)";
+            cmd.ExecuteNonQuery();
+            
             Patch();
         }
 

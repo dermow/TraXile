@@ -166,7 +166,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TrX_CoreLogic.cs" />
+    <Compile Include="TrX_EnchantInfo.cs" />
+    <Compile Include="TrX_EnchantNote.cs" />
     <Compile Include="TrX_Helpers.cs" />
+    <Compile Include="TrX_LabbieConnector.cs" />
+    <Compile Include="TrX_LabEnchant.cs" />
+    <Compile Include="TrX_TrackedLabrun.cs" />
     <Compile Include="UI\AboutW.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,6 +254,12 @@
     <Compile Include="TrX_SettingsManager.cs" />
     <Compile Include="UI\TrX_Theme.cs" />
     <Compile Include="UI\TrX_ThemeDefinitions.cs" />
+    <Compile Include="UI\UserControlLabRun.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\UserControlLabRun.Designer.cs">
+      <DependentUpon>UserControlLabRun.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="UI\AboutW.resx">
       <DependentUpon>AboutW.cs</DependentUpon>
     </EmbeddedResource>
@@ -289,6 +300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\StopWatchOverlay.resx">
       <DependentUpon>StopWatchOverlay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UserControlLabRun.resx">
+      <DependentUpon>UserControlLabRun.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

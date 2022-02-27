@@ -100,6 +100,9 @@ namespace TraXile
         private bool _uiFlagMapDashboard;
         private bool _uiFlagStatisticsChart;
 
+        // UI Update Flag: Lab enchants
+        private bool _uiFlagEnchants;
+
         // UI Update Flag: Global Dashboard
         private bool _uiFlagGlobalDashboard;
 
@@ -182,6 +185,15 @@ namespace TraXile
         // Property: Timecaps to be accessible
         public Dictionary<ACTIVITY_TYPES, int> TimeCaps => _timeCaps;
 
+        // User Controls labruns
+        private List<UI.UserControlLabRun> _labRunControls;
+
+        // Current labrun user control
+        private UI.UserControlLabRun _currentLabrunControl;
+
+        // Enchant info ID
+        private int _selectedEnchantID = 0;
+
         /// <summary>
         /// Main Window Constructor
         /// </summary>
@@ -247,7 +259,7 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Get LeagueInfo object by league name
+        /// Get LeagueInfo obRect by league name
         /// </summary>
         /// <param name="name">League name</param>
         /// <returns>League info object or null</returns>
@@ -479,7 +491,7 @@ namespace TraXile
             _dateTimeFormatInfo.Calendar = new GregorianCalendar();
             _defaultMappings = new TrX_DefaultMappings();
             _loadScreenWindow = new LoadScreen();
-
+            
 
             SaveVersion();
             CheckForUpdate();
@@ -488,6 +500,9 @@ namespace TraXile
             _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
             _logic.OnActivityFinished += Logic_OnActivityFinished;
             _logic.OnTagsUpdated += Logic_OnTagsUpdated;
+            _logic.LabEnchantsReceived += _logic_LabEnchantsReceived;
+            _logic.OnActivityStarted += _logic_OnActivityStarted;
+            _logic.LabbieConnector.LabbieLogPath = ReadSetting("labbie.path", null);
             _logic.Start();
 
             _lvmActlog = new TrX_ListViewManager(listViewActLog);
@@ -704,7 +719,14 @@ namespace TraXile
 
             InitLeagueInfo();
             ResetMapHistory();
+            ResetLabRuns();
             LoadLayout();
+
+            // Add all enchants
+            foreach(TrX_LabEnchant en in _logic.LabbieConnector.KnownEnchants)
+            {
+                comboBox2.Items.Add(en.Text);
+            }
 
             // Request initial Dashboard update
             _uiFlagLabDashboard = true;
@@ -768,6 +790,106 @@ namespace TraXile
             // Start UI Thread
             timer1.Enabled = true;
             timer1.Start();
+
+            // Add dummy Labrun for testing
+            // ==============================
+            bool addDummyLab = false;
+            bool addDummyEnchants = false;
+            if(addDummyLab)
+            {
+                AddDummyLabForTesting(addDummyEnchants);
+            }
+        }
+
+        /// <summary>
+        /// Method for testing and debugging only
+        /// </summary>
+        /// <param name="addDummyEnchants"></param>
+        private void AddDummyLabForTesting(bool addDummyEnchants)
+        {
+            TrX_TrackedLabrun lr = new TrX_TrackedLabrun();
+            lr.Area = "Uber-Lab";
+            lr.Started = DateTime.Now;
+            lr.TimeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            lr.StartStopWatch();
+            if (addDummyEnchants)
+            {
+                lr.Enchants.Add(new TrX_LabEnchant() { ID = 1, Text = "Sigil of Powers Buff also grants 30% increased Critical Strike Chance per Stage" });
+                lr.Enchants.Add(new TrX_LabEnchant() { ID = 2, Text = "My Test Enchant 2" });
+                lr.Enchants.Add(new TrX_LabEnchant() { ID = 3, Text = "My Test Enchant 3" });
+            }
+            UI.UserControlLabRun uclr = new UI.UserControlLabRun(lr, this, true);
+            uclr.Dock = DockStyle.Fill;
+            foreach (string s in comboBox2.Items)
+            {
+                uclr.EnchantCombo.Items.Add(s);
+            }
+            panel23.Controls.Add(uclr);
+            _currentLabrunControl = uclr;
+            _logic.CurrentLab = lr;
+            _logic.CurrentActivity = lr;
+        }
+
+        /// <summary>
+        /// Event Handler
+        /// </summary>
+        /// <param name="e"></param>
+        private void _logic_OnActivityStarted(TrX_CoreLogicActivityEventArgs e)
+        {
+            if(_logic.EventQueueInitialized)
+            {
+                // Start new lab
+                if (e.Activity.Type == ACTIVITY_TYPES.LABYRINTH)
+                {
+                    MethodInvoker mi = delegate
+                    {
+                        UI.UserControlLabRun ulr = new UI.UserControlLabRun((TrX_TrackedLabrun)e.Activity, this, true);
+                        ulr.Dock = DockStyle.Fill;
+                        foreach (string s in comboBox2.Items)
+                        {
+                            ulr.EnchantCombo.Items.Add(s);
+                        }
+                        _myTheme.Apply(ulr);
+
+                        if (_currentLabrunControl != null)
+                        {
+                            panel23.Controls.Remove(_currentLabrunControl);
+                            _currentLabrunControl = null;
+                        }
+
+                        _currentLabrunControl = ulr;
+                        panel23.Controls.Add(ulr);
+                    };
+                    BeginInvoke(mi);
+                }
+            }
+           
+        }
+
+        /// <summary>
+        /// Event Handler
+        /// </summary>
+        /// <param name="e"></param>
+        private void _logic_LabEnchantsReceived(TrX_LabbieEventArgs e)
+        {
+            _uiFlagEnchants = true;
+
+            if(_currentLabrunControl != null)
+            {
+                MethodInvoker mi = delegate
+                {
+                    foreach (TrX_LabEnchant enchant in e.Enchants)
+                    {
+                        _currentLabrunControl.AddEnchant(enchant);
+                        if(!comboBox2.Items.Contains(enchant.Text))
+                        {
+                            comboBox2.Items.Add(enchant.Text);
+                        }
+                    }
+                };
+                BeginInvoke(mi);
+            }
+            
         }
 
         /// <summary>
@@ -1239,6 +1361,30 @@ namespace TraXile
             StreamWriter streamWriter = new StreamWriter(TrX_AppInfo.APPDATA_PATH + @"\VERSION.txt");
             streamWriter.WriteLine(TrX_AppInfo.VERSION);
             streamWriter.Close();
+        }
+
+        private void ResetLabRuns()
+        {
+            int labsToShow = 5;
+
+            panel22.Controls.Clear();
+
+            if(_logic.LabHistory.Count > 0)
+            {
+                if (_logic.LabHistory.Count < labsToShow)
+                {
+                    labsToShow = _logic.LabHistory.Count;
+                }
+                int y = 0;
+                foreach (TrX_TrackedLabrun labrun in _logic.LabHistory.GetRange(0, labsToShow))
+                {
+                    UI.UserControlLabRun lr = new UI.UserControlLabRun(labrun, this);
+                    lr.Location = new Point(0, y);
+                    panel22.Controls.Add(lr);
+                    y += lr.Height + 20;
+                }
+            }
+           
         }
 
         /// <summary>
@@ -1792,6 +1938,12 @@ namespace TraXile
                         SetTimeRangeFilter();
                     }
 
+                    // Lab farming tab
+                    if(_logic.CurrentLab != null && _currentLabrunControl != null)
+                    {
+                        _currentLabrunControl.UpdateInfo();
+                    }
+
                     // MAP Dashbaord
                     if (_uiFlagMapDashboard)
                     {
@@ -1880,7 +2032,6 @@ namespace TraXile
             _showHideoutInPie = Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true"));
             _stopwatchOverlayOpacity = Convert.ToInt32(ReadSetting("overlay.stopwatch.opacity", "100"));
             _stopwatchOverlayShowDefault = Convert.ToBoolean(ReadSetting("overlay.stopwatch.default", "false"));
-
             comboBoxTheme.SelectedItem = ReadSetting("theme", "Dark") == "Dark" ? "Dark" : "Light";
             //textBoxMapCap.Text = _timeCapMap.ToString();
             //textBoxLabCap.Text = _timeCapLab.ToString();
@@ -3357,6 +3508,97 @@ namespace TraXile
             }
         }
 
+        private void SaveTimeCaps()
+        {
+            ACTIVITY_TYPES type;
+            int value;
+            string sett;
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                type = (ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), row.Cells[0].Value.ToString());
+                value = Convert.ToInt32(row.Cells[1].Value);
+                sett = string.Format("TimeCap{0}", TrX_Helpers.CapitalFirstLetter(type.ToString()));
+                _timeCaps[type] = value;
+                _mySettings.AddOrUpdateSetting(sett, value.ToString());
+            }
+
+            _mySettings.WriteToXml();
+        }
+
+        private void ActivateStopWatchOverlay()
+        {
+            try
+            {
+                _stopwatchOverlay.Show();
+            }
+            catch (ObjectDisposedException)
+            {
+                _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
+            }
+
+            _stopwatchOverlay.TopMost = true;
+            _stopwatchOverlay.Opacity = _stopwatchOverlayOpacity / 100.0;
+            _stopwatchOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatch.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatch.y", "0"))));
+        }
+
+        public void SaveCurrentLabRun()
+        {
+            if(_currentLabrunControl != null)
+            {
+                foreach (int i in _currentLabrunControl.GetSelectedEnchants())
+                {
+                    _logic.CurrentLab.EnchantsTaken.Add(_logic.LabbieConnector.GetEnchantByID(i));
+                }
+                _logic.SaveCurrentLabRun();
+                _logic.SaveEnchantNoteList(_currentLabrunControl.GetEnchantNotes());
+
+                if (_logic.CurrentLab != null && _logic.CurrentActivity != null && _logic.CurrentLab == _logic.CurrentActivity)
+                {
+                    _logic.FinishActivity(_logic.CurrentLab, null, ACTIVITY_TYPES.BREACHSTONE, DateTime.Now);
+                }
+
+                MethodInvoker mi = delegate
+                {
+                    panel23.Controls.Remove(_currentLabrunControl);
+                };
+                BeginInvoke(mi);
+            }
+        }
+
+        public void SelectEnchant(int id, bool jump = false)
+        {
+            TrX_LabEnchant enchant = _logic.LabbieConnector.GetEnchantByID(id);
+            comboBox2.SelectedItem = enchant.Text;
+
+            if(jump)
+            {
+                tabControl1.SelectedIndex = 1;
+            }
+        }
+
+
+        public void SetEnchantInfoPage(TrX_EnchantInfo enchantInfo, TrX_LabEnchant enchant)
+        {
+            label72.Text = enchant.Text;
+            label94.Text = enchantInfo.Found.ToString();
+            label95.Text = enchantInfo.Taken.ToString();
+            label96.Text = enchantInfo.LastFound.Year > 2000 ? enchantInfo.LastFound.ToString() : "-";
+
+            listBox1.Items.Clear();
+            foreach (TrX_EnchantNote note in enchantInfo.EnchantNotes)
+            {
+                listBox1.Items.Add(string.Format("{0}: {1}{2}", DateTimeOffset.FromUnixTimeSeconds(note.LabTimeStamp).DateTime, note.Note, Environment.NewLine));
+            }
+
+            listBox2.Items.Clear();
+            foreach(string s in enchantInfo.History)
+            {
+                listBox2.Items.Add(s);
+            }
+
+        }
+
         private void timer2_Tick(object sender, EventArgs e)
         {
             if (_logic.EventQueueInitialized)
@@ -3768,23 +4010,8 @@ namespace TraXile
             RenderLabDashboard();
         }
 
-        private void SaveTimeCaps()
-        {
-            ACTIVITY_TYPES type;
-            int value;
-            string sett;
+       
 
-            foreach(DataGridViewRow row in dataGridView1.Rows)
-            {
-                type = (ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), row.Cells[0].Value.ToString());
-                value = Convert.ToInt32(row.Cells[1].Value);
-                sett = string.Format("TimeCap{0}", TrX_Helpers.CapitalFirstLetter(type.ToString()));
-                _timeCaps[type] = value;
-                _mySettings.AddOrUpdateSetting(sett, value.ToString());
-            }
-
-            _mySettings.WriteToXml();
-        }
 
         private void button23_Click(object sender, EventArgs e)
         {
@@ -3880,22 +4107,7 @@ namespace TraXile
             RenderLabDashboard();
         }
 
-        private void ActivateStopWatchOverlay()
-        {
-            try
-            {
-                _stopwatchOverlay.Show();
-            }
-            catch (ObjectDisposedException)
-            {
-                _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
-            }
-
-            _stopwatchOverlay.TopMost = true;
-            _stopwatchOverlay.Opacity = _stopwatchOverlayOpacity / 100.0;
-            _stopwatchOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatch.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatch.y", "0"))));
-        }
-
+      
         private void stopwatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_stopwatchOverlay.Visible)
@@ -3949,6 +4161,76 @@ namespace TraXile
         private void button3_Click_2(object sender, EventArgs e)
         {
             RequestDashboardUpdates();
+        }
+
+        private void label52_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel22_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button7_Click_1(object sender, EventArgs e)
+        {
+            SaveCurrentLabRun();
+            ResetLabRuns();
+        }
+
+       
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TrX_LabEnchant en;
+            TrX_EnchantInfo info;
+            
+            en = _logic.LabbieConnector.GetEnchantObjectForText(comboBox2.SelectedItem.ToString());
+
+            if(en != null)
+            {
+                info = _logic.GetEnchantInfo(en.ID);
+                _selectedEnchantID = en.ID;
+                SetEnchantInfoPage(info, en);
+            }
+        }
+
+        private void tableLayoutPanel32_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button8_Click_1(object sender, EventArgs e)
+        {
+            TrX_EnchantNote note;
+            DateTime dt;
+            dt = DateTime.Now;
+            note = new TrX_EnchantNote(_selectedEnchantID, textBox7.Text, (int)((DateTimeOffset)dt).ToUnixTimeSeconds());
+            _logic.SaveEnchantNoteList(new List<TrX_EnchantNote>() { note });
+            listBox1.Items.Add(string.Format("{0}: {1}", dt, note.Note));
+            textBox7.Clear();
+        }
+
+        private void button4_Click_2(object sender, EventArgs e)
+        {
+            FolderBrowserDialog sfd = new FolderBrowserDialog();
+            sfd.ShowDialog();
+
+            if(sfd.SelectedPath != null)
+            {
+                textBox6.Text = sfd.SelectedPath;
+                _mySettings.AddOrUpdateSetting("labbie.path", sfd.SelectedPath);
+                _mySettings.WriteToXml();
+                if(_logic.LabbieConnector != null)
+                {
+                    _logic.LabbieConnector.LabbieLogPath = sfd.SelectedPath;
+                    if(!_logic.LabbieConnector.IsStarted)
+                    {
+                        _logic.LabbieConnector.Start();
+                    }
+                }
+            }
         }
 
         private void checkBox3_CheckedChanged_1(object sender, EventArgs e)
