@@ -2096,6 +2096,7 @@ namespace TraXile
             radioButton1.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "all";
             radioButton2.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "open";
             radioButton3.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "sold";
+            textBox6.Text = ReadSetting("labbie.path", "");
         }
 
         /// <summary>

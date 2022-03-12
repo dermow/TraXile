@@ -140,6 +140,9 @@ namespace TraXile
             this.tabPage12 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel26 = new System.Windows.Forms.TableLayoutPanel();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.listViewNF1 = new TraXile.ListViewNF();
+            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label100 = new System.Windows.Forms.Label();
             this.panel19 = new System.Windows.Forms.Panel();
             this.button6 = new System.Windows.Forms.Button();
@@ -427,8 +430,19 @@ namespace TraXile
             this.label3 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pictureBox28 = new System.Windows.Forms.PictureBox();
+            this.pictureBox25 = new System.Windows.Forms.PictureBox();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.label131 = new System.Windows.Forms.Label();
+            this.label130 = new System.Windows.Forms.Label();
             this.button4 = new System.Windows.Forms.Button();
+            this.label129 = new System.Windows.Forms.Label();
             this.textBox6 = new System.Windows.Forms.TextBox();
+            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.label125 = new System.Windows.Forms.Label();
+            this.label121 = new System.Windows.Forms.Label();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.label52 = new System.Windows.Forms.Label();
             this.tabPage14 = new System.Windows.Forms.TabPage();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage15 = new System.Windows.Forms.TabPage();
@@ -437,6 +451,10 @@ namespace TraXile
             this.panel23 = new System.Windows.Forms.Panel();
             this.label53 = new System.Windows.Forms.Label();
             this.label54 = new System.Windows.Forms.Label();
+            this.panel37 = new System.Windows.Forms.Panel();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.label116 = new System.Windows.Forms.Label();
+            this.button7 = new System.Windows.Forms.Button();
             this.tabPage17 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel31 = new System.Windows.Forms.TableLayoutPanel();
             this.panel24 = new System.Windows.Forms.Panel();
@@ -465,6 +483,7 @@ namespace TraXile
             this.tabPage16 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel35 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel36 = new System.Windows.Forms.TableLayoutPanel();
+            this.dataGridView2 = new TraXile.DataGridViewNF();
             this.panel27 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel37 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
@@ -538,25 +557,6 @@ namespace TraXile
             this.toolTip5 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip6 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip7 = new System.Windows.Forms.ToolTip(this.components);
-            this.panel37 = new System.Windows.Forms.Panel();
-            this.button7 = new System.Windows.Forms.Button();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.label116 = new System.Windows.Forms.Label();
-            this.label52 = new System.Windows.Forms.Label();
-            this.label121 = new System.Windows.Forms.Label();
-            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
-            this.groupBox17 = new System.Windows.Forms.GroupBox();
-            this.label125 = new System.Windows.Forms.Label();
-            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
-            this.label129 = new System.Windows.Forms.Label();
-            this.label130 = new System.Windows.Forms.Label();
-            this.pictureBox25 = new System.Windows.Forms.PictureBox();
-            this.pictureBox28 = new System.Windows.Forms.PictureBox();
-            this.listViewNF1 = new TraXile.ListViewNF();
-            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.dataGridView2 = new TraXile.DataGridViewNF();
-            this.label131 = new System.Windows.Forms.Label();
             this.tabCtl1.SuspendLayout();
             this.tabPageTracking.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -687,10 +687,14 @@ namespace TraXile
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).BeginInit();
+            this.groupBox17.SuspendLayout();
             this.tabPage14.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage15.SuspendLayout();
             this.tableLayoutPanel30.SuspendLayout();
+            this.panel37.SuspendLayout();
             this.tabPage17.SuspendLayout();
             this.tableLayoutPanel31.SuspendLayout();
             this.panel24.SuspendLayout();
@@ -705,6 +709,7 @@ namespace TraXile
             this.tabPage16.SuspendLayout();
             this.tableLayoutPanel35.SuspendLayout();
             this.tableLayoutPanel36.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel27.SuspendLayout();
             this.tableLayoutPanel37.SuspendLayout();
             this.groupBox15.SuspendLayout();
@@ -717,11 +722,6 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            this.panel37.SuspendLayout();
-            this.groupBox17.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // tabCtl1
@@ -1692,6 +1692,32 @@ namespace TraXile
             this.chart1.Size = new System.Drawing.Size(1083, 211);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
+            // 
+            // listViewNF1
+            // 
+            this.listViewNF1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader23,
+            this.columnHeader24});
+            this.listViewNF1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewNF1.FullRowSelect = true;
+            this.listViewNF1.HideSelection = false;
+            this.listViewNF1.Location = new System.Drawing.Point(3, 275);
+            this.listViewNF1.Name = "listViewNF1";
+            this.listViewNF1.Size = new System.Drawing.Size(1083, 797);
+            this.listViewNF1.TabIndex = 1;
+            this.listViewNF1.UseCompatibleStateImageBehavior = false;
+            this.listViewNF1.View = System.Windows.Forms.View.Details;
+            this.listViewNF1.SelectedIndexChanged += new System.EventHandler(this.listViewNF1_SelectedIndexChanged);
+            // 
+            // columnHeader23
+            // 
+            this.columnHeader23.Text = "Stat";
+            this.columnHeader23.Width = 200;
+            // 
+            // columnHeader24
+            // 
+            this.columnHeader24.Text = "Value";
+            this.columnHeader24.Width = 150;
             // 
             // label100
             // 
@@ -5105,6 +5131,66 @@ namespace TraXile
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "Labbie";
             // 
+            // pictureBox28
+            // 
+            this.pictureBox28.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox28.Image")));
+            this.pictureBox28.Location = new System.Drawing.Point(252, 39);
+            this.pictureBox28.Name = "pictureBox28";
+            this.pictureBox28.Size = new System.Drawing.Size(206, 122);
+            this.pictureBox28.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox28.TabIndex = 6;
+            this.pictureBox28.TabStop = false;
+            // 
+            // pictureBox25
+            // 
+            this.pictureBox25.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox25.Image")));
+            this.pictureBox25.Location = new System.Drawing.Point(16, 39);
+            this.pictureBox25.Name = "pictureBox25";
+            this.pictureBox25.Size = new System.Drawing.Size(206, 122);
+            this.pictureBox25.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox25.TabIndex = 5;
+            this.pictureBox25.TabStop = false;
+            // 
+            // groupBox17
+            // 
+            this.groupBox17.BackColor = System.Drawing.Color.Black;
+            this.groupBox17.Controls.Add(this.label131);
+            this.groupBox17.Controls.Add(this.label130);
+            this.groupBox17.Controls.Add(this.button4);
+            this.groupBox17.Controls.Add(this.label129);
+            this.groupBox17.Controls.Add(this.textBox6);
+            this.groupBox17.Controls.Add(this.linkLabel4);
+            this.groupBox17.Controls.Add(this.label125);
+            this.groupBox17.Controls.Add(this.label121);
+            this.groupBox17.Controls.Add(this.linkLabel3);
+            this.groupBox17.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox17.Location = new System.Drawing.Point(16, 177);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(663, 118);
+            this.groupBox17.TabIndex = 4;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "Help";
+            // 
+            // label131
+            // 
+            this.label131.AutoSize = true;
+            this.label131.Location = new System.Drawing.Point(154, 90);
+            this.label131.Name = "label131";
+            this.label131.Size = new System.Drawing.Size(433, 13);
+            this.label131.TabIndex = 8;
+            this.label131.Text = "example: If labbie is installed at C:\\tools\\labbie, the log path would be: C:\\too" +
+    "ls\\labbie\\logs";
+            // 
+            // label130
+            // 
+            this.label130.AutoSize = true;
+            this.label130.ForeColor = System.Drawing.SystemColors.Control;
+            this.label130.Location = new System.Drawing.Point(6, 91);
+            this.label130.Name = "label130";
+            this.label130.Size = new System.Drawing.Size(66, 13);
+            this.label130.TabIndex = 7;
+            this.label130.Text = "4) That´s it :)";
+            // 
             // button4
             // 
             this.button4.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -5116,12 +5202,77 @@ namespace TraXile
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click_2);
             // 
+            // label129
+            // 
+            this.label129.AutoSize = true;
+            this.label129.ForeColor = System.Drawing.SystemColors.Control;
+            this.label129.Location = new System.Drawing.Point(6, 67);
+            this.label129.Name = "label129";
+            this.label129.Size = new System.Drawing.Size(142, 13);
+            this.label129.TabIndex = 6;
+            this.label129.Text = "3) Select labbie log path ---->";
+            // 
             // textBox6
             // 
             this.textBox6.Location = new System.Drawing.Point(154, 64);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(401, 20);
             this.textBox6.TabIndex = 0;
+            // 
+            // linkLabel4
+            // 
+            this.linkLabel4.AutoSize = true;
+            this.linkLabel4.LinkColor = System.Drawing.Color.Red;
+            this.linkLabel4.Location = new System.Drawing.Point(97, 41);
+            this.linkLabel4.Name = "linkLabel4";
+            this.linkLabel4.Size = new System.Drawing.Size(297, 13);
+            this.linkLabel4.TabIndex = 5;
+            this.linkLabel4.TabStop = true;
+            this.linkLabel4.Text = "https://github.com/bnorick/labbie/blob/master/README.md";
+            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
+            // 
+            // label125
+            // 
+            this.label125.AutoSize = true;
+            this.label125.ForeColor = System.Drawing.SystemColors.Control;
+            this.label125.Location = new System.Drawing.Point(6, 41);
+            this.label125.Name = "label125";
+            this.label125.Size = new System.Drawing.Size(82, 13);
+            this.label125.TabIndex = 4;
+            this.label125.Text = "2) Install --------->";
+            // 
+            // label121
+            // 
+            this.label121.AutoSize = true;
+            this.label121.ForeColor = System.Drawing.SystemColors.Control;
+            this.label121.Location = new System.Drawing.Point(6, 16);
+            this.label121.Name = "label121";
+            this.label121.Size = new System.Drawing.Size(82, 13);
+            this.label121.TabIndex = 2;
+            this.label121.Text = "1) Get labbie -->";
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.LinkColor = System.Drawing.Color.Red;
+            this.linkLabel3.Location = new System.Drawing.Point(94, 16);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(242, 13);
+            this.linkLabel3.TabIndex = 3;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "https://github.com/bnorick/labbie/releases/latest";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.ForeColor = System.Drawing.SystemColors.Control;
+            this.label52.Location = new System.Drawing.Point(13, 7);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(731, 13);
+            this.label52.TabIndex = 1;
+            this.label52.Text = "If you are farming labs, you can use the great tool \'Labbie\' to lookup enchants. " +
+    "Too keep track of your found enchants, you can connect labbie to TraXile.";
             // 
             // tabPage14
             // 
@@ -5216,6 +5367,47 @@ namespace TraXile
             this.label54.Size = new System.Drawing.Size(67, 13);
             this.label54.TabIndex = 3;
             this.label54.Text = "Current Run:";
+            // 
+            // panel37
+            // 
+            this.panel37.Controls.Add(this.linkLabel2);
+            this.panel37.Controls.Add(this.label116);
+            this.panel37.Controls.Add(this.button7);
+            this.panel37.Location = new System.Drawing.Point(3, 32);
+            this.panel37.Name = "panel37";
+            this.panel37.Size = new System.Drawing.Size(1089, 27);
+            this.panel37.TabIndex = 4;
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.LinkColor = System.Drawing.Color.Blue;
+            this.linkLabel2.Location = new System.Drawing.Point(388, 6);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(35, 13);
+            this.linkLabel2.TabIndex = 7;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "Setup";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked_1);
+            // 
+            // label116
+            // 
+            this.label116.AutoSize = true;
+            this.label116.Location = new System.Drawing.Point(177, 6);
+            this.label116.Name = "label116";
+            this.label116.Size = new System.Drawing.Size(214, 13);
+            this.label116.TabIndex = 6;
+            this.label116.Text = "Auto enchant detection powered by Labbie:";
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(3, 1);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(111, 23);
+            this.button7.TabIndex = 5;
+            this.button7.Text = "Save and Close";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click_1);
             // 
             // tabPage17
             // 
@@ -5524,6 +5716,19 @@ namespace TraXile
             this.tableLayoutPanel36.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel36.Size = new System.Drawing.Size(1089, 1114);
             this.tableLayoutPanel36.TabIndex = 0;
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView2.Location = new System.Drawing.Point(3, 140);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.Size = new System.Drawing.Size(1083, 971);
+            this.dataGridView2.TabIndex = 0;
+            this.dataGridView2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellEndEdit);
+            this.dataGridView2.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView2_DefaultValuesNeeded);
+            this.dataGridView2.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_RowLeave);
+            this.dataGridView2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView2_KeyUp);
             // 
             // panel27
             // 
@@ -6194,210 +6399,6 @@ namespace TraXile
             // 
             this.toolTip1.ToolTipTitle = "Reload Logfile (Full)";
             // 
-            // panel37
-            // 
-            this.panel37.Controls.Add(this.linkLabel2);
-            this.panel37.Controls.Add(this.label116);
-            this.panel37.Controls.Add(this.button7);
-            this.panel37.Location = new System.Drawing.Point(3, 32);
-            this.panel37.Name = "panel37";
-            this.panel37.Size = new System.Drawing.Size(1089, 27);
-            this.panel37.TabIndex = 4;
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(3, 1);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(111, 23);
-            this.button7.TabIndex = 5;
-            this.button7.Text = "Save and Close";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click_1);
-            // 
-            // linkLabel2
-            // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(383, 6);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(122, 13);
-            this.linkLabel2.TabIndex = 7;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "Setup labbie connection";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked_1);
-            // 
-            // label116
-            // 
-            this.label116.AutoSize = true;
-            this.label116.Location = new System.Drawing.Point(177, 6);
-            this.label116.Name = "label116";
-            this.label116.Size = new System.Drawing.Size(210, 13);
-            this.label116.TabIndex = 6;
-            this.label116.Text = "Auto enchant detection powered by labbie:";
-            // 
-            // label52
-            // 
-            this.label52.AutoSize = true;
-            this.label52.ForeColor = System.Drawing.SystemColors.Control;
-            this.label52.Location = new System.Drawing.Point(13, 7);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(731, 13);
-            this.label52.TabIndex = 1;
-            this.label52.Text = "If you are farming labs, you can use the great tool \'Labbie\' to lookup enchants. " +
-    "Too keep track of your found enchants, you can connect labbie to TraXile.";
-            // 
-            // label121
-            // 
-            this.label121.AutoSize = true;
-            this.label121.ForeColor = System.Drawing.SystemColors.Control;
-            this.label121.Location = new System.Drawing.Point(6, 16);
-            this.label121.Name = "label121";
-            this.label121.Size = new System.Drawing.Size(82, 13);
-            this.label121.TabIndex = 2;
-            this.label121.Text = "1) Get labbie -->";
-            // 
-            // linkLabel3
-            // 
-            this.linkLabel3.AutoSize = true;
-            this.linkLabel3.LinkColor = System.Drawing.Color.Red;
-            this.linkLabel3.Location = new System.Drawing.Point(94, 16);
-            this.linkLabel3.Name = "linkLabel3";
-            this.linkLabel3.Size = new System.Drawing.Size(242, 13);
-            this.linkLabel3.TabIndex = 3;
-            this.linkLabel3.TabStop = true;
-            this.linkLabel3.Text = "https://github.com/bnorick/labbie/releases/latest";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
-            // 
-            // groupBox17
-            // 
-            this.groupBox17.BackColor = System.Drawing.Color.Black;
-            this.groupBox17.Controls.Add(this.label131);
-            this.groupBox17.Controls.Add(this.label130);
-            this.groupBox17.Controls.Add(this.button4);
-            this.groupBox17.Controls.Add(this.label129);
-            this.groupBox17.Controls.Add(this.textBox6);
-            this.groupBox17.Controls.Add(this.linkLabel4);
-            this.groupBox17.Controls.Add(this.label125);
-            this.groupBox17.Controls.Add(this.label121);
-            this.groupBox17.Controls.Add(this.linkLabel3);
-            this.groupBox17.ForeColor = System.Drawing.SystemColors.Control;
-            this.groupBox17.Location = new System.Drawing.Point(16, 177);
-            this.groupBox17.Name = "groupBox17";
-            this.groupBox17.Size = new System.Drawing.Size(663, 118);
-            this.groupBox17.TabIndex = 4;
-            this.groupBox17.TabStop = false;
-            this.groupBox17.Text = "Help";
-            // 
-            // label125
-            // 
-            this.label125.AutoSize = true;
-            this.label125.ForeColor = System.Drawing.SystemColors.Control;
-            this.label125.Location = new System.Drawing.Point(6, 41);
-            this.label125.Name = "label125";
-            this.label125.Size = new System.Drawing.Size(82, 13);
-            this.label125.TabIndex = 4;
-            this.label125.Text = "2) Install --------->";
-            // 
-            // linkLabel4
-            // 
-            this.linkLabel4.AutoSize = true;
-            this.linkLabel4.LinkColor = System.Drawing.Color.Red;
-            this.linkLabel4.Location = new System.Drawing.Point(97, 41);
-            this.linkLabel4.Name = "linkLabel4";
-            this.linkLabel4.Size = new System.Drawing.Size(297, 13);
-            this.linkLabel4.TabIndex = 5;
-            this.linkLabel4.TabStop = true;
-            this.linkLabel4.Text = "https://github.com/bnorick/labbie/blob/master/README.md";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
-            // 
-            // label129
-            // 
-            this.label129.AutoSize = true;
-            this.label129.ForeColor = System.Drawing.SystemColors.Control;
-            this.label129.Location = new System.Drawing.Point(6, 67);
-            this.label129.Name = "label129";
-            this.label129.Size = new System.Drawing.Size(142, 13);
-            this.label129.TabIndex = 6;
-            this.label129.Text = "3) Select labbie log path ---->";
-            // 
-            // label130
-            // 
-            this.label130.AutoSize = true;
-            this.label130.ForeColor = System.Drawing.SystemColors.Control;
-            this.label130.Location = new System.Drawing.Point(6, 91);
-            this.label130.Name = "label130";
-            this.label130.Size = new System.Drawing.Size(66, 13);
-            this.label130.TabIndex = 7;
-            this.label130.Text = "4) That´s it :)";
-            // 
-            // pictureBox25
-            // 
-            this.pictureBox25.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox25.Image")));
-            this.pictureBox25.Location = new System.Drawing.Point(16, 39);
-            this.pictureBox25.Name = "pictureBox25";
-            this.pictureBox25.Size = new System.Drawing.Size(206, 122);
-            this.pictureBox25.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox25.TabIndex = 5;
-            this.pictureBox25.TabStop = false;
-            // 
-            // pictureBox28
-            // 
-            this.pictureBox28.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox28.Image")));
-            this.pictureBox28.Location = new System.Drawing.Point(252, 39);
-            this.pictureBox28.Name = "pictureBox28";
-            this.pictureBox28.Size = new System.Drawing.Size(206, 122);
-            this.pictureBox28.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox28.TabIndex = 6;
-            this.pictureBox28.TabStop = false;
-            // 
-            // listViewNF1
-            // 
-            this.listViewNF1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader23,
-            this.columnHeader24});
-            this.listViewNF1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewNF1.FullRowSelect = true;
-            this.listViewNF1.HideSelection = false;
-            this.listViewNF1.Location = new System.Drawing.Point(3, 275);
-            this.listViewNF1.Name = "listViewNF1";
-            this.listViewNF1.Size = new System.Drawing.Size(1083, 797);
-            this.listViewNF1.TabIndex = 1;
-            this.listViewNF1.UseCompatibleStateImageBehavior = false;
-            this.listViewNF1.View = System.Windows.Forms.View.Details;
-            this.listViewNF1.SelectedIndexChanged += new System.EventHandler(this.listViewNF1_SelectedIndexChanged);
-            // 
-            // columnHeader23
-            // 
-            this.columnHeader23.Text = "Stat";
-            this.columnHeader23.Width = 200;
-            // 
-            // columnHeader24
-            // 
-            this.columnHeader24.Text = "Value";
-            this.columnHeader24.Width = 150;
-            // 
-            // dataGridView2
-            // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView2.Location = new System.Drawing.Point(3, 140);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1083, 971);
-            this.dataGridView2.TabIndex = 0;
-            this.dataGridView2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellEndEdit);
-            this.dataGridView2.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView2_DefaultValuesNeeded);
-            this.dataGridView2.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_RowLeave);
-            this.dataGridView2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView2_KeyUp);
-            // 
-            // label131
-            // 
-            this.label131.AutoSize = true;
-            this.label131.Location = new System.Drawing.Point(154, 90);
-            this.label131.Name = "label131";
-            this.label131.Size = new System.Drawing.Size(433, 13);
-            this.label131.TabIndex = 8;
-            this.label131.Text = "example: If labbie is installed at C:\\tools\\labbie, the log path would be: C:\\too" +
-    "ls\\labbie\\logs";
-            // 
             // Main
             // 
             this.AcceptButton = this.buttonStartSearch;
@@ -6593,11 +6594,17 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).EndInit();
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
             this.tabPage14.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage15.ResumeLayout(false);
             this.tableLayoutPanel30.ResumeLayout(false);
             this.tableLayoutPanel30.PerformLayout();
+            this.panel37.ResumeLayout(false);
+            this.panel37.PerformLayout();
             this.tabPage17.ResumeLayout(false);
             this.tableLayoutPanel31.ResumeLayout(false);
             this.panel24.ResumeLayout(false);
@@ -6615,6 +6622,7 @@ namespace TraXile
             this.tabPage16.ResumeLayout(false);
             this.tableLayoutPanel35.ResumeLayout(false);
             this.tableLayoutPanel36.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.panel27.ResumeLayout(false);
             this.tableLayoutPanel37.ResumeLayout(false);
             this.groupBox15.ResumeLayout(false);
@@ -6630,13 +6638,6 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.panel37.ResumeLayout(false);
-            this.panel37.PerformLayout();
-            this.groupBox17.ResumeLayout(false);
-            this.groupBox17.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
