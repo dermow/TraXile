@@ -202,7 +202,7 @@ namespace TraXile
         /// </summary>
         /// <param name="enchant"></param>
         /// <returns></returns>
-        private string GetValidEnchantName(string enchant)
+        public string GetValidEnchantName(string enchant)
         {
             string validName;
             validName = enchant.Replace("'", "");

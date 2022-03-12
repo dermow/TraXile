@@ -625,6 +625,7 @@ namespace TraXile
                 new TrX_ActivityTag("lab-trial") { BackColor = Color.DarkTurquoise, ForeColor = Color.Black },
                 new TrX_ActivityTag("abyss-depths") { BackColor = Color.ForestGreen, ForeColor = Color.Black },
                 new TrX_ActivityTag("exp-side-area") { BackColor = Color.Turquoise, ForeColor = Color.Black },
+                new TrX_ActivityTag("twice-blessed") { BackColor = Color.DarkTurquoise, ForeColor = Color.Black },
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -754,12 +755,16 @@ namespace TraXile
                 { "AreaChanges", 0 },
                 { "BaranStarted", 0 },
                 { "BaranKilled", 0 },
+                { "BlackStarTried", 0 },
+                { "BlackStarKilled", 0 },
                 { "CampaignFinished", 0 },
                 { "CatarinaTried", 0 },
                 { "CatarinaKilled", 0 },
                 { "TotalKilledCount", 0 },
                 { "DroxStarted", 0 },
                 { "DroxKilled", 0 },
+                { "EaterOfWorldsTried", 0 },
+                { "EaterOfWorldsKilled", 0 },
                 { "EinharCaptures", 0 },
                 { "ElderTried", 0 },
                 { "ElderKilled", 0 },
@@ -772,6 +777,8 @@ namespace TraXile
                 { "HighestLevel", 0 },
                 { "HunterKilled", 0 },
                 { "HunterStarted", 0 },
+                { "InfiniteHungerTried", 0 },
+                { "InfiniteHungerKilled", 0 },
                 { "LabsFinished", 0 },
                 { "LabsStarted", 0 },
                 { "LevelUps", 0 },
@@ -779,6 +786,8 @@ namespace TraXile
                 { "MavenKilled", 0 },
                 { "TotalMapsDone", 0 },
                 { "TotalHeistsDone", 0 },
+                { "SearingExarchTried", 0 },
+                { "SearingExarchKilled", 0 },
                 { "ShaperTried", 0 },
                 { "ShaperKilled", 0 },
                 { "SimulacrumCleared", 0 },
@@ -839,7 +848,15 @@ namespace TraXile
                 { "ExpeditionEncounters_Dannig", "Expedition encounters: Dannig" },
                 { "HideoutTimeSec", "Hideout time" },
                 { "CampaignFinished", "Campaign finished" },
-                { "Suicides", "Suicides" }
+                { "Suicides", "Suicides" },
+                { "SearingExarchTried", "Searing Exarch tried" },
+                { "SearingExarchKilled", "Searing Exarch killed" },
+                { "BlackStarTried", "Black Star tried" },
+                { "BlackStarKilled", "Black Star killed" },
+                { "EaterOfWorldsTried", "Eater of Worlds tried" },
+                { "EaterOfWorldsKilled", "Eater of Worlds killed" },
+                { "InfiniteHungerTried", "Infinite Hunger tried" },
+                { "InfiniteHungerKilled", "Infinite Hunger killed" },
             };
 
             labs = new List<string>
@@ -1058,6 +1075,14 @@ namespace TraXile
                     return ACTIVITY_TYPES.SAFEHOUSE;
                 case "breachstone":
                     return ACTIVITY_TYPES.BREACHSTONE;
+                case "searing_exarch_fight":
+                    return ACTIVITY_TYPES.SEARING_EXARCH_FIGHT;
+                case "black_star_fight":
+                    return ACTIVITY_TYPES.BLACK_STAR_FIGHT;
+                case "infinite_hunger_fight":
+                    return ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT;
+                case "eater_of_worlds_fight":
+                    return ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT;
             }
             return ACTIVITY_TYPES.MAP;
         }
@@ -1102,7 +1127,6 @@ namespace TraXile
                     while(subReader.Read())
                     {
                         TrX_LabEnchant en = _labbieConnector.GetEnchantByID(subReader.GetInt32(1));
-                        _log.Info("Adding enchant to lab: " + en.Text);
                         if(subReader.GetString(2) == "taken")
                         {
                             ((TrX_TrackedLabrun)map).EnchantsTaken.Add(en);
@@ -1455,33 +1479,38 @@ namespace TraXile
             string sSourceArea = _currentArea;
             string sTargetArea = GetAreaNameFromEvent(ev);
             string sAreaName = GetAreaNameFromEvent(ev);
-            bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea);
-            bool bSourceAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sSourceArea);
-            bool bSourceAreaIsAbyss = _defaultMappings.AbyssalAreas.Contains(sSourceArea);
-            bool bSourceAreaIsLabTrial = sSourceArea.Contains("Trial of");
-            bool bSourceAreaIsLogbookSide = _defaultMappings.LogbookSideAreas.Contains(sSourceArea);
-            bool bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea);
-            bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
-            bool bTargetAreaIsSimu = false;
-            bool bTargetAreaMine = _defaultMappings.DelveAreas.Contains(sTargetArea);
-            bool bTargetAreaTemple = _defaultMappings.TempleAreas.Contains(sTargetArea);
-            bool bTargetAreaIsLab = _defaultMappings.LabyrinthStartAreas.Contains(sTargetArea);
-            bool bTargetAreaIsMI = _defaultMappings.MavenInvitationAreas.Contains(sTargetArea);
-            bool bTargetAreaIsAtziri = _defaultMappings.AtziriAreas.Contains(sTargetArea);
-            bool bTargetAreaIsUberAtziri = _defaultMappings.UberAtziriAreas.Contains(sTargetArea);
-            bool bTargetAreaIsElder = _defaultMappings.ElderAreas.Contains(sTargetArea);
-            bool bTargetAreaIsShaper = _defaultMappings.ShaperAreas.Contains(sTargetArea);
-            bool bTargetAreaIsSirusFight = _defaultMappings.SirusAreas.Contains(sTargetArea);
-            bool bTargetAreaIsMavenFight = _defaultMappings.MavenFightAreas.Contains(sTargetArea);
-            bool bTargetAreaIsCampaign = _defaultMappings.CampaignAreas.Contains(sTargetArea);
-            bool bTargetAreaIsLabTrial = sTargetArea.Contains("Trial of");
-            bool bTargetAreaIsAbyssal = _defaultMappings.AbyssalAreas.Contains(sTargetArea);
-            bool bTargetAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sTargetArea);
-            bool bTargetAreaIsLogbook = _defaultMappings.LogbookAreas.Contains(sTargetArea);
-            bool bTargetAreaIsLogBookSide = _defaultMappings.LogbookSideAreas.Contains(sTargetArea);
-            bool bTargetAreaIsCata = _defaultMappings.CatarinaFightAreas.Contains(sTargetArea);
-            bool bTargetAreaIsSafehouse = _defaultMappings.SyndicateSafehouseAreas.Contains(sTargetArea);
-            bool bTargetAreaIsBreachStone = _defaultMappings.BreachstoneDomainAreas.Contains(sTargetArea);
+            bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea),
+            bSourceAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sSourceArea),
+            bSourceAreaIsAbyss = _defaultMappings.AbyssalAreas.Contains(sSourceArea),
+            bSourceAreaIsLabTrial = sSourceArea.Contains("Trial of"),
+            bSourceAreaIsLogbookSide = _defaultMappings.LogbookSideAreas.Contains(sSourceArea),
+            bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea),
+            bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea),
+            bTargetAreaIsSimu = false,
+            bTargetAreaMine = _defaultMappings.DelveAreas.Contains(sTargetArea),
+            bTargetAreaTemple = _defaultMappings.TempleAreas.Contains(sTargetArea),
+            bTargetAreaIsLab = _defaultMappings.LabyrinthStartAreas.Contains(sTargetArea),
+            bTargetAreaIsMI = _defaultMappings.MavenInvitationAreas.Contains(sTargetArea),
+            bTargetAreaIsAtziri = _defaultMappings.AtziriAreas.Contains(sTargetArea),
+            bTargetAreaIsUberAtziri = _defaultMappings.UberAtziriAreas.Contains(sTargetArea),
+            bTargetAreaIsElder = _defaultMappings.ElderAreas.Contains(sTargetArea),
+            bTargetAreaIsShaper = _defaultMappings.ShaperAreas.Contains(sTargetArea),
+            bTargetAreaIsSirusFight = _defaultMappings.SirusAreas.Contains(sTargetArea),
+            bTargetAreaIsMavenFight = _defaultMappings.MavenFightAreas.Contains(sTargetArea),
+            bTargetAreaIsCampaign = _defaultMappings.CampaignAreas.Contains(sTargetArea),
+            bTargetAreaIsLabTrial = sTargetArea.Contains("Trial of"),
+            bTargetAreaIsAbyssal = _defaultMappings.AbyssalAreas.Contains(sTargetArea),
+            bTargetAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sTargetArea),
+            bTargetAreaIsLogbook = _defaultMappings.LogbookAreas.Contains(sTargetArea),
+            bTargetAreaIsLogBookSide = _defaultMappings.LogbookSideAreas.Contains(sTargetArea),
+            bTargetAreaIsCata = _defaultMappings.CatarinaFightAreas.Contains(sTargetArea),
+            bTargetAreaIsSafehouse = _defaultMappings.SyndicateSafehouseAreas.Contains(sTargetArea),
+            bTargetAreaIsBreachStone = _defaultMappings.BreachstoneDomainAreas.Contains(sTargetArea),
+            bTargetAreaIsExarch = _defaultMappings.SearingExarchAreas.Contains(sTargetArea),
+            bTargetAreaIsBlackStar = _defaultMappings.BlackStarAreas.Contains(sTargetArea),
+            bTargetAreaIsInfinitetHunger = _defaultMappings.InfiniteHungerAreas.Contains(sTargetArea),
+            bTargetAreaIsEaterOfWorlds = _defaultMappings.EaterOfWorldsAreas.Contains(sTargetArea);
+
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
             IncrementStat("AreaChanges", ev.EventTime, 1);
@@ -1653,6 +1682,22 @@ namespace TraXile
             else if (bTargetAreaIsBreachStone)
             {
                 actType = ACTIVITY_TYPES.BREACHSTONE;
+            }
+            else if (bTargetAreaIsExarch)
+            {
+                actType = ACTIVITY_TYPES.SEARING_EXARCH_FIGHT;
+            }
+            else if (bTargetAreaIsBlackStar)
+            {
+                actType = ACTIVITY_TYPES.BLACK_STAR_FIGHT;
+            }
+            else if (bTargetAreaIsInfinitetHunger)
+            {
+                actType = ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT;
+            }
+            else if (bTargetAreaIsEaterOfWorlds)
+            {
+                actType = ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT;
             }
 
             // Special handling for logbook cemetery + vaal temple
@@ -1926,7 +1971,11 @@ namespace TraXile
                     || _defaultMappings.SyndicateSafehouseAreas.Contains(sSourceArea)
                     || _defaultMappings.ShaperAreas.Contains(sSourceArea)
                     || _defaultMappings.SirusAreas.Contains(sSourceArea)
-                    || _defaultMappings.UberAtziriAreas.Contains(sSourceArea);
+                    || _defaultMappings.UberAtziriAreas.Contains(sSourceArea)
+                    || _defaultMappings.SearingExarchAreas.Contains(sSourceArea)
+                    || _defaultMappings.BlackStarAreas.Contains(sSourceArea)
+                    || _defaultMappings.EaterOfWorldsAreas.Contains(sSourceArea)
+                    || _defaultMappings.InfiniteHungerAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
                 if (!_StartedFlag && !bFromActivity)
@@ -2008,7 +2057,11 @@ namespace TraXile
                 bTargetAreaIsLogbook ||
                 bTargetAreaIsSafehouse ||
                 bTargetAreaIsCata ||
-                bTargetAreaIsBreachStone;
+                bTargetAreaIsExarch ||
+                bTargetAreaIsBreachStone ||
+                bTargetAreaIsBlackStar ||
+                bTargetAreaIsEaterOfWorlds ||
+                bTargetAreaIsInfinitetHunger;
 
             // Check if opened activity needs to be opened on Mapdevice
             bool isMapDeviceActivity =
@@ -2024,7 +2077,11 @@ namespace TraXile
                 bTargetAreaIsMI ||
                 bTargetAreaIsMavenFight ||
                 bTargetAreaIsLogbook ||
-                bTargetAreaIsBreachStone;
+                bTargetAreaIsExarch ||
+                bTargetAreaIsBreachStone ||
+                bTargetAreaIsBlackStar ||
+                bTargetAreaIsInfinitetHunger ||
+                bTargetAreaIsEaterOfWorlds;
 
             if (isMapDeviceActivity)
             {
@@ -2716,7 +2773,36 @@ namespace TraXile
                     case EVENT_TYPES.NEXT_CEMETERY_IS_LOGBOOK:
                         _nextAreaIsExp = true;
                         break;
-
+                    case EVENT_TYPES.TWICE_BLESSED:
+                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+                        {
+                            _currentActivity.AddTag("twice-blessed");
+                        }
+                        break;
+                    case EVENT_TYPES.EXARCH_TRIED:
+                        IncrementStat("SearingExarchTried", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.EXARCH_KILLED:
+                        IncrementStat("SearingExarchKilled", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.BLACK_STAR_TRIED:
+                        IncrementStat("BlackStarTried", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.BLACK_STAR_KILLED:
+                        IncrementStat("BlackStarKilled", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.INFINITE_HUNGER_TRIED:
+                        IncrementStat("InfiniteHungerTried", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.INFINITE_HUNGER_KILLED:
+                        IncrementStat("InfiniteHungerKilled", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.EATER_OF_WORLDS_TRIED:
+                        IncrementStat("EaterOfWorldsTried", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.EATER_OF_WORLDS_KILLED:
+                        IncrementStat("EaterOfWorldsKilled", ev.EventTime);
+                        break;
                 }
 
                 // Sometimes conqueror fire their death speech twice...

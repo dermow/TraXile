@@ -84,7 +84,7 @@ namespace TraXile.UI
         /// Get notes for enchants
         /// </summary>
         /// <returns></returns>
-        public List<TrX_EnchantNote> GetEnchantNotes()
+        public List<TrX_EnchantNote> GetEnchantNotes(int enchant_filter = -1)
         {
             List<TrX_EnchantNote> results;
             results = new List<TrX_EnchantNote>();
@@ -98,7 +98,11 @@ namespace TraXile.UI
                     if(!String.IsNullOrEmpty(textBox.Text))
                     {
                         note = new TrX_EnchantNote(Convert.ToInt32(textBox.Name), textBox.Text, (int)_labrun.TimeStamp);
-                        results.Add(note);
+
+                        if(enchant_filter == -1 || enchant_filter == Convert.ToInt32(textBox.Name))
+                        {
+                            results.Add(note);
+                        }
                     }
                 }
             }
@@ -309,8 +313,9 @@ namespace TraXile.UI
             if(enchant == null)
             {
                 enchant = new TrX_LabEnchant();
-                enchant.Text = comboBox1.Text;
+                enchant.Text = _parent.Logic.LabbieConnector.GetValidEnchantName(comboBox1.Text);
                 enchant.ID = _parent.Logic.LabbieConnector.AddKnownEnchant(comboBox1.Text);
+                _parent.Logic.LabbieConnector.KnownEnchants.Add(enchant);
             }
 
             enchant.EnchantInfo = _parent.Logic.GetEnchantInfo(enchant.ID);

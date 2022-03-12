@@ -171,6 +171,7 @@
     <Compile Include="TrX_Helpers.cs" />
     <Compile Include="TrX_LabbieConnector.cs" />
     <Compile Include="TrX_LabEnchant.cs" />
+    <Compile Include="TrX_ProfitTracking.cs" />
     <Compile Include="TrX_TrackedLabrun.cs" />
     <Compile Include="UI\AboutW.cs">
       <SubType>Form</SubType>
@@ -185,6 +186,9 @@
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </Compile>
     <Compile Include="TrX_AppInfo.cs" />
+    <Compile Include="UI\DataGridViewNF.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\StopWatchOverlay.cs">
       <SubType>Form</SubType>
     </Compile>
