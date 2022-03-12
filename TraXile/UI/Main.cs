@@ -45,7 +45,8 @@ namespace TraXile
         SEARING_EXARCH_FIGHT,
         BLACK_STAR_FIGHT,
         INFINITE_HUNGER_FIGHT,
-        EATER_OF_WORLDS_FIGHT
+        EATER_OF_WORLDS_FIGHT,
+        TIMELESS_LEGION
     }
 
     /// <summary>
@@ -1328,6 +1329,9 @@ namespace TraXile
             _log.Info("Stats cleared.");
         }
 
+        /// <summary>
+        /// Drop data and initiate the reload
+        /// </summary>
         private void InitLogFileReload()
         {
             // Stop UI updates
@@ -1336,17 +1340,17 @@ namespace TraXile
             // Stop core logic
             _logic.Stop();
 
-            // Terminiate db connection
-            _logic.Database.Close();
-
-            // Delete Database
+            // DROP Databases
             try
             {
-                File.Delete(_logic.Database.DatabasePath);
+                _logic.Database.DoNonQuery("DELETE FROM tx_activity_log");
+                _logic.Database.DoNonQuery("DELETE FROM tx_stats");
+                _logic.Database.DoNonQuery("UPDATE tx_kvstore SET value = '0' WHERE key = 'last_hash'");
+                _logic.Database.Close();
             }
             catch (Exception ex)
             {
-                _log.Error("cannot delete database file: " + ex.Message);
+                _log.Error("cannot drop databases: " + ex.Message);
                 _log.Debug(ex.ToString());
             }
 
@@ -1716,6 +1720,10 @@ namespace TraXile
             else if (map.Type == ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT)
             {
                 iIndex = 49;
+            }
+            else if (map.Type == ACTIVITY_TYPES.TIMELESS_LEGION)
+            {
+                iIndex = 50;
             }
             return iIndex;
         }
@@ -2287,7 +2295,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.SEARING_EXARCH_FIGHT, 0 },
                 { ACTIVITY_TYPES.BLACK_STAR_FIGHT, 0 },
                 { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, 0 },
-                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 }
+                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 },
+                { ACTIVITY_TYPES.TIMELESS_LEGION, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2317,7 +2326,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.SEARING_EXARCH_FIGHT, 0 },
                 { ACTIVITY_TYPES.BLACK_STAR_FIGHT, 0 },
                 { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, 0 },
-                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 }
+                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 },
+                { ACTIVITY_TYPES.TIMELESS_LEGION, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2347,7 +2357,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.BLACK_STAR_FIGHT, Color.Red },
                 { ACTIVITY_TYPES.SEARING_EXARCH_FIGHT, Color.Red },
                 { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, Color.Blue }
+                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.TIMELESS_LEGION, Color.BlueViolet }
             };
             double hideOutTime = 0;
             double totalCount = 0;
@@ -4479,6 +4490,27 @@ namespace TraXile
             textBox9.Text = "";
             radioButton1.Checked = true;
             SetProfitFilter();
+        }
+
+        private void button17_Click_1(object sender, EventArgs e)
+        {
+            ResetLabRuns();
+        }
+
+        private void linkLabel2_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            tabCtl1.SelectedTab = tabPage3;
+            tabControl2.SelectedTab = tabPage2;
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(linkLabel3.Text);
+        }
+
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(linkLabel4.Text);
         }
 
         private void checkBox3_CheckedChanged_1(object sender, EventArgs e)

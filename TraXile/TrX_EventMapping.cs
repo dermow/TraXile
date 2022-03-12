@@ -78,7 +78,8 @@ namespace TraXile
         INFINITE_HUNGER_TRIED,
         INFINITE_HUNGER_KILLED,
         EATER_OF_WORLDS_TRIED,
-        EATER_OF_WORLDS_KILLED
+        EATER_OF_WORLDS_KILLED,
+        HARVEST
     }
 
     public class TrX_EventMapping
@@ -119,9 +120,10 @@ namespace TraXile
                 { "Zana, Master Cartographer: I'm sorry... Sirus... This was all my fault. I'm sorry. I'm so, so sorry.", EVENT_TYPES.SIRUS_KILLED },
                 { "Sirus, Awakener of Worlds: Did you really think this would work?", EVENT_TYPES.SIRUS_FIGHT_STARTED },
                 { " is now level ", EVENT_TYPES.LEVELUP },
-                
+                { "] Oshabi: ", EVENT_TYPES.HARVEST },
+
                 // Veritania Fight Events
-                { "You and I both know this isn't over.", EVENT_TYPES.VERITANIA_KILLED },
+            { "You and I both know this isn't over.", EVENT_TYPES.VERITANIA_KILLED },
                 { "The roots have taken hold. We shall see each other again.", EVENT_TYPES.VERITANIA_KILLED },
                 { "You insist on dooming yourself...", EVENT_TYPES.VERITANIA_KILLED },
                 { "The thrill of victory shall forever be your prison...", EVENT_TYPES.VERITANIA_KILLED },

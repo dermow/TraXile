@@ -18,4 +18,5 @@
 * Encahnt info page added
 * Added statistics for new eldrich bosses
 * Lab is automatically paused if you try to open a locked chest in treasure room
-* Timeless Domain is now be tracked
+* Timeless Domain is now being tracked
+* Auto-Tag 'harvest' added

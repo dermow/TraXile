@@ -34,38 +34,38 @@ namespace TraXile
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TabControl tabControlMain;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea17 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend17 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series17 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea18 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend18 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series18 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea19 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend19 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series19 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title13 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea20 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend20 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series20 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title14 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea21 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend21 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series21 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title15 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea22 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend22 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series22 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title16 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea23 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend23 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series23 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title17 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea24 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend24 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series24 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title18 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title4 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title5 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title6 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            this.tabCtl1 = new System.Windows.Forms.TabControl();
             this.tabPageTracking = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -140,9 +140,6 @@ namespace TraXile
             this.tabPage12 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel26 = new System.Windows.Forms.TableLayoutPanel();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.listViewNF1 = new TraXile.ListViewNF();
-            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label100 = new System.Windows.Forms.Label();
             this.panel19 = new System.Windows.Forms.Panel();
             this.button6 = new System.Windows.Forms.Button();
@@ -295,6 +292,14 @@ namespace TraXile
             this.pictureBox29 = new System.Windows.Forms.PictureBox();
             this.label149 = new System.Windows.Forms.Label();
             this.panel35 = new System.Windows.Forms.Panel();
+            this.labelEaterTried = new System.Windows.Forms.Label();
+            this.label119 = new System.Windows.Forms.Label();
+            this.labelEaterKilled = new System.Windows.Forms.Label();
+            this.label123 = new System.Windows.Forms.Label();
+            this.labelEaterStatus = new System.Windows.Forms.Label();
+            this.label126 = new System.Windows.Forms.Label();
+            this.pictureBox24 = new System.Windows.Forms.PictureBox();
+            this.label127 = new System.Windows.Forms.Label();
             this.label150 = new System.Windows.Forms.Label();
             this.label151 = new System.Windows.Forms.Label();
             this.panel36 = new System.Windows.Forms.Panel();
@@ -422,8 +427,6 @@ namespace TraXile
             this.label3 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label52 = new System.Windows.Forms.Label();
-            this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.button4 = new System.Windows.Forms.Button();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.tabPage14 = new System.Windows.Forms.TabPage();
@@ -434,7 +437,6 @@ namespace TraXile
             this.panel23 = new System.Windows.Forms.Panel();
             this.label53 = new System.Windows.Forms.Label();
             this.label54 = new System.Windows.Forms.Label();
-            this.button7 = new System.Windows.Forms.Button();
             this.tabPage17 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel31 = new System.Windows.Forms.TableLayoutPanel();
             this.panel24 = new System.Windows.Forms.Panel();
@@ -463,7 +465,6 @@ namespace TraXile
             this.tabPage16 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel35 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel36 = new System.Windows.Forms.TableLayoutPanel();
-            this.dataGridView2 = new TraXile.DataGridViewNF();
             this.panel27 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel37 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
@@ -537,16 +538,26 @@ namespace TraXile
             this.toolTip5 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip6 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip7 = new System.Windows.Forms.ToolTip(this.components);
-            this.labelEaterTried = new System.Windows.Forms.Label();
-            this.label119 = new System.Windows.Forms.Label();
-            this.labelEaterKilled = new System.Windows.Forms.Label();
-            this.label123 = new System.Windows.Forms.Label();
-            this.labelEaterStatus = new System.Windows.Forms.Label();
-            this.label126 = new System.Windows.Forms.Label();
-            this.pictureBox24 = new System.Windows.Forms.PictureBox();
-            this.label127 = new System.Windows.Forms.Label();
-            tabControlMain = new System.Windows.Forms.TabControl();
-            tabControlMain.SuspendLayout();
+            this.panel37 = new System.Windows.Forms.Panel();
+            this.button7 = new System.Windows.Forms.Button();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.label116 = new System.Windows.Forms.Label();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label121 = new System.Windows.Forms.Label();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.label125 = new System.Windows.Forms.Label();
+            this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+            this.label129 = new System.Windows.Forms.Label();
+            this.label130 = new System.Windows.Forms.Label();
+            this.pictureBox25 = new System.Windows.Forms.PictureBox();
+            this.pictureBox28 = new System.Windows.Forms.PictureBox();
+            this.listViewNF1 = new TraXile.ListViewNF();
+            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.dataGridView2 = new TraXile.DataGridViewNF();
+            this.label131 = new System.Windows.Forms.Label();
+            this.tabCtl1.SuspendLayout();
             this.tabPageTracking.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -636,6 +647,7 @@ namespace TraXile
             this.panel34.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox29)).BeginInit();
             this.panel35.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).BeginInit();
             this.tabPage20.SuspendLayout();
             this.tableLayoutPanel25.SuspendLayout();
             this.panel12.SuspendLayout();
@@ -675,7 +687,6 @@ namespace TraXile
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.tabPage2.SuspendLayout();
-            this.groupBox11.SuspendLayout();
             this.tabPage14.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage15.SuspendLayout();
@@ -694,7 +705,6 @@ namespace TraXile
             this.tabPage16.SuspendLayout();
             this.tableLayoutPanel35.SuspendLayout();
             this.tableLayoutPanel36.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel27.SuspendLayout();
             this.tableLayoutPanel37.SuspendLayout();
             this.groupBox15.SuspendLayout();
@@ -707,26 +717,31 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).BeginInit();
+            this.panel37.SuspendLayout();
+            this.groupBox17.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
-            // tabControlMain
+            // tabCtl1
             // 
-            tabControlMain.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
-            tabControlMain.Controls.Add(this.tabPageTracking);
-            tabControlMain.Controls.Add(this.tabPage8);
-            tabControlMain.Controls.Add(this.tabPage3);
-            tabControlMain.Controls.Add(this.tabPage14);
-            tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            tabControlMain.HotTrack = true;
-            tabControlMain.ImeMode = System.Windows.Forms.ImeMode.KatakanaHalf;
-            tabControlMain.Location = new System.Drawing.Point(0, 24);
-            tabControlMain.Multiline = true;
-            tabControlMain.Name = "tabControlMain";
-            tabControlMain.SelectedIndex = 0;
-            tabControlMain.Size = new System.Drawing.Size(1123, 1187);
-            tabControlMain.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
-            tabControlMain.TabIndex = 1;
+            this.tabCtl1.AccessibleName = "tbc1";
+            this.tabCtl1.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
+            this.tabCtl1.Controls.Add(this.tabPageTracking);
+            this.tabCtl1.Controls.Add(this.tabPage8);
+            this.tabCtl1.Controls.Add(this.tabPage3);
+            this.tabCtl1.Controls.Add(this.tabPage14);
+            this.tabCtl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabCtl1.HotTrack = true;
+            this.tabCtl1.ImeMode = System.Windows.Forms.ImeMode.KatakanaHalf;
+            this.tabCtl1.Location = new System.Drawing.Point(0, 24);
+            this.tabCtl1.Multiline = true;
+            this.tabCtl1.Name = "tabCtl1";
+            this.tabCtl1.SelectedIndex = 0;
+            this.tabCtl1.Size = new System.Drawing.Size(1123, 1187);
+            this.tabCtl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.tabCtl1.TabIndex = 1;
             // 
             // tabPageTracking
             // 
@@ -1259,6 +1274,7 @@ namespace TraXile
             this.imageList1.Images.SetKeyName(47, "polaric-invitation.png");
             this.imageList1.Images.SetKeyName(48, "writhing-invitation.png");
             this.imageList1.Images.SetKeyName(49, "screaming-invitation.png");
+            this.imageList1.Images.SetKeyName(50, "MarakethFragment.png");
             // 
             // panel3
             // 
@@ -1529,18 +1545,18 @@ namespace TraXile
             // 
             // chartGlobalDashboard
             // 
-            chartArea17.Name = "ChartArea1";
-            this.chartGlobalDashboard.ChartAreas.Add(chartArea17);
+            chartArea1.Name = "ChartArea1";
+            this.chartGlobalDashboard.ChartAreas.Add(chartArea1);
             this.chartGlobalDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend17.Name = "Legend1";
-            this.chartGlobalDashboard.Legends.Add(legend17);
+            legend1.Name = "Legend1";
+            this.chartGlobalDashboard.Legends.Add(legend1);
             this.chartGlobalDashboard.Location = new System.Drawing.Point(13, 33);
             this.chartGlobalDashboard.Name = "chartGlobalDashboard";
-            series17.ChartArea = "ChartArea1";
-            series17.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series17.Legend = "Legend1";
-            series17.Name = "Series1";
-            this.chartGlobalDashboard.Series.Add(series17);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartGlobalDashboard.Series.Add(series1);
             this.chartGlobalDashboard.Size = new System.Drawing.Size(1073, 705);
             this.chartGlobalDashboard.TabIndex = 0;
             this.chartGlobalDashboard.Text = "chart8";
@@ -1660,48 +1676,22 @@ namespace TraXile
             // 
             // chart1
             // 
-            chartArea18.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea18);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend18.Name = "Legend1";
-            this.chart1.Legends.Add(legend18);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(3, 23);
             this.chart1.Name = "chart1";
-            series18.ChartArea = "ChartArea1";
-            series18.Legend = "Legend1";
-            series18.Name = "Series1";
-            series18.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series18.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chart1.Series.Add(series18);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series2.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(1083, 211);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
-            // 
-            // listViewNF1
-            // 
-            this.listViewNF1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader23,
-            this.columnHeader24});
-            this.listViewNF1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewNF1.FullRowSelect = true;
-            this.listViewNF1.HideSelection = false;
-            this.listViewNF1.Location = new System.Drawing.Point(3, 275);
-            this.listViewNF1.Name = "listViewNF1";
-            this.listViewNF1.Size = new System.Drawing.Size(1083, 797);
-            this.listViewNF1.TabIndex = 1;
-            this.listViewNF1.UseCompatibleStateImageBehavior = false;
-            this.listViewNF1.View = System.Windows.Forms.View.Details;
-            this.listViewNF1.SelectedIndexChanged += new System.EventHandler(this.listViewNF1_SelectedIndexChanged);
-            // 
-            // columnHeader23
-            // 
-            this.columnHeader23.Text = "Stat";
-            this.columnHeader23.Width = 200;
-            // 
-            // columnHeader24
-            // 
-            this.columnHeader24.Text = "Value";
-            this.columnHeader24.Width = 150;
             // 
             // label100
             // 
@@ -1823,23 +1813,23 @@ namespace TraXile
             // chartMapTierCount
             // 
             this.chartMapTierCount.BackColor = System.Drawing.Color.Black;
-            chartArea19.BackColor = System.Drawing.Color.Black;
-            chartArea19.Name = "ChartArea1";
-            this.chartMapTierCount.ChartAreas.Add(chartArea19);
+            chartArea3.BackColor = System.Drawing.Color.Black;
+            chartArea3.Name = "ChartArea1";
+            this.chartMapTierCount.ChartAreas.Add(chartArea3);
             this.chartMapTierCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend19.Name = "Legend1";
-            this.chartMapTierCount.Legends.Add(legend19);
+            legend3.Name = "Legend1";
+            this.chartMapTierCount.Legends.Add(legend3);
             this.chartMapTierCount.Location = new System.Drawing.Point(3, 23);
             this.chartMapTierCount.Name = "chartMapTierCount";
-            series19.ChartArea = "ChartArea1";
-            series19.Legend = "Legend1";
-            series19.Name = "Series1";
-            this.chartMapTierCount.Series.Add(series19);
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chartMapTierCount.Series.Add(series3);
             this.chartMapTierCount.Size = new System.Drawing.Size(531, 313);
             this.chartMapTierCount.TabIndex = 1;
             this.chartMapTierCount.Text = "chart2";
-            title13.Name = "Map Tiers";
-            this.chartMapTierCount.Titles.Add(title13);
+            title1.Name = "Map Tiers";
+            this.chartMapTierCount.Titles.Add(title1);
             // 
             // label9
             // 
@@ -1872,23 +1862,23 @@ namespace TraXile
             // chartMapTierAvgTime
             // 
             this.chartMapTierAvgTime.BackColor = System.Drawing.Color.Black;
-            chartArea20.BackColor = System.Drawing.Color.Black;
-            chartArea20.Name = "ChartArea1";
-            this.chartMapTierAvgTime.ChartAreas.Add(chartArea20);
+            chartArea4.BackColor = System.Drawing.Color.Black;
+            chartArea4.Name = "ChartArea1";
+            this.chartMapTierAvgTime.ChartAreas.Add(chartArea4);
             this.chartMapTierAvgTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend20.Name = "Legend1";
-            this.chartMapTierAvgTime.Legends.Add(legend20);
+            legend4.Name = "Legend1";
+            this.chartMapTierAvgTime.Legends.Add(legend4);
             this.chartMapTierAvgTime.Location = new System.Drawing.Point(3, 23);
             this.chartMapTierAvgTime.Name = "chartMapTierAvgTime";
-            series20.ChartArea = "ChartArea1";
-            series20.Legend = "Legend1";
-            series20.Name = "Series1";
-            this.chartMapTierAvgTime.Series.Add(series20);
+            series4.ChartArea = "ChartArea1";
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            this.chartMapTierAvgTime.Series.Add(series4);
             this.chartMapTierAvgTime.Size = new System.Drawing.Size(531, 313);
             this.chartMapTierAvgTime.TabIndex = 1;
             this.chartMapTierAvgTime.Text = "chart3";
-            title14.Name = "Map Tiers";
-            this.chartMapTierAvgTime.Titles.Add(title14);
+            title2.Name = "Map Tiers";
+            this.chartMapTierAvgTime.Titles.Add(title2);
             // 
             // label18
             // 
@@ -2062,25 +2052,25 @@ namespace TraXile
             // chartLabsAvgTime
             // 
             this.chartLabsAvgTime.BackColor = System.Drawing.Color.Black;
-            chartArea21.BackColor = System.Drawing.Color.Black;
-            chartArea21.Name = "ChartArea1";
-            this.chartLabsAvgTime.ChartAreas.Add(chartArea21);
+            chartArea5.BackColor = System.Drawing.Color.Black;
+            chartArea5.Name = "ChartArea1";
+            this.chartLabsAvgTime.ChartAreas.Add(chartArea5);
             this.chartLabsAvgTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend21.Name = "Legend1";
-            this.chartLabsAvgTime.Legends.Add(legend21);
+            legend5.Name = "Legend1";
+            this.chartLabsAvgTime.Legends.Add(legend5);
             this.chartLabsAvgTime.Location = new System.Drawing.Point(3, 32);
             this.chartLabsAvgTime.Name = "chartLabsAvgTime";
-            series21.ChartArea = "ChartArea1";
-            series21.IsValueShownAsLabel = true;
-            series21.Legend = "Legend1";
-            series21.Name = "Series1";
-            series21.SmartLabelStyle.AllowOutsidePlotArea = System.Windows.Forms.DataVisualization.Charting.LabelOutsidePlotAreaStyle.Yes;
-            this.chartLabsAvgTime.Series.Add(series21);
+            series5.ChartArea = "ChartArea1";
+            series5.IsValueShownAsLabel = true;
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            series5.SmartLabelStyle.AllowOutsidePlotArea = System.Windows.Forms.DataVisualization.Charting.LabelOutsidePlotAreaStyle.Yes;
+            this.chartLabsAvgTime.Series.Add(series5);
             this.chartLabsAvgTime.Size = new System.Drawing.Size(533, 291);
             this.chartLabsAvgTime.TabIndex = 1;
             this.chartLabsAvgTime.Text = "chart5";
-            title15.Name = "Map Tiers";
-            this.chartLabsAvgTime.Titles.Add(title15);
+            title3.Name = "Map Tiers";
+            this.chartLabsAvgTime.Titles.Add(title3);
             // 
             // label50
             // 
@@ -2113,23 +2103,23 @@ namespace TraXile
             // chartLabsDone
             // 
             this.chartLabsDone.BackColor = System.Drawing.Color.Black;
-            chartArea22.BackColor = System.Drawing.Color.Black;
-            chartArea22.Name = "ChartArea1";
-            this.chartLabsDone.ChartAreas.Add(chartArea22);
+            chartArea6.BackColor = System.Drawing.Color.Black;
+            chartArea6.Name = "ChartArea1";
+            this.chartLabsDone.ChartAreas.Add(chartArea6);
             this.chartLabsDone.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend22.Name = "Legend1";
-            this.chartLabsDone.Legends.Add(legend22);
+            legend6.Name = "Legend1";
+            this.chartLabsDone.Legends.Add(legend6);
             this.chartLabsDone.Location = new System.Drawing.Point(3, 32);
             this.chartLabsDone.Name = "chartLabsDone";
-            series22.ChartArea = "ChartArea1";
-            series22.Legend = "Legend1";
-            series22.Name = "Series1";
-            this.chartLabsDone.Series.Add(series22);
+            series6.ChartArea = "ChartArea1";
+            series6.Legend = "Legend1";
+            series6.Name = "Series1";
+            this.chartLabsDone.Series.Add(series6);
             this.chartLabsDone.Size = new System.Drawing.Size(532, 291);
             this.chartLabsDone.TabIndex = 1;
             this.chartLabsDone.Text = "chart4";
-            title16.Name = "Map Tiers";
-            this.chartLabsDone.Titles.Add(title16);
+            title4.Name = "Map Tiers";
+            this.chartLabsDone.Titles.Add(title4);
             // 
             // label25
             // 
@@ -2287,23 +2277,23 @@ namespace TraXile
             // chartHeistByLevel
             // 
             this.chartHeistByLevel.BackColor = System.Drawing.Color.Black;
-            chartArea23.BackColor = System.Drawing.Color.Black;
-            chartArea23.Name = "ChartArea1";
-            this.chartHeistByLevel.ChartAreas.Add(chartArea23);
+            chartArea7.BackColor = System.Drawing.Color.Black;
+            chartArea7.Name = "ChartArea1";
+            this.chartHeistByLevel.ChartAreas.Add(chartArea7);
             this.chartHeistByLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend23.Name = "Legend1";
-            this.chartHeistByLevel.Legends.Add(legend23);
+            legend7.Name = "Legend1";
+            this.chartHeistByLevel.Legends.Add(legend7);
             this.chartHeistByLevel.Location = new System.Drawing.Point(3, 46);
             this.chartHeistByLevel.Name = "chartHeistByLevel";
-            series23.ChartArea = "ChartArea1";
-            series23.Legend = "Legend1";
-            series23.Name = "Series1";
-            this.chartHeistByLevel.Series.Add(series23);
+            series7.ChartArea = "ChartArea1";
+            series7.Legend = "Legend1";
+            series7.Name = "Series1";
+            this.chartHeistByLevel.Series.Add(series7);
             this.chartHeistByLevel.Size = new System.Drawing.Size(533, 245);
             this.chartHeistByLevel.TabIndex = 1;
             this.chartHeistByLevel.Text = "chart6";
-            title17.Name = "Map Tiers";
-            this.chartHeistByLevel.Titles.Add(title17);
+            title5.Name = "Map Tiers";
+            this.chartHeistByLevel.Titles.Add(title5);
             // 
             // label85
             // 
@@ -2446,23 +2436,23 @@ namespace TraXile
             // chartHeistAvgTime
             // 
             this.chartHeistAvgTime.BackColor = System.Drawing.Color.Black;
-            chartArea24.BackColor = System.Drawing.Color.Black;
-            chartArea24.Name = "ChartArea1";
-            this.chartHeistAvgTime.ChartAreas.Add(chartArea24);
+            chartArea8.BackColor = System.Drawing.Color.Black;
+            chartArea8.Name = "ChartArea1";
+            this.chartHeistAvgTime.ChartAreas.Add(chartArea8);
             this.chartHeistAvgTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend24.Name = "Legend1";
-            this.chartHeistAvgTime.Legends.Add(legend24);
+            legend8.Name = "Legend1";
+            this.chartHeistAvgTime.Legends.Add(legend8);
             this.chartHeistAvgTime.Location = new System.Drawing.Point(3, 46);
             this.chartHeistAvgTime.Name = "chartHeistAvgTime";
-            series24.ChartArea = "ChartArea1";
-            series24.Legend = "Legend1";
-            series24.Name = "Series1";
-            this.chartHeistAvgTime.Series.Add(series24);
+            series8.ChartArea = "ChartArea1";
+            series8.Legend = "Legend1";
+            series8.Name = "Series1";
+            this.chartHeistAvgTime.Series.Add(series8);
             this.chartHeistAvgTime.Size = new System.Drawing.Size(532, 245);
             this.chartHeistAvgTime.TabIndex = 1;
             this.chartHeistAvgTime.Text = "chart7";
-            title18.Name = "Map Tiers";
-            this.chartHeistAvgTime.Titles.Add(title18);
+            title6.Name = "Map Tiers";
+            this.chartHeistAvgTime.Titles.Add(title6);
             // 
             // label88
             // 
@@ -3571,6 +3561,93 @@ namespace TraXile
             this.panel35.Name = "panel35";
             this.panel35.Size = new System.Drawing.Size(294, 330);
             this.panel35.TabIndex = 4;
+            // 
+            // labelEaterTried
+            // 
+            this.labelEaterTried.AutoSize = true;
+            this.labelEaterTried.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEaterTried.ForeColor = System.Drawing.Color.White;
+            this.labelEaterTried.Location = new System.Drawing.Point(158, 297);
+            this.labelEaterTried.Name = "labelEaterTried";
+            this.labelEaterTried.Size = new System.Drawing.Size(21, 13);
+            this.labelEaterTried.TabIndex = 96;
+            this.labelEaterTried.Text = "8x";
+            // 
+            // label119
+            // 
+            this.label119.AutoSize = true;
+            this.label119.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label119.ForeColor = System.Drawing.Color.White;
+            this.label119.Location = new System.Drawing.Point(78, 297);
+            this.label119.Name = "label119";
+            this.label119.Size = new System.Drawing.Size(49, 13);
+            this.label119.TabIndex = 95;
+            this.label119.Text = "Tried:";
+            // 
+            // labelEaterKilled
+            // 
+            this.labelEaterKilled.AutoSize = true;
+            this.labelEaterKilled.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEaterKilled.ForeColor = System.Drawing.Color.White;
+            this.labelEaterKilled.Location = new System.Drawing.Point(159, 281);
+            this.labelEaterKilled.Name = "labelEaterKilled";
+            this.labelEaterKilled.Size = new System.Drawing.Size(21, 13);
+            this.labelEaterKilled.TabIndex = 94;
+            this.labelEaterKilled.Text = "8x";
+            // 
+            // label123
+            // 
+            this.label123.AutoSize = true;
+            this.label123.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label123.ForeColor = System.Drawing.Color.White;
+            this.label123.Location = new System.Drawing.Point(79, 281);
+            this.label123.Name = "label123";
+            this.label123.Size = new System.Drawing.Size(56, 13);
+            this.label123.TabIndex = 93;
+            this.label123.Text = "Killed:";
+            // 
+            // labelEaterStatus
+            // 
+            this.labelEaterStatus.AutoSize = true;
+            this.labelEaterStatus.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEaterStatus.ForeColor = System.Drawing.Color.White;
+            this.labelEaterStatus.Location = new System.Drawing.Point(158, 265);
+            this.labelEaterStatus.Name = "labelEaterStatus";
+            this.labelEaterStatus.Size = new System.Drawing.Size(28, 13);
+            this.labelEaterStatus.TabIndex = 92;
+            this.labelEaterStatus.Text = "Yes";
+            // 
+            // label126
+            // 
+            this.label126.AutoSize = true;
+            this.label126.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label126.ForeColor = System.Drawing.Color.White;
+            this.label126.Location = new System.Drawing.Point(79, 265);
+            this.label126.Name = "label126";
+            this.label126.Size = new System.Drawing.Size(42, 13);
+            this.label126.TabIndex = 91;
+            this.label126.Text = "Done:";
+            // 
+            // pictureBox24
+            // 
+            this.pictureBox24.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox24.Image")));
+            this.pictureBox24.Location = new System.Drawing.Point(3, 40);
+            this.pictureBox24.Name = "pictureBox24";
+            this.pictureBox24.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox24.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox24.TabIndex = 90;
+            this.pictureBox24.TabStop = false;
+            // 
+            // label127
+            // 
+            this.label127.AutoSize = true;
+            this.label127.Font = new System.Drawing.Font("Noto Mono", 18F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label127.ForeColor = System.Drawing.Color.White;
+            this.label127.Location = new System.Drawing.Point(11, 9);
+            this.label127.Name = "label127";
+            this.label127.Size = new System.Drawing.Size(278, 28);
+            this.label127.TabIndex = 89;
+            this.label127.Text = "The Eater of Worlds";
             // 
             // label150
             // 
@@ -5017,8 +5094,10 @@ namespace TraXile
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Black;
+            this.tabPage2.Controls.Add(this.pictureBox28);
+            this.tabPage2.Controls.Add(this.pictureBox25);
+            this.tabPage2.Controls.Add(this.groupBox17);
             this.tabPage2.Controls.Add(this.label52);
-            this.tabPage2.Controls.Add(this.groupBox11);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -5026,33 +5105,10 @@ namespace TraXile
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "Labbie";
             // 
-            // label52
-            // 
-            this.label52.AutoSize = true;
-            this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label52.ForeColor = System.Drawing.Color.Red;
-            this.label52.Location = new System.Drawing.Point(9, 76);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(163, 20);
-            this.label52.TabIndex = 2;
-            this.label52.Text = "Labbie not connected";
-            // 
-            // groupBox11
-            // 
-            this.groupBox11.Controls.Add(this.button4);
-            this.groupBox11.Controls.Add(this.textBox6);
-            this.groupBox11.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.groupBox11.Location = new System.Drawing.Point(6, 6);
-            this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(740, 54);
-            this.groupBox11.TabIndex = 0;
-            this.groupBox11.TabStop = false;
-            this.groupBox11.Text = "Labbie log directory";
-            // 
             // button4
             // 
             this.button4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button4.Location = new System.Drawing.Point(414, 18);
+            this.button4.Location = new System.Drawing.Point(561, 62);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 1;
@@ -5062,7 +5118,7 @@ namespace TraXile
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(7, 20);
+            this.textBox6.Location = new System.Drawing.Point(154, 64);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(401, 20);
             this.textBox6.TabIndex = 0;
@@ -5109,7 +5165,7 @@ namespace TraXile
             this.tableLayoutPanel30.Controls.Add(this.panel23, 0, 1);
             this.tableLayoutPanel30.Controls.Add(this.label53, 0, 3);
             this.tableLayoutPanel30.Controls.Add(this.label54, 0, 0);
-            this.tableLayoutPanel30.Controls.Add(this.button7, 0, 2);
+            this.tableLayoutPanel30.Controls.Add(this.panel37, 0, 2);
             this.tableLayoutPanel30.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel30.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel30.Name = "tableLayoutPanel30";
@@ -5160,16 +5216,6 @@ namespace TraXile
             this.label54.Size = new System.Drawing.Size(67, 13);
             this.label54.TabIndex = 3;
             this.label54.Text = "Current Run:";
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(3, 32);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(111, 23);
-            this.button7.TabIndex = 4;
-            this.button7.Text = "Save and Close";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click_1);
             // 
             // tabPage17
             // 
@@ -5478,19 +5524,6 @@ namespace TraXile
             this.tableLayoutPanel36.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel36.Size = new System.Drawing.Size(1089, 1114);
             this.tableLayoutPanel36.TabIndex = 0;
-            // 
-            // dataGridView2
-            // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView2.Location = new System.Drawing.Point(3, 140);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1083, 971);
-            this.dataGridView2.TabIndex = 0;
-            this.dataGridView2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellEndEdit);
-            this.dataGridView2.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView2_DefaultValuesNeeded);
-            this.dataGridView2.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_RowLeave);
-            this.dataGridView2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView2_KeyUp);
             // 
             // panel27
             // 
@@ -6155,97 +6188,215 @@ namespace TraXile
             this.imageList2.Images.SetKeyName(47, "polaric-invitation.png");
             this.imageList2.Images.SetKeyName(48, "writhing-invitation.png");
             this.imageList2.Images.SetKeyName(49, "screaming-invitation.png");
+            this.imageList2.Images.SetKeyName(50, "MarakethFragment.png");
             // 
             // toolTip1
             // 
             this.toolTip1.ToolTipTitle = "Reload Logfile (Full)";
             // 
-            // labelEaterTried
+            // panel37
             // 
-            this.labelEaterTried.AutoSize = true;
-            this.labelEaterTried.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelEaterTried.ForeColor = System.Drawing.Color.White;
-            this.labelEaterTried.Location = new System.Drawing.Point(158, 297);
-            this.labelEaterTried.Name = "labelEaterTried";
-            this.labelEaterTried.Size = new System.Drawing.Size(21, 13);
-            this.labelEaterTried.TabIndex = 96;
-            this.labelEaterTried.Text = "8x";
+            this.panel37.Controls.Add(this.linkLabel2);
+            this.panel37.Controls.Add(this.label116);
+            this.panel37.Controls.Add(this.button7);
+            this.panel37.Location = new System.Drawing.Point(3, 32);
+            this.panel37.Name = "panel37";
+            this.panel37.Size = new System.Drawing.Size(1089, 27);
+            this.panel37.TabIndex = 4;
             // 
-            // label119
+            // button7
             // 
-            this.label119.AutoSize = true;
-            this.label119.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label119.ForeColor = System.Drawing.Color.White;
-            this.label119.Location = new System.Drawing.Point(78, 297);
-            this.label119.Name = "label119";
-            this.label119.Size = new System.Drawing.Size(49, 13);
-            this.label119.TabIndex = 95;
-            this.label119.Text = "Tried:";
+            this.button7.Location = new System.Drawing.Point(3, 1);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(111, 23);
+            this.button7.TabIndex = 5;
+            this.button7.Text = "Save and Close";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click_1);
             // 
-            // labelEaterKilled
+            // linkLabel2
             // 
-            this.labelEaterKilled.AutoSize = true;
-            this.labelEaterKilled.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelEaterKilled.ForeColor = System.Drawing.Color.White;
-            this.labelEaterKilled.Location = new System.Drawing.Point(159, 281);
-            this.labelEaterKilled.Name = "labelEaterKilled";
-            this.labelEaterKilled.Size = new System.Drawing.Size(21, 13);
-            this.labelEaterKilled.TabIndex = 94;
-            this.labelEaterKilled.Text = "8x";
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(383, 6);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(122, 13);
+            this.linkLabel2.TabIndex = 7;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "Setup labbie connection";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked_1);
             // 
-            // label123
+            // label116
             // 
-            this.label123.AutoSize = true;
-            this.label123.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label123.ForeColor = System.Drawing.Color.White;
-            this.label123.Location = new System.Drawing.Point(79, 281);
-            this.label123.Name = "label123";
-            this.label123.Size = new System.Drawing.Size(56, 13);
-            this.label123.TabIndex = 93;
-            this.label123.Text = "Killed:";
+            this.label116.AutoSize = true;
+            this.label116.Location = new System.Drawing.Point(177, 6);
+            this.label116.Name = "label116";
+            this.label116.Size = new System.Drawing.Size(210, 13);
+            this.label116.TabIndex = 6;
+            this.label116.Text = "Auto enchant detection powered by labbie:";
             // 
-            // labelEaterStatus
+            // label52
             // 
-            this.labelEaterStatus.AutoSize = true;
-            this.labelEaterStatus.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelEaterStatus.ForeColor = System.Drawing.Color.White;
-            this.labelEaterStatus.Location = new System.Drawing.Point(158, 265);
-            this.labelEaterStatus.Name = "labelEaterStatus";
-            this.labelEaterStatus.Size = new System.Drawing.Size(28, 13);
-            this.labelEaterStatus.TabIndex = 92;
-            this.labelEaterStatus.Text = "Yes";
+            this.label52.AutoSize = true;
+            this.label52.ForeColor = System.Drawing.SystemColors.Control;
+            this.label52.Location = new System.Drawing.Point(13, 7);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(731, 13);
+            this.label52.TabIndex = 1;
+            this.label52.Text = "If you are farming labs, you can use the great tool \'Labbie\' to lookup enchants. " +
+    "Too keep track of your found enchants, you can connect labbie to TraXile.";
             // 
-            // label126
+            // label121
             // 
-            this.label126.AutoSize = true;
-            this.label126.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label126.ForeColor = System.Drawing.Color.White;
-            this.label126.Location = new System.Drawing.Point(79, 265);
-            this.label126.Name = "label126";
-            this.label126.Size = new System.Drawing.Size(42, 13);
-            this.label126.TabIndex = 91;
-            this.label126.Text = "Done:";
+            this.label121.AutoSize = true;
+            this.label121.ForeColor = System.Drawing.SystemColors.Control;
+            this.label121.Location = new System.Drawing.Point(6, 16);
+            this.label121.Name = "label121";
+            this.label121.Size = new System.Drawing.Size(82, 13);
+            this.label121.TabIndex = 2;
+            this.label121.Text = "1) Get labbie -->";
             // 
-            // pictureBox24
+            // linkLabel3
             // 
-            this.pictureBox24.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox24.Image")));
-            this.pictureBox24.Location = new System.Drawing.Point(3, 40);
-            this.pictureBox24.Name = "pictureBox24";
-            this.pictureBox24.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox24.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox24.TabIndex = 90;
-            this.pictureBox24.TabStop = false;
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.LinkColor = System.Drawing.Color.Red;
+            this.linkLabel3.Location = new System.Drawing.Point(94, 16);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(242, 13);
+            this.linkLabel3.TabIndex = 3;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "https://github.com/bnorick/labbie/releases/latest";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
-            // label127
+            // groupBox17
             // 
-            this.label127.AutoSize = true;
-            this.label127.Font = new System.Drawing.Font("Noto Mono", 18F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label127.ForeColor = System.Drawing.Color.White;
-            this.label127.Location = new System.Drawing.Point(11, 9);
-            this.label127.Name = "label127";
-            this.label127.Size = new System.Drawing.Size(278, 28);
-            this.label127.TabIndex = 89;
-            this.label127.Text = "The Eater of Worlds";
+            this.groupBox17.BackColor = System.Drawing.Color.Black;
+            this.groupBox17.Controls.Add(this.label131);
+            this.groupBox17.Controls.Add(this.label130);
+            this.groupBox17.Controls.Add(this.button4);
+            this.groupBox17.Controls.Add(this.label129);
+            this.groupBox17.Controls.Add(this.textBox6);
+            this.groupBox17.Controls.Add(this.linkLabel4);
+            this.groupBox17.Controls.Add(this.label125);
+            this.groupBox17.Controls.Add(this.label121);
+            this.groupBox17.Controls.Add(this.linkLabel3);
+            this.groupBox17.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox17.Location = new System.Drawing.Point(16, 177);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(663, 118);
+            this.groupBox17.TabIndex = 4;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "Help";
+            // 
+            // label125
+            // 
+            this.label125.AutoSize = true;
+            this.label125.ForeColor = System.Drawing.SystemColors.Control;
+            this.label125.Location = new System.Drawing.Point(6, 41);
+            this.label125.Name = "label125";
+            this.label125.Size = new System.Drawing.Size(82, 13);
+            this.label125.TabIndex = 4;
+            this.label125.Text = "2) Install --------->";
+            // 
+            // linkLabel4
+            // 
+            this.linkLabel4.AutoSize = true;
+            this.linkLabel4.LinkColor = System.Drawing.Color.Red;
+            this.linkLabel4.Location = new System.Drawing.Point(97, 41);
+            this.linkLabel4.Name = "linkLabel4";
+            this.linkLabel4.Size = new System.Drawing.Size(297, 13);
+            this.linkLabel4.TabIndex = 5;
+            this.linkLabel4.TabStop = true;
+            this.linkLabel4.Text = "https://github.com/bnorick/labbie/blob/master/README.md";
+            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
+            // 
+            // label129
+            // 
+            this.label129.AutoSize = true;
+            this.label129.ForeColor = System.Drawing.SystemColors.Control;
+            this.label129.Location = new System.Drawing.Point(6, 67);
+            this.label129.Name = "label129";
+            this.label129.Size = new System.Drawing.Size(142, 13);
+            this.label129.TabIndex = 6;
+            this.label129.Text = "3) Select labbie log path ---->";
+            // 
+            // label130
+            // 
+            this.label130.AutoSize = true;
+            this.label130.ForeColor = System.Drawing.SystemColors.Control;
+            this.label130.Location = new System.Drawing.Point(6, 91);
+            this.label130.Name = "label130";
+            this.label130.Size = new System.Drawing.Size(66, 13);
+            this.label130.TabIndex = 7;
+            this.label130.Text = "4) That´s it :)";
+            // 
+            // pictureBox25
+            // 
+            this.pictureBox25.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox25.Image")));
+            this.pictureBox25.Location = new System.Drawing.Point(16, 39);
+            this.pictureBox25.Name = "pictureBox25";
+            this.pictureBox25.Size = new System.Drawing.Size(206, 122);
+            this.pictureBox25.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox25.TabIndex = 5;
+            this.pictureBox25.TabStop = false;
+            // 
+            // pictureBox28
+            // 
+            this.pictureBox28.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox28.Image")));
+            this.pictureBox28.Location = new System.Drawing.Point(252, 39);
+            this.pictureBox28.Name = "pictureBox28";
+            this.pictureBox28.Size = new System.Drawing.Size(206, 122);
+            this.pictureBox28.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox28.TabIndex = 6;
+            this.pictureBox28.TabStop = false;
+            // 
+            // listViewNF1
+            // 
+            this.listViewNF1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader23,
+            this.columnHeader24});
+            this.listViewNF1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewNF1.FullRowSelect = true;
+            this.listViewNF1.HideSelection = false;
+            this.listViewNF1.Location = new System.Drawing.Point(3, 275);
+            this.listViewNF1.Name = "listViewNF1";
+            this.listViewNF1.Size = new System.Drawing.Size(1083, 797);
+            this.listViewNF1.TabIndex = 1;
+            this.listViewNF1.UseCompatibleStateImageBehavior = false;
+            this.listViewNF1.View = System.Windows.Forms.View.Details;
+            this.listViewNF1.SelectedIndexChanged += new System.EventHandler(this.listViewNF1_SelectedIndexChanged);
+            // 
+            // columnHeader23
+            // 
+            this.columnHeader23.Text = "Stat";
+            this.columnHeader23.Width = 200;
+            // 
+            // columnHeader24
+            // 
+            this.columnHeader24.Text = "Value";
+            this.columnHeader24.Width = 150;
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView2.Location = new System.Drawing.Point(3, 140);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.Size = new System.Drawing.Size(1083, 971);
+            this.dataGridView2.TabIndex = 0;
+            this.dataGridView2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellEndEdit);
+            this.dataGridView2.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView2_DefaultValuesNeeded);
+            this.dataGridView2.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_RowLeave);
+            this.dataGridView2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView2_KeyUp);
+            // 
+            // label131
+            // 
+            this.label131.AutoSize = true;
+            this.label131.Location = new System.Drawing.Point(154, 90);
+            this.label131.Name = "label131";
+            this.label131.Size = new System.Drawing.Size(433, 13);
+            this.label131.TabIndex = 8;
+            this.label131.Text = "example: If labbie is installed at C:\\tools\\labbie, the log path would be: C:\\too" +
+    "ls\\labbie\\logs";
             // 
             // Main
             // 
@@ -6256,7 +6407,7 @@ namespace TraXile
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1123, 1211);
-            this.Controls.Add(tabControlMain);
+            this.Controls.Add(this.tabCtl1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.ImeMode = System.Windows.Forms.ImeMode.Alpha;
@@ -6265,7 +6416,7 @@ namespace TraXile
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainW_FormClosing);
-            tabControlMain.ResumeLayout(false);
+            this.tabCtl1.ResumeLayout(false);
             this.tabPageTracking.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -6389,6 +6540,7 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox29)).EndInit();
             this.panel35.ResumeLayout(false);
             this.panel35.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).EndInit();
             this.tabPage20.ResumeLayout(false);
             this.tableLayoutPanel25.ResumeLayout(false);
             this.panel12.ResumeLayout(false);
@@ -6441,8 +6593,6 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.groupBox11.ResumeLayout(false);
-            this.groupBox11.PerformLayout();
             this.tabPage14.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage15.ResumeLayout(false);
@@ -6465,7 +6615,6 @@ namespace TraXile
             this.tabPage16.ResumeLayout(false);
             this.tableLayoutPanel35.ResumeLayout(false);
             this.tableLayoutPanel36.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.panel27.ResumeLayout(false);
             this.tableLayoutPanel37.ResumeLayout(false);
             this.groupBox15.ResumeLayout(false);
@@ -6481,7 +6630,13 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).EndInit();
+            this.panel37.ResumeLayout(false);
+            this.panel37.PerformLayout();
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -6757,9 +6912,7 @@ namespace TraXile
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel29;
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.Label label52;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TabPage tabPage14;
         private System.Windows.Forms.TabControl tabControl1;
@@ -6771,7 +6924,6 @@ namespace TraXile
         private System.Windows.Forms.Label label53;
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.TabPage tabPage17;
-        private System.Windows.Forms.Button button7;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel31;
         private System.Windows.Forms.Panel panel24;
         private System.Windows.Forms.ComboBox comboBox2;
@@ -6968,6 +7120,22 @@ namespace TraXile
         private System.Windows.Forms.Label label126;
         private System.Windows.Forms.PictureBox pictureBox24;
         private System.Windows.Forms.Label label127;
+        private System.Windows.Forms.Panel panel37;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.Label label116;
+        public System.Windows.Forms.TabControl tabCtl1;
+        private System.Windows.Forms.PictureBox pictureBox28;
+        private System.Windows.Forms.PictureBox pictureBox25;
+        private System.Windows.Forms.GroupBox groupBox17;
+        private System.Windows.Forms.Label label130;
+        private System.Windows.Forms.Label label129;
+        private System.Windows.Forms.LinkLabel linkLabel4;
+        private System.Windows.Forms.Label label125;
+        private System.Windows.Forms.Label label121;
+        private System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Label label131;
     }
 }
 

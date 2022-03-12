@@ -124,6 +124,10 @@ namespace TraXile
         private List<string> _eaterOfWorldsAreas;
         public List<string> EaterOfWorldsAreas => _eaterOfWorldsAreas;
 
+        // Timeless Legion
+        private List<string> _timelessLeagionAreas;
+        public List<string> TimelessLegionAreas => _timelessLeagionAreas;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -707,6 +711,11 @@ namespace TraXile
                 "Absence of Symmetry and Harmony"
             };
 
+            _timelessLeagionAreas = new List<string>
+            {
+                "Domain of Timeless Conflict"
+            };
+
             _pausableActivityTypes = new List<ACTIVITY_TYPES>
             {
                 ACTIVITY_TYPES.MAP,
@@ -728,7 +737,8 @@ namespace TraXile
                 ACTIVITY_TYPES.SEARING_EXARCH_FIGHT,
                 ACTIVITY_TYPES.BLACK_STAR_FIGHT,
                 ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT,
-                ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT
+                ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT,
+                ACTIVITY_TYPES.TIMELESS_LEGION
             };
 
             // Map areas with enabled death counter
@@ -758,6 +768,7 @@ namespace TraXile
             _deathCountEnabledAreas.AddRange(BlackStarAreas);
             _deathCountEnabledAreas.AddRange(EaterOfWorldsAreas);
             _deathCountEnabledAreas.AddRange(InfiniteHungerAreas);
+            _deathCountEnabledAreas.AddRange(TimelessLegionAreas);
         }
     }
 }

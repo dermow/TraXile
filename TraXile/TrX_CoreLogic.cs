@@ -626,6 +626,7 @@ namespace TraXile
                 new TrX_ActivityTag("abyss-depths") { BackColor = Color.ForestGreen, ForeColor = Color.Black },
                 new TrX_ActivityTag("exp-side-area") { BackColor = Color.Turquoise, ForeColor = Color.Black },
                 new TrX_ActivityTag("twice-blessed") { BackColor = Color.DarkTurquoise, ForeColor = Color.Black },
+                new TrX_ActivityTag("harvest") { BackColor = Color.Blue, ForeColor = Color.White },
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -1083,8 +1084,10 @@ namespace TraXile
                     return ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT;
                 case "eater_of_worlds_fight":
                     return ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT;
+                case "timeless_legion":
+                    return ACTIVITY_TYPES.TIMELESS_LEGION;
             }
-            return ACTIVITY_TYPES.MAP;
+            return ACTIVITY_TYPES.OTHER;
         }
 
         /// <summary>
@@ -1509,7 +1512,8 @@ namespace TraXile
             bTargetAreaIsExarch = _defaultMappings.SearingExarchAreas.Contains(sTargetArea),
             bTargetAreaIsBlackStar = _defaultMappings.BlackStarAreas.Contains(sTargetArea),
             bTargetAreaIsInfinitetHunger = _defaultMappings.InfiniteHungerAreas.Contains(sTargetArea),
-            bTargetAreaIsEaterOfWorlds = _defaultMappings.EaterOfWorldsAreas.Contains(sTargetArea);
+            bTargetAreaIsEaterOfWorlds = _defaultMappings.EaterOfWorldsAreas.Contains(sTargetArea),
+            bTargetAreaIsLegion = _defaultMappings.TimelessLegionAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1698,6 +1702,10 @@ namespace TraXile
             else if (bTargetAreaIsEaterOfWorlds)
             {
                 actType = ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT;
+            }
+            else if (bTargetAreaIsLegion)
+            {
+                actType = ACTIVITY_TYPES.TIMELESS_LEGION;
             }
 
             // Special handling for logbook cemetery + vaal temple
@@ -1975,7 +1983,8 @@ namespace TraXile
                     || _defaultMappings.SearingExarchAreas.Contains(sSourceArea)
                     || _defaultMappings.BlackStarAreas.Contains(sSourceArea)
                     || _defaultMappings.EaterOfWorldsAreas.Contains(sSourceArea)
-                    || _defaultMappings.InfiniteHungerAreas.Contains(sSourceArea);
+                    || _defaultMappings.InfiniteHungerAreas.Contains(sSourceArea)
+                    || _defaultMappings.TimelessLegionAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
                 if (!_StartedFlag && !bFromActivity)
@@ -2061,7 +2070,8 @@ namespace TraXile
                 bTargetAreaIsBreachStone ||
                 bTargetAreaIsBlackStar ||
                 bTargetAreaIsEaterOfWorlds ||
-                bTargetAreaIsInfinitetHunger;
+                bTargetAreaIsInfinitetHunger ||
+                bTargetAreaIsLegion;
 
             // Check if opened activity needs to be opened on Mapdevice
             bool isMapDeviceActivity =
@@ -2081,7 +2091,8 @@ namespace TraXile
                 bTargetAreaIsBreachStone ||
                 bTargetAreaIsBlackStar ||
                 bTargetAreaIsInfinitetHunger ||
-                bTargetAreaIsEaterOfWorlds;
+                bTargetAreaIsEaterOfWorlds ||
+                bTargetAreaIsLegion;
 
             if (isMapDeviceActivity)
             {
@@ -2803,6 +2814,12 @@ namespace TraXile
                     case EVENT_TYPES.EATER_OF_WORLDS_KILLED:
                         IncrementStat("EaterOfWorldsKilled", ev.EventTime);
                         break;
+                    case EVENT_TYPES.HARVEST:
+                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        {
+                            _currentActivity.AddTag("harvest");
+                        }
+                        break;
                 }
 
                 // Sometimes conqueror fire their death speech twice...
@@ -3096,6 +3113,11 @@ namespace TraXile
                             SaveToActivityLog(((DateTimeOffset)activity.SideArea_LabTrial.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LabTrial.Type), activity.SideArea_LabTrial.Area, activity.SideArea_LabTrial.AreaLevel, iSecondsLabTrial, activity.SideArea_LabTrial.DeathCounter, activity.SideArea_LabTrial.TrialMasterCount, true, activity.SideArea_LabTrial
                                 .Tags, activity.SideArea_LabTrial.Success, Convert.ToInt32(activity.SideArea_LabTrial.PausedTime));
                         }
+                    }
+
+                    if(activity.Type == ACTIVITY_TYPES.LABYRINTH)
+                    {
+                        _labHistory.Insert(0, (TrX_TrackedLabrun)activity);
                     }
 
                     // Trigger event
