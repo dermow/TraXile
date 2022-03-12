@@ -3042,6 +3042,8 @@ namespace TraXile
                 System.IO.File.Copy(TrX_AppInfo.DB_PATH, sBackupDir + @"/data.db");
             if (System.IO.File.Exists(TrX_AppInfo.APPDATA_PATH + @"\config.xml"))
                 System.IO.File.Copy(TrX_AppInfo.APPDATA_PATH + @"\config.xml", sBackupDir + @"/config.xml");
+            if (System.IO.File.Exists(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml"))
+                System.IO.File.Copy(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml", sBackupDir + @"/labdata.xml");
         }
 
         /// <summary>
@@ -3107,6 +3109,10 @@ namespace TraXile
             File.Copy(sPath + @"/data.db", TrX_AppInfo.DB_PATH + ".restore");
             File.Copy(sPath + @"/Client.txt", Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore");
             File.Copy(sPath + @"/config.xml", TrX_AppInfo.APPDATA_PATH + @"/config.xml.restore");
+            if(File.Exists(sPath + @"/labdata.xml"))
+            {
+                File.Copy(sPath + @"/labdata.xml", TrX_AppInfo.APPDATA_PATH + @"/labdata.xml.restore");
+            }
             _log.Info("Backup restore successfully prepared! Restarting Application");
             Application.Restart();
         }
@@ -3129,6 +3135,22 @@ namespace TraXile
                 File.Delete(TrX_AppInfo.APPDATA_PATH + @"\config.xml");
                 File.Move(TrX_AppInfo.APPDATA_PATH + @"\config.xml.restore", TrX_AppInfo.APPDATA_PATH + @"\config.xml");
                 _log.Info("BackupRestored -> Source: config.xml.restore, Destination: " + TrX_AppInfo.APPDATA_PATH + @"\config.xml");
+                _restoreMode = true;
+            }
+
+            if (File.Exists(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml.restore"))
+            {
+                try
+                {
+                    File.Delete(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
+                }
+                catch(Exception ex)
+                {
+                    _log.Warn("cannot delete labdata.xml: " + ex.Message);
+                }
+                
+                File.Move(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml.restore", TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
+                _log.Info("BackupRestored -> Source: labdata.xml.restore, Destination: " + TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
                 _restoreMode = true;
             }
 
