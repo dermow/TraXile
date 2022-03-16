@@ -108,6 +108,26 @@ namespace TraXile
         private List<ACTIVITY_TYPES> _pausableActivityTypes;
         public List<ACTIVITY_TYPES> PausableActivityTypes => _pausableActivityTypes;
 
+        // Searing Exarch Areas
+        private List<string> _searingExarchAreas;
+        public List<string> SearingExarchAreas => _searingExarchAreas;
+
+        // Black Star Areas
+        private List<string> _blackStarAreas;
+        public List<string> BlackStarAreas => _blackStarAreas;
+
+        // Infinite Hunger Areas
+        private List<string> _infiniteHungerAreas;
+        public List<string> InfiniteHungerAreas => _infiniteHungerAreas;
+
+        // Eater of Worlds Areas
+        private List<string> _eaterOfWorldsAreas;
+        public List<string> EaterOfWorldsAreas => _eaterOfWorldsAreas;
+
+        // Timeless Legion
+        private List<string> _timelessLeagionAreas;
+        public List<string> TimelessLegionAreas => _timelessLeagionAreas;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -671,6 +691,31 @@ namespace TraXile
                 "Syndicate Hideout"
             };
 
+            _searingExarchAreas = new List<string>
+            {
+                "Absence of Patience and Wisdom"
+            };
+
+            _blackStarAreas = new List<string>
+            {
+                "Polaric Void"
+            };
+
+            _eaterOfWorldsAreas = new List<string>
+            {
+                "Seething Chyme"
+            };
+
+            _infiniteHungerAreas = new List<string>
+            {
+                "Absence of Symmetry and Harmony"
+            };
+
+            _timelessLeagionAreas = new List<string>
+            {
+                "Domain of Timeless Conflict"
+            };
+
             _pausableActivityTypes = new List<ACTIVITY_TYPES>
             {
                 ACTIVITY_TYPES.MAP,
@@ -688,7 +733,12 @@ namespace TraXile
                 ACTIVITY_TYPES.LOGBOOK_SIDE,
                 ACTIVITY_TYPES.SAFEHOUSE,
                 ACTIVITY_TYPES.ABYSSAL_DEPTHS,
-                ACTIVITY_TYPES.VAAL_SIDEAREA
+                ACTIVITY_TYPES.VAAL_SIDEAREA,
+                ACTIVITY_TYPES.SEARING_EXARCH_FIGHT,
+                ACTIVITY_TYPES.BLACK_STAR_FIGHT,
+                ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT,
+                ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT,
+                ACTIVITY_TYPES.TIMELESS_LEGION
             };
 
             // Map areas with enabled death counter
@@ -714,6 +764,11 @@ namespace TraXile
             _deathCountEnabledAreas.AddRange(CatarinaFightAreas);
             _deathCountEnabledAreas.AddRange(SyndicateSafehouseAreas);
             _deathCountEnabledAreas.AddRange(BreachstoneDomainAreas);
+            _deathCountEnabledAreas.AddRange(SearingExarchAreas);
+            _deathCountEnabledAreas.AddRange(BlackStarAreas);
+            _deathCountEnabledAreas.AddRange(EaterOfWorldsAreas);
+            _deathCountEnabledAreas.AddRange(InfiniteHungerAreas);
+            _deathCountEnabledAreas.AddRange(TimelessLegionAreas);
         }
     }
 }

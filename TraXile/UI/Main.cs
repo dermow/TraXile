@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -40,7 +41,12 @@ namespace TraXile
         SAFEHOUSE,
         CATARINA_FIGHT,
         LOGBOOK_SIDE,
-        BREACHSTONE
+        BREACHSTONE,
+        SEARING_EXARCH_FIGHT,
+        BLACK_STAR_FIGHT,
+        INFINITE_HUNGER_FIGHT,
+        EATER_OF_WORLDS_FIGHT,
+        TIMELESS_LEGION
     }
 
     /// <summary>
@@ -99,6 +105,9 @@ namespace TraXile
         // UI Update Flag: Map Dashboard
         private bool _uiFlagMapDashboard;
         private bool _uiFlagStatisticsChart;
+
+        // UI Update Flag: Lab enchants
+        private bool _uiFlagEnchants;
 
         // UI Update Flag: Global Dashboard
         private bool _uiFlagGlobalDashboard;
@@ -182,6 +191,21 @@ namespace TraXile
         // Property: Timecaps to be accessible
         public Dictionary<ACTIVITY_TYPES, int> TimeCaps => _timeCaps;
 
+        // User Controls labruns
+        private List<UI.UserControlLabRun> _labRunControls;
+
+        // Current labrun user control
+        private UI.UserControlLabRun _currentLabrunControl;
+
+        // Enchant info ID
+        private int _selectedEnchantID = 0;
+
+        // Profit tracker
+        private TrX_ProfitTracking _profitTracking;
+
+        // DataBInd
+        private BindingSource _profitBinding;
+
         /// <summary>
         /// Main Window Constructor
         /// </summary>
@@ -247,7 +271,7 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Get LeagueInfo object by league name
+        /// Get LeagueInfo obRect by league name
         /// </summary>
         /// <param name="name">League name</param>
         /// <returns>League info object or null</returns>
@@ -479,7 +503,7 @@ namespace TraXile
             _dateTimeFormatInfo.Calendar = new GregorianCalendar();
             _defaultMappings = new TrX_DefaultMappings();
             _loadScreenWindow = new LoadScreen();
-
+            
 
             SaveVersion();
             CheckForUpdate();
@@ -488,8 +512,28 @@ namespace TraXile
             _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
             _logic.OnActivityFinished += Logic_OnActivityFinished;
             _logic.OnTagsUpdated += Logic_OnTagsUpdated;
+            _logic.LabEnchantsReceived += _logic_LabEnchantsReceived;
+            _logic.OnActivityStarted += _logic_OnActivityStarted;
+            _logic.LabbieConnector.LabbieLogPath = ReadSetting("labbie.path", null);
             _logic.Start();
 
+            // Init profit tracker
+            _profitTracking = new TrX_ProfitTracking(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
+            _profitTracking.DataFilePath = TrX_AppInfo.APPDATA_PATH + @"\labdata.xml";
+            _profitBinding = new BindingSource();
+            _profitBinding.DataSource = _profitTracking.Data;
+            
+            dataGridView2.DataSource = _profitBinding.DataSource;
+            dataGridView2.ForeColor = Color.Black;
+            dataGridView2.Columns[5].ReadOnly = true;
+
+            UpdateProfitSummary();
+            SetProfitFilter();
+
+            //Testdata
+          //  _profitTracking.Data.Rows.Add(new object[] { DateTime.Now, "B", "C", 1 });
+//            _profitTracking.Data.WriteXml(TrX_AppInfo.APPDATA_PATH + @"\test.xml");
+                
             _lvmActlog = new TrX_ListViewManager(listViewActLog);
             _lvmAllStats = new TrX_ListViewManager(listViewNF1);
           
@@ -704,7 +748,14 @@ namespace TraXile
 
             InitLeagueInfo();
             ResetMapHistory();
+            ResetLabRuns();
             LoadLayout();
+
+            // Add all enchants
+            foreach(TrX_LabEnchant en in _logic.LabbieConnector.KnownEnchants)
+            {
+                comboBox2.Items.Add(en.Text);
+            }
 
             // Request initial Dashboard update
             _uiFlagLabDashboard = true;
@@ -768,6 +819,108 @@ namespace TraXile
             // Start UI Thread
             timer1.Enabled = true;
             timer1.Start();
+
+            // Add dummy Labrun for testing
+            // ==============================
+            bool addDummyLab = false;
+            bool addDummyEnchants = false;
+            if(addDummyLab)
+            {
+                AddDummyLabForTesting(addDummyEnchants, 24);
+            }
+        }
+
+        /// <summary>
+        /// Method for testing and debugging only
+        /// </summary>
+        /// <param name="addDummyEnchants"></param>
+        private void AddDummyLabForTesting(bool addDummyEnchants = false, int enchant_count = 3)
+        {
+            TrX_TrackedLabrun lr = new TrX_TrackedLabrun();
+            lr.Area = "Uber-Lab";
+            lr.Started = DateTime.Now;
+            lr.TimeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            lr.Type = ACTIVITY_TYPES.LABYRINTH;
+            lr.StartStopWatch();
+            if (addDummyEnchants)
+            {
+                for(int i = 0; i < enchant_count; i++)
+                {
+                    lr.Enchants.Add(new TrX_LabEnchant() { ID = 2, Text = "Dummy Enchant 1" });
+                }
+            }
+            UI.UserControlLabRun uclr = new UI.UserControlLabRun(lr, this, true);
+            uclr.Dock = DockStyle.Fill;
+            foreach (string s in comboBox2.Items)
+            {
+                uclr.EnchantCombo.Items.Add(s);
+            }
+            panel23.Controls.Add(uclr);
+            _currentLabrunControl = uclr;
+            _logic.CurrentLab = lr;
+            _logic.CurrentActivity = lr;
+        }
+
+        /// <summary>
+        /// Event Handler
+        /// </summary>
+        /// <param name="e"></param>
+        private void _logic_OnActivityStarted(TrX_CoreLogicActivityEventArgs e)
+        {
+            if(_logic.EventQueueInitialized)
+            {
+                // Start new lab
+                if (e.Activity.Type == ACTIVITY_TYPES.LABYRINTH)
+                {
+                    MethodInvoker mi = delegate
+                    {
+                        UI.UserControlLabRun ulr = new UI.UserControlLabRun((TrX_TrackedLabrun)e.Activity, this, true);
+                        ulr.Dock = DockStyle.Fill;
+                        foreach (string s in comboBox2.Items)
+                        {
+                            ulr.EnchantCombo.Items.Add(s);
+                        }
+                        _myTheme.Apply(ulr);
+
+                        if (_currentLabrunControl != null)
+                        {
+                            panel23.Controls.Remove(_currentLabrunControl);
+                            _currentLabrunControl = null;
+                        }
+
+                        _currentLabrunControl = ulr;
+                        panel23.Controls.Add(ulr);
+                    };
+                    BeginInvoke(mi);
+                }
+            }
+           
+        }
+
+        /// <summary>
+        /// Event Handler
+        /// </summary>
+        /// <param name="e"></param>
+        private void _logic_LabEnchantsReceived(TrX_LabbieEventArgs e)
+        {
+            _uiFlagEnchants = true;
+
+            if(_currentLabrunControl != null)
+            {
+                MethodInvoker mi = delegate
+                {
+                    foreach (TrX_LabEnchant enchant in e.Enchants)
+                    {
+                        _currentLabrunControl.AddEnchant(enchant);
+                        if(!comboBox2.Items.Contains(enchant.Text))
+                        {
+                            comboBox2.Items.Add(enchant.Text);
+                        }
+                    }
+                };
+                BeginInvoke(mi);
+            }
+            
         }
 
         /// <summary>
@@ -1176,6 +1329,9 @@ namespace TraXile
             _log.Info("Stats cleared.");
         }
 
+        /// <summary>
+        /// Drop data and initiate the reload
+        /// </summary>
         private void InitLogFileReload()
         {
             // Stop UI updates
@@ -1184,17 +1340,17 @@ namespace TraXile
             // Stop core logic
             _logic.Stop();
 
-            // Terminiate db connection
-            _logic.Database.Close();
-
-            // Delete Database
+            // DROP Databases
             try
             {
-                File.Delete(_logic.Database.DatabasePath);
+                _logic.Database.DoNonQuery("DELETE FROM tx_activity_log");
+                _logic.Database.DoNonQuery("DELETE FROM tx_stats");
+                _logic.Database.DoNonQuery("UPDATE tx_kvstore SET value = '0' WHERE key = 'last_hash'");
+                _logic.Database.Close();
             }
             catch (Exception ex)
             {
-                _log.Error("cannot delete database file: " + ex.Message);
+                _log.Error("cannot drop databases: " + ex.Message);
                 _log.Debug(ex.ToString());
             }
 
@@ -1239,6 +1395,30 @@ namespace TraXile
             StreamWriter streamWriter = new StreamWriter(TrX_AppInfo.APPDATA_PATH + @"\VERSION.txt");
             streamWriter.WriteLine(TrX_AppInfo.VERSION);
             streamWriter.Close();
+        }
+
+        private void ResetLabRuns()
+        {
+            int labsToShow = 5;
+
+            panel22.Controls.Clear();
+
+            if(_logic.LabHistory.Count > 0)
+            {
+                if (_logic.LabHistory.Count < labsToShow)
+                {
+                    labsToShow = _logic.LabHistory.Count;
+                }
+                int y = 0;
+                foreach (TrX_TrackedLabrun labrun in _logic.LabHistory.GetRange(0, labsToShow))
+                {
+                    UI.UserControlLabRun lr = new UI.UserControlLabRun(labrun, this);
+                    lr.Location = new Point(0, y);
+                    panel22.Controls.Add(lr);
+                    y += lr.Height + 20;
+                }
+            }
+           
         }
 
         /// <summary>
@@ -1525,6 +1705,26 @@ namespace TraXile
                     }
                 }
             }
+            else if (map.Type == ACTIVITY_TYPES.SEARING_EXARCH_FIGHT)
+            {
+                iIndex = 46;
+            }
+            else if (map.Type == ACTIVITY_TYPES.BLACK_STAR_FIGHT)
+            {
+                iIndex = 47;
+            }
+            else if (map.Type == ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT)
+            {
+                iIndex = 48;
+            }
+            else if (map.Type == ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT)
+            {
+                iIndex = 49;
+            }
+            else if (map.Type == ACTIVITY_TYPES.TIMELESS_LEGION)
+            {
+                iIndex = 50;
+            }
             return iIndex;
         }
 
@@ -1792,6 +1992,12 @@ namespace TraXile
                         SetTimeRangeFilter();
                     }
 
+                    // Lab farming tab
+                    if(_logic.CurrentLab != null && _currentLabrunControl != null)
+                    {
+                        _currentLabrunControl.UpdateInfo();
+                    }
+
                     // MAP Dashbaord
                     if (_uiFlagMapDashboard)
                     {
@@ -1880,16 +2086,17 @@ namespace TraXile
             _showHideoutInPie = Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true"));
             _stopwatchOverlayOpacity = Convert.ToInt32(ReadSetting("overlay.stopwatch.opacity", "100"));
             _stopwatchOverlayShowDefault = Convert.ToBoolean(ReadSetting("overlay.stopwatch.default", "false"));
-
             comboBoxTheme.SelectedItem = ReadSetting("theme", "Dark") == "Dark" ? "Dark" : "Light";
-            //textBoxMapCap.Text = _timeCapMap.ToString();
-            //textBoxLabCap.Text = _timeCapLab.ToString();
-            //textBoxHeistCap.Text = _timeCapHeist.ToString();
             listViewActLog.GridLines = _showGridInActLog;
             trackBar1.Value = _stopwatchOverlayOpacity;
             checkBox2.Checked = _stopwatchOverlayShowDefault;
             label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
             checkBox3.Checked = Convert.ToBoolean(ReadSetting("statistics_auto_refresh", "false"));
+            textBox9.Text = ReadSetting("lab.profittracking.filter.text", "");
+            radioButton1.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "all";
+            radioButton2.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "open";
+            radioButton3.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "sold";
+            textBox6.Text = ReadSetting("labbie.path", "");
         }
 
         /// <summary>
@@ -2086,6 +2293,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.CATARINA_FIGHT, 0 },
                 { ACTIVITY_TYPES.SAFEHOUSE, 0 },
                 { ACTIVITY_TYPES.BREACHSTONE, 0 },
+                { ACTIVITY_TYPES.SEARING_EXARCH_FIGHT, 0 },
+                { ACTIVITY_TYPES.BLACK_STAR_FIGHT, 0 },
+                { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, 0 },
+                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 },
+                { ACTIVITY_TYPES.TIMELESS_LEGION, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2112,6 +2324,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.CATARINA_FIGHT, 0 },
                 { ACTIVITY_TYPES.SAFEHOUSE, 0 },
                 { ACTIVITY_TYPES.BREACHSTONE, 0 },
+                { ACTIVITY_TYPES.SEARING_EXARCH_FIGHT, 0 },
+                { ACTIVITY_TYPES.BLACK_STAR_FIGHT, 0 },
+                { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, 0 },
+                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 },
+                { ACTIVITY_TYPES.TIMELESS_LEGION, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2138,6 +2355,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.LOGBOOK_SIDE, Color.LightBlue },
                 { ACTIVITY_TYPES.CATARINA_FIGHT, Color.Orange },
                 { ACTIVITY_TYPES.BREACHSTONE, Color.PaleVioletRed },
+                { ACTIVITY_TYPES.BLACK_STAR_FIGHT, Color.Red },
+                { ACTIVITY_TYPES.SEARING_EXARCH_FIGHT, Color.Red },
+                { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.TIMELESS_LEGION, Color.BlueViolet }
             };
             double hideOutTime = 0;
             double totalCount = 0;
@@ -2416,7 +2638,15 @@ namespace TraXile
                 mavenTried = 0,
                 mavenKilled = 0,
                 tmTried = 0,
-                tmKilled = 0;
+                tmKilled = 0,
+                exarchTried = 0,
+                exarchKilled = 0,
+                blackStarTried = 0,
+                blackStarKilled = 0,
+                eaterTried = 0,
+                eaterKilled = 0,
+                hungerTried = 0,
+                hungerKilled = 0;
 
             baranTried = _logic.Stats.GetIncrementValue("BaranStarted", ts1, ts2);
             baranKilled = _logic.Stats.GetIncrementValue("BaranKilled", ts1, ts2);
@@ -2438,6 +2668,15 @@ namespace TraXile
             mavenKilled = _logic.Stats.GetIncrementValue("MavenKilled", ts1, ts2);
             tmTried = _logic.Stats.GetIncrementValue("TrialMasterStarted", ts1, ts2);
             tmKilled = _logic.Stats.GetIncrementValue("TrialMasterKilled", ts1, ts2);
+            exarchTried = _logic.Stats.GetIncrementValue("SearingExarchTried", ts1, ts2);
+            exarchKilled = _logic.Stats.GetIncrementValue("SearingExarchKilled", ts1, ts2);
+            blackStarTried = _logic.Stats.GetIncrementValue("BlackStarTried", ts1, ts2);
+            blackStarKilled = _logic.Stats.GetIncrementValue("BlackStarKilled", ts1, ts2);
+            hungerTried = _logic.Stats.GetIncrementValue("InfiniteHungerTried", ts1, ts2);
+            hungerKilled = _logic.Stats.GetIncrementValue("InfiniteHungerKilled", ts1, ts2);
+            eaterTried = _logic.Stats.GetIncrementValue("EaterOfWorldsTried", ts1, ts2);
+            eaterKilled = _logic.Stats.GetIncrementValue("EaterOfWorldsKilled", ts1, ts2);
+
 
             MethodInvoker mi = delegate
             {
@@ -2500,6 +2739,30 @@ namespace TraXile
                 labelTrialMasterStatus.ForeColor = tmKilled > 0 ? Color.Green : Color.Red;
                 labelTrialMasterTried.Text = tmTried.ToString();
                 labelTrialMasterKilled.Text = tmKilled.ToString();
+
+                // Exarch
+                labelExarchStatus.Text = exarchKilled > 0 ? "Yes" : "No";
+                labelExarchStatus.ForeColor = exarchKilled > 0 ? Color.Green : Color.Red;
+                labelExarchTried.Text = exarchTried.ToString();
+                labelExarchKilled.Text = exarchKilled.ToString();
+
+                // Black Star
+                labelBlackstarStatus.Text = blackStarKilled > 0 ? "Yes" : "No";
+                labelBlackstarStatus.ForeColor = blackStarKilled > 0 ? Color.Green : Color.Red;
+                labelBlackStarTried.Text = blackStarTried.ToString();
+                labelBlackStarKilled.Text = blackStarKilled.ToString();
+
+                // Infinite Hunger
+                labelHungerStatus.Text = hungerKilled > 0 ? "Yes" : "No";
+                labelHungerStatus.ForeColor = hungerKilled > 0 ? Color.Green : Color.Red;
+                labelHungerTried.Text = hungerTried.ToString();
+                labelHungerKilled.Text = hungerKilled.ToString();
+
+                // Eater of Worlds
+                labelEaterStatus.Text = eaterKilled > 0 ? "Yes" : "No";
+                labelEaterStatus.ForeColor = eaterKilled > 0 ? Color.Green : Color.Red;
+                labelEaterTried.Text = eaterTried.ToString();
+                labelEaterKilled.Text = eaterKilled.ToString();
             };
             BeginInvoke(mi);
         }
@@ -2779,6 +3042,8 @@ namespace TraXile
                 System.IO.File.Copy(TrX_AppInfo.DB_PATH, sBackupDir + @"/data.db");
             if (System.IO.File.Exists(TrX_AppInfo.APPDATA_PATH + @"\config.xml"))
                 System.IO.File.Copy(TrX_AppInfo.APPDATA_PATH + @"\config.xml", sBackupDir + @"/config.xml");
+            if (System.IO.File.Exists(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml"))
+                System.IO.File.Copy(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml", sBackupDir + @"/labdata.xml");
         }
 
         /// <summary>
@@ -2844,6 +3109,10 @@ namespace TraXile
             File.Copy(sPath + @"/data.db", TrX_AppInfo.DB_PATH + ".restore");
             File.Copy(sPath + @"/Client.txt", Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore");
             File.Copy(sPath + @"/config.xml", TrX_AppInfo.APPDATA_PATH + @"/config.xml.restore");
+            if(File.Exists(sPath + @"/labdata.xml"))
+            {
+                File.Copy(sPath + @"/labdata.xml", TrX_AppInfo.APPDATA_PATH + @"/labdata.xml.restore");
+            }
             _log.Info("Backup restore successfully prepared! Restarting Application");
             Application.Restart();
         }
@@ -2866,6 +3135,22 @@ namespace TraXile
                 File.Delete(TrX_AppInfo.APPDATA_PATH + @"\config.xml");
                 File.Move(TrX_AppInfo.APPDATA_PATH + @"\config.xml.restore", TrX_AppInfo.APPDATA_PATH + @"\config.xml");
                 _log.Info("BackupRestored -> Source: config.xml.restore, Destination: " + TrX_AppInfo.APPDATA_PATH + @"\config.xml");
+                _restoreMode = true;
+            }
+
+            if (File.Exists(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml.restore"))
+            {
+                try
+                {
+                    File.Delete(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
+                }
+                catch(Exception ex)
+                {
+                    _log.Warn("cannot delete labdata.xml: " + ex.Message);
+                }
+                
+                File.Move(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml.restore", TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
+                _log.Info("BackupRestored -> Source: labdata.xml.restore, Destination: " + TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
                 _restoreMode = true;
             }
 
@@ -3357,6 +3642,141 @@ namespace TraXile
             }
         }
 
+        private void SaveTimeCaps()
+        {
+            ACTIVITY_TYPES type;
+            int value;
+            string sett;
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                type = (ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), row.Cells[0].Value.ToString());
+                value = Convert.ToInt32(row.Cells[1].Value);
+                sett = string.Format("TimeCap{0}", TrX_Helpers.CapitalFirstLetter(type.ToString()));
+                _timeCaps[type] = value;
+                _mySettings.AddOrUpdateSetting(sett, value.ToString());
+            }
+
+            _mySettings.WriteToXml();
+        }
+
+        private void ActivateStopWatchOverlay()
+        {
+            try
+            {
+                _stopwatchOverlay.Show();
+            }
+            catch (ObjectDisposedException)
+            {
+                _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
+            }
+
+            _stopwatchOverlay.TopMost = true;
+            _stopwatchOverlay.Opacity = _stopwatchOverlayOpacity / 100.0;
+            _stopwatchOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatch.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatch.y", "0"))));
+        }
+
+        public void SaveCurrentLabRun()
+        {
+            if(_currentLabrunControl != null)
+            {
+                List<TrX_EnchantNote> notes = _currentLabrunControl.GetEnchantNotes();
+
+                foreach (int i in _currentLabrunControl.GetSelectedEnchants())
+                {
+                    TrX_LabEnchant en = _logic.LabbieConnector.GetEnchantByID(i);
+
+                    if(en != null)
+                    {
+                        List<TrX_EnchantNote> notes2 = _currentLabrunControl.GetEnchantNotes(en.ID);
+                        _logic.CurrentLab.EnchantsTaken.Add(en);
+
+                        DataRow row = _profitTracking.Data.NewRow();
+                        row["Time"] = DateTime.Now;
+                        row["Enchant"] = en.Text;
+                        row["Base"] = "";
+                        row["Base Cost (Exalts)"] = 0;
+                        row["Sold for (Exalts)"] = 0;
+                        row["Profit (Exalts)"] = 0;
+                        row["State"] = "open";
+                        row["Note"] = notes2.Count > 0 ? notes2[0].Note : "";
+                        _profitTracking.Data.Rows.InsertAt(row, 0);
+                    }
+                }
+                _logic.SaveCurrentLabRun();
+                _logic.SaveEnchantNoteList(notes);
+
+                if (_logic.CurrentLab != null && _logic.CurrentActivity != null && _logic.CurrentLab == _logic.CurrentActivity)
+                {
+                    _logic.FinishActivity(_logic.CurrentLab, null, ACTIVITY_TYPES.BREACHSTONE, DateTime.Now);
+                }
+
+                MethodInvoker mi = delegate
+                {
+                    panel23.Controls.Remove(_currentLabrunControl);
+                };
+                BeginInvoke(mi);
+            }
+        }
+
+        public void SelectEnchant(int id, bool jump = false)
+        {
+            TrX_LabEnchant enchant = _logic.LabbieConnector.GetEnchantByID(id);
+            comboBox2.SelectedItem = enchant.Text;
+
+            if(jump)
+            {
+                tabControl1.SelectedIndex = 1;
+            }
+        }
+
+
+        public void SetEnchantInfoPage(TrX_EnchantInfo enchantInfo, TrX_LabEnchant enchant)
+        {
+            label72.Text = enchant.Text;
+            label94.Text = enchantInfo.Found.ToString();
+            label95.Text = enchantInfo.Taken.ToString();
+            label96.Text = enchantInfo.LastFound.Year > 2000 ? enchantInfo.LastFound.ToString() : "-";
+
+            listBox1.Items.Clear();
+            foreach (TrX_EnchantNote note in enchantInfo.EnchantNotes)
+            {
+                listBox1.Items.Add(string.Format("{0}: {1}{2}", DateTimeOffset.FromUnixTimeSeconds(note.LabTimeStamp).DateTime, note.Note, Environment.NewLine));
+            }
+
+            listBox2.Items.Clear();
+            foreach(string s in enchantInfo.History)
+            {
+                listBox2.Items.Add(s);
+            }
+
+        }
+
+        private void UpdateProfitSummary()
+        {
+            label110.Text = Math.Round(_profitTracking.BaseCosts, 1).ToString() + " ex.";
+            label111.Text = Math.Round(_profitTracking.Income, 1).ToString() + "ex.";
+            lbl_profit.Text = Math.Round(_profitTracking.Profit, 1).ToString() + "ex.";
+            lbl_profit.ForeColor = _profitTracking.Profit >= 0 ? Color.LimeGreen : Color.Red;
+            label108.Text = _profitTracking.BaseCount.ToString();
+            label109.Text = _profitTracking.BasesSold.ToString();
+        }
+
+        private void SaveLabProfitTab()
+        {
+            try
+            {
+                _profitTracking.Calculate();
+                _profitTracking.Save();
+                UpdateProfitSummary();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Invalid input: " + ex.Message);
+            }
+        }
+
         private void timer2_Tick(object sender, EventArgs e)
         {
             if (_logic.EventQueueInitialized)
@@ -3768,23 +4188,8 @@ namespace TraXile
             RenderLabDashboard();
         }
 
-        private void SaveTimeCaps()
-        {
-            ACTIVITY_TYPES type;
-            int value;
-            string sett;
+       
 
-            foreach(DataGridViewRow row in dataGridView1.Rows)
-            {
-                type = (ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), row.Cells[0].Value.ToString());
-                value = Convert.ToInt32(row.Cells[1].Value);
-                sett = string.Format("TimeCap{0}", TrX_Helpers.CapitalFirstLetter(type.ToString()));
-                _timeCaps[type] = value;
-                _mySettings.AddOrUpdateSetting(sett, value.ToString());
-            }
-
-            _mySettings.WriteToXml();
-        }
 
         private void button23_Click(object sender, EventArgs e)
         {
@@ -3880,22 +4285,7 @@ namespace TraXile
             RenderLabDashboard();
         }
 
-        private void ActivateStopWatchOverlay()
-        {
-            try
-            {
-                _stopwatchOverlay.Show();
-            }
-            catch (ObjectDisposedException)
-            {
-                _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
-            }
-
-            _stopwatchOverlay.TopMost = true;
-            _stopwatchOverlay.Opacity = _stopwatchOverlayOpacity / 100.0;
-            _stopwatchOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatch.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatch.y", "0"))));
-        }
-
+      
         private void stopwatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_stopwatchOverlay.Visible)
@@ -3949,6 +4339,201 @@ namespace TraXile
         private void button3_Click_2(object sender, EventArgs e)
         {
             RequestDashboardUpdates();
+        }
+
+        private void label52_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel22_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button7_Click_1(object sender, EventArgs e)
+        {
+            SaveCurrentLabRun();
+            ResetLabRuns();
+        }
+
+       
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            TrX_LabEnchant en;
+            TrX_EnchantInfo info;
+            
+            en = _logic.LabbieConnector.GetEnchantObjectForText(comboBox2.SelectedItem.ToString());
+
+            if(en != null)
+            {
+                info = _logic.GetEnchantInfo(en.ID);
+                _selectedEnchantID = en.ID;
+                SetEnchantInfoPage(info, en);
+            }
+        }
+
+        private void tableLayoutPanel32_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button8_Click_1(object sender, EventArgs e)
+        {
+            TrX_EnchantNote note;
+            DateTime dt;
+            dt = DateTime.Now;
+            note = new TrX_EnchantNote(_selectedEnchantID, textBox7.Text, (int)((DateTimeOffset)dt).ToUnixTimeSeconds());
+            _logic.SaveEnchantNoteList(new List<TrX_EnchantNote>() { note });
+            listBox1.Items.Add(string.Format("{0}: {1}", dt, note.Note));
+            textBox7.Clear();
+        }
+
+        private void button4_Click_2(object sender, EventArgs e)
+        {
+            FolderBrowserDialog sfd = new FolderBrowserDialog();
+            sfd.ShowDialog();
+
+            if(sfd.SelectedPath != null)
+            {
+                textBox6.Text = sfd.SelectedPath;
+                _mySettings.AddOrUpdateSetting("labbie.path", sfd.SelectedPath);
+                _mySettings.WriteToXml();
+                if(_logic.LabbieConnector != null)
+                {
+                    _logic.LabbieConnector.LabbieLogPath = sfd.SelectedPath;
+                    if(!_logic.LabbieConnector.IsStarted)
+                    {
+                        _logic.LabbieConnector.Start();
+                    }
+                }
+            }
+        }
+
+        private void button9_Click_1(object sender, EventArgs e)
+        {
+           
+        }
+
+       
+
+        private void button9_Click_2(object sender, EventArgs e)
+        {
+            SaveLabProfitTab();
+        }
+
+        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
+        private void dataGridView2_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            //SaveLabProfitTab();
+        }
+
+        private void dataGridView2_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                SaveLabProfitTab();
+            }
+        }
+
+        private void dataGridView2_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
+        {
+            e.Row.Cells["Time"].Value = DateTime.Now;
+            e.Row.Cells["Base Cost (Exalts)"].Value = 0;
+            e.Row.Cells["Sold for (Exalts)"].Value = 0;
+            e.Row.Cells["Profit (Exalts)"].Value = 0;
+            e.Row.Cells["State"].Value = "open";
+        }
+
+        private void tableLayoutPanel37_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button9_Click_3(object sender, EventArgs e)
+        {
+            SaveLabProfitTab();
+        }
+
+        private void SetProfitFilter()
+        {
+            string textFilter = "Enchant LIKE '%'";
+            string stateFilter = "State LIKE '%'";
+
+            if (!String.IsNullOrEmpty(textBox9.Text))
+            {
+                textFilter = string.Format("Enchant LIKE '%{0}%' OR Note LIKE '%{0}%' OR Base LIKE '%{0}%'", textBox9.Text);
+            }
+
+            // All
+            if (radioButton1.Checked)
+            {
+                stateFilter = "State LIKE '%'";
+                _mySettings.AddOrUpdateSetting("lab.profittracking.filter.state", "all");
+            }
+
+            // Open
+            if (radioButton2.Checked)
+            {
+                stateFilter = "State LIKE '%open%'";
+                _mySettings.AddOrUpdateSetting("lab.profittracking.filter.state", "open");
+            }
+
+            // Sold
+            if (radioButton3.Checked)
+            {
+                stateFilter = "State LIKE '%sold%'";
+                _mySettings.AddOrUpdateSetting("lab.profittracking.filter.state", "sold");
+            }
+
+            string filter = string.Format("({0}) AND ({1})", textFilter, stateFilter);
+            _profitTracking.Data.DefaultView.RowFilter = filter;
+
+            // Settings
+            _mySettings.AddOrUpdateSetting("lab.profittracking.filter.text", textBox9.Text);
+            _mySettings.WriteToXml();
+        }
+
+        private void button15_Click_1(object sender, EventArgs e)
+        {
+            SetProfitFilter();
+        }
+
+        private void textBox10_TextChanged(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void button16_Click_1(object sender, EventArgs e)
+        {
+            textBox9.Text = "";
+            radioButton1.Checked = true;
+            SetProfitFilter();
+        }
+
+        private void button17_Click_1(object sender, EventArgs e)
+        {
+            ResetLabRuns();
+        }
+
+        private void linkLabel2_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            tabCtl1.SelectedTab = tabPage3;
+            tabControl2.SelectedTab = tabPage2;
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(linkLabel3.Text);
+        }
+
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(linkLabel4.Text);
         }
 
         private void checkBox3_CheckedChanged_1(object sender, EventArgs e)

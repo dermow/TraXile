@@ -72,6 +72,12 @@ namespace TraXile
         // Event: called when tags are changed
         public event Trx_GenericEventHandler OnTagsUpdated;
 
+        // Event: Lab enchants received
+        public event Trx_LabbieEventHandler LabEnchantsReceived;
+
+        // Event: Activity started
+        public event TrX_ActivityEventHandler OnActivityStarted;
+
         // DateTime format info for enforcing specific calendar info
         public DateTimeFormatInfo _dateTimeFormatInfo;
 
@@ -162,7 +168,11 @@ namespace TraXile
 
         // Property: Current Activity
         public TrX_TrackedActivity _currentActivity;
-        public TrX_TrackedActivity CurrentActivity => _currentActivity;
+        public TrX_TrackedActivity CurrentActivity
+        {
+            get { return _currentActivity; }
+            set { _currentActivity = value; }
+        }
 
         // Property: Event History
         private List<TrX_TrackedActivity> _eventHistory;
@@ -212,6 +222,14 @@ namespace TraXile
         private TrX_TrackedActivity _prevActivityOverlay;
         public TrX_TrackedActivity OverlayPrevActivity => _prevActivityOverlay;
 
+        // Property: Previous activity in overlay
+        private TrX_TrackedLabrun _currentLabRun;
+        public TrX_TrackedLabrun CurrentLab
+        {
+            get { return _currentLabRun; }
+            set { _currentLabRun = value; }
+        }
+
         // Property: DB Manager
         private TrX_DataBackend _dataBackend;
         public TrX_DataBackend Database => _dataBackend;
@@ -223,6 +241,14 @@ namespace TraXile
         // Property: Long stat names
         private Dictionary<string, string> _statNamesLong;
         public Dictionary<string, string> StatNamesLong => _statNamesLong;
+
+        // Labbie Connector
+        private TrX_LabbieConnector _labbieConnector;
+        public TrX_LabbieConnector LabbieConnector => _labbieConnector;
+
+        // Lab History
+        private List<TrX_TrackedLabrun> _labHistory;
+        public List<TrX_TrackedLabrun> LabHistory => _labHistory;
 
         // Property: Path to Client.txt
         public string ClientTxtPath
@@ -238,6 +264,8 @@ namespace TraXile
         {
             Init();
         }
+
+        
 
         /// <summary>
         /// Do main initialization
@@ -264,6 +292,9 @@ namespace TraXile
             _dataBackend = new TrX_DataBackend(TrX_AppInfo.DB_PATH, ref _log);
             _myStats = new TrX_StatsManager(_dataBackend);
             _lastEventTypeConq = EVENT_TYPES.APP_STARTED;
+            _labbieConnector = new TrX_LabbieConnector(_dataBackend, ref _log);
+            _labbieConnector.EnchantsReceived += _labbieConnector_EnchantsReceived;
+            _labHistory = new List<TrX_TrackedLabrun>();
 
             InitDefaultTags();
             InitNumStats();
@@ -331,12 +362,164 @@ namespace TraXile
         }
 
         /// <summary>
+        /// Event handler: Received labbie enchants
+        /// </summary>
+        /// <param name="e"></param>
+        private void _labbieConnector_EnchantsReceived(TrX_LabbieEventArgs e)
+        {
+            // Log enchants
+            foreach(TrX_LabEnchant en in e.Enchants)
+            {
+                _log.Info(string.Format("Received enchante from Labbie: {0}:  {1}", en.ID, en.Text));
+                en.EnchantInfo = GetEnchantInfo(en.ID);
+            }
+
+            if(_currentLabRun != null)
+            {
+                _currentLabRun.Enchants.AddRange(e.Enchants);
+                PauseCurrentActivityOrSide();
+                LabEnchantsReceived(e);
+            }
+        }
+
+        /// <summary>
+        /// Save a list of enchant notes
+        /// </summary>
+        /// <param name="list"></param>
+        public void SaveEnchantNoteList(List<TrX_EnchantNote> list)
+        {
+            foreach(TrX_EnchantNote note in list)
+            {
+                string query;
+                query = string.Format("INSERT INTO tx_enchant_notes (lab_timestamp, enchant_id, enchant_note) VALUES ({0}, {1}, '{2}')"
+                    , note.LabTimeStamp, note.EnchantID, note.Note);
+
+                try
+                {
+                    _dataBackend.DoNonQuery(query);
+                }
+                catch(Exception ex)
+                {
+                    _log.Error("Could not save enchant notes: " + ex.Message);
+                    _log.Debug(ex);
+                }
+            }
+        }
+
+       
+
+        /// <summary>
+        /// Get several informations about an enchant
+        /// </summary>
+        /// <param name="enchantID"></param>
+        public TrX_EnchantInfo GetEnchantInfo(int enchantID)
+        {
+            List<string> history;
+            TrX_EnchantInfo info;
+            SqliteDataReader reader;
+            info = new TrX_EnchantInfo(enchantID);
+            history = new List<string>();
+
+            try
+            {
+                // Get notes
+                reader = _dataBackend.GetSQLReader("SELECT * FROM tx_enchant_notes WHERE enchant_id = " + enchantID);
+                TrX_EnchantNote note;
+                while (reader.Read())
+                {
+                    note = new TrX_EnchantNote(enchantID, reader.GetString(2), reader.GetInt32(0));
+                    info.EnchantNotes.Add(note);
+                }
+
+                // Get found count
+                string res = _dataBackend.GetSingleValue(string.Format(
+                    "SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {0} AND action = 'found'", enchantID));
+                if (res != null)
+                {
+                    info.Found = Convert.ToInt32(res);
+                }
+                else
+                {
+                    info.Found = 0;
+                }
+
+                // Get taken count
+                res = _dataBackend.GetSingleValue(string.Format(
+                    "SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {0} AND action = 'taken'", enchantID));
+                if (res != null)
+                {
+                    info.Taken = Convert.ToInt32(res);
+                }
+                else
+                {
+                    info.Taken = 0;
+                }
+
+                // Get taken count
+                res = _dataBackend.GetSingleValue(string.Format(
+                    "SELECT MAX(lab_timestamp) FROM tx_enchant_history WHERE enchant_id = {0}", enchantID));
+                if (res != null)
+                {
+                    info.LastFound = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt32(res)).DateTime;
+                }
+                else
+                {
+                    info.LastFound = new DateTime();
+                }
+
+                // Get history
+                reader = _dataBackend.GetSQLReader(string.Format(
+                    "SELECT * FROM tx_enchant_history WHERE enchant_id = {0}", enchantID));
+                while (reader.Read())
+                {
+                    info.History.Add(string.Format("{0}: {1}", DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(0)).DateTime, reader.GetString(2)));
+                }
+            }
+            catch(Exception ex)
+            {
+                _log.Error("Error getting enchant info object for enchant " + enchantID + ": " + ex.Message);
+                _log.Debug(ex.ToString());
+            }
+            
+
+            return info;
+        }
+
+        /// <summary>
+        /// Save the current labrun
+        /// </summary>
+        public void SaveCurrentLabRun()
+        {
+            if(_currentLabRun != null)
+            {
+                foreach(TrX_LabEnchant e in _currentLabRun.Enchants)
+                {
+                    _dataBackend.DoNonQuery("INSERT INTO tx_enchant_history (lab_timestamp, enchant_id, action) " +
+                        "VALUES (" + _currentLabRun.TimeStamp.ToString() + ", " + e.ID.ToString() + ", 'found')");
+                }
+                foreach (TrX_LabEnchant e in _currentLabRun.EnchantsTaken)
+                {
+                    _dataBackend.DoNonQuery("INSERT INTO tx_enchant_history (lab_timestamp, enchant_id, action) " +
+                        "VALUES (" + _currentLabRun.TimeStamp.ToString() + ", " + e.ID.ToString() + ", 'taken')");
+                }
+
+                _labHistory.Insert(0, _currentLabRun);
+            }
+        }
+
+        /// <summary>
         /// Start logfile parsing and event handling
         /// </summary>
         public void Start()
         {
             _logParseThread.Start();
             _eventThread.Start();
+
+            if(_labbieConnector.LabbieLogPath != null)
+            {
+                _labbieConnector.Start();
+            }
+
             _log.Info("Core logic started.");
         }
 
@@ -442,6 +625,8 @@ namespace TraXile
                 new TrX_ActivityTag("lab-trial") { BackColor = Color.DarkTurquoise, ForeColor = Color.Black },
                 new TrX_ActivityTag("abyss-depths") { BackColor = Color.ForestGreen, ForeColor = Color.Black },
                 new TrX_ActivityTag("exp-side-area") { BackColor = Color.Turquoise, ForeColor = Color.Black },
+                new TrX_ActivityTag("twice-blessed") { BackColor = Color.DarkTurquoise, ForeColor = Color.Black },
+                new TrX_ActivityTag("harvest") { BackColor = Color.Blue, ForeColor = Color.White },
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -571,12 +756,16 @@ namespace TraXile
                 { "AreaChanges", 0 },
                 { "BaranStarted", 0 },
                 { "BaranKilled", 0 },
+                { "BlackStarTried", 0 },
+                { "BlackStarKilled", 0 },
                 { "CampaignFinished", 0 },
                 { "CatarinaTried", 0 },
                 { "CatarinaKilled", 0 },
                 { "TotalKilledCount", 0 },
                 { "DroxStarted", 0 },
                 { "DroxKilled", 0 },
+                { "EaterOfWorldsTried", 0 },
+                { "EaterOfWorldsKilled", 0 },
                 { "EinharCaptures", 0 },
                 { "ElderTried", 0 },
                 { "ElderKilled", 0 },
@@ -589,6 +778,8 @@ namespace TraXile
                 { "HighestLevel", 0 },
                 { "HunterKilled", 0 },
                 { "HunterStarted", 0 },
+                { "InfiniteHungerTried", 0 },
+                { "InfiniteHungerKilled", 0 },
                 { "LabsFinished", 0 },
                 { "LabsStarted", 0 },
                 { "LevelUps", 0 },
@@ -596,6 +787,8 @@ namespace TraXile
                 { "MavenKilled", 0 },
                 { "TotalMapsDone", 0 },
                 { "TotalHeistsDone", 0 },
+                { "SearingExarchTried", 0 },
+                { "SearingExarchKilled", 0 },
                 { "ShaperTried", 0 },
                 { "ShaperKilled", 0 },
                 { "SimulacrumCleared", 0 },
@@ -656,7 +849,15 @@ namespace TraXile
                 { "ExpeditionEncounters_Dannig", "Expedition encounters: Dannig" },
                 { "HideoutTimeSec", "Hideout time" },
                 { "CampaignFinished", "Campaign finished" },
-                { "Suicides", "Suicides" }
+                { "Suicides", "Suicides" },
+                { "SearingExarchTried", "Searing Exarch tried" },
+                { "SearingExarchKilled", "Searing Exarch killed" },
+                { "BlackStarTried", "Black Star tried" },
+                { "BlackStarKilled", "Black Star killed" },
+                { "EaterOfWorldsTried", "Eater of Worlds tried" },
+                { "EaterOfWorldsKilled", "Eater of Worlds killed" },
+                { "InfiniteHungerTried", "Infinite Hunger tried" },
+                { "InfiniteHungerKilled", "Infinite Hunger killed" },
             };
 
             labs = new List<string>
@@ -875,8 +1076,18 @@ namespace TraXile
                     return ACTIVITY_TYPES.SAFEHOUSE;
                 case "breachstone":
                     return ACTIVITY_TYPES.BREACHSTONE;
+                case "searing_exarch_fight":
+                    return ACTIVITY_TYPES.SEARING_EXARCH_FIGHT;
+                case "black_star_fight":
+                    return ACTIVITY_TYPES.BLACK_STAR_FIGHT;
+                case "infinite_hunger_fight":
+                    return ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT;
+                case "eater_of_worlds_fight":
+                    return ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT;
+                case "timeless_legion":
+                    return ACTIVITY_TYPES.TIMELESS_LEGION;
             }
-            return ACTIVITY_TYPES.MAP;
+            return ACTIVITY_TYPES.OTHER;
         }
 
         /// <summary>
@@ -894,19 +1105,57 @@ namespace TraXile
                 TimeSpan ts = TimeSpan.FromSeconds(sqlReader.GetInt32(3));
                 string sType = sqlReader.GetString(1);
                 ACTIVITY_TYPES aType = GetActTypeFromString(sType);
+                TrX_TrackedActivity map;
 
-                TrX_TrackedActivity map = new TrX_TrackedActivity
+                if(aType == ACTIVITY_TYPES.LABYRINTH)
                 {
-                    Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
-                    TimeStamp = sqlReader.GetInt32(0),
-                    CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds),
-                    TotalSeconds = Convert.ToInt32(ts.TotalSeconds),
-                    Type = aType,
-                    Area = sqlReader.GetString(2),
-                    DeathCounter = sqlReader.GetInt32(4),
-                    TrialMasterCount = sqlReader.GetInt32(5),
-                    PausedTime = sqlReader.GetDouble(10)
-                };
+                    map = new TrX_TrackedLabrun
+                    {
+                        Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
+                        TimeStamp = sqlReader.GetInt32(0),
+                        CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds),
+                        TotalSeconds = Convert.ToInt32(ts.TotalSeconds),
+                        Type = aType,
+                        Area = sqlReader.GetString(2),
+                        DeathCounter = sqlReader.GetInt32(4),
+                        TrialMasterCount = sqlReader.GetInt32(5),
+                        PausedTime = sqlReader.GetDouble(10)
+                    };
+
+                    // Get Enchants
+                    SqliteDataReader subReader;
+                    string query = "SELECT * FROM tx_enchant_history WHERE lab_timestamp = " + map.TimeStamp.ToString();
+                    subReader = _dataBackend.GetSQLReader(query);
+
+                    while(subReader.Read())
+                    {
+                        TrX_LabEnchant en = _labbieConnector.GetEnchantByID(subReader.GetInt32(1));
+                        if(subReader.GetString(2) == "taken")
+                        {
+                            ((TrX_TrackedLabrun)map).EnchantsTaken.Add(en);
+                        }
+                        else
+                        {
+                            ((TrX_TrackedLabrun)map).Enchants.Add(en);
+                        }
+                    }
+                }
+                else
+                {
+                    map = new TrX_TrackedActivity
+                    {
+                        Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
+                        TimeStamp = sqlReader.GetInt32(0),
+                        CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds),
+                        TotalSeconds = Convert.ToInt32(ts.TotalSeconds),
+                        Type = aType,
+                        Area = sqlReader.GetString(2),
+                        DeathCounter = sqlReader.GetInt32(4),
+                        TrialMasterCount = sqlReader.GetInt32(5),
+                        PausedTime = sqlReader.GetDouble(10)
+                    };
+                }
+               
 
                 try
                 {
@@ -936,6 +1185,11 @@ namespace TraXile
                 {
                     _eventHistory.Add(map);
                     _parsedActivities.Add(map.UniqueID);
+
+                    if(map.Type == ACTIVITY_TYPES.LABYRINTH)
+                    {
+                        _labHistory.Add((TrX_TrackedLabrun)map);
+                    }
                 }
             }
             _historyInitialized = true;
@@ -953,7 +1207,6 @@ namespace TraXile
                 if (_clientTxtPath != null)
                 {
                     ParseLogFile();
-
                 }
             }
         }
@@ -1016,6 +1269,8 @@ namespace TraXile
 
                             // Trigger ready event
                             OnHistoryInitialized(new TrX_CoreLogicGenericEventArgs(this));
+
+                            SaveStatsCache();
                         }
                         _eventQueueInitizalized = true;
 
@@ -1227,33 +1482,39 @@ namespace TraXile
             string sSourceArea = _currentArea;
             string sTargetArea = GetAreaNameFromEvent(ev);
             string sAreaName = GetAreaNameFromEvent(ev);
-            bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea);
-            bool bSourceAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sSourceArea);
-            bool bSourceAreaIsAbyss = _defaultMappings.AbyssalAreas.Contains(sSourceArea);
-            bool bSourceAreaIsLabTrial = sSourceArea.Contains("Trial of");
-            bool bSourceAreaIsLogbookSide = _defaultMappings.LogbookSideAreas.Contains(sSourceArea);
-            bool bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea);
-            bool bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea);
-            bool bTargetAreaIsSimu = false;
-            bool bTargetAreaMine = _defaultMappings.DelveAreas.Contains(sTargetArea);
-            bool bTargetAreaTemple = _defaultMappings.TempleAreas.Contains(sTargetArea);
-            bool bTargetAreaIsLab = _defaultMappings.LabyrinthStartAreas.Contains(sTargetArea);
-            bool bTargetAreaIsMI = _defaultMappings.MavenInvitationAreas.Contains(sTargetArea);
-            bool bTargetAreaIsAtziri = _defaultMappings.AtziriAreas.Contains(sTargetArea);
-            bool bTargetAreaIsUberAtziri = _defaultMappings.UberAtziriAreas.Contains(sTargetArea);
-            bool bTargetAreaIsElder = _defaultMappings.ElderAreas.Contains(sTargetArea);
-            bool bTargetAreaIsShaper = _defaultMappings.ShaperAreas.Contains(sTargetArea);
-            bool bTargetAreaIsSirusFight = _defaultMappings.SirusAreas.Contains(sTargetArea);
-            bool bTargetAreaIsMavenFight = _defaultMappings.MavenFightAreas.Contains(sTargetArea);
-            bool bTargetAreaIsCampaign = _defaultMappings.CampaignAreas.Contains(sTargetArea);
-            bool bTargetAreaIsLabTrial = sTargetArea.Contains("Trial of");
-            bool bTargetAreaIsAbyssal = _defaultMappings.AbyssalAreas.Contains(sTargetArea);
-            bool bTargetAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sTargetArea);
-            bool bTargetAreaIsLogbook = _defaultMappings.LogbookAreas.Contains(sTargetArea);
-            bool bTargetAreaIsLogBookSide = _defaultMappings.LogbookSideAreas.Contains(sTargetArea);
-            bool bTargetAreaIsCata = _defaultMappings.CatarinaFightAreas.Contains(sTargetArea);
-            bool bTargetAreaIsSafehouse = _defaultMappings.SyndicateSafehouseAreas.Contains(sTargetArea);
-            bool bTargetAreaIsBreachStone = _defaultMappings.BreachstoneDomainAreas.Contains(sTargetArea);
+            bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea),
+            bSourceAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sSourceArea),
+            bSourceAreaIsAbyss = _defaultMappings.AbyssalAreas.Contains(sSourceArea),
+            bSourceAreaIsLabTrial = sSourceArea.Contains("Trial of"),
+            bSourceAreaIsLogbookSide = _defaultMappings.LogbookSideAreas.Contains(sSourceArea),
+            bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea),
+            bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea),
+            bTargetAreaIsSimu = false,
+            bTargetAreaMine = _defaultMappings.DelveAreas.Contains(sTargetArea),
+            bTargetAreaTemple = _defaultMappings.TempleAreas.Contains(sTargetArea),
+            bTargetAreaIsLab = _defaultMappings.LabyrinthStartAreas.Contains(sTargetArea),
+            bTargetAreaIsMI = _defaultMappings.MavenInvitationAreas.Contains(sTargetArea),
+            bTargetAreaIsAtziri = _defaultMappings.AtziriAreas.Contains(sTargetArea),
+            bTargetAreaIsUberAtziri = _defaultMappings.UberAtziriAreas.Contains(sTargetArea),
+            bTargetAreaIsElder = _defaultMappings.ElderAreas.Contains(sTargetArea),
+            bTargetAreaIsShaper = _defaultMappings.ShaperAreas.Contains(sTargetArea),
+            bTargetAreaIsSirusFight = _defaultMappings.SirusAreas.Contains(sTargetArea),
+            bTargetAreaIsMavenFight = _defaultMappings.MavenFightAreas.Contains(sTargetArea),
+            bTargetAreaIsCampaign = _defaultMappings.CampaignAreas.Contains(sTargetArea),
+            bTargetAreaIsLabTrial = sTargetArea.Contains("Trial of"),
+            bTargetAreaIsAbyssal = _defaultMappings.AbyssalAreas.Contains(sTargetArea),
+            bTargetAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sTargetArea),
+            bTargetAreaIsLogbook = _defaultMappings.LogbookAreas.Contains(sTargetArea),
+            bTargetAreaIsLogBookSide = _defaultMappings.LogbookSideAreas.Contains(sTargetArea),
+            bTargetAreaIsCata = _defaultMappings.CatarinaFightAreas.Contains(sTargetArea),
+            bTargetAreaIsSafehouse = _defaultMappings.SyndicateSafehouseAreas.Contains(sTargetArea),
+            bTargetAreaIsBreachStone = _defaultMappings.BreachstoneDomainAreas.Contains(sTargetArea),
+            bTargetAreaIsExarch = _defaultMappings.SearingExarchAreas.Contains(sTargetArea),
+            bTargetAreaIsBlackStar = _defaultMappings.BlackStarAreas.Contains(sTargetArea),
+            bTargetAreaIsInfinitetHunger = _defaultMappings.InfiniteHungerAreas.Contains(sTargetArea),
+            bTargetAreaIsEaterOfWorlds = _defaultMappings.EaterOfWorldsAreas.Contains(sTargetArea),
+            bTargetAreaIsLegion = _defaultMappings.TimelessLegionAreas.Contains(sTargetArea);
+
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
             IncrementStat("AreaChanges", ev.EventTime, 1);
@@ -1426,6 +1687,26 @@ namespace TraXile
             {
                 actType = ACTIVITY_TYPES.BREACHSTONE;
             }
+            else if (bTargetAreaIsExarch)
+            {
+                actType = ACTIVITY_TYPES.SEARING_EXARCH_FIGHT;
+            }
+            else if (bTargetAreaIsBlackStar)
+            {
+                actType = ACTIVITY_TYPES.BLACK_STAR_FIGHT;
+            }
+            else if (bTargetAreaIsInfinitetHunger)
+            {
+                actType = ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT;
+            }
+            else if (bTargetAreaIsEaterOfWorlds)
+            {
+                actType = ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT;
+            }
+            else if (bTargetAreaIsLegion)
+            {
+                actType = ACTIVITY_TYPES.TIMELESS_LEGION;
+            }
 
             // Special handling for logbook cemetery + vaal temple
             if (bTargetAreaIsLogbook && bTargetAreaIsMap)
@@ -1467,7 +1748,7 @@ namespace TraXile
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                 }
 
-                _currentActivity = new TrX_TrackedActivity
+                _currentActivity = new TrX_TrackedLabrun
                 {
                     Area = sLabName,
                     AreaLevel = _nextAreaLevel,
@@ -1478,13 +1759,15 @@ namespace TraXile
                 };
 
                 _prevActivityOverlay = GetLastActivityByType(actType);
+                _currentLabRun = (TrX_TrackedLabrun)_currentActivity;
                 IncrementStat("LabsStarted", ev.EventTime, 1);
+                OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
             }
 
             //Aspirants Trial entered
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH && sTargetArea == "Aspirants Trial")
             {
-                _currentActivity.TrialCount++;
+                ((TrX_TrackedLabrun)_currentActivity).TrialCount++;
             }
 
             //Lab cancelled?
@@ -1660,6 +1943,7 @@ namespace TraXile
                 };
 
                 _prevActivityOverlay = GetLastActivityByType(actType);
+                OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
             }
 
             // Update Delve level
@@ -1695,7 +1979,12 @@ namespace TraXile
                     || _defaultMappings.SyndicateSafehouseAreas.Contains(sSourceArea)
                     || _defaultMappings.ShaperAreas.Contains(sSourceArea)
                     || _defaultMappings.SirusAreas.Contains(sSourceArea)
-                    || _defaultMappings.UberAtziriAreas.Contains(sSourceArea);
+                    || _defaultMappings.UberAtziriAreas.Contains(sSourceArea)
+                    || _defaultMappings.SearingExarchAreas.Contains(sSourceArea)
+                    || _defaultMappings.BlackStarAreas.Contains(sSourceArea)
+                    || _defaultMappings.EaterOfWorldsAreas.Contains(sSourceArea)
+                    || _defaultMappings.InfiniteHungerAreas.Contains(sSourceArea)
+                    || _defaultMappings.TimelessLegionAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
                 if (!_StartedFlag && !bFromActivity)
@@ -1723,6 +2012,7 @@ namespace TraXile
                         _currentActivity.StartStopWatch();
 
                         _prevActivityOverlay = GetLastActivityByType(actType);
+                        OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
                     }
                 }
                 else
@@ -1776,7 +2066,12 @@ namespace TraXile
                 bTargetAreaIsLogbook ||
                 bTargetAreaIsSafehouse ||
                 bTargetAreaIsCata ||
-                bTargetAreaIsBreachStone;
+                bTargetAreaIsExarch ||
+                bTargetAreaIsBreachStone ||
+                bTargetAreaIsBlackStar ||
+                bTargetAreaIsEaterOfWorlds ||
+                bTargetAreaIsInfinitetHunger ||
+                bTargetAreaIsLegion;
 
             // Check if opened activity needs to be opened on Mapdevice
             bool isMapDeviceActivity =
@@ -1792,7 +2087,12 @@ namespace TraXile
                 bTargetAreaIsMI ||
                 bTargetAreaIsMavenFight ||
                 bTargetAreaIsLogbook ||
-                bTargetAreaIsBreachStone;
+                bTargetAreaIsExarch ||
+                bTargetAreaIsBreachStone ||
+                bTargetAreaIsBlackStar ||
+                bTargetAreaIsInfinitetHunger ||
+                bTargetAreaIsEaterOfWorlds ||
+                bTargetAreaIsLegion;
 
             if (isMapDeviceActivity)
             {
@@ -1821,8 +2121,8 @@ namespace TraXile
                         InstanceEndpoint = _currentInstanceEndpoint,
                     };
                     _nextAreaLevel = 0;
-
                     _prevActivityOverlay = GetLastActivityByType(actType);
+                    OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
                 }
                 else
                 {
@@ -2343,7 +2643,7 @@ namespace TraXile
                             IncrementStat("LabsFinished", ev.EventTime, 1);
                             IncrementStat("LabsCompleted_" + _currentActivity.Area, ev.EventTime, 1);
                             _currentActivity.Success = true;
-                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                            PauseCurrentActivityOrSide();
                         }
                         break;
                     case EVENT_TYPES.LAB_START_INFO_RECEIVED:
@@ -2484,7 +2784,42 @@ namespace TraXile
                     case EVENT_TYPES.NEXT_CEMETERY_IS_LOGBOOK:
                         _nextAreaIsExp = true;
                         break;
-
+                    case EVENT_TYPES.TWICE_BLESSED:
+                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
+                        {
+                            _currentActivity.AddTag("twice-blessed");
+                        }
+                        break;
+                    case EVENT_TYPES.EXARCH_TRIED:
+                        IncrementStat("SearingExarchTried", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.EXARCH_KILLED:
+                        IncrementStat("SearingExarchKilled", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.BLACK_STAR_TRIED:
+                        IncrementStat("BlackStarTried", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.BLACK_STAR_KILLED:
+                        IncrementStat("BlackStarKilled", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.INFINITE_HUNGER_TRIED:
+                        IncrementStat("InfiniteHungerTried", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.INFINITE_HUNGER_KILLED:
+                        IncrementStat("InfiniteHungerKilled", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.EATER_OF_WORLDS_TRIED:
+                        IncrementStat("EaterOfWorldsTried", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.EATER_OF_WORLDS_KILLED:
+                        IncrementStat("EaterOfWorldsKilled", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.HARVEST:
+                        if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        {
+                            _currentActivity.AddTag("harvest");
+                        }
+                        break;
                 }
 
                 // Sometimes conqueror fire their death speech twice...
@@ -2611,7 +2946,7 @@ namespace TraXile
                     }
 
                     // Labs must be successfull or death counter 1
-                    if ((activity.Success != true && activity.DeathCounter == 0) && activity.TrialCount < 3)
+                    if ((activity.Success != true && activity.DeathCounter == 0) && ((TrX_TrackedLabrun)activity).TrialCount < 3)
                     {
                         _log.Warn("Filtered out lab run [time=" + activity.Started + ", area: " + activity.Area + "]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
                         _currentActivity = null;
@@ -2780,6 +3115,11 @@ namespace TraXile
                         }
                     }
 
+                    if(activity.Type == ACTIVITY_TYPES.LABYRINTH)
+                    {
+                        _labHistory.Insert(0, (TrX_TrackedLabrun)activity);
+                    }
+
                     // Trigger event
                     OnActivityFinished(new TrX_CoreLogicActivityEventArgs(this, activity));
                 }
@@ -2832,6 +3172,8 @@ namespace TraXile
 
                 _nextAreaLevel = 0;
                 _currentActivity.StartStopWatch();
+                OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
+
             }
             else
             {

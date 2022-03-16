@@ -11,3 +11,12 @@
 * CSV export format optimized
 * Eventlog Tab removed
 * Fixed a bug where the "All stats chart" was not updated on time change of time filter
+
+## 0.10.0
+* Labbie integration added: track lab enchants
+* Lab profit tracking added
+* Encahnt info page added
+* Added statistics for new eldrich bosses
+* Lab is automatically paused if you try to open a locked chest in treasure room
+* Timeless Domain is now being tracked
+* Auto-Tag 'harvest' added

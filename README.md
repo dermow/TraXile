@@ -23,6 +23,14 @@ If you don´t have TraXile already installed, just go to the [latest release](ht
 ### Updates
 If you already have TraXile installed, the tool will notify you if there is a newer version. It will be downloaded and installed automaticaly if you choose to do so.
 
+## Labbie Integration
+For labyrinth farmers (yes they really exist!) there is the great tool called "Labbie". 
+
+You can find and download it [here](). 
+
+To keep track of your lab enchants, add notes to them and calculate enchant based statistics, you can connect labbie to TraXile. To do this, just go to "Config -> Labbie", select the path to the labbie logs (<labbie_install_dir/logs>).
+
+
 ## How does it work?
 TraXile reads your Path of Exile log (Client.txt) and calculates all data based on this.
 

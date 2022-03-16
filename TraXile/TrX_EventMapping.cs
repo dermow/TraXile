@@ -69,7 +69,17 @@ namespace TraXile
         ABNORMAL_DISCONNECT,
         CAMPAIGN_FINISHED,
         NEXT_CEMETERY_IS_LOGBOOK,
-        PLAYER_SUICIDE
+        PLAYER_SUICIDE,
+        TWICE_BLESSED,
+        EXARCH_KILLED,
+        EXARCH_TRIED,
+        BLACK_STAR_KILLED,
+        BLACK_STAR_TRIED,
+        INFINITE_HUNGER_TRIED,
+        INFINITE_HUNGER_KILLED,
+        EATER_OF_WORLDS_TRIED,
+        EATER_OF_WORLDS_KILLED,
+        HARVEST
     }
 
     public class TrX_EventMapping
@@ -110,9 +120,10 @@ namespace TraXile
                 { "Zana, Master Cartographer: I'm sorry... Sirus... This was all my fault. I'm sorry. I'm so, so sorry.", EVENT_TYPES.SIRUS_KILLED },
                 { "Sirus, Awakener of Worlds: Did you really think this would work?", EVENT_TYPES.SIRUS_FIGHT_STARTED },
                 { " is now level ", EVENT_TYPES.LEVELUP },
-                
+                { "] Oshabi: ", EVENT_TYPES.HARVEST },
+
                 // Veritania Fight Events
-                { "You and I both know this isn't over.", EVENT_TYPES.VERITANIA_KILLED },
+            { "You and I both know this isn't over.", EVENT_TYPES.VERITANIA_KILLED },
                 { "The roots have taken hold. We shall see each other again.", EVENT_TYPES.VERITANIA_KILLED },
                 { "You insist on dooming yourself...", EVENT_TYPES.VERITANIA_KILLED },
                 { "The thrill of victory shall forever be your prison...", EVENT_TYPES.VERITANIA_KILLED },
@@ -366,6 +377,8 @@ namespace TraXile
                 { "Izaro: Delight in your gilded dungeon, ascendant.", EVENT_TYPES.LAB_FINISHED },
                 { "Izaro: Your destination is more dangerous than the journey, ascendant.", EVENT_TYPES.LAB_FINISHED },
                 { "] Generating level ", EVENT_TYPES.NEXT_AREA_LEVEL_RECEIVED },
+                { "] : Be twice blessed.", EVENT_TYPES.TWICE_BLESSED },
+                { "] : This chest is locked. A Treasure Key is required to open it.", EVENT_TYPES.LAB_FINISHED },
 
                 // Expedition
                 { "] Tujen, the Haggler:", EVENT_TYPES.EXP_TUJEN_ENCOUNTER },
@@ -386,6 +399,21 @@ namespace TraXile
                 { "] Vinderi, the Dismantler: ", EVENT_TYPES.HEIST_VINDERI_SPEAK },
                 { "] Gianna, the Master of Disguise: ", EVENT_TYPES.HEIST_GIANNA_SPEAK },
                 { "] Huck, the Soldier: ", EVENT_TYPES.HEIST_HUCK_SPEAK },
+
+                // Eldrich bosses
+                {"] The Searing Exarch: Improbable...!", EVENT_TYPES.EXARCH_KILLED },
+                {"] The Searing Exarch: The hatchling... Surprises...", EVENT_TYPES.EXARCH_KILLED },
+                {"] The Searing Exarch: Your absurd defiance ends here, hatchling.", EVENT_TYPES.EXARCH_TRIED },
+                {"] The Black Star: The dark light fades...", EVENT_TYPES.BLACK_STAR_KILLED },
+                {"] The Black Star: How... unexpected...", EVENT_TYPES.BLACK_STAR_KILLED },
+                {"] The Black Star: Maven! The Challenge begins! Your champion will fall.", EVENT_TYPES.BLACK_STAR_TRIED },
+                {"] The Infinite Hunger: Foolish Maven, come to feed me her champion!", EVENT_TYPES.INFINITE_HUNGER_TRIED },
+                {"] The Infinite Hunger: Your champion looks delicious.", EVENT_TYPES.INFINITE_HUNGER_TRIED },
+                {"] The Infinite Hunger: Death... is meaningless...", EVENT_TYPES.INFINITE_HUNGER_KILLED },
+                {"] The Infinite Hunger: The pain... never ends...", EVENT_TYPES.INFINITE_HUNGER_KILLED },
+                {"] The Eater of Worlds: This is not a battle you can win, hatchling.", EVENT_TYPES.EATER_OF_WORLDS_TRIED },
+                {"] The Eater of Worlds: You deny us... escape from pain...", EVENT_TYPES.EATER_OF_WORLDS_KILLED },
+
 
                 // Campaign
                 { "] Sin: May a new dawn arise!", EVENT_TYPES.CAMPAIGN_FINISHED },

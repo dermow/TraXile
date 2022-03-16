@@ -99,13 +99,7 @@ namespace TraXile
             set { _totalSeconds = value; }
         }
 
-        // Count of Izaro-Fights
-        private int _trialCount;
-        public int TrialCount
-        {
-            get { return _trialCount; }
-            set { _trialCount = value; }
-        }
+       
 
         // Activity Type
         private ACTIVITY_TYPES _activityType;
