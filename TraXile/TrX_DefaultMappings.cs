@@ -703,12 +703,12 @@ namespace TraXile
 
             _eaterOfWorldsAreas = new List<string>
             {
-                "Seething Chyme"
+                "Absence of Symmetry and Harmony"
             };
 
             _infiniteHungerAreas = new List<string>
             {
-                "Absence of Symmetry and Harmony"
+                "Seething Chyme"
             };
 
             _timelessLeagionAreas = new List<string>

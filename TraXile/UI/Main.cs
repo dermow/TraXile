@@ -1992,6 +1992,8 @@ namespace TraXile
                         SetTimeRangeFilter();
                     }
 
+                    DateTime dtRenderStart = DateTime.Now;
+
                     // Lab farming tab
                     if(_logic.CurrentLab != null && _currentLabrunControl != null)
                     {
@@ -2001,41 +2003,63 @@ namespace TraXile
                     // MAP Dashbaord
                     if (_uiFlagMapDashboard)
                     {
+                        dtRenderStart = DateTime.Now;
+                        
                         RenderMappingDashboard();
                         _uiFlagMapDashboard = false;
+
+                        _log.Debug(string.Format("Updated 'MapDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // LAB Dashbaord
                     if (_uiFlagLabDashboard)
                     {
+                        dtRenderStart = DateTime.Now;
+
                         RenderLabDashboard();
                         _uiFlagLabDashboard = false;
+
+                        _log.Debug(string.Format("Updated 'LabDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // HEIST Dashbaord
                     if (_uiFlagHeistDashboard)
                     {
+                        dtRenderStart = DateTime.Now;
+
                         RenderHeistDashboard();
                         _uiFlagHeistDashboard = false;
+
+                        _log.Debug(string.Format("Updated 'HeistDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // AllStats Dashbaord
                     if (_uiFlagAllStatsDashboard)
                     {
+                        dtRenderStart = DateTime.Now;
+
                         RenderAllStatsDashboard();
                         _uiFlagAllStatsDashboard = false;
+
+                        _log.Debug(string.Format("Updated 'AllStatsDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     //Bossing
                     if (_uiFlagBossDashboard)
                     {
+                        dtRenderStart = DateTime.Now;
+
                         RenderBossingDashboard();
                         _uiFlagBossDashboard = false;
+
+                        _log.Debug(string.Format("Updated 'BossDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // Global Dashbaord
                     if (_uiFlagGlobalDashboard)
                     {
+                        dtRenderStart = DateTime.Now;
+
                         RenderGlobalDashboard();
                         _uiFlagGlobalDashboard = false;
 
@@ -2048,20 +2072,30 @@ namespace TraXile
                         {
                             checkBox1.Checked = _showHideoutInPie;
                         }
+
+                        _log.Debug(string.Format("Updated 'ActivityOverview' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // All stats chart
                     if(_uiFlagStatisticsChart)
                     {
+                        dtRenderStart = DateTime.Now;
+
                         UpdateAllStatsChart();
                         _uiFlagStatisticsChart = false;
+
+                        _log.Debug(string.Format("Updated 'AllStatsChart' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // Activity List
                     if (_uiFlagActivityList)
                     {
+                        dtRenderStart = DateTime.Now;
+
                         DoSearch();
                         _uiFlagActivityList = false;
+
+                        _log.Debug(string.Format("Updated 'ActivityList' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     listView1.Columns[2].Width = listView1.Width;
