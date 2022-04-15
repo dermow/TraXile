@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -411,24 +412,24 @@ namespace TraXile
 
                 _log.Info(string.Format("UpdateCheck -> My version: {0}, Remote version: {1}", TrX_AppInfo.VERSION, sVersion));
 
-                int MyMajor = Convert.ToInt32(TrX_AppInfo.VERSION.Split('.')[0]);
-                int MyMinor = Convert.ToInt32(TrX_AppInfo.VERSION.Split('.')[1]);
-                int MyPatch = Convert.ToInt32(TrX_AppInfo.VERSION.Split('.')[2]);
+                int myMajor = Assembly.GetExecutingAssembly().GetName().Version.Major;
+                int myMinor = Assembly.GetExecutingAssembly().GetName().Version.Minor;
+                int myBuild = Assembly.GetExecutingAssembly().GetName().Version.Build;
 
-                int RemoteMajor = Convert.ToInt32(sVersion.Split('.')[0]);
-                int RemoteMinor = Convert.ToInt32(sVersion.Split('.')[1]);
-                int RemotePatch = Convert.ToInt32(sVersion.Split('.')[2]);
+                int remoteMajor = Convert.ToInt32(sVersion.Split('.')[0]);
+                int remoteMinor = Convert.ToInt32(sVersion.Split('.')[1]);
+                int remoteBuild = Convert.ToInt32(sVersion.Split('.')[2]);
 
                 bool bUpdate = false;
-                if (RemoteMajor > MyMajor)
+                if (remoteMajor > myMajor)
                 {
                     bUpdate = true;
                 }
-                else if (RemoteMajor == MyMajor && RemoteMinor > MyMinor)
+                else if (remoteMajor == myMajor && remoteMinor > myMinor)
                 {
                     bUpdate = true;
                 }
-                else if (RemoteMajor == MyMajor && RemoteMinor == MyMinor && RemotePatch > MyPatch)
+                else if (remoteMajor == myMajor && remoteMinor == myMinor && remoteBuild > myBuild)
                 {
                     bUpdate = true;
                 }
@@ -529,17 +530,12 @@ namespace TraXile
 
             UpdateProfitSummary();
             SetProfitFilter();
-
-            //Testdata
-          //  _profitTracking.Data.Rows.Add(new object[] { DateTime.Now, "B", "C", 1 });
-//            _profitTracking.Data.WriteXml(TrX_AppInfo.APPDATA_PATH + @"\test.xml");
                 
             _lvmActlog = new TrX_ListViewManager(listViewActLog);
             _lvmAllStats = new TrX_ListViewManager(listViewNF1);
           
             _leagues = new List<TrX_LeagueInfo>();
             _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
-            
             
             _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
 

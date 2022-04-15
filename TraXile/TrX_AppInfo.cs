@@ -7,8 +7,17 @@ namespace TraXile
 {
     static class TrX_AppInfo
     {
+        // Major Version
+        public static int MAJOR = Assembly.GetExecutingAssembly().GetName().Version.Major;
+
+        // Ninor Version
+        public static int MINOR = Assembly.GetExecutingAssembly().GetName().Version.Minor;
+
+        // Build nunber
+        public static int BUILD = Assembly.GetExecutingAssembly().GetName().Version.Build;
+
         // Application Version
-        public static string VERSION = "0.10.2";
+        public static string VERSION = string.Format("{0}.{1}.{2}", MAJOR, MINOR, BUILD);
 
         // Application Name
         public static string NAME = "TraXile";
