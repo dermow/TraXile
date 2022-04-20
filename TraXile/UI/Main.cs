@@ -206,6 +206,8 @@ namespace TraXile
 
         // DataBInd
         private BindingSource _profitBinding;
+        private bool filterBarShown;
+        private bool _uiFlagActivityListReset;
 
         /// <summary>
         /// Main Window Constructor
@@ -743,7 +745,6 @@ namespace TraXile
             _loadScreenWindow.Show(this);
 
             InitLeagueInfo();
-            ResetMapHistory();
             ResetLabRuns();
             LoadLayout();
 
@@ -759,7 +760,7 @@ namespace TraXile
             _uiFlagBossDashboard = true;
             _uiFlagHeistDashboard = true;
             _uiFlagGlobalDashboard = true;
-            _uiFlagActivityList = true;
+            _uiFlagActivityListReset = true;
             _uiFlagAllStatsDashboard = true;
 
             // Tool tips
@@ -811,6 +812,18 @@ namespace TraXile
             toolTip7.SetToolTip(pictureBox23, sb.ToString());
             toolTip7.ToolTipTitle = "Restore Backup";
             toolTip7.AutoPopDelay = 30000;
+
+            // Map filter
+            comboBox3.Items.Add("All");
+            foreach(string s in _defaultMappings.MapAreas)
+            {
+                comboBox3.Items.Add(s);
+            }
+            comboBox3.SelectedItem = "All";
+            comboBox4.SelectedItem = "Contains";
+            comboBox6.SelectedItem = "All";
+
+            //tableLayoutPanelMain.RowStyles[1].Height = 0;
 
             // Start UI Thread
             timer1.Enabled = true;
@@ -1433,7 +1446,6 @@ namespace TraXile
                 chStopwatch = new ColumnHeader() { Name = "actlog_stopwatch", Text = "Stopwatch", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_stopwatch.width", "100")) },
                 chDeath = new ColumnHeader() { Name = "actlog_death", Text = "Deaths", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_death.width", "60")) };
 
-
             _lvmActlog.Columns.Add(chTime);
             _lvmActlog.Columns.Add(chType);
             _lvmActlog.Columns.Add(chArea);
@@ -1464,7 +1476,7 @@ namespace TraXile
         /// </summary>
         private void AddActivityLvItems()
         {
-            foreach (TrX_TrackedActivity act in _logic.ActivityHistory)
+            foreach (TrX_TrackedActivity act in _statsDataSource)
             {
                 AddMapLvItem(act, act.IsZana, -1, false);
             }
@@ -1872,7 +1884,6 @@ namespace TraXile
 
                     if (!_listViewInitielaized)
                     {
-                        DoSearch();
                         _oldestTimeStamp = _logic.Stats.GetOldestTimeStamp();
                         _listViewInitielaized = true;
                     }
@@ -1983,7 +1994,9 @@ namespace TraXile
                     _uiFlagGlobalDashboard ||
                     _uiFlagHeistDashboard ||
                     _uiFlagLabDashboard ||
-                    _uiFlagMapDashboard)
+                    _uiFlagMapDashboard ||
+                    _uiFlagActivityList
+                    )
                     {
                         SetTimeRangeFilter();
                     }
@@ -2083,8 +2096,17 @@ namespace TraXile
                         _log.Debug(string.Format("Updated 'AllStatsChart' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
-                    // Activity List
-                    if (_uiFlagActivityList)
+                    // Rest act list
+                    if (_uiFlagActivityListReset)
+                    {
+                        int i = _statsDataSource.Count;
+
+                        ResetMapHistory();
+                        DoSearch();
+                        _uiFlagActivityListReset = false;
+                        _uiFlagActivityList = false;
+                    }
+                    else if (_uiFlagActivityList)
                     {
                         dtRenderStart = DateTime.Now;
 
@@ -2903,6 +2925,9 @@ namespace TraXile
             {
                 if (act.Type == ACTIVITY_TYPES.MAP)
                 {
+                    if (comboBox3.Text != "All" && comboBox3.Text != act.Area)
+                        continue;
+
                     countByArea[act.Area]++;
                     countByTier[act.MapTier]++;
                 }
@@ -2940,6 +2965,9 @@ namespace TraXile
             {
                 if (act.Type == ACTIVITY_TYPES.MAP)
                 {
+                    if (comboBox3.Text != "All" && comboBox3.Text != act.Area)
+                        continue;
+
                     foreach (string s in act.Tags)
                     {
                         if (!String.IsNullOrEmpty(s))
@@ -2992,6 +3020,9 @@ namespace TraXile
                 {
                     if (act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i + 1))
                     {
+                        if (comboBox3.Text != "All" && comboBox3.Text != act.Area)
+                            continue;
+
                         if (act.TotalSeconds < _timeCaps[ACTIVITY_TYPES.MAP])
                         {
                             iSum += act.TotalSeconds;
@@ -4218,9 +4249,6 @@ namespace TraXile
             RenderLabDashboard();
         }
 
-       
-
-
         private void button23_Click(object sender, EventArgs e)
         {
             try
@@ -4278,6 +4306,7 @@ namespace TraXile
                     dateTimePicker1.Enabled = false;
                     dateTimePicker2.Enabled = false;
                     RequestDashboardUpdates();
+                    RequestActivityListReset();
                 }
             }
         }
@@ -4369,6 +4398,12 @@ namespace TraXile
         private void button3_Click_2(object sender, EventArgs e)
         {
             RequestDashboardUpdates();
+            RequestActivityListReset();
+        }
+
+        private void RequestActivityListReset()
+        {
+            _uiFlagActivityListReset = true;
         }
 
         private void label52_Click(object sender, EventArgs e)
@@ -4564,6 +4599,33 @@ namespace TraXile
         private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(linkLabel4.Text);
+        }
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Request update
+            _uiFlagMapDashboard = true;
+        }
+
+        private void label91_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if(filterBarShown)
+            {
+                tableLayoutPanelMain.RowStyles[1].Height = 0;
+                linkLabel5.Text = "show filters";
+                filterBarShown = false;
+            }
+            else
+            {
+                tableLayoutPanelMain.RowStyles[1].Height = 160;
+                linkLabel5.Text = "hide filters";
+                filterBarShown = true;
+            }
         }
 
         private void checkBox3_CheckedChanged_1(object sender, EventArgs e)
