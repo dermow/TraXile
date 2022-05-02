@@ -206,8 +206,15 @@ namespace TraXile
 
         // DataBInd
         private BindingSource _profitBinding;
-        private bool filterBarShown;
+
+        // Is filter bar visible?
+        private bool filterBarShown = true;
+
+        // UI Flag. Reset activity list
         private bool _uiFlagActivityListReset;
+
+        // OVerlay tags toshow
+        private TrX_ActivityTag _overlayTag1, _overlayTag2, _overlayTag3;
 
         /// <summary>
         /// Main Window Constructor
@@ -245,13 +252,142 @@ namespace TraXile
 
         }
 
+        private List<TrX_TrackedActivity> FilterActivitiesByAreaLevel(int lvl, string op, List<TrX_TrackedActivity> source)
+        {
+            List<TrX_TrackedActivity> results;
+            results = new List<TrX_TrackedActivity>();
+
+            foreach (TrX_TrackedActivity act in source)
+            {
+                bool result = false;
+                switch (op)
+                {
+                    case "=":
+                        result = act.AreaLevel == lvl;
+                        break;
+                    case ">":
+                        result = act.AreaLevel > lvl;
+                        break;
+                    case ">=":
+                        result = act.AreaLevel >= lvl;
+                        break;
+                    case "<":
+                        result = act.AreaLevel < lvl;
+                        break;
+                    case "<=":
+                        result = act.AreaLevel <= lvl;
+                        break;
+                }
+
+                if (result)
+                {
+                    results.Add(act);
+                }
+            }
+           
+            return results;
+        }
+
+        private List<TrX_TrackedActivity> FilterActivitiesByArea(string area, List<TrX_TrackedActivity> source)
+        {
+            List<TrX_TrackedActivity> results;
+            results = new List<TrX_TrackedActivity>();
+
+            foreach (TrX_TrackedActivity act in source)
+            {
+                if (act.Area.ToLower() == area.ToLower() || act.AreaOrig.ToLower() == area.ToLower())
+                {
+                    results.Add(act);
+                }
+            }
+            return results;
+        }
+
+        private List<TrX_TrackedActivity> FilterActivitiesByType(ACTIVITY_TYPES type, List<TrX_TrackedActivity> source)
+        {
+            List<TrX_TrackedActivity> results;
+            results = new List<TrX_TrackedActivity>();
+
+            foreach (TrX_TrackedActivity act in source)
+            {
+                if(act.Type == type)
+                {
+                    results.Add(act);
+                }
+            }
+            return results;
+        }
+
+        private List<TrX_TrackedActivity> FilterActivitiesByTags(List<string> tags, string mode, List<TrX_TrackedActivity> source)
+        {
+            List<TrX_TrackedActivity> results;
+            results = new List<TrX_TrackedActivity>();
+
+            switch(mode)
+            {
+                case "OR":
+                    foreach(TrX_TrackedActivity act in source)
+                    {
+                        foreach(string tag in tags)
+                        {
+                            if(act.HasTag(tag))
+                            {
+                                results.Add(act);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case "NOT":
+                    foreach (TrX_TrackedActivity act in source)
+                    {
+                        bool filterResult = true;
+                        foreach (string tag in tags)
+                        {
+                            if (act.HasTag(tag))
+                            {
+                                filterResult = false;
+                                break;
+                            }
+                        }
+
+                        if(filterResult)
+                        {
+                            results.Add(act);
+                        }
+                    }
+                    break;
+                case "AND":
+                    foreach (TrX_TrackedActivity act in source)
+                    {
+                        bool filterResult = true;
+                        foreach (string tag in tags)
+                        {
+                            if (!act.HasTag(tag))
+                            {
+                                filterResult = false;
+                                break;
+                            }
+                        }
+
+                        if (filterResult)
+                        {
+                            results.Add(act);
+                        }
+                    }
+                    break;
+            }
+           
+            return results;
+        }
+
         /// <summary>
         /// Filter the activitylist by tie range
         /// </summary>
         /// <param name="dt1">Start date/time</param>
         /// <param name="dt2">End date/time</param>
         /// <returns>List of filtered activities</returns>
-        private List<TrX_TrackedActivity> FilterActivitiesByTimeRange(DateTime dt1, DateTime dt2)
+        private List<TrX_TrackedActivity> FilterActivitiesByTimeRange(DateTime dt1, DateTime dt2, List<TrX_TrackedActivity> source)
         {
             List<TrX_TrackedActivity> results;
             results = new List<TrX_TrackedActivity>();
@@ -262,7 +398,7 @@ namespace TraXile
             _statsDate1 = date1;
             _statsDate2 = date2;
 
-            foreach (TrX_TrackedActivity act in _logic.ActivityHistory)
+            foreach (TrX_TrackedActivity act in source)
             {
                 if (act.Started >= date1 && act.Started <= date2)
                 {
@@ -288,11 +424,26 @@ namespace TraXile
             return null;
         }
 
+        private void ResetFilter(bool set = false)
+        {
+            comboBox1.SelectedItem = "All";
+            comboBox7.SelectedItem = "All";
+            comboBox8.SelectedItem = "All";
+            comboBox4.SelectedItem = "OR";
+            comboBox9.SelectedItem = "=";
+            listBox3.Items.Clear();
+
+            if(set)
+            {
+                SetFilter(true);
+            }
+        }
+
         /// <summary>
         /// Apply the current timerange filter to the UI
         /// </summary>
         /// <param name="render">update dashboards?</param>
-        private void SetTimeRangeFilter(bool render = false)
+        private void SetFilter(bool render = false)
         {
             if (comboBox1.SelectedItem == null || _statsDataSource == null)
                 return;
@@ -315,7 +466,7 @@ namespace TraXile
                 DateTime dt1 = li.Start;
                 DateTime dt2 = li.End;
 
-                _statsDataSource = FilterActivitiesByTimeRange(dt1, dt2);
+                _statsDataSource = FilterActivitiesByTimeRange(dt1, dt2, _logic.ActivityHistory);
 
                 if (comboBox1.SelectedItem.ToString() != "Custom")
                 {
@@ -352,7 +503,7 @@ namespace TraXile
                         break;
                 }
 
-                _statsDataSource = FilterActivitiesByTimeRange(date1, date2);
+                _statsDataSource = FilterActivitiesByTimeRange(date1, date2, _logic.ActivityHistory);
 
                 if (comboBox1.SelectedItem.ToString() != "Custom")
                 {
@@ -361,9 +512,49 @@ namespace TraXile
                 }
             }
 
+            // Apply Type filter
+            if(comboBox7.SelectedItem.ToString() != "All")
+            {
+                _statsDataSource = FilterActivitiesByType((ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), comboBox7.SelectedItem.ToString()), _statsDataSource);
+            }
+
+            // Apply Area filter
+            if (comboBox8.SelectedItem.ToString() != "All")
+            {
+                _statsDataSource = FilterActivitiesByArea(comboBox8.SelectedItem.ToString(), _statsDataSource);
+            }
+
+            // Apply Area filter
+            if (!string.IsNullOrEmpty(textBox10.Text))
+            {
+                try
+                {
+                    int lvl = Convert.ToInt32(textBox10.Text);
+                    _statsDataSource = FilterActivitiesByAreaLevel(lvl, comboBox9.SelectedItem.ToString(), _statsDataSource);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+
+                }
+            }
+
+            // Apply tag filter
+            if (listBox3.Items.Count > 0)
+            {
+                List<string> src = new List<string>();
+                foreach (string s in listBox3.Items)
+                {
+                    src.Add(s);
+                }
+
+                _statsDataSource = FilterActivitiesByTags(src, comboBox4.SelectedItem.ToString(), _statsDataSource);
+            }
+
             if (render)
             {
                 RequestDashboardUpdates();
+                RequestActivityListReset();
             }
         }
 
@@ -483,6 +674,11 @@ namespace TraXile
 
             Opacity = 0;
             _mySettings.LoadFromXml();
+
+            _overlayTag1 = null;
+            _overlayTag2 = null;
+            _overlayTag3 = null;
+
             ReadSettings();
 
             // Backup restore mode?
@@ -819,9 +1015,48 @@ namespace TraXile
             {
                 comboBox3.Items.Add(s);
             }
+            foreach (string type in Enum.GetNames(typeof(ACTIVITY_TYPES)))
+            {
+                comboBox7.Items.Add(type);
+            }
             comboBox3.SelectedItem = "All";
-            comboBox4.SelectedItem = "Contains";
+            comboBox4.SelectedItem = "OR";
             comboBox6.SelectedItem = "All";
+            comboBox7.SelectedItem = "All";
+            comboBox8.SelectedItem = "All";
+
+            comboBoxStopWatchTag1.Items.Add("None");
+            comboBoxStopWatchTag2.Items.Add("None");
+            comboBoxStopWatchTag3.Items.Add("None");
+
+            foreach (TrX_ActivityTag tag in _logic.Tags)
+            {
+                comboBox5.Items.Add(tag.DisplayName);
+                comboBoxStopWatchTag1.Items.Add(tag.DisplayName);
+                comboBoxStopWatchTag2.Items.Add(tag.DisplayName);
+                comboBoxStopWatchTag3.Items.Add(tag.DisplayName);
+            }
+
+            // Set Overlay tags
+            string _overlayTagName1 = _mySettings.ReadSetting("overlay.stopwatch.tag_1", null);
+            string _overlayTagName2 = _mySettings.ReadSetting("overlay.stopwatch.tag_2", null);
+            string _overlayTagName3 = _mySettings.ReadSetting("overlay.stopwatch.tag_3", null);
+
+            if(!string.IsNullOrEmpty(_overlayTagName1))
+            {
+
+            }
+
+            comboBoxStopWatchTag1.SelectedItem = _mySettings.ReadSetting("overlay.stopwatch.tag_1", "blight");
+            comboBoxStopWatchTag2.SelectedItem = _mySettings.ReadSetting("overlay.stopwatch.tag_1", "expedition");
+            comboBoxStopWatchTag3.SelectedItem = _mySettings.ReadSetting("overlay.stopwatch.tag_1", "None");
+
+            foreach (string s in _defaultMappings.AllAreas)
+            {
+                comboBox8.Items.Add(s);
+            }
+
+            ResetFilter();
 
             //tableLayoutPanelMain.RowStyles[1].Height = 0;
 
@@ -868,6 +1103,8 @@ namespace TraXile
             _currentLabrunControl = uclr;
             _logic.CurrentLab = lr;
             _logic.CurrentActivity = lr;
+
+           
         }
 
         /// <summary>
@@ -1468,6 +1705,7 @@ namespace TraXile
             }
 
             AddActivityLvItems();
+            _log.Debug("2 _lvmActLog.MasterList.Count = " + _lvmActlog.MasterList.Count);
         }
 
         /// <summary>
@@ -1480,7 +1718,7 @@ namespace TraXile
             {
                 AddMapLvItem(act, act.IsZana, -1, false);
             }
-            _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
+            //_lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
         }
 
         /// <summary>
@@ -1745,7 +1983,7 @@ namespace TraXile
         /// <param name="b_display"></param>
         private void AddMapLvItem(TrX_TrackedActivity map, bool bZana = false, int iPos = 0, bool b_display = true)
         {
-            BeginInvoke((MethodInvoker)delegate
+            Invoke((MethodInvoker)delegate
             {
                 ListViewItem lvi = new ListViewItem(" " + map.Started.ToString());
                 string sName = map.Area;
@@ -1791,16 +2029,13 @@ namespace TraXile
                 {
                     _lvmActlog.InsertLvItem(lvi, map.UniqueID, iPos, b_display);
                 }
-
                 _actLogItemCount = _lvmActlog.CurrentItemCount;
 
+                foreach (TrX_TrackedActivity act in map.GetSubActivities())
+                {
+                    AddMapLvItem(act);
+                }
             });
-
-            // Side areas
-            foreach(TrX_TrackedActivity act in map.GetSubActivities())
-            {
-                AddMapLvItem(act);
-            }
         }
 
         /// <summary>
@@ -1844,7 +2079,7 @@ namespace TraXile
                 stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
                 stopwatchToolStripMenuItem1.Checked = _stopwatchOverlay.Visible;
                 _loadScreenWindow.Close();
-                Invoke((MethodInvoker)delegate
+                MethodInvoker mi = delegate
                 {
                     Show();
 
@@ -1872,7 +2107,6 @@ namespace TraXile
                             ActivateStopWatchOverlay();
 
                         }
-
                         _autoStartsDone = true;
                     }
 
@@ -1998,7 +2232,7 @@ namespace TraXile
                     _uiFlagActivityList
                     )
                     {
-                        SetTimeRangeFilter();
+                       SetFilter();
                     }
 
                     DateTime dtRenderStart = DateTime.Now;
@@ -2099,12 +2333,12 @@ namespace TraXile
                     // Rest act list
                     if (_uiFlagActivityListReset)
                     {
-                        int i = _statsDataSource.Count;
-
+                        _log.Debug("_lvmActLog.MasterList.Count = " + _lvmActlog.MasterList.Count);
                         ResetMapHistory();
                         DoSearch();
                         _uiFlagActivityListReset = false;
                         _uiFlagActivityList = false;
+                        
                     }
                     else if (_uiFlagActivityList)
                     {
@@ -2118,13 +2352,16 @@ namespace TraXile
 
                     listView1.Columns[2].Width = listView1.Width;
 
-                });
+                };
+                Invoke(mi);
             }
 
+            // Update stopwatchOverlay
             _stopwatchOverlay.UpdateStopWatch(labelStopWatch.Text,
                            _logic.OverlayPrevActivity != null ? _logic.OverlayPrevActivity.StopWatchValue : "00:00:00",
                            _logic.CurrentActivity != null ? GetImageIndex(_logic.CurrentActivity) : 0,
                            _logic.OverlayPrevActivity != null ? GetImageIndex(_logic.OverlayPrevActivity) : 0);
+
         }
 
         /// <summary>
@@ -2143,7 +2380,7 @@ namespace TraXile
             trackBar1.Value = _stopwatchOverlayOpacity;
             checkBox2.Checked = _stopwatchOverlayShowDefault;
             label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
-            checkBox3.Checked = Convert.ToBoolean(ReadSetting("statistics_auto_refresh", "false"));
+            //checkBox3.Checked = Convert.ToBoolean(ReadSetting("statistics_auto_refresh", "false"));
             textBox9.Text = ReadSetting("lab.profittracking.filter.text", "");
             radioButton1.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "all";
             radioButton2.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "open";
@@ -3154,9 +3391,9 @@ namespace TraXile
             string sLine = TrX_TrackedActivity.GetCSVHeadline();
             wrt.WriteLine(sLine);
 
-            for (int i = 0; i < _logic.ActivityHistory.Count; i++)
+            for (int i = 0; i < _statsDataSource.Count; i++)
             {
-                wrt.WriteLine(_logic.ActivityHistory[i].ToCSVLine());
+                wrt.WriteLine(_statsDataSource[i].ToCSVLine());
             }
             wrt.Close();
         }
@@ -4058,13 +4295,13 @@ namespace TraXile
 
         private void panelTags_SizeChanged(object sender, EventArgs e)
         {
-            if (_logic.EventQueueInitialized)
+            if (_logic != null && _logic.EventQueueInitialized)
                 RenderTagsForTracking(true);
         }
 
         private void panelEditTags_SizeChanged(object sender, EventArgs e)
         {
-            if (_logic.EventQueueInitialized)
+            if (_logic != null && _logic.EventQueueInitialized)
                 RenderTagsForConfig(true);
         }
 
@@ -4176,7 +4413,7 @@ namespace TraXile
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             textBox8.Text = "";
-            DoSearch();
+            _uiFlagActivityList = true;
         }
 
         private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -4234,7 +4471,9 @@ namespace TraXile
         private void comboBox2_SelectionChangeCommitted(object sender, EventArgs e)
         {
             AddUpdateAppSettings("actlog.maxitems", comboBoxShowMaxItems.SelectedItem.ToString());
-            DoSearch();
+
+            MethodInvoker mi = delegate { DoSearch(); };
+            BeginInvoke(mi);
         }
 
         private void tabPage1_Enter(object sender, EventArgs e)
@@ -4305,8 +4544,8 @@ namespace TraXile
                 {
                     dateTimePicker1.Enabled = false;
                     dateTimePicker2.Enabled = false;
-                    RequestDashboardUpdates();
-                    RequestActivityListReset();
+                    // RequestDashboardUpdates();
+                    // RequestActivityListReset();
                 }
             }
         }
@@ -4622,15 +4861,43 @@ namespace TraXile
             }
             else
             {
-                tableLayoutPanelMain.RowStyles[1].Height = 160;
+                tableLayoutPanelMain.RowStyles[1].Height = 130;
                 linkLabel5.Text = "hide filters";
                 filterBarShown = true;
             }
         }
 
+        private void button17_Click_2(object sender, EventArgs e)
+        {
+            if(!listBox3.Items.Contains(comboBox5.SelectedItem.ToString()))
+            {
+                listBox3.Items.Add(comboBox5.SelectedItem);
+            }
+            comboBox5.Text = "";
+        }
+
+        private void button18_Click_1(object sender, EventArgs e)
+        {
+            if(listBox3.SelectedItem != null)
+            {
+                listBox3.Items.Remove(listBox3.SelectedItem);
+            }
+        }
+
+      
+
+        private void button5_Click_2(object sender, EventArgs e)
+        {
+            ResetFilter(true);
+        }
+
+        private void comboBox9_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void checkBox3_CheckedChanged_1(object sender, EventArgs e)
         {
-            AddUpdateAppSettings("statistics_auto_refresh", checkBox3.Checked.ToString());
         }
     }
 }

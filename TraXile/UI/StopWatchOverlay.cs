@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace TraXile
@@ -7,6 +8,15 @@ namespace TraXile
     {
         private readonly Main _main;
         private ImageList _images;
+
+        public TrX_ActivityTag Tag1 => _tag1;
+        private TrX_ActivityTag _tag1;
+
+        public TrX_ActivityTag Tag2 => _tag2;
+        private TrX_ActivityTag _tag2;
+
+        public TrX_ActivityTag Tag3 => _tag3;
+        private TrX_ActivityTag _tag3;
 
         public StopWatchOverlay(Main main, ImageList images)
         {
@@ -26,6 +36,45 @@ namespace TraXile
                 {
                     linkLabel2.Text = "Pause";
                 }
+            }
+        }
+
+        public void UpdateTagStatus(TrX_ActivityTag tag1, TrX_ActivityTag tag2, TrX_ActivityTag tag3, bool status1, bool status2, bool status3)
+        {
+            if(tag1 != null)
+            { 
+                label5.Text = tag1.DisplayName;
+                label5.BackColor = status1 ? tag1.BackColor : Color.Gray;
+                label5.ForeColor = status1 ? tag1.ForeColor : Color.LightGray;
+            }
+            else
+            {
+                label5.Text = "";
+                label5.BackColor = this.BackColor;
+            }
+
+            if (tag2 != null)
+            {
+                label6.Text = tag2.DisplayName;
+                label6.BackColor = status2 ? tag2.BackColor : Color.Gray;
+                label6.ForeColor = status2 ? tag2.ForeColor : Color.LightGray;
+            }
+            else
+            {
+                label6.Text = "";
+                label6.BackColor = this.BackColor;
+            }
+
+            if (tag3 != null)
+            {
+                label7.Text = tag1.DisplayName;
+                label7.BackColor = status3 ? tag3.BackColor : Color.Gray;
+                label7.ForeColor = status3 ? tag3.ForeColor : Color.LightGray;
+            }
+            else
+            {
+                label7.Text = "";
+                label7.BackColor = this.BackColor;
             }
         }
 

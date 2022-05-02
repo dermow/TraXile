@@ -128,6 +128,41 @@ namespace TraXile
         private List<string> _timelessLeagionAreas;
         public List<string> TimelessLegionAreas => _timelessLeagionAreas;
 
+        // All
+        public List<string> AllAreas
+        {
+            get
+            {
+                List<string> lst = new List<string>();
+                lst.AddRange(MapAreas);
+                lst.AddRange(HeistAreas);
+                lst.AddRange(BreachstoneDomainAreas);
+                lst.AddRange(LogbookAreas);
+                lst.AddRange(SimulacrumAreas);
+                lst.AddRange(TimelessLegionAreas);
+                lst.AddRange(EaterOfWorldsAreas);
+                lst.AddRange(AbyssalAreas);
+                lst.AddRange(AtziriAreas);
+                lst.AddRange(BlackStarAreas);
+                lst.AddRange(CampaignAreas);
+                lst.AddRange(CatarinaFightAreas);
+                lst.AddRange(SyndicateSafehouseAreas);
+                lst.AddRange(DelveAreas);
+                lst.AddRange(SirusAreas);
+                lst.AddRange(ShaperAreas);
+                lst.AddRange(ElderAreas);
+                lst.AddRange(MavenFightAreas);
+                lst.AddRange(MavenInvitationAreas);
+                lst.AddRange(SearingExarchAreas);
+                lst.AddRange(TempleAreas);
+                lst.AddRange(UberAtziriAreas);
+                lst.AddRange(VaalSideAreas);
+                lst.AddRange(LabTrialAreas);
+                lst.Sort();
+                return lst;
+            }
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>

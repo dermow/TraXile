@@ -12,6 +12,8 @@ namespace TraXile
         private readonly List<ListViewItem> _filteredList;
         private readonly Dictionary<string, ListViewItem> _itemMap;
 
+        public List<ListViewItem> MasterList => _masterList;
+
         public TrX_ListViewManager(ListView lv_to_manage)
         {
             _listView = lv_to_manage;
