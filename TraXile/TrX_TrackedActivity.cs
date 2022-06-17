@@ -118,7 +118,7 @@ namespace TraXile
         }
 
         // Original area name (if overwritten)
-        private string _origAreaName;
+        private string _origAreaName = "";
         public string AreaOrig
         {
             get { return _origAreaName.Replace("'", ""); }

@@ -140,9 +140,6 @@ namespace TraXile
             this.tabPage12 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel26 = new System.Windows.Forms.TableLayoutPanel();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.listViewNF1 = new TraXile.ListViewNF();
-            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label100 = new System.Windows.Forms.Label();
             this.panel19 = new System.Windows.Forms.Panel();
             this.button6 = new System.Windows.Forms.Button();
@@ -167,6 +164,11 @@ namespace TraXile
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label33 = new System.Windows.Forms.Label();
+            this.panel38 = new System.Windows.Forms.Panel();
+            this.comboBox6 = new System.Windows.Forms.ComboBox();
+            this.label134 = new System.Windows.Forms.Label();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label132 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
@@ -348,16 +350,6 @@ namespace TraXile
             this.label106 = new System.Windows.Forms.Label();
             this.label107 = new System.Windows.Forms.Label();
             this.panel18 = new System.Windows.Forms.Panel();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.label91 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.label74 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label68 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage6 = new System.Windows.Forms.TabPage();
@@ -425,6 +417,12 @@ namespace TraXile
             this.button12 = new System.Windows.Forms.Button();
             this.tabPage13 = new System.Windows.Forms.TabPage();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.comboBoxStopWatchTag3 = new System.Windows.Forms.ComboBox();
+            this.label141 = new System.Windows.Forms.Label();
+            this.comboBoxStopWatchTag2 = new System.Windows.Forms.ComboBox();
+            this.label140 = new System.Windows.Forms.Label();
+            this.comboBoxStopWatchTag1 = new System.Windows.Forms.ComboBox();
+            this.label139 = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.label38 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -483,7 +481,6 @@ namespace TraXile
             this.tabPage16 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel35 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel36 = new System.Windows.Forms.TableLayoutPanel();
-            this.dataGridView2 = new TraXile.DataGridViewNF();
             this.panel27 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel37 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
@@ -508,6 +505,13 @@ namespace TraXile
             this.label112 = new System.Windows.Forms.Label();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.button15 = new System.Windows.Forms.Button();
+            this.btt_apply_filter = new System.Windows.Forms.Button();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.label91 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.label74 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label68 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -557,6 +561,31 @@ namespace TraXile
             this.toolTip5 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip6 = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip7 = new System.Windows.Forms.ToolTip(this.components);
+            this.label133 = new System.Windows.Forms.Label();
+            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.tableLayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.comboBox9 = new System.Windows.Forms.ComboBox();
+            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.label138 = new System.Windows.Forms.Label();
+            this.btt_remove_filter = new System.Windows.Forms.Button();
+            this.label137 = new System.Windows.Forms.Label();
+            this.label136 = new System.Windows.Forms.Label();
+            this.comboBox8 = new System.Windows.Forms.ComboBox();
+            this.label135 = new System.Windows.Forms.Label();
+            this.comboBox7 = new System.Windows.Forms.ComboBox();
+            this.button18 = new System.Windows.Forms.Button();
+            this.button17 = new System.Windows.Forms.Button();
+            this.listBox3 = new System.Windows.Forms.ListBox();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.pictureBox30 = new System.Windows.Forms.PictureBox();
+            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
+            this.btt_summary = new System.Windows.Forms.Button();
+            this.listViewNF1 = new TraXile.ListViewNF();
+            this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.dataGridView2 = new TraXile.DataGridViewNF();
             this.tabCtl1.SuspendLayout();
             this.tabPageTracking.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -606,6 +635,7 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.chartMapTierAvgTime)).BeginInit();
             this.tableLayoutPanel13.SuspendLayout();
             this.tableLayoutPanel14.SuspendLayout();
+            this.panel38.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tableLayoutPanel15.SuspendLayout();
             this.tableLayoutPanel17.SuspendLayout();
@@ -659,7 +689,6 @@ namespace TraXile
             this.panel15.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.panel16.SuspendLayout();
-            this.panel8.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -709,7 +738,6 @@ namespace TraXile
             this.tabPage16.SuspendLayout();
             this.tableLayoutPanel35.SuspendLayout();
             this.tableLayoutPanel36.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel27.SuspendLayout();
             this.tableLayoutPanel37.SuspendLayout();
             this.groupBox15.SuspendLayout();
@@ -722,6 +750,11 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.tableLayoutPanelMain.SuspendLayout();
+            this.groupBox11.SuspendLayout();
+            this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox30)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // tabCtl1
@@ -735,11 +768,11 @@ namespace TraXile
             this.tabCtl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabCtl1.HotTrack = true;
             this.tabCtl1.ImeMode = System.Windows.Forms.ImeMode.KatakanaHalf;
-            this.tabCtl1.Location = new System.Drawing.Point(0, 24);
+            this.tabCtl1.Location = new System.Drawing.Point(3, 151);
             this.tabCtl1.Multiline = true;
             this.tabCtl1.Name = "tabCtl1";
             this.tabCtl1.SelectedIndex = 0;
-            this.tabCtl1.Size = new System.Drawing.Size(1123, 1187);
+            this.tabCtl1.Size = new System.Drawing.Size(1117, 883);
             this.tabCtl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabCtl1.TabIndex = 1;
             // 
@@ -750,7 +783,7 @@ namespace TraXile
             this.tabPageTracking.Location = new System.Drawing.Point(4, 25);
             this.tabPageTracking.Name = "tabPageTracking";
             this.tabPageTracking.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTracking.Size = new System.Drawing.Size(1115, 1158);
+            this.tabPageTracking.Size = new System.Drawing.Size(1109, 854);
             this.tabPageTracking.TabIndex = 6;
             this.tabPageTracking.Text = "Tracking";
             // 
@@ -767,8 +800,8 @@ namespace TraXile
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel5);
-            this.splitContainer1.Size = new System.Drawing.Size(1109, 1152);
-            this.splitContainer1.SplitterDistance = 387;
+            this.splitContainer1.Size = new System.Drawing.Size(1103, 848);
+            this.splitContainer1.SplitterDistance = 384;
             this.splitContainer1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -790,7 +823,7 @@ namespace TraXile
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(387, 1152);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(384, 848);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // panel2
@@ -800,7 +833,7 @@ namespace TraXile
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(381, 194);
+            this.panel2.Size = new System.Drawing.Size(378, 194);
             this.panel2.TabIndex = 0;
             // 
             // tableLayoutPanelStopWatchArea1
@@ -815,7 +848,7 @@ namespace TraXile
             this.tableLayoutPanelStopWatchArea1.RowCount = 2;
             this.tableLayoutPanelStopWatchArea1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75F));
             this.tableLayoutPanelStopWatchArea1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanelStopWatchArea1.Size = new System.Drawing.Size(381, 194);
+            this.tableLayoutPanelStopWatchArea1.Size = new System.Drawing.Size(378, 194);
             this.tableLayoutPanelStopWatchArea1.TabIndex = 10;
             // 
             // tableLayoutPanel1
@@ -830,7 +863,7 @@ namespace TraXile
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(375, 139);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(372, 139);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // pictureBoxStopWatch
@@ -894,7 +927,7 @@ namespace TraXile
             this.panel20.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel20.Location = new System.Drawing.Point(3, 3);
             this.panel20.Name = "panel20";
-            this.panel20.Size = new System.Drawing.Size(121, 41);
+            this.panel20.Size = new System.Drawing.Size(122, 41);
             this.panel20.TabIndex = 0;
             // 
             // pictureBoxStop
@@ -934,9 +967,9 @@ namespace TraXile
             // 
             this.panel21.Controls.Add(this.pictureBoxSkull);
             this.panel21.Controls.Add(this.labelTrackingDied);
-            this.panel21.Location = new System.Drawing.Point(130, 3);
+            this.panel21.Location = new System.Drawing.Point(131, 3);
             this.panel21.Name = "panel21";
-            this.panel21.Size = new System.Drawing.Size(90, 41);
+            this.panel21.Size = new System.Drawing.Size(89, 41);
             this.panel21.TabIndex = 1;
             // 
             // pictureBoxSkull
@@ -972,7 +1005,7 @@ namespace TraXile
             this.tableLayoutPanel28.Name = "tableLayoutPanel28";
             this.tableLayoutPanel28.RowCount = 1;
             this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel28.Size = new System.Drawing.Size(375, 43);
+            this.tableLayoutPanel28.Size = new System.Drawing.Size(372, 43);
             this.tableLayoutPanel28.TabIndex = 1;
             // 
             // pictureBox10
@@ -1028,7 +1061,7 @@ namespace TraXile
             this.panelTags.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelTags.Location = new System.Drawing.Point(3, 245);
             this.panelTags.Name = "panelTags";
-            this.panelTags.Size = new System.Drawing.Size(381, 509);
+            this.panelTags.Size = new System.Drawing.Size(378, 509);
             this.panelTags.TabIndex = 2;
             this.panelTags.SizeChanged += new System.EventHandler(this.panelTags_SizeChanged);
             // 
@@ -1040,7 +1073,7 @@ namespace TraXile
             this.groupBoxTrackingTags.ForeColor = System.Drawing.Color.Red;
             this.groupBoxTrackingTags.Location = new System.Drawing.Point(0, 0);
             this.groupBoxTrackingTags.Name = "groupBoxTrackingTags";
-            this.groupBoxTrackingTags.Size = new System.Drawing.Size(381, 509);
+            this.groupBoxTrackingTags.Size = new System.Drawing.Size(378, 509);
             this.groupBoxTrackingTags.TabIndex = 0;
             this.groupBoxTrackingTags.TabStop = false;
             this.groupBoxTrackingTags.Text = "Tags";
@@ -1051,7 +1084,7 @@ namespace TraXile
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(3, 760);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(381, 23);
+            this.panel7.Size = new System.Drawing.Size(378, 23);
             this.panel7.TabIndex = 3;
             // 
             // labelAddTagsNote
@@ -1073,7 +1106,7 @@ namespace TraXile
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 203);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(381, 36);
+            this.panel1.Size = new System.Drawing.Size(378, 36);
             this.panel1.TabIndex = 4;
             // 
             // panel6
@@ -1085,7 +1118,7 @@ namespace TraXile
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(381, 36);
+            this.panel6.Size = new System.Drawing.Size(378, 36);
             this.panel6.TabIndex = 8;
             // 
             // label80
@@ -1168,7 +1201,7 @@ namespace TraXile
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(718, 1152);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(715, 848);
             this.tableLayoutPanel5.TabIndex = 5;
             // 
             // listViewActLog
@@ -1189,9 +1222,8 @@ namespace TraXile
             this.listViewActLog.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listViewActLog.HideSelection = false;
             this.listViewActLog.Location = new System.Drawing.Point(3, 93);
-            this.listViewActLog.MultiSelect = false;
             this.listViewActLog.Name = "listViewActLog";
-            this.listViewActLog.Size = new System.Drawing.Size(712, 1024);
+            this.listViewActLog.Size = new System.Drawing.Size(709, 720);
             this.listViewActLog.SmallImageList = this.imageList1;
             this.listViewActLog.TabIndex = 4;
             this.listViewActLog.UseCompatibleStateImageBehavior = false;
@@ -1283,11 +1315,12 @@ namespace TraXile
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(712, 84);
+            this.panel3.Size = new System.Drawing.Size(709, 84);
             this.panel3.TabIndex = 5;
             // 
             // groupBox10
             // 
+            this.groupBox10.Controls.Add(this.btt_summary);
             this.groupBox10.Controls.Add(this.textBox8);
             this.groupBox10.Controls.Add(this.buttonStartSearch);
             this.groupBox10.Controls.Add(this.btt_DeleteActivity);
@@ -1300,7 +1333,7 @@ namespace TraXile
             this.groupBox10.ForeColor = System.Drawing.Color.Red;
             this.groupBox10.Location = new System.Drawing.Point(0, 0);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(712, 84);
+            this.groupBox10.Size = new System.Drawing.Size(709, 84);
             this.groupBox10.TabIndex = 11;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Search";
@@ -1328,7 +1361,7 @@ namespace TraXile
             this.btt_DeleteActivity.FlatAppearance.BorderSize = 0;
             this.btt_DeleteActivity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btt_DeleteActivity.ForeColor = System.Drawing.Color.Black;
-            this.btt_DeleteActivity.Location = new System.Drawing.Point(13, 52);
+            this.btt_DeleteActivity.Location = new System.Drawing.Point(337, 52);
             this.btt_DeleteActivity.Name = "btt_DeleteActivity";
             this.btt_DeleteActivity.Size = new System.Drawing.Size(75, 21);
             this.btt_DeleteActivity.TabIndex = 0;
@@ -1342,7 +1375,7 @@ namespace TraXile
             this.linkLabelClearSearch.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabelClearSearch.ForeColor = System.Drawing.Color.Red;
             this.linkLabelClearSearch.LinkColor = System.Drawing.Color.Red;
-            this.linkLabelClearSearch.Location = new System.Drawing.Point(441, 52);
+            this.linkLabelClearSearch.Location = new System.Drawing.Point(492, 16);
             this.linkLabelClearSearch.Name = "linkLabelClearSearch";
             this.linkLabelClearSearch.Size = new System.Drawing.Size(42, 13);
             this.linkLabelClearSearch.TabIndex = 7;
@@ -1370,7 +1403,7 @@ namespace TraXile
             this.linkLabelSearchSyntax.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabelSearchSyntax.ForeColor = System.Drawing.Color.Red;
             this.linkLabelSearchSyntax.LinkColor = System.Drawing.Color.Red;
-            this.linkLabelSearchSyntax.Location = new System.Drawing.Point(337, 52);
+            this.linkLabelSearchSyntax.Location = new System.Drawing.Point(492, 29);
             this.linkLabelSearchSyntax.Name = "linkLabelSearchSyntax";
             this.linkLabelSearchSyntax.Size = new System.Drawing.Size(98, 13);
             this.linkLabelSearchSyntax.TabIndex = 6;
@@ -1417,11 +1450,11 @@ namespace TraXile
             this.tableLayoutPanel7.Controls.Add(this.label73, 1, 0);
             this.tableLayoutPanel7.Controls.Add(this.labelItemCount, 0, 0);
             this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 1123);
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 819);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 1;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(712, 26);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(709, 26);
             this.tableLayoutPanel7.TabIndex = 6;
             // 
             // comboBoxShowMaxItems
@@ -1474,7 +1507,7 @@ namespace TraXile
             this.tabPage8.Location = new System.Drawing.Point(4, 25);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(1115, 1158);
+            this.tabPage8.Size = new System.Drawing.Size(1109, 854);
             this.tabPage8.TabIndex = 8;
             this.tabPage8.Text = "Statistics";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -1484,19 +1517,18 @@ namespace TraXile
             this.tableLayoutPanel8.AutoScroll = true;
             this.tableLayoutPanel8.ColumnCount = 1;
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel8.Controls.Add(this.tabControl3, 0, 1);
-            this.tableLayoutPanel8.Controls.Add(this.panel8, 0, 0);
+            this.tableLayoutPanel8.Controls.Add(this.tabControl3, 0, 0);
             this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
-            this.tableLayoutPanel8.RowCount = 2;
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
+            this.tableLayoutPanel8.RowCount = 1;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(1109, 1152);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(1103, 848);
             this.tableLayoutPanel8.TabIndex = 0;
             // 
             // tabControl3
             // 
+            this.tabControl3.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
             this.tabControl3.Controls.Add(this.tabPage11);
             this.tabControl3.Controls.Add(this.tabPage12);
             this.tabControl3.Controls.Add(this.tabPage1);
@@ -1504,20 +1536,21 @@ namespace TraXile
             this.tabControl3.Controls.Add(this.tabPage4);
             this.tabControl3.Controls.Add(this.tabPage9);
             this.tabControl3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl3.Location = new System.Drawing.Point(3, 42);
+            this.tabControl3.Location = new System.Drawing.Point(3, 3);
+            this.tabControl3.Multiline = true;
             this.tabControl3.Name = "tabControl3";
             this.tabControl3.SelectedIndex = 0;
-            this.tabControl3.Size = new System.Drawing.Size(1103, 1107);
+            this.tabControl3.Size = new System.Drawing.Size(1097, 842);
             this.tabControl3.TabIndex = 2;
             // 
             // tabPage11
             // 
             this.tabPage11.BackColor = System.Drawing.Color.Black;
             this.tabPage11.Controls.Add(this.tableLayoutPanel24);
-            this.tabPage11.Location = new System.Drawing.Point(4, 22);
+            this.tabPage11.Location = new System.Drawing.Point(4, 25);
             this.tabPage11.Name = "tabPage11";
             this.tabPage11.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage11.Size = new System.Drawing.Size(1095, 1081);
+            this.tabPage11.Size = new System.Drawing.Size(1089, 813);
             this.tabPage11.TabIndex = 5;
             this.tabPage11.Text = "Activity Overview";
             // 
@@ -1540,7 +1573,7 @@ namespace TraXile
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 278F));
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-            this.tableLayoutPanel24.Size = new System.Drawing.Size(1089, 1075);
+            this.tableLayoutPanel24.Size = new System.Drawing.Size(1083, 807);
             this.tableLayoutPanel24.TabIndex = 0;
             // 
             // chartGlobalDashboard
@@ -1557,7 +1590,7 @@ namespace TraXile
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chartGlobalDashboard.Series.Add(series1);
-            this.chartGlobalDashboard.Size = new System.Drawing.Size(1073, 705);
+            this.chartGlobalDashboard.Size = new System.Drawing.Size(1067, 437);
             this.chartGlobalDashboard.TabIndex = 0;
             this.chartGlobalDashboard.Text = "chart8";
             // 
@@ -1569,7 +1602,7 @@ namespace TraXile
             this.label89.ForeColor = System.Drawing.Color.White;
             this.label89.Location = new System.Drawing.Point(13, 0);
             this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(1073, 30);
+            this.label89.Size = new System.Drawing.Size(1067, 30);
             this.label89.TabIndex = 1;
             this.label89.Text = "Activity Time (Hours)";
             this.label89.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1584,9 +1617,9 @@ namespace TraXile
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(13, 771);
+            this.listView1.Location = new System.Drawing.Point(13, 503);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(1073, 272);
+            this.listView1.Size = new System.Drawing.Size(1067, 272);
             this.listView1.TabIndex = 2;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -1615,9 +1648,9 @@ namespace TraXile
             // 
             this.panel9.Controls.Add(this.checkBox1);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel9.Location = new System.Drawing.Point(13, 744);
+            this.panel9.Location = new System.Drawing.Point(13, 476);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(1073, 21);
+            this.panel9.Size = new System.Drawing.Size(1067, 21);
             this.panel9.TabIndex = 3;
             // 
             // checkBox1
@@ -1638,7 +1671,7 @@ namespace TraXile
             this.label46.AutoSize = true;
             this.label46.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label46.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label46.Location = new System.Drawing.Point(13, 1046);
+            this.label46.Location = new System.Drawing.Point(13, 778);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(203, 20);
             this.label46.TabIndex = 4;
@@ -1648,10 +1681,10 @@ namespace TraXile
             // 
             this.tabPage12.BackColor = System.Drawing.Color.Black;
             this.tabPage12.Controls.Add(this.tableLayoutPanel26);
-            this.tabPage12.Location = new System.Drawing.Point(4, 22);
+            this.tabPage12.Location = new System.Drawing.Point(4, 25);
             this.tabPage12.Name = "tabPage12";
             this.tabPage12.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage12.Size = new System.Drawing.Size(1095, 1081);
+            this.tabPage12.Size = new System.Drawing.Size(1089, 813);
             this.tabPage12.TabIndex = 6;
             this.tabPage12.Text = "All stats";
             // 
@@ -1671,7 +1704,7 @@ namespace TraXile
             this.tableLayoutPanel26.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 217F));
             this.tableLayoutPanel26.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel26.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
-            this.tableLayoutPanel26.Size = new System.Drawing.Size(1089, 1075);
+            this.tableLayoutPanel26.Size = new System.Drawing.Size(1083, 807);
             this.tableLayoutPanel26.TabIndex = 0;
             // 
             // chart1
@@ -1689,35 +1722,9 @@ namespace TraXile
             series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series2.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chart1.Series.Add(series2);
-            this.chart1.Size = new System.Drawing.Size(1083, 211);
+            this.chart1.Size = new System.Drawing.Size(1077, 211);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
-            // 
-            // listViewNF1
-            // 
-            this.listViewNF1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader23,
-            this.columnHeader24});
-            this.listViewNF1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewNF1.FullRowSelect = true;
-            this.listViewNF1.HideSelection = false;
-            this.listViewNF1.Location = new System.Drawing.Point(3, 275);
-            this.listViewNF1.Name = "listViewNF1";
-            this.listViewNF1.Size = new System.Drawing.Size(1083, 797);
-            this.listViewNF1.TabIndex = 1;
-            this.listViewNF1.UseCompatibleStateImageBehavior = false;
-            this.listViewNF1.View = System.Windows.Forms.View.Details;
-            this.listViewNF1.SelectedIndexChanged += new System.EventHandler(this.listViewNF1_SelectedIndexChanged);
-            // 
-            // columnHeader23
-            // 
-            this.columnHeader23.Text = "Stat";
-            this.columnHeader23.Width = 200;
-            // 
-            // columnHeader24
-            // 
-            this.columnHeader24.Text = "Value";
-            this.columnHeader24.Width = 150;
             // 
             // label100
             // 
@@ -1727,7 +1734,7 @@ namespace TraXile
             this.label100.ForeColor = System.Drawing.Color.White;
             this.label100.Location = new System.Drawing.Point(3, 0);
             this.label100.Name = "label100";
-            this.label100.Size = new System.Drawing.Size(1083, 20);
+            this.label100.Size = new System.Drawing.Size(1077, 20);
             this.label100.TabIndex = 2;
             this.label100.Text = "(select stat below to show chart)";
             this.label100.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1741,7 +1748,7 @@ namespace TraXile
             this.panel19.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel19.Location = new System.Drawing.Point(3, 240);
             this.panel19.Name = "panel19";
-            this.panel19.Size = new System.Drawing.Size(1083, 29);
+            this.panel19.Size = new System.Drawing.Size(1077, 29);
             this.panel19.TabIndex = 3;
             // 
             // button6
@@ -1793,10 +1800,10 @@ namespace TraXile
             // 
             this.tabPage1.BackColor = System.Drawing.Color.Black;
             this.tabPage1.Controls.Add(this.tableLayoutPanel10);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1095, 1081);
+            this.tabPage1.Size = new System.Drawing.Size(1089, 813);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Mapping";
             // 
@@ -1807,18 +1814,20 @@ namespace TraXile
             this.tableLayoutPanel10.ColumnCount = 2;
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel11, 0, 0);
-            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel12, 1, 0);
-            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel13, 0, 2);
-            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel14, 1, 2);
+            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel11, 0, 1);
+            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel12, 1, 1);
+            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel13, 0, 3);
+            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel14, 1, 3);
+            this.tableLayoutPanel10.Controls.Add(this.panel38, 0, 0);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel10.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
-            this.tableLayoutPanel10.RowCount = 3;
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 345F));
+            this.tableLayoutPanel10.RowCount = 4;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F));
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 331F));
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(1089, 1075);
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(1083, 807);
             this.tableLayoutPanel10.TabIndex = 0;
             // 
             // tableLayoutPanel11
@@ -1828,12 +1837,12 @@ namespace TraXile
             this.tableLayoutPanel11.Controls.Add(this.chartMapTierCount, 0, 1);
             this.tableLayoutPanel11.Controls.Add(this.label9, 0, 0);
             this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel11.Location = new System.Drawing.Point(4, 4);
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(4, 39);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 2;
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.19469F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.80531F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(537, 339);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(534, 325);
             this.tableLayoutPanel11.TabIndex = 0;
             // 
             // chartMapTierCount
@@ -1851,7 +1860,7 @@ namespace TraXile
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             this.chartMapTierCount.Series.Add(series3);
-            this.chartMapTierCount.Size = new System.Drawing.Size(531, 313);
+            this.chartMapTierCount.Size = new System.Drawing.Size(528, 299);
             this.chartMapTierCount.TabIndex = 1;
             this.chartMapTierCount.Text = "chart2";
             title1.Name = "Map Tiers";
@@ -1865,7 +1874,7 @@ namespace TraXile
             this.label9.ForeColor = System.Drawing.Color.White;
             this.label9.Location = new System.Drawing.Point(3, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(531, 20);
+            this.label9.Size = new System.Drawing.Size(528, 20);
             this.label9.TabIndex = 2;
             this.label9.Text = "Map Tiers";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1877,12 +1886,12 @@ namespace TraXile
             this.tableLayoutPanel12.Controls.Add(this.chartMapTierAvgTime, 0, 1);
             this.tableLayoutPanel12.Controls.Add(this.label18, 0, 0);
             this.tableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel12.Location = new System.Drawing.Point(548, 4);
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(545, 39);
             this.tableLayoutPanel12.Name = "tableLayoutPanel12";
             this.tableLayoutPanel12.RowCount = 2;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.19469F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.80531F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(537, 339);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(534, 325);
             this.tableLayoutPanel12.TabIndex = 3;
             // 
             // chartMapTierAvgTime
@@ -1900,7 +1909,7 @@ namespace TraXile
             series4.Legend = "Legend1";
             series4.Name = "Series1";
             this.chartMapTierAvgTime.Series.Add(series4);
-            this.chartMapTierAvgTime.Size = new System.Drawing.Size(531, 313);
+            this.chartMapTierAvgTime.Size = new System.Drawing.Size(528, 299);
             this.chartMapTierAvgTime.TabIndex = 1;
             this.chartMapTierAvgTime.Text = "chart3";
             title2.Name = "Map Tiers";
@@ -1914,7 +1923,7 @@ namespace TraXile
             this.label18.ForeColor = System.Drawing.Color.White;
             this.label18.Location = new System.Drawing.Point(3, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(531, 20);
+            this.label18.Size = new System.Drawing.Size(528, 20);
             this.label18.TabIndex = 2;
             this.label18.Text = "Average time per map/tier (minutes)";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1926,12 +1935,12 @@ namespace TraXile
             this.tableLayoutPanel13.Controls.Add(this.listViewTop10Maps, 0, 1);
             this.tableLayoutPanel13.Controls.Add(this.label29, 0, 0);
             this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel13.Location = new System.Drawing.Point(4, 361);
+            this.tableLayoutPanel13.Location = new System.Drawing.Point(4, 382);
             this.tableLayoutPanel13.Name = "tableLayoutPanel13";
             this.tableLayoutPanel13.RowCount = 2;
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.602151F));
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.39785F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(537, 710);
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(534, 421);
             this.tableLayoutPanel13.TabIndex = 4;
             // 
             // listViewTop10Maps
@@ -1944,9 +1953,9 @@ namespace TraXile
             this.listViewTop10Maps.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewTop10Maps.ForeColor = System.Drawing.Color.White;
             this.listViewTop10Maps.HideSelection = false;
-            this.listViewTop10Maps.Location = new System.Drawing.Point(3, 64);
+            this.listViewTop10Maps.Location = new System.Drawing.Point(3, 39);
             this.listViewTop10Maps.Name = "listViewTop10Maps";
-            this.listViewTop10Maps.Size = new System.Drawing.Size(531, 643);
+            this.listViewTop10Maps.Size = new System.Drawing.Size(528, 379);
             this.listViewTop10Maps.TabIndex = 0;
             this.listViewTop10Maps.UseCompatibleStateImageBehavior = false;
             this.listViewTop10Maps.View = System.Windows.Forms.View.Details;
@@ -1969,7 +1978,7 @@ namespace TraXile
             this.label29.ForeColor = System.Drawing.Color.White;
             this.label29.Location = new System.Drawing.Point(3, 0);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(531, 61);
+            this.label29.Size = new System.Drawing.Size(528, 36);
             this.label29.TabIndex = 1;
             this.label29.Text = "Top 10 Maps";
             this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1981,12 +1990,12 @@ namespace TraXile
             this.tableLayoutPanel14.Controls.Add(this.listViewTaggingOverview, 0, 1);
             this.tableLayoutPanel14.Controls.Add(this.label33, 0, 0);
             this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel14.Location = new System.Drawing.Point(548, 361);
+            this.tableLayoutPanel14.Location = new System.Drawing.Point(545, 382);
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
             this.tableLayoutPanel14.RowCount = 2;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.602151F));
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.39785F));
-            this.tableLayoutPanel14.Size = new System.Drawing.Size(537, 710);
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(534, 421);
             this.tableLayoutPanel14.TabIndex = 5;
             // 
             // listViewTaggingOverview
@@ -1999,9 +2008,9 @@ namespace TraXile
             this.listViewTaggingOverview.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewTaggingOverview.ForeColor = System.Drawing.Color.White;
             this.listViewTaggingOverview.HideSelection = false;
-            this.listViewTaggingOverview.Location = new System.Drawing.Point(3, 64);
+            this.listViewTaggingOverview.Location = new System.Drawing.Point(3, 39);
             this.listViewTaggingOverview.Name = "listViewTaggingOverview";
-            this.listViewTaggingOverview.Size = new System.Drawing.Size(531, 643);
+            this.listViewTaggingOverview.Size = new System.Drawing.Size(528, 379);
             this.listViewTaggingOverview.TabIndex = 0;
             this.listViewTaggingOverview.UseCompatibleStateImageBehavior = false;
             this.listViewTaggingOverview.View = System.Windows.Forms.View.Details;
@@ -2024,19 +2033,92 @@ namespace TraXile
             this.label33.ForeColor = System.Drawing.Color.White;
             this.label33.Location = new System.Drawing.Point(3, 0);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(531, 61);
+            this.label33.Size = new System.Drawing.Size(528, 36);
             this.label33.TabIndex = 1;
             this.label33.Text = "Tagging Overview";
             this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel38
+            // 
+            this.panel38.Controls.Add(this.comboBox6);
+            this.panel38.Controls.Add(this.label134);
+            this.panel38.Controls.Add(this.comboBox3);
+            this.panel38.Controls.Add(this.label132);
+            this.panel38.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel38.Location = new System.Drawing.Point(4, 4);
+            this.panel38.Name = "panel38";
+            this.panel38.Size = new System.Drawing.Size(534, 28);
+            this.panel38.TabIndex = 6;
+            // 
+            // comboBox6
+            // 
+            this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox6.FormattingEnabled = true;
+            this.comboBox6.Items.AddRange(new object[] {
+            "All",
+            "T1",
+            "T2",
+            "T3",
+            "T4",
+            "T5",
+            "T6",
+            "T7",
+            "T8",
+            "T9",
+            "T10",
+            "T11",
+            "T12",
+            "T13",
+            "T14",
+            "T15",
+            "T16",
+            "T17",
+            "T18"});
+            this.comboBox6.Location = new System.Drawing.Point(262, 3);
+            this.comboBox6.Name = "comboBox6";
+            this.comboBox6.Size = new System.Drawing.Size(91, 21);
+            this.comboBox6.TabIndex = 3;
+            // 
+            // label134
+            // 
+            this.label134.AutoSize = true;
+            this.label134.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label134.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label134.Location = new System.Drawing.Point(216, 6);
+            this.label134.Name = "label134";
+            this.label134.Size = new System.Drawing.Size(42, 13);
+            this.label134.TabIndex = 2;
+            this.label134.Text = "Tier:";
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Location = new System.Drawing.Point(48, 3);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(162, 21);
+            this.comboBox3.TabIndex = 1;
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
+            // 
+            // label132
+            // 
+            this.label132.AutoSize = true;
+            this.label132.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label132.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label132.Location = new System.Drawing.Point(7, 6);
+            this.label132.Name = "label132";
+            this.label132.Size = new System.Drawing.Size(35, 13);
+            this.label132.TabIndex = 0;
+            this.label132.Text = "Map:";
             // 
             // tabPage5
             // 
             this.tabPage5.BackColor = System.Drawing.Color.Black;
             this.tabPage5.Controls.Add(this.tableLayoutPanel15);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(1095, 1081);
+            this.tabPage5.Size = new System.Drawing.Size(1089, 813);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Lab";
             // 
@@ -2057,7 +2139,7 @@ namespace TraXile
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 270F));
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel15.Size = new System.Drawing.Size(1089, 1075);
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(1083, 807);
             this.tableLayoutPanel15.TabIndex = 0;
             // 
             // tableLayoutPanel17
@@ -2067,12 +2149,12 @@ namespace TraXile
             this.tableLayoutPanel17.Controls.Add(this.chartLabsAvgTime, 0, 1);
             this.tableLayoutPanel17.Controls.Add(this.label50, 0, 0);
             this.tableLayoutPanel17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel17.Location = new System.Drawing.Point(547, 3);
+            this.tableLayoutPanel17.Location = new System.Drawing.Point(544, 3);
             this.tableLayoutPanel17.Name = "tableLayoutPanel17";
             this.tableLayoutPanel17.RowCount = 2;
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.895705F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.10429F));
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(539, 326);
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(536, 326);
             this.tableLayoutPanel17.TabIndex = 3;
             // 
             // chartLabsAvgTime
@@ -2092,7 +2174,7 @@ namespace TraXile
             series5.Name = "Series1";
             series5.SmartLabelStyle.AllowOutsidePlotArea = System.Windows.Forms.DataVisualization.Charting.LabelOutsidePlotAreaStyle.Yes;
             this.chartLabsAvgTime.Series.Add(series5);
-            this.chartLabsAvgTime.Size = new System.Drawing.Size(533, 291);
+            this.chartLabsAvgTime.Size = new System.Drawing.Size(530, 291);
             this.chartLabsAvgTime.TabIndex = 1;
             this.chartLabsAvgTime.Text = "chart5";
             title3.Name = "Map Tiers";
@@ -2106,7 +2188,7 @@ namespace TraXile
             this.label50.ForeColor = System.Drawing.Color.White;
             this.label50.Location = new System.Drawing.Point(3, 0);
             this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(533, 29);
+            this.label50.Size = new System.Drawing.Size(530, 29);
             this.label50.TabIndex = 2;
             this.label50.Text = "Avg. time per successful  lab (minutes)";
             this.label50.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2123,7 +2205,7 @@ namespace TraXile
             this.tableLayoutPanel16.RowCount = 2;
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.895705F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.10429F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(538, 326);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(535, 326);
             this.tableLayoutPanel16.TabIndex = 1;
             // 
             // chartLabsDone
@@ -2141,7 +2223,7 @@ namespace TraXile
             series6.Legend = "Legend1";
             series6.Name = "Series1";
             this.chartLabsDone.Series.Add(series6);
-            this.chartLabsDone.Size = new System.Drawing.Size(532, 291);
+            this.chartLabsDone.Size = new System.Drawing.Size(529, 291);
             this.chartLabsDone.TabIndex = 1;
             this.chartLabsDone.Text = "chart4";
             title4.Name = "Map Tiers";
@@ -2155,7 +2237,7 @@ namespace TraXile
             this.label25.ForeColor = System.Drawing.Color.White;
             this.label25.Location = new System.Drawing.Point(3, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(532, 29);
+            this.label25.Size = new System.Drawing.Size(529, 29);
             this.label25.TabIndex = 2;
             this.label25.Text = "Successful labs done by type";
             this.label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2172,7 +2254,7 @@ namespace TraXile
             this.tableLayoutPanel18.RowCount = 2;
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.91228F));
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.08772F));
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(538, 264);
+            this.tableLayoutPanel18.Size = new System.Drawing.Size(535, 264);
             this.tableLayoutPanel18.TabIndex = 4;
             // 
             // listViewBestLabs
@@ -2188,7 +2270,7 @@ namespace TraXile
             this.listViewBestLabs.HideSelection = false;
             this.listViewBestLabs.Location = new System.Drawing.Point(3, 42);
             this.listViewBestLabs.Name = "listViewBestLabs";
-            this.listViewBestLabs.Size = new System.Drawing.Size(532, 219);
+            this.listViewBestLabs.Size = new System.Drawing.Size(529, 219);
             this.listViewBestLabs.TabIndex = 3;
             this.listViewBestLabs.UseCompatibleStateImageBehavior = false;
             this.listViewBestLabs.View = System.Windows.Forms.View.Details;
@@ -2216,7 +2298,7 @@ namespace TraXile
             this.label84.ForeColor = System.Drawing.Color.White;
             this.label84.Location = new System.Drawing.Point(3, 0);
             this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(532, 39);
+            this.label84.Size = new System.Drawing.Size(529, 39);
             this.label84.TabIndex = 2;
             this.label84.Text = "Best lab times";
             this.label84.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2228,7 +2310,7 @@ namespace TraXile
             this.panel17.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel17.Location = new System.Drawing.Point(3, 335);
             this.panel17.Name = "panel17";
-            this.panel17.Size = new System.Drawing.Size(538, 19);
+            this.panel17.Size = new System.Drawing.Size(535, 19);
             this.panel17.TabIndex = 5;
             // 
             // label49
@@ -2258,10 +2340,10 @@ namespace TraXile
             // 
             this.tabPage4.BackColor = System.Drawing.Color.Black;
             this.tabPage4.Controls.Add(this.tableLayoutPanel19);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1095, 1081);
+            this.tabPage4.Size = new System.Drawing.Size(1089, 813);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Heist";
             // 
@@ -2282,7 +2364,7 @@ namespace TraXile
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 360F));
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
-            this.tableLayoutPanel19.Size = new System.Drawing.Size(1089, 1075);
+            this.tableLayoutPanel19.Size = new System.Drawing.Size(1083, 807);
             this.tableLayoutPanel19.TabIndex = 0;
             // 
             // tableLayoutPanel20
@@ -2297,7 +2379,7 @@ namespace TraXile
             this.tableLayoutPanel20.RowCount = 2;
             this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.91228F));
             this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.08772F));
-            this.tableLayoutPanel20.Size = new System.Drawing.Size(539, 294);
+            this.tableLayoutPanel20.Size = new System.Drawing.Size(536, 294);
             this.tableLayoutPanel20.TabIndex = 2;
             // 
             // chartHeistByLevel
@@ -2315,7 +2397,7 @@ namespace TraXile
             series7.Legend = "Legend1";
             series7.Name = "Series1";
             this.chartHeistByLevel.Series.Add(series7);
-            this.chartHeistByLevel.Size = new System.Drawing.Size(533, 245);
+            this.chartHeistByLevel.Size = new System.Drawing.Size(530, 245);
             this.chartHeistByLevel.TabIndex = 1;
             this.chartHeistByLevel.Text = "chart6";
             title5.Name = "Map Tiers";
@@ -2329,7 +2411,7 @@ namespace TraXile
             this.label85.ForeColor = System.Drawing.Color.White;
             this.label85.Location = new System.Drawing.Point(3, 0);
             this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(533, 43);
+            this.label85.Size = new System.Drawing.Size(530, 43);
             this.label85.TabIndex = 2;
             this.label85.Text = "Heists done by level";
             this.label85.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2346,7 +2428,7 @@ namespace TraXile
             this.tableLayoutPanel21.RowCount = 2;
             this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.602151F));
             this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.39785F));
-            this.tableLayoutPanel21.Size = new System.Drawing.Size(539, 354);
+            this.tableLayoutPanel21.Size = new System.Drawing.Size(536, 354);
             this.tableLayoutPanel21.TabIndex = 5;
             // 
             // listView4
@@ -2361,7 +2443,7 @@ namespace TraXile
             this.listView4.HideSelection = false;
             this.listView4.Location = new System.Drawing.Point(3, 33);
             this.listView4.Name = "listView4";
-            this.listView4.Size = new System.Drawing.Size(533, 318);
+            this.listView4.Size = new System.Drawing.Size(530, 318);
             this.listView4.TabIndex = 0;
             this.listView4.UseCompatibleStateImageBehavior = false;
             this.listView4.View = System.Windows.Forms.View.Details;
@@ -2384,7 +2466,7 @@ namespace TraXile
             this.label86.ForeColor = System.Drawing.Color.White;
             this.label86.Location = new System.Drawing.Point(3, 0);
             this.label86.Name = "label86";
-            this.label86.Size = new System.Drawing.Size(533, 30);
+            this.label86.Size = new System.Drawing.Size(530, 30);
             this.label86.TabIndex = 1;
             this.label86.Text = "Heists done by area";
             this.label86.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2396,12 +2478,12 @@ namespace TraXile
             this.tableLayoutPanel22.Controls.Add(this.listView5, 0, 1);
             this.tableLayoutPanel22.Controls.Add(this.label87, 0, 0);
             this.tableLayoutPanel22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel22.Location = new System.Drawing.Point(548, 328);
+            this.tableLayoutPanel22.Location = new System.Drawing.Point(545, 328);
             this.tableLayoutPanel22.Name = "tableLayoutPanel22";
             this.tableLayoutPanel22.RowCount = 2;
             this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.602151F));
             this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.39785F));
-            this.tableLayoutPanel22.Size = new System.Drawing.Size(538, 354);
+            this.tableLayoutPanel22.Size = new System.Drawing.Size(535, 354);
             this.tableLayoutPanel22.TabIndex = 6;
             // 
             // listView5
@@ -2416,7 +2498,7 @@ namespace TraXile
             this.listView5.HideSelection = false;
             this.listView5.Location = new System.Drawing.Point(3, 33);
             this.listView5.Name = "listView5";
-            this.listView5.Size = new System.Drawing.Size(532, 318);
+            this.listView5.Size = new System.Drawing.Size(529, 318);
             this.listView5.TabIndex = 0;
             this.listView5.UseCompatibleStateImageBehavior = false;
             this.listView5.View = System.Windows.Forms.View.Details;
@@ -2439,7 +2521,7 @@ namespace TraXile
             this.label87.ForeColor = System.Drawing.Color.White;
             this.label87.Location = new System.Drawing.Point(3, 0);
             this.label87.Name = "label87";
-            this.label87.Size = new System.Drawing.Size(532, 30);
+            this.label87.Size = new System.Drawing.Size(529, 30);
             this.label87.TabIndex = 1;
             this.label87.Text = "Tagging overview";
             this.label87.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2451,12 +2533,12 @@ namespace TraXile
             this.tableLayoutPanel23.Controls.Add(this.chartHeistAvgTime, 0, 1);
             this.tableLayoutPanel23.Controls.Add(this.label88, 0, 0);
             this.tableLayoutPanel23.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel23.Location = new System.Drawing.Point(548, 3);
+            this.tableLayoutPanel23.Location = new System.Drawing.Point(545, 3);
             this.tableLayoutPanel23.Name = "tableLayoutPanel23";
             this.tableLayoutPanel23.RowCount = 2;
             this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.91228F));
             this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.08772F));
-            this.tableLayoutPanel23.Size = new System.Drawing.Size(538, 294);
+            this.tableLayoutPanel23.Size = new System.Drawing.Size(535, 294);
             this.tableLayoutPanel23.TabIndex = 7;
             // 
             // chartHeistAvgTime
@@ -2474,7 +2556,7 @@ namespace TraXile
             series8.Legend = "Legend1";
             series8.Name = "Series1";
             this.chartHeistAvgTime.Series.Add(series8);
-            this.chartHeistAvgTime.Size = new System.Drawing.Size(532, 245);
+            this.chartHeistAvgTime.Size = new System.Drawing.Size(529, 245);
             this.chartHeistAvgTime.TabIndex = 1;
             this.chartHeistAvgTime.Text = "chart7";
             title6.Name = "Map Tiers";
@@ -2488,7 +2570,7 @@ namespace TraXile
             this.label88.ForeColor = System.Drawing.Color.White;
             this.label88.Location = new System.Drawing.Point(3, 0);
             this.label88.Name = "label88";
-            this.label88.Size = new System.Drawing.Size(532, 43);
+            this.label88.Size = new System.Drawing.Size(529, 43);
             this.label88.TabIndex = 2;
             this.label88.Text = "Average time per heist/level (minutes)";
             this.label88.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2498,10 +2580,10 @@ namespace TraXile
             this.tabPage9.AutoScroll = true;
             this.tabPage9.BackColor = System.Drawing.Color.Black;
             this.tabPage9.Controls.Add(this.tabControl4);
-            this.tabPage9.Location = new System.Drawing.Point(4, 22);
+            this.tabPage9.Location = new System.Drawing.Point(4, 25);
             this.tabPage9.Name = "tabPage9";
             this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(1095, 1081);
+            this.tabPage9.Size = new System.Drawing.Size(1089, 813);
             this.tabPage9.TabIndex = 0;
             this.tabPage9.Text = "Bossing";
             // 
@@ -2514,7 +2596,7 @@ namespace TraXile
             this.tabControl4.Location = new System.Drawing.Point(3, 3);
             this.tabControl4.Name = "tabControl4";
             this.tabControl4.SelectedIndex = 0;
-            this.tabControl4.Size = new System.Drawing.Size(1089, 1075);
+            this.tabControl4.Size = new System.Drawing.Size(1083, 807);
             this.tabControl4.TabIndex = 0;
             // 
             // tabPage18
@@ -2524,7 +2606,7 @@ namespace TraXile
             this.tabPage18.Location = new System.Drawing.Point(4, 22);
             this.tabPage18.Name = "tabPage18";
             this.tabPage18.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage18.Size = new System.Drawing.Size(1081, 1049);
+            this.tabPage18.Size = new System.Drawing.Size(1075, 781);
             this.tabPage18.TabIndex = 0;
             this.tabPage18.Text = "Default";
             // 
@@ -2551,7 +2633,7 @@ namespace TraXile
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 342F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 336F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 51F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(1075, 1043);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(1069, 775);
             this.tableLayoutPanel9.TabIndex = 1;
             // 
             // panel30
@@ -2559,7 +2641,7 @@ namespace TraXile
             this.panel30.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel30.Location = new System.Drawing.Point(3, 681);
             this.panel30.Name = "panel30";
-            this.panel30.Size = new System.Drawing.Size(294, 359);
+            this.panel30.Size = new System.Drawing.Size(294, 91);
             this.panel30.TabIndex = 7;
             // 
             // panel28
@@ -2567,7 +2649,7 @@ namespace TraXile
             this.panel28.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel28.Location = new System.Drawing.Point(303, 681);
             this.panel28.Name = "panel28";
-            this.panel28.Size = new System.Drawing.Size(294, 359);
+            this.panel28.Size = new System.Drawing.Size(294, 91);
             this.panel28.TabIndex = 6;
             // 
             // panelBossElder
@@ -3222,7 +3304,7 @@ namespace TraXile
             this.tabPage19.Location = new System.Drawing.Point(4, 22);
             this.tabPage19.Name = "tabPage19";
             this.tabPage19.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage19.Size = new System.Drawing.Size(1081, 1049);
+            this.tabPage19.Size = new System.Drawing.Size(1075, 781);
             this.tabPage19.TabIndex = 1;
             this.tabPage19.Text = "Eldrich";
             // 
@@ -3248,7 +3330,7 @@ namespace TraXile
             this.tableLayoutPanel38.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 342F));
             this.tableLayoutPanel38.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 336F));
             this.tableLayoutPanel38.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 51F));
-            this.tableLayoutPanel38.Size = new System.Drawing.Size(1075, 1043);
+            this.tableLayoutPanel38.Size = new System.Drawing.Size(1069, 775);
             this.tableLayoutPanel38.TabIndex = 3;
             // 
             // panel31
@@ -3712,7 +3794,7 @@ namespace TraXile
             this.tabPage20.Location = new System.Drawing.Point(4, 22);
             this.tabPage20.Name = "tabPage20";
             this.tabPage20.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage20.Size = new System.Drawing.Size(1081, 1049);
+            this.tabPage20.Size = new System.Drawing.Size(1075, 781);
             this.tabPage20.TabIndex = 2;
             this.tabPage20.Text = "Conqueror";
             // 
@@ -3738,7 +3820,7 @@ namespace TraXile
             this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 342F));
             this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 336F));
             this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 51F));
-            this.tableLayoutPanel25.Size = new System.Drawing.Size(1075, 1043);
+            this.tableLayoutPanel25.Size = new System.Drawing.Size(1069, 775);
             this.tableLayoutPanel25.TabIndex = 2;
             // 
             // panel12
@@ -4195,123 +4277,6 @@ namespace TraXile
             this.panel18.Size = new System.Drawing.Size(294, 330);
             this.panel18.TabIndex = 5;
             // 
-            // panel8
-            // 
-            this.panel8.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.panel8.Controls.Add(this.checkBox3);
-            this.panel8.Controls.Add(this.button3);
-            this.panel8.Controls.Add(this.button5);
-            this.panel8.Controls.Add(this.dateTimePicker2);
-            this.panel8.Controls.Add(this.label91);
-            this.panel8.Controls.Add(this.dateTimePicker1);
-            this.panel8.Controls.Add(this.label74);
-            this.panel8.Controls.Add(this.comboBox1);
-            this.panel8.Controls.Add(this.label68);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(3, 3);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(1103, 33);
-            this.panel8.TabIndex = 0;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.ForeColor = System.Drawing.Color.White;
-            this.checkBox3.Location = new System.Drawing.Point(1011, 9);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(82, 17);
-            this.checkBox3.TabIndex = 8;
-            this.checkBox3.Text = "auto refresh";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged_1);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(930, 5);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 7;
-            this.button3.Text = "Refresh";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click_2);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(815, 5);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(38, 23);
-            this.button5.TabIndex = 6;
-            this.button5.Text = "set";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click_1);
-            // 
-            // dateTimePicker2
-            // 
-            this.dateTimePicker2.Enabled = false;
-            this.dateTimePicker2.Location = new System.Drawing.Point(609, 6);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker2.TabIndex = 5;
-            // 
-            // label91
-            // 
-            this.label91.AutoSize = true;
-            this.label91.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label91.ForeColor = System.Drawing.Color.White;
-            this.label91.Location = new System.Drawing.Point(572, 7);
-            this.label91.Name = "label91";
-            this.label91.Size = new System.Drawing.Size(31, 15);
-            this.label91.TabIndex = 4;
-            this.label91.Text = "To:";
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.CustomFormat = "yyyy-MM-dd";
-            this.dateTimePicker1.Enabled = false;
-            this.dateTimePicker1.Location = new System.Drawing.Point(355, 6);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker1.TabIndex = 3;
-            // 
-            // label74
-            // 
-            this.label74.AutoSize = true;
-            this.label74.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label74.ForeColor = System.Drawing.Color.White;
-            this.label74.Location = new System.Drawing.Point(302, 7);
-            this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(47, 15);
-            this.label74.TabIndex = 2;
-            this.label74.Text = "From:";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "All",
-            "Custom",
-            "Today",
-            "Last 7 days",
-            "Last 30 days",
-            "Last year"});
-            this.comboBox1.Location = new System.Drawing.Point(110, 5);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(174, 21);
-            this.comboBox1.TabIndex = 1;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
-            // 
-            // label68
-            // 
-            this.label68.AutoSize = true;
-            this.label68.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label68.ForeColor = System.Drawing.Color.White;
-            this.label68.Location = new System.Drawing.Point(9, 7);
-            this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(95, 15);
-            this.label68.TabIndex = 0;
-            this.label68.Text = "Time range:";
-            // 
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -4319,7 +4284,7 @@ namespace TraXile
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(1115, 1158);
+            this.tabPage3.Size = new System.Drawing.Size(1109, 854);
             this.tabPage3.TabIndex = 7;
             this.tabPage3.Text = "Config";
             // 
@@ -4331,9 +4296,10 @@ namespace TraXile
             this.tabControl2.Controls.Add(this.tabPage2);
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.Location = new System.Drawing.Point(3, 3);
+            this.tabControl2.Multiline = true;
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(1109, 1152);
+            this.tabControl2.Size = new System.Drawing.Size(1103, 848);
             this.tabControl2.TabIndex = 0;
             // 
             // tabPage6
@@ -4350,7 +4316,7 @@ namespace TraXile
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(1101, 1126);
+            this.tabPage6.Size = new System.Drawing.Size(1095, 822);
             this.tabPage6.TabIndex = 0;
             this.tabPage6.Text = "Settings";
             // 
@@ -4763,7 +4729,7 @@ namespace TraXile
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(1101, 1126);
+            this.tabPage7.Size = new System.Drawing.Size(1095, 822);
             this.tabPage7.TabIndex = 1;
             this.tabPage7.Text = "Manage Tags";
             // 
@@ -4783,7 +4749,7 @@ namespace TraXile
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 37.84615F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(1095, 1120);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(1089, 816);
             this.tableLayoutPanel6.TabIndex = 0;
             // 
             // panelEditTags
@@ -4792,7 +4758,7 @@ namespace TraXile
             this.panelEditTags.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelEditTags.Location = new System.Drawing.Point(3, 40);
             this.panelEditTags.Name = "panelEditTags";
-            this.panelEditTags.Size = new System.Drawing.Size(508, 1036);
+            this.panelEditTags.Size = new System.Drawing.Size(506, 732);
             this.panelEditTags.TabIndex = 0;
             this.panelEditTags.SizeChanged += new System.EventHandler(this.panelEditTags_SizeChanged);
             // 
@@ -4803,7 +4769,7 @@ namespace TraXile
             this.groupBox3.ForeColor = System.Drawing.Color.Red;
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(508, 1036);
+            this.groupBox3.Size = new System.Drawing.Size(506, 732);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Tags (click to edit)";
@@ -4818,7 +4784,7 @@ namespace TraXile
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(3, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(508, 31);
+            this.panel4.Size = new System.Drawing.Size(506, 31);
             this.panel4.TabIndex = 1;
             // 
             // textBox3
@@ -4875,9 +4841,9 @@ namespace TraXile
             // 
             this.panel5.Controls.Add(this.groupBox7);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(517, 40);
+            this.panel5.Location = new System.Drawing.Point(515, 40);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(575, 1036);
+            this.panel5.Size = new System.Drawing.Size(571, 732);
             this.panel5.TabIndex = 2;
             // 
             // groupBox7
@@ -4901,7 +4867,7 @@ namespace TraXile
             this.groupBox7.ForeColor = System.Drawing.Color.Red;
             this.groupBox7.Location = new System.Drawing.Point(0, 0);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(575, 1036);
+            this.groupBox7.Size = new System.Drawing.Size(571, 732);
             this.groupBox7.TabIndex = 1;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Edit";
@@ -5061,12 +5027,18 @@ namespace TraXile
             this.tabPage13.Location = new System.Drawing.Point(4, 22);
             this.tabPage13.Name = "tabPage13";
             this.tabPage13.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage13.Size = new System.Drawing.Size(1101, 1126);
+            this.tabPage13.Size = new System.Drawing.Size(1095, 822);
             this.tabPage13.TabIndex = 2;
             this.tabPage13.Text = "Overlay Settings";
             // 
             // groupBox8
             // 
+            this.groupBox8.Controls.Add(this.comboBoxStopWatchTag3);
+            this.groupBox8.Controls.Add(this.label141);
+            this.groupBox8.Controls.Add(this.comboBoxStopWatchTag2);
+            this.groupBox8.Controls.Add(this.label140);
+            this.groupBox8.Controls.Add(this.comboBoxStopWatchTag1);
+            this.groupBox8.Controls.Add(this.label139);
             this.groupBox8.Controls.Add(this.checkBox2);
             this.groupBox8.Controls.Add(this.label38);
             this.groupBox8.Controls.Add(this.label3);
@@ -5074,10 +5046,67 @@ namespace TraXile
             this.groupBox8.ForeColor = System.Drawing.Color.Red;
             this.groupBox8.Location = new System.Drawing.Point(6, 6);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(497, 100);
+            this.groupBox8.Size = new System.Drawing.Size(497, 198);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Stopwatch";
+            // 
+            // comboBoxStopWatchTag3
+            // 
+            this.comboBoxStopWatchTag3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxStopWatchTag3.FormattingEnabled = true;
+            this.comboBoxStopWatchTag3.Location = new System.Drawing.Point(99, 164);
+            this.comboBoxStopWatchTag3.Name = "comboBoxStopWatchTag3";
+            this.comboBoxStopWatchTag3.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxStopWatchTag3.TabIndex = 9;
+            this.comboBoxStopWatchTag3.SelectedIndexChanged += new System.EventHandler(this.comboBoxStopWatchTag3_SelectedIndexChanged);
+            // 
+            // label141
+            // 
+            this.label141.AutoSize = true;
+            this.label141.Location = new System.Drawing.Point(4, 167);
+            this.label141.Name = "label141";
+            this.label141.Size = new System.Drawing.Size(75, 13);
+            this.label141.TabIndex = 8;
+            this.label141.Text = "Display Tag 3:";
+            // 
+            // comboBoxStopWatchTag2
+            // 
+            this.comboBoxStopWatchTag2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxStopWatchTag2.FormattingEnabled = true;
+            this.comboBoxStopWatchTag2.Location = new System.Drawing.Point(99, 137);
+            this.comboBoxStopWatchTag2.Name = "comboBoxStopWatchTag2";
+            this.comboBoxStopWatchTag2.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxStopWatchTag2.TabIndex = 7;
+            this.comboBoxStopWatchTag2.SelectedIndexChanged += new System.EventHandler(this.comboBoxStopWatchTag2_SelectedIndexChanged);
+            // 
+            // label140
+            // 
+            this.label140.AutoSize = true;
+            this.label140.Location = new System.Drawing.Point(4, 140);
+            this.label140.Name = "label140";
+            this.label140.Size = new System.Drawing.Size(75, 13);
+            this.label140.TabIndex = 6;
+            this.label140.Text = "Display Tag 2:";
+            // 
+            // comboBoxStopWatchTag1
+            // 
+            this.comboBoxStopWatchTag1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxStopWatchTag1.FormattingEnabled = true;
+            this.comboBoxStopWatchTag1.Location = new System.Drawing.Point(99, 111);
+            this.comboBoxStopWatchTag1.Name = "comboBoxStopWatchTag1";
+            this.comboBoxStopWatchTag1.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxStopWatchTag1.TabIndex = 5;
+            this.comboBoxStopWatchTag1.SelectedIndexChanged += new System.EventHandler(this.comboBoxStopWatchTag1_SelectedIndexChanged);
+            // 
+            // label139
+            // 
+            this.label139.AutoSize = true;
+            this.label139.Location = new System.Drawing.Point(5, 114);
+            this.label139.Name = "label139";
+            this.label139.Size = new System.Drawing.Size(75, 13);
+            this.label139.TabIndex = 4;
+            this.label139.Text = "Display Tag 1:";
             // 
             // checkBox2
             // 
@@ -5127,7 +5156,7 @@ namespace TraXile
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1101, 1126);
+            this.tabPage2.Size = new System.Drawing.Size(1095, 822);
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "Labbie";
             // 
@@ -5280,7 +5309,7 @@ namespace TraXile
             this.tabPage14.Location = new System.Drawing.Point(4, 25);
             this.tabPage14.Name = "tabPage14";
             this.tabPage14.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage14.Size = new System.Drawing.Size(1115, 1158);
+            this.tabPage14.Size = new System.Drawing.Size(1109, 854);
             this.tabPage14.TabIndex = 9;
             this.tabPage14.Text = "Lab Farming";
             this.tabPage14.UseVisualStyleBackColor = true;
@@ -5294,7 +5323,7 @@ namespace TraXile
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1109, 1152);
+            this.tabControl1.Size = new System.Drawing.Size(1103, 848);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage15
@@ -5303,7 +5332,7 @@ namespace TraXile
             this.tabPage15.Location = new System.Drawing.Point(4, 22);
             this.tabPage15.Name = "tabPage15";
             this.tabPage15.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage15.Size = new System.Drawing.Size(1101, 1126);
+            this.tabPage15.Size = new System.Drawing.Size(1095, 822);
             this.tabPage15.TabIndex = 0;
             this.tabPage15.Text = "Lab runs";
             this.tabPage15.UseVisualStyleBackColor = true;
@@ -5326,7 +5355,7 @@ namespace TraXile
             this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
             this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
             this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel30.Size = new System.Drawing.Size(1095, 1120);
+            this.tableLayoutPanel30.Size = new System.Drawing.Size(1089, 816);
             this.tableLayoutPanel30.TabIndex = 0;
             // 
             // panel22
@@ -5336,9 +5365,8 @@ namespace TraXile
             this.panel22.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel22.Location = new System.Drawing.Point(3, 84);
             this.panel22.Name = "panel22";
-            this.panel22.Size = new System.Drawing.Size(1089, 1033);
+            this.panel22.Size = new System.Drawing.Size(1083, 729);
             this.panel22.TabIndex = 0;
-            this.panel22.Paint += new System.Windows.Forms.PaintEventHandler(this.panel22_Paint);
             // 
             // panel23
             // 
@@ -5347,7 +5375,7 @@ namespace TraXile
             this.panel23.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel23.Location = new System.Drawing.Point(3, 26);
             this.panel23.Name = "panel23";
-            this.panel23.Size = new System.Drawing.Size(1089, 1);
+            this.panel23.Size = new System.Drawing.Size(1083, 1);
             this.panel23.TabIndex = 1;
             // 
             // label53
@@ -5375,7 +5403,7 @@ namespace TraXile
             this.panel37.Controls.Add(this.button7);
             this.panel37.Location = new System.Drawing.Point(3, 32);
             this.panel37.Name = "panel37";
-            this.panel37.Size = new System.Drawing.Size(1089, 27);
+            this.panel37.Size = new System.Drawing.Size(1083, 27);
             this.panel37.TabIndex = 4;
             // 
             // linkLabel2
@@ -5415,7 +5443,7 @@ namespace TraXile
             this.tabPage17.Location = new System.Drawing.Point(4, 22);
             this.tabPage17.Name = "tabPage17";
             this.tabPage17.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage17.Size = new System.Drawing.Size(1101, 1126);
+            this.tabPage17.Size = new System.Drawing.Size(1095, 822);
             this.tabPage17.TabIndex = 2;
             this.tabPage17.Text = "Enchant Info";
             this.tabPage17.UseVisualStyleBackColor = true;
@@ -5432,7 +5460,7 @@ namespace TraXile
             this.tableLayoutPanel31.RowCount = 2;
             this.tableLayoutPanel31.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 4.066986F));
             this.tableLayoutPanel31.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95.93301F));
-            this.tableLayoutPanel31.Size = new System.Drawing.Size(1095, 1120);
+            this.tableLayoutPanel31.Size = new System.Drawing.Size(1089, 816);
             this.tableLayoutPanel31.TabIndex = 0;
             // 
             // panel24
@@ -5442,7 +5470,7 @@ namespace TraXile
             this.panel24.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel24.Location = new System.Drawing.Point(3, 3);
             this.panel24.Name = "panel24";
-            this.panel24.Size = new System.Drawing.Size(1089, 39);
+            this.panel24.Size = new System.Drawing.Size(1083, 27);
             this.panel24.TabIndex = 0;
             // 
             // comboBox2
@@ -5472,15 +5500,14 @@ namespace TraXile
             this.tableLayoutPanel32.Controls.Add(this.panel25, 0, 0);
             this.tableLayoutPanel32.Controls.Add(this.tableLayoutPanel33, 0, 1);
             this.tableLayoutPanel32.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel32.Location = new System.Drawing.Point(3, 48);
+            this.tableLayoutPanel32.Location = new System.Drawing.Point(3, 36);
             this.tableLayoutPanel32.Name = "tableLayoutPanel32";
             this.tableLayoutPanel32.RowCount = 3;
             this.tableLayoutPanel32.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 123F));
             this.tableLayoutPanel32.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 307F));
             this.tableLayoutPanel32.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 357F));
-            this.tableLayoutPanel32.Size = new System.Drawing.Size(1089, 1069);
+            this.tableLayoutPanel32.Size = new System.Drawing.Size(1083, 777);
             this.tableLayoutPanel32.TabIndex = 1;
-            this.tableLayoutPanel32.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel32_Paint);
             // 
             // panel25
             // 
@@ -5488,7 +5515,7 @@ namespace TraXile
             this.panel25.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel25.Location = new System.Drawing.Point(3, 3);
             this.panel25.Name = "panel25";
-            this.panel25.Size = new System.Drawing.Size(1083, 117);
+            this.panel25.Size = new System.Drawing.Size(1077, 117);
             this.panel25.TabIndex = 0;
             // 
             // groupBox12
@@ -5504,7 +5531,7 @@ namespace TraXile
             this.groupBox12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox12.Location = new System.Drawing.Point(0, 0);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(1083, 117);
+            this.groupBox12.Size = new System.Drawing.Size(1077, 117);
             this.groupBox12.TabIndex = 0;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Stats";
@@ -5593,7 +5620,7 @@ namespace TraXile
             this.tableLayoutPanel33.Name = "tableLayoutPanel33";
             this.tableLayoutPanel33.RowCount = 1;
             this.tableLayoutPanel33.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel33.Size = new System.Drawing.Size(1083, 301);
+            this.tableLayoutPanel33.Size = new System.Drawing.Size(1077, 301);
             this.tableLayoutPanel33.TabIndex = 1;
             // 
             // groupBox13
@@ -5602,7 +5629,7 @@ namespace TraXile
             this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox13.Location = new System.Drawing.Point(3, 3);
             this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(535, 295);
+            this.groupBox13.Size = new System.Drawing.Size(532, 295);
             this.groupBox13.TabIndex = 0;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "Notes";
@@ -5619,7 +5646,7 @@ namespace TraXile
             this.tableLayoutPanel34.RowCount = 2;
             this.tableLayoutPanel34.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel34.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel34.Size = new System.Drawing.Size(529, 276);
+            this.tableLayoutPanel34.Size = new System.Drawing.Size(526, 276);
             this.tableLayoutPanel34.TabIndex = 0;
             // 
             // listBox1
@@ -5628,7 +5655,7 @@ namespace TraXile
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(3, 33);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(523, 240);
+            this.listBox1.Size = new System.Drawing.Size(520, 240);
             this.listBox1.TabIndex = 1;
             // 
             // panel26
@@ -5638,7 +5665,7 @@ namespace TraXile
             this.panel26.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel26.Location = new System.Drawing.Point(3, 3);
             this.panel26.Name = "panel26";
-            this.panel26.Size = new System.Drawing.Size(523, 24);
+            this.panel26.Size = new System.Drawing.Size(520, 24);
             this.panel26.TabIndex = 0;
             // 
             // button8
@@ -5662,9 +5689,9 @@ namespace TraXile
             // 
             this.groupBox14.Controls.Add(this.listBox2);
             this.groupBox14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox14.Location = new System.Drawing.Point(544, 3);
+            this.groupBox14.Location = new System.Drawing.Point(541, 3);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(536, 295);
+            this.groupBox14.Size = new System.Drawing.Size(533, 295);
             this.groupBox14.TabIndex = 1;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "History";
@@ -5675,7 +5702,7 @@ namespace TraXile
             this.listBox2.FormattingEnabled = true;
             this.listBox2.Location = new System.Drawing.Point(3, 16);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(530, 276);
+            this.listBox2.Size = new System.Drawing.Size(527, 276);
             this.listBox2.TabIndex = 2;
             // 
             // tabPage16
@@ -5684,7 +5711,7 @@ namespace TraXile
             this.tabPage16.Location = new System.Drawing.Point(4, 22);
             this.tabPage16.Name = "tabPage16";
             this.tabPage16.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage16.Size = new System.Drawing.Size(1101, 1126);
+            this.tabPage16.Size = new System.Drawing.Size(1095, 822);
             this.tabPage16.TabIndex = 1;
             this.tabPage16.Text = "Profit Tracking";
             this.tabPage16.UseVisualStyleBackColor = true;
@@ -5699,7 +5726,7 @@ namespace TraXile
             this.tableLayoutPanel35.Name = "tableLayoutPanel35";
             this.tableLayoutPanel35.RowCount = 1;
             this.tableLayoutPanel35.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 76.91388F));
-            this.tableLayoutPanel35.Size = new System.Drawing.Size(1095, 1120);
+            this.tableLayoutPanel35.Size = new System.Drawing.Size(1089, 816);
             this.tableLayoutPanel35.TabIndex = 0;
             // 
             // tableLayoutPanel36
@@ -5714,21 +5741,8 @@ namespace TraXile
             this.tableLayoutPanel36.RowCount = 2;
             this.tableLayoutPanel36.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 137F));
             this.tableLayoutPanel36.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel36.Size = new System.Drawing.Size(1089, 1114);
+            this.tableLayoutPanel36.Size = new System.Drawing.Size(1083, 810);
             this.tableLayoutPanel36.TabIndex = 0;
-            // 
-            // dataGridView2
-            // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView2.Location = new System.Drawing.Point(3, 140);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1083, 971);
-            this.dataGridView2.TabIndex = 0;
-            this.dataGridView2.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellEndEdit);
-            this.dataGridView2.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView2_DefaultValuesNeeded);
-            this.dataGridView2.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_RowLeave);
-            this.dataGridView2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView2_KeyUp);
             // 
             // panel27
             // 
@@ -5736,7 +5750,7 @@ namespace TraXile
             this.panel27.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel27.Location = new System.Drawing.Point(3, 3);
             this.panel27.Name = "panel27";
-            this.panel27.Size = new System.Drawing.Size(1083, 131);
+            this.panel27.Size = new System.Drawing.Size(1077, 131);
             this.panel27.TabIndex = 1;
             // 
             // tableLayoutPanel37
@@ -5981,6 +5995,87 @@ namespace TraXile
             this.button15.Text = "Search";
             this.button15.UseVisualStyleBackColor = true;
             this.button15.Click += new System.EventHandler(this.button15_Click_1);
+            // 
+            // btt_apply_filter
+            // 
+            this.btt_apply_filter.BackColor = System.Drawing.Color.Lime;
+            this.btt_apply_filter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btt_apply_filter.ForeColor = System.Drawing.Color.Black;
+            this.btt_apply_filter.Location = new System.Drawing.Point(811, 17);
+            this.btt_apply_filter.Name = "btt_apply_filter";
+            this.btt_apply_filter.Size = new System.Drawing.Size(75, 25);
+            this.btt_apply_filter.TabIndex = 7;
+            this.btt_apply_filter.Text = "set filter";
+            this.btt_apply_filter.UseVisualStyleBackColor = false;
+            this.btt_apply_filter.Click += new System.EventHandler(this.button3_Click_2);
+            // 
+            // dateTimePicker2
+            // 
+            this.dateTimePicker2.Enabled = false;
+            this.dateTimePicker2.Location = new System.Drawing.Point(116, 74);
+            this.dateTimePicker2.Name = "dateTimePicker2";
+            this.dateTimePicker2.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker2.TabIndex = 5;
+            // 
+            // label91
+            // 
+            this.label91.AutoSize = true;
+            this.label91.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label91.ForeColor = System.Drawing.Color.White;
+            this.label91.Location = new System.Drawing.Point(17, 74);
+            this.label91.Name = "label91";
+            this.label91.Size = new System.Drawing.Size(31, 15);
+            this.label91.TabIndex = 4;
+            this.label91.Text = "To:";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.CustomFormat = "yyyy-MM-dd";
+            this.dateTimePicker1.Enabled = false;
+            this.dateTimePicker1.Location = new System.Drawing.Point(116, 48);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker1.TabIndex = 3;
+            // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label74.ForeColor = System.Drawing.Color.White;
+            this.label74.Location = new System.Drawing.Point(17, 47);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(47, 15);
+            this.label74.TabIndex = 2;
+            this.label74.Text = "From:";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "All",
+            "Custom",
+            "Today",
+            "Last 24 hours",
+            "Last 7 days",
+            "Last 30 days",
+            "Last year"});
+            this.comboBox1.Location = new System.Drawing.Point(116, 21);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(200, 21);
+            this.comboBox1.TabIndex = 1;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label68.ForeColor = System.Drawing.Color.White;
+            this.label68.Location = new System.Drawing.Point(15, 23);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(95, 15);
+            this.label68.TabIndex = 0;
+            this.label68.Text = "Time range:";
             // 
             // menuStrip1
             // 
@@ -6399,6 +6494,305 @@ namespace TraXile
             // 
             this.toolTip1.ToolTipTitle = "Reload Logfile (Full)";
             // 
+            // label133
+            // 
+            this.label133.AutoSize = true;
+            this.label133.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label133.ForeColor = System.Drawing.Color.White;
+            this.label133.Location = new System.Drawing.Point(620, 1);
+            this.label133.Name = "label133";
+            this.label133.Size = new System.Drawing.Size(47, 15);
+            this.label133.TabIndex = 9;
+            this.label133.Text = "Tags:";
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Items.AddRange(new object[] {
+            "OR",
+            "AND",
+            "NOT"});
+            this.comboBox4.Location = new System.Drawing.Point(705, 92);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(65, 21);
+            this.comboBox4.TabIndex = 10;
+            // 
+            // comboBox5
+            // 
+            this.comboBox5.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.comboBox5.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBox5.FormattingEnabled = true;
+            this.comboBox5.Location = new System.Drawing.Point(623, 19);
+            this.comboBox5.Name = "comboBox5";
+            this.comboBox5.Size = new System.Drawing.Size(151, 21);
+            this.comboBox5.TabIndex = 11;
+            // 
+            // tableLayoutPanelMain
+            // 
+            this.tableLayoutPanelMain.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.tableLayoutPanelMain.ColumnCount = 1;
+            this.tableLayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelMain.Controls.Add(this.tabCtl1, 0, 2);
+            this.tableLayoutPanelMain.Controls.Add(this.groupBox11, 0, 1);
+            this.tableLayoutPanelMain.Controls.Add(this.panel8, 0, 0);
+            this.tableLayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelMain.Location = new System.Drawing.Point(0, 24);
+            this.tableLayoutPanelMain.Name = "tableLayoutPanelMain";
+            this.tableLayoutPanelMain.RowCount = 3;
+            this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 125F));
+            this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelMain.Size = new System.Drawing.Size(1123, 1037);
+            this.tableLayoutPanelMain.TabIndex = 2;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBox11.Controls.Add(this.comboBox9);
+            this.groupBox11.Controls.Add(this.textBox10);
+            this.groupBox11.Controls.Add(this.label138);
+            this.groupBox11.Controls.Add(this.btt_remove_filter);
+            this.groupBox11.Controls.Add(this.label137);
+            this.groupBox11.Controls.Add(this.label136);
+            this.groupBox11.Controls.Add(this.comboBox8);
+            this.groupBox11.Controls.Add(this.label135);
+            this.groupBox11.Controls.Add(this.comboBox7);
+            this.groupBox11.Controls.Add(this.button18);
+            this.groupBox11.Controls.Add(this.button17);
+            this.groupBox11.Controls.Add(this.listBox3);
+            this.groupBox11.Controls.Add(this.comboBox5);
+            this.groupBox11.Controls.Add(this.btt_apply_filter);
+            this.groupBox11.Controls.Add(this.label68);
+            this.groupBox11.Controls.Add(this.comboBox4);
+            this.groupBox11.Controls.Add(this.comboBox1);
+            this.groupBox11.Controls.Add(this.label133);
+            this.groupBox11.Controls.Add(this.label74);
+            this.groupBox11.Controls.Add(this.dateTimePicker1);
+            this.groupBox11.Controls.Add(this.dateTimePicker2);
+            this.groupBox11.Controls.Add(this.label91);
+            this.groupBox11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox11.ForeColor = System.Drawing.Color.White;
+            this.groupBox11.Location = new System.Drawing.Point(3, 26);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(1117, 119);
+            this.groupBox11.TabIndex = 2;
+            this.groupBox11.TabStop = false;
+            // 
+            // comboBox9
+            // 
+            this.comboBox9.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox9.FormattingEnabled = true;
+            this.comboBox9.Items.AddRange(new object[] {
+            "=",
+            ">",
+            ">=",
+            "<",
+            "<="});
+            this.comboBox9.Location = new System.Drawing.Point(411, 69);
+            this.comboBox9.Name = "comboBox9";
+            this.comboBox9.Size = new System.Drawing.Size(42, 21);
+            this.comboBox9.TabIndex = 23;
+            // 
+            // textBox10
+            // 
+            this.textBox10.Location = new System.Drawing.Point(460, 70);
+            this.textBox10.Name = "textBox10";
+            this.textBox10.Size = new System.Drawing.Size(82, 20);
+            this.textBox10.TabIndex = 22;
+            // 
+            // label138
+            // 
+            this.label138.AutoSize = true;
+            this.label138.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label138.ForeColor = System.Drawing.Color.White;
+            this.label138.Location = new System.Drawing.Point(327, 71);
+            this.label138.Name = "label138";
+            this.label138.Size = new System.Drawing.Size(79, 15);
+            this.label138.TabIndex = 21;
+            this.label138.Text = "Area Lvl.";
+            // 
+            // btt_remove_filter
+            // 
+            this.btt_remove_filter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.btt_remove_filter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btt_remove_filter.ForeColor = System.Drawing.Color.Black;
+            this.btt_remove_filter.Location = new System.Drawing.Point(811, 42);
+            this.btt_remove_filter.Name = "btt_remove_filter";
+            this.btt_remove_filter.Size = new System.Drawing.Size(75, 26);
+            this.btt_remove_filter.TabIndex = 20;
+            this.btt_remove_filter.Text = "reset";
+            this.btt_remove_filter.UseVisualStyleBackColor = false;
+            this.btt_remove_filter.Click += new System.EventHandler(this.button5_Click_2);
+            // 
+            // label137
+            // 
+            this.label137.AutoSize = true;
+            this.label137.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label137.ForeColor = System.Drawing.Color.White;
+            this.label137.Location = new System.Drawing.Point(620, 94);
+            this.label137.Name = "label137";
+            this.label137.Size = new System.Drawing.Size(79, 15);
+            this.label137.TabIndex = 19;
+            this.label137.Text = "Matching:";
+            // 
+            // label136
+            // 
+            this.label136.AutoSize = true;
+            this.label136.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label136.ForeColor = System.Drawing.Color.White;
+            this.label136.Location = new System.Drawing.Point(327, 47);
+            this.label136.Name = "label136";
+            this.label136.Size = new System.Drawing.Size(39, 15);
+            this.label136.TabIndex = 17;
+            this.label136.Text = "Area";
+            // 
+            // comboBox8
+            // 
+            this.comboBox8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox8.FormattingEnabled = true;
+            this.comboBox8.Items.AddRange(new object[] {
+            "All"});
+            this.comboBox8.Location = new System.Drawing.Point(411, 45);
+            this.comboBox8.Name = "comboBox8";
+            this.comboBox8.Size = new System.Drawing.Size(171, 21);
+            this.comboBox8.TabIndex = 18;
+            // 
+            // label135
+            // 
+            this.label135.AutoSize = true;
+            this.label135.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label135.ForeColor = System.Drawing.Color.White;
+            this.label135.Location = new System.Drawing.Point(327, 23);
+            this.label135.Name = "label135";
+            this.label135.Size = new System.Drawing.Size(47, 15);
+            this.label135.TabIndex = 15;
+            this.label135.Text = "Type:";
+            // 
+            // comboBox7
+            // 
+            this.comboBox7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox7.FormattingEnabled = true;
+            this.comboBox7.Items.AddRange(new object[] {
+            "All"});
+            this.comboBox7.Location = new System.Drawing.Point(411, 21);
+            this.comboBox7.Name = "comboBox7";
+            this.comboBox7.Size = new System.Drawing.Size(171, 21);
+            this.comboBox7.TabIndex = 16;
+            // 
+            // button18
+            // 
+            this.button18.ForeColor = System.Drawing.Color.Black;
+            this.button18.Location = new System.Drawing.Point(780, 43);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(22, 23);
+            this.button18.TabIndex = 14;
+            this.button18.Text = "-";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click_1);
+            // 
+            // button17
+            // 
+            this.button17.ForeColor = System.Drawing.Color.Black;
+            this.button17.Location = new System.Drawing.Point(780, 17);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(22, 23);
+            this.button17.TabIndex = 13;
+            this.button17.Text = "+";
+            this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.button17_Click_2);
+            // 
+            // listBox3
+            // 
+            this.listBox3.FormattingEnabled = true;
+            this.listBox3.Location = new System.Drawing.Point(623, 43);
+            this.listBox3.Name = "listBox3";
+            this.listBox3.Size = new System.Drawing.Size(151, 43);
+            this.listBox3.TabIndex = 12;
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.pictureBox30);
+            this.panel8.Controls.Add(this.linkLabel5);
+            this.panel8.Location = new System.Drawing.Point(3, 3);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(200, 17);
+            this.panel8.TabIndex = 3;
+            // 
+            // pictureBox30
+            // 
+            this.pictureBox30.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox30.Image")));
+            this.pictureBox30.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox30.Name = "pictureBox30";
+            this.pictureBox30.Size = new System.Drawing.Size(21, 20);
+            this.pictureBox30.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox30.TabIndex = 12;
+            this.pictureBox30.TabStop = false;
+            // 
+            // linkLabel5
+            // 
+            this.linkLabel5.AutoSize = true;
+            this.linkLabel5.LinkColor = System.Drawing.Color.White;
+            this.linkLabel5.Location = new System.Drawing.Point(24, 1);
+            this.linkLabel5.Name = "linkLabel5";
+            this.linkLabel5.Size = new System.Drawing.Size(54, 13);
+            this.linkLabel5.TabIndex = 13;
+            this.linkLabel5.TabStop = true;
+            this.linkLabel5.Text = "hide filters";
+            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+            // 
+            // btt_summary
+            // 
+            this.btt_summary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.btt_summary.FlatAppearance.BorderSize = 0;
+            this.btt_summary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btt_summary.ForeColor = System.Drawing.Color.Black;
+            this.btt_summary.Location = new System.Drawing.Point(13, 52);
+            this.btt_summary.Name = "btt_summary";
+            this.btt_summary.Size = new System.Drawing.Size(75, 21);
+            this.btt_summary.TabIndex = 11;
+            this.btt_summary.Text = "summary";
+            this.btt_summary.UseVisualStyleBackColor = false;
+            this.btt_summary.Click += new System.EventHandler(this.btt_summary_Click);
+            // 
+            // listViewNF1
+            // 
+            this.listViewNF1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader23,
+            this.columnHeader24});
+            this.listViewNF1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewNF1.FullRowSelect = true;
+            this.listViewNF1.HideSelection = false;
+            this.listViewNF1.Location = new System.Drawing.Point(3, 275);
+            this.listViewNF1.Name = "listViewNF1";
+            this.listViewNF1.Size = new System.Drawing.Size(1077, 529);
+            this.listViewNF1.TabIndex = 1;
+            this.listViewNF1.UseCompatibleStateImageBehavior = false;
+            this.listViewNF1.View = System.Windows.Forms.View.Details;
+            this.listViewNF1.SelectedIndexChanged += new System.EventHandler(this.listViewNF1_SelectedIndexChanged);
+            // 
+            // columnHeader23
+            // 
+            this.columnHeader23.Text = "Stat";
+            this.columnHeader23.Width = 200;
+            // 
+            // columnHeader24
+            // 
+            this.columnHeader24.Text = "Value";
+            this.columnHeader24.Width = 150;
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView2.Location = new System.Drawing.Point(3, 140);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.Size = new System.Drawing.Size(1077, 667);
+            this.dataGridView2.TabIndex = 0;
+            this.dataGridView2.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView2_DefaultValuesNeeded);
+            this.dataGridView2.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_RowLeave);
+            this.dataGridView2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView2_KeyUp);
+            // 
             // Main
             // 
             this.AcceptButton = this.buttonStartSearch;
@@ -6407,8 +6801,8 @@ namespace TraXile
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1123, 1211);
-            this.Controls.Add(this.tabCtl1);
+            this.ClientSize = new System.Drawing.Size(1123, 1061);
+            this.Controls.Add(this.tableLayoutPanelMain);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.ImeMode = System.Windows.Forms.ImeMode.Alpha;
@@ -6482,6 +6876,8 @@ namespace TraXile
             this.tableLayoutPanel13.PerformLayout();
             this.tableLayoutPanel14.ResumeLayout(false);
             this.tableLayoutPanel14.PerformLayout();
+            this.panel38.ResumeLayout(false);
+            this.panel38.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tableLayoutPanel15.ResumeLayout(false);
             this.tableLayoutPanel17.ResumeLayout(false);
@@ -6558,8 +6954,6 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.panel16.ResumeLayout(false);
             this.panel16.PerformLayout();
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
@@ -6622,7 +7016,6 @@ namespace TraXile
             this.tabPage16.ResumeLayout(false);
             this.tableLayoutPanel35.ResumeLayout(false);
             this.tableLayoutPanel36.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.panel27.ResumeLayout(false);
             this.tableLayoutPanel37.ResumeLayout(false);
             this.groupBox15.ResumeLayout(false);
@@ -6638,6 +7031,13 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.tableLayoutPanelMain.ResumeLayout(false);
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox11.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox30)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -6824,14 +7224,12 @@ namespace TraXile
         private Chart chartHeistAvgTime;
         private System.Windows.Forms.Label label88;
         private System.Windows.Forms.TabPage tabPage9;
-        private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.Label label91;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label74;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label68;
-        private System.Windows.Forms.Button button5;
         private System.Windows.Forms.TabPage tabPage12;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel26;
         private Chart chart1;
@@ -6844,7 +7242,7 @@ namespace TraXile
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label101;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btt_apply_filter;
         private System.Windows.Forms.ToolStripMenuItem overlayToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopwatchToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage13;
@@ -6855,7 +7253,6 @@ namespace TraXile
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.ToolStripMenuItem overlaysToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopwatchToolStripMenuItem1;
-        private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.PictureBox pictureBox10;
@@ -7137,6 +7534,38 @@ namespace TraXile
         private System.Windows.Forms.LinkLabel linkLabel3;
         private System.Windows.Forms.Label label52;
         private System.Windows.Forms.Label label131;
+        private System.Windows.Forms.Panel panel38;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.Label label132;
+        private System.Windows.Forms.ComboBox comboBox5;
+        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.Label label133;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.ComboBox comboBox6;
+        private System.Windows.Forms.Label label134;
+        private System.Windows.Forms.PictureBox pictureBox30;
+        private System.Windows.Forms.LinkLabel linkLabel5;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.ListBox listBox3;
+        private System.Windows.Forms.Label label135;
+        private System.Windows.Forms.ComboBox comboBox7;
+        private System.Windows.Forms.Label label137;
+        private System.Windows.Forms.Label label136;
+        private System.Windows.Forms.ComboBox comboBox8;
+        private System.Windows.Forms.Button btt_remove_filter;
+        private System.Windows.Forms.Label label138;
+        private System.Windows.Forms.ComboBox comboBox9;
+        private System.Windows.Forms.TextBox textBox10;
+        private System.Windows.Forms.ComboBox comboBoxStopWatchTag3;
+        private System.Windows.Forms.Label label141;
+        private System.Windows.Forms.ComboBox comboBoxStopWatchTag2;
+        private System.Windows.Forms.Label label140;
+        private System.Windows.Forms.ComboBox comboBoxStopWatchTag1;
+        private System.Windows.Forms.Label label139;
+        private System.Windows.Forms.Button btt_summary;
     }
 }
 

@@ -1757,6 +1757,7 @@ namespace TraXile
                     TimeStamp = lTS,
                     InstanceEndpoint = _currentInstanceEndpoint
                 };
+                _currentActivity.StartStopWatch();
 
                 _prevActivityOverlay = GetLastActivityByType(actType);
                 _currentLabRun = (TrX_TrackedLabrun)_currentActivity;
@@ -2053,7 +2054,7 @@ namespace TraXile
                 bTargetAreaIsMap ||
                 bTargetAreaIsHeist ||
                 bTargetAreaIsSimu ||
-                bTargetAreaIsLab ||
+                //bTargetAreaIsLab ||
                 bTargetAreaMine ||
                 bTargetAreaTemple ||
                 bTargetAreaIsMI ||

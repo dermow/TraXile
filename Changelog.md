@@ -20,3 +20,10 @@
 * Lab is automatically paused if you try to open a locked chest in treasure room
 * Timeless Domain is now being tracked
 * Auto-Tag 'harvest' added
+
+## 1.0.3
+* Advanced global filtering options (tags, aresas, area level...)
+* StopwatchOverlay: define up to 3 tags to show in overlay
+* Filter info for Sentinel league added
+* Auto save for lab enchants fixed
+* Small summary feature for selected history items (duration, avg. duration...)

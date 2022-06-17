@@ -9,6 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -206,6 +207,15 @@ namespace TraXile
         // DataBInd
         private BindingSource _profitBinding;
 
+        // Is filter bar visible?
+        private bool filterBarShown = true;
+
+        // UI Flag. Reset activity list
+        private bool _uiFlagActivityListReset;
+
+        // OVerlay tags toshow
+        private string _overlayTag1, _overlayTag2, _overlayTag3;
+
         /// <summary>
         /// Main Window Constructor
         /// </summary>
@@ -242,13 +252,142 @@ namespace TraXile
 
         }
 
+        private List<TrX_TrackedActivity> FilterActivitiesByAreaLevel(int lvl, string op, List<TrX_TrackedActivity> source)
+        {
+            List<TrX_TrackedActivity> results;
+            results = new List<TrX_TrackedActivity>();
+
+            foreach (TrX_TrackedActivity act in source)
+            {
+                bool result = false;
+                switch (op)
+                {
+                    case "=":
+                        result = act.AreaLevel == lvl;
+                        break;
+                    case ">":
+                        result = act.AreaLevel > lvl;
+                        break;
+                    case ">=":
+                        result = act.AreaLevel >= lvl;
+                        break;
+                    case "<":
+                        result = act.AreaLevel < lvl;
+                        break;
+                    case "<=":
+                        result = act.AreaLevel <= lvl;
+                        break;
+                }
+
+                if (result)
+                {
+                    results.Add(act);
+                }
+            }
+           
+            return results;
+        }
+
+        private List<TrX_TrackedActivity> FilterActivitiesByArea(string area, List<TrX_TrackedActivity> source)
+        {
+            List<TrX_TrackedActivity> results;
+            results = new List<TrX_TrackedActivity>();
+
+            foreach (TrX_TrackedActivity act in source)
+            {
+                if (act.Area.ToLower() == area.ToLower() || act.AreaOrig.ToLower() == area.ToLower())
+                {
+                    results.Add(act);
+                }
+            }
+            return results;
+        }
+
+        private List<TrX_TrackedActivity> FilterActivitiesByType(ACTIVITY_TYPES type, List<TrX_TrackedActivity> source)
+        {
+            List<TrX_TrackedActivity> results;
+            results = new List<TrX_TrackedActivity>();
+
+            foreach (TrX_TrackedActivity act in source)
+            {
+                if(act.Type == type)
+                {
+                    results.Add(act);
+                }
+            }
+            return results;
+        }
+
+        private List<TrX_TrackedActivity> FilterActivitiesByTags(List<string> tags, string mode, List<TrX_TrackedActivity> source)
+        {
+            List<TrX_TrackedActivity> results;
+            results = new List<TrX_TrackedActivity>();
+
+            switch(mode)
+            {
+                case "OR":
+                    foreach(TrX_TrackedActivity act in source)
+                    {
+                        foreach(string tag in tags)
+                        {
+                            if(act.HasTag(tag))
+                            {
+                                results.Add(act);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                case "NOT":
+                    foreach (TrX_TrackedActivity act in source)
+                    {
+                        bool filterResult = true;
+                        foreach (string tag in tags)
+                        {
+                            if (act.HasTag(tag))
+                            {
+                                filterResult = false;
+                                break;
+                            }
+                        }
+
+                        if(filterResult)
+                        {
+                            results.Add(act);
+                        }
+                    }
+                    break;
+                case "AND":
+                    foreach (TrX_TrackedActivity act in source)
+                    {
+                        bool filterResult = true;
+                        foreach (string tag in tags)
+                        {
+                            if (!act.HasTag(tag))
+                            {
+                                filterResult = false;
+                                break;
+                            }
+                        }
+
+                        if (filterResult)
+                        {
+                            results.Add(act);
+                        }
+                    }
+                    break;
+            }
+           
+            return results;
+        }
+
         /// <summary>
         /// Filter the activitylist by tie range
         /// </summary>
         /// <param name="dt1">Start date/time</param>
         /// <param name="dt2">End date/time</param>
         /// <returns>List of filtered activities</returns>
-        private List<TrX_TrackedActivity> FilterActivitiesByTimeRange(DateTime dt1, DateTime dt2)
+        private List<TrX_TrackedActivity> FilterActivitiesByTimeRange(DateTime dt1, DateTime dt2, List<TrX_TrackedActivity> source)
         {
             List<TrX_TrackedActivity> results;
             results = new List<TrX_TrackedActivity>();
@@ -259,7 +398,7 @@ namespace TraXile
             _statsDate1 = date1;
             _statsDate2 = date2;
 
-            foreach (TrX_TrackedActivity act in _logic.ActivityHistory)
+            foreach (TrX_TrackedActivity act in source)
             {
                 if (act.Started >= date1 && act.Started <= date2)
                 {
@@ -285,11 +424,26 @@ namespace TraXile
             return null;
         }
 
+        private void ResetFilter(bool set = false)
+        {
+            comboBox1.SelectedItem = "All";
+            comboBox7.SelectedItem = "All";
+            comboBox8.SelectedItem = "All";
+            comboBox4.SelectedItem = "OR";
+            comboBox9.SelectedItem = "=";
+            listBox3.Items.Clear();
+
+            if(set)
+            {
+                SetFilter(true);
+            }
+        }
+
         /// <summary>
         /// Apply the current timerange filter to the UI
         /// </summary>
         /// <param name="render">update dashboards?</param>
-        private void SetTimeRangeFilter(bool render = false)
+        private void SetFilter(bool render = false)
         {
             if (comboBox1.SelectedItem == null || _statsDataSource == null)
                 return;
@@ -312,7 +466,7 @@ namespace TraXile
                 DateTime dt1 = li.Start;
                 DateTime dt2 = li.End;
 
-                _statsDataSource = FilterActivitiesByTimeRange(dt1, dt2);
+                _statsDataSource = FilterActivitiesByTimeRange(dt1, dt2, _logic.ActivityHistory);
 
                 if (comboBox1.SelectedItem.ToString() != "Custom")
                 {
@@ -335,6 +489,10 @@ namespace TraXile
                         date1 = DateTime.Now;
                         date2 = DateTime.Now;
                         break;
+                    case "Last 24 hours":
+                        date1 = DateTime.Now.AddHours(-24);
+                        date2 = DateTime.Now;
+                        break;
                     case "Last 7 days":
                         date1 = DateTime.Now.AddDays(-7);
                         date2 = DateTime.Now;
@@ -349,7 +507,7 @@ namespace TraXile
                         break;
                 }
 
-                _statsDataSource = FilterActivitiesByTimeRange(date1, date2);
+                _statsDataSource = FilterActivitiesByTimeRange(date1, date2, _logic.ActivityHistory);
 
                 if (comboBox1.SelectedItem.ToString() != "Custom")
                 {
@@ -358,9 +516,49 @@ namespace TraXile
                 }
             }
 
+            // Apply Type filter
+            if(comboBox7.SelectedItem.ToString() != "All")
+            {
+                _statsDataSource = FilterActivitiesByType((ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), comboBox7.SelectedItem.ToString()), _statsDataSource);
+            }
+
+            // Apply Area filter
+            if (comboBox8.SelectedItem.ToString() != "All")
+            {
+                _statsDataSource = FilterActivitiesByArea(comboBox8.SelectedItem.ToString(), _statsDataSource);
+            }
+
+            // Apply Area filter
+            if (!string.IsNullOrEmpty(textBox10.Text))
+            {
+                try
+                {
+                    int lvl = Convert.ToInt32(textBox10.Text);
+                    _statsDataSource = FilterActivitiesByAreaLevel(lvl, comboBox9.SelectedItem.ToString(), _statsDataSource);
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+
+                }
+            }
+
+            // Apply tag filter
+            if (listBox3.Items.Count > 0)
+            {
+                List<string> src = new List<string>();
+                foreach (string s in listBox3.Items)
+                {
+                    src.Add(s);
+                }
+
+                _statsDataSource = FilterActivitiesByTags(src, comboBox4.SelectedItem.ToString(), _statsDataSource);
+            }
+
             if (render)
             {
                 RequestDashboardUpdates();
+                RequestActivityListReset();
             }
         }
 
@@ -411,24 +609,24 @@ namespace TraXile
 
                 _log.Info(string.Format("UpdateCheck -> My version: {0}, Remote version: {1}", TrX_AppInfo.VERSION, sVersion));
 
-                int MyMajor = Convert.ToInt32(TrX_AppInfo.VERSION.Split('.')[0]);
-                int MyMinor = Convert.ToInt32(TrX_AppInfo.VERSION.Split('.')[1]);
-                int MyPatch = Convert.ToInt32(TrX_AppInfo.VERSION.Split('.')[2]);
+                int myMajor = Assembly.GetExecutingAssembly().GetName().Version.Major;
+                int myMinor = Assembly.GetExecutingAssembly().GetName().Version.Minor;
+                int myBuild = Assembly.GetExecutingAssembly().GetName().Version.Build;
 
-                int RemoteMajor = Convert.ToInt32(sVersion.Split('.')[0]);
-                int RemoteMinor = Convert.ToInt32(sVersion.Split('.')[1]);
-                int RemotePatch = Convert.ToInt32(sVersion.Split('.')[2]);
+                int remoteMajor = Convert.ToInt32(sVersion.Split('.')[0]);
+                int remoteMinor = Convert.ToInt32(sVersion.Split('.')[1]);
+                int remoteBuild = Convert.ToInt32(sVersion.Split('.')[2]);
 
                 bool bUpdate = false;
-                if (RemoteMajor > MyMajor)
+                if (remoteMajor > myMajor)
                 {
                     bUpdate = true;
                 }
-                else if (RemoteMajor == MyMajor && RemoteMinor > MyMinor)
+                else if (remoteMajor == myMajor && remoteMinor > myMinor)
                 {
                     bUpdate = true;
                 }
-                else if (RemoteMajor == MyMajor && RemoteMinor == MyMinor && RemotePatch > MyPatch)
+                else if (remoteMajor == myMajor && remoteMinor == myMinor && remoteBuild > myBuild)
                 {
                     bUpdate = true;
                 }
@@ -480,6 +678,11 @@ namespace TraXile
 
             Opacity = 0;
             _mySettings.LoadFromXml();
+
+            _overlayTag1 = null;
+            _overlayTag2 = null;
+            _overlayTag3 = null;
+
             ReadSettings();
 
             // Backup restore mode?
@@ -529,17 +732,12 @@ namespace TraXile
 
             UpdateProfitSummary();
             SetProfitFilter();
-
-            //Testdata
-          //  _profitTracking.Data.Rows.Add(new object[] { DateTime.Now, "B", "C", 1 });
-//            _profitTracking.Data.WriteXml(TrX_AppInfo.APPDATA_PATH + @"\test.xml");
                 
             _lvmActlog = new TrX_ListViewManager(listViewActLog);
             _lvmAllStats = new TrX_ListViewManager(listViewNF1);
           
             _leagues = new List<TrX_LeagueInfo>();
             _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
-            
             
             _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
 
@@ -747,7 +945,6 @@ namespace TraXile
             _loadScreenWindow.Show(this);
 
             InitLeagueInfo();
-            ResetMapHistory();
             ResetLabRuns();
             LoadLayout();
 
@@ -763,7 +960,7 @@ namespace TraXile
             _uiFlagBossDashboard = true;
             _uiFlagHeistDashboard = true;
             _uiFlagGlobalDashboard = true;
-            _uiFlagActivityList = true;
+            _uiFlagActivityListReset = true;
             _uiFlagAllStatsDashboard = true;
 
             // Tool tips
@@ -816,6 +1013,47 @@ namespace TraXile
             toolTip7.ToolTipTitle = "Restore Backup";
             toolTip7.AutoPopDelay = 30000;
 
+            // Map filter
+            comboBox3.Items.Add("All");
+            foreach(string s in _defaultMappings.MapAreas)
+            {
+                comboBox3.Items.Add(s);
+            }
+            foreach (string type in Enum.GetNames(typeof(ACTIVITY_TYPES)))
+            {
+                comboBox7.Items.Add(type);
+            }
+            comboBox3.SelectedItem = "All";
+            comboBox4.SelectedItem = "OR";
+            comboBox6.SelectedItem = "All";
+            comboBox7.SelectedItem = "All";
+            comboBox8.SelectedItem = "All";
+
+            comboBoxStopWatchTag1.Items.Add("None");
+            comboBoxStopWatchTag2.Items.Add("None");
+            comboBoxStopWatchTag3.Items.Add("None");
+
+            foreach (TrX_ActivityTag tag in _logic.Tags)
+            {
+                comboBox5.Items.Add(tag.DisplayName);
+                comboBoxStopWatchTag1.Items.Add(tag.DisplayName);
+                comboBoxStopWatchTag2.Items.Add(tag.DisplayName);
+                comboBoxStopWatchTag3.Items.Add(tag.DisplayName);
+            }
+
+            comboBoxStopWatchTag1.SelectedItem = _overlayTag1 != null ? _overlayTag1 : "None";
+            comboBoxStopWatchTag2.SelectedItem = _overlayTag2 != null ? _overlayTag2 : "None";
+            comboBoxStopWatchTag3.SelectedItem = _overlayTag3 != null ? _overlayTag3 : "None";
+
+            foreach (string s in _defaultMappings.AllAreas)
+            {
+                comboBox8.Items.Add(s);
+            }
+
+            ResetFilter();
+
+            //tableLayoutPanelMain.RowStyles[1].Height = 0;
+
             // Start UI Thread
             timer1.Enabled = true;
             timer1.Start();
@@ -823,10 +1061,10 @@ namespace TraXile
             // Add dummy Labrun for testing
             // ==============================
             bool addDummyLab = false;
-            bool addDummyEnchants = false;
+            bool addDummyEnchants = true;
             if(addDummyLab)
             {
-                AddDummyLabForTesting(addDummyEnchants, 24);
+                AddDummyLabForTesting(addDummyEnchants, 3);
             }
         }
 
@@ -859,6 +1097,8 @@ namespace TraXile
             _currentLabrunControl = uclr;
             _logic.CurrentLab = lr;
             _logic.CurrentActivity = lr;
+
+           
         }
 
         /// <summary>
@@ -983,6 +1223,7 @@ namespace TraXile
             _leagues.Add(new TrX_LeagueInfo("Expedition", 3, 15, new DateTime(2021, 7, 23, 20, 0, 0), new DateTime(2021, 10, 19, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Scourge", 3, 16, new DateTime(2021, 10, 22, 20, 0, 0), new DateTime(2022, 01, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Archnemesis", 3, 17, new DateTime(2022, 02, 04, 20, 0, 0), new DateTime(2022, 05, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Sentinel", 3, 18, new DateTime(2022, 05, 13, 22, 0, 0), new DateTime(2022, 07, 31, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
 
             List<TrX_LeagueInfo> litmp = new List<TrX_LeagueInfo>();
             litmp.AddRange(_leagues);
@@ -1437,7 +1678,6 @@ namespace TraXile
                 chStopwatch = new ColumnHeader() { Name = "actlog_stopwatch", Text = "Stopwatch", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_stopwatch.width", "100")) },
                 chDeath = new ColumnHeader() { Name = "actlog_death", Text = "Deaths", Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_death.width", "60")) };
 
-
             _lvmActlog.Columns.Add(chTime);
             _lvmActlog.Columns.Add(chType);
             _lvmActlog.Columns.Add(chArea);
@@ -1460,6 +1700,7 @@ namespace TraXile
             }
 
             AddActivityLvItems();
+            _log.Debug("2 _lvmActLog.MasterList.Count = " + _lvmActlog.MasterList.Count);
         }
 
         /// <summary>
@@ -1468,11 +1709,11 @@ namespace TraXile
         /// </summary>
         private void AddActivityLvItems()
         {
-            foreach (TrX_TrackedActivity act in _logic.ActivityHistory)
+            foreach (TrX_TrackedActivity act in _statsDataSource)
             {
                 AddMapLvItem(act, act.IsZana, -1, false);
             }
-            _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
+            //_lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
         }
 
         /// <summary>
@@ -1737,7 +1978,7 @@ namespace TraXile
         /// <param name="b_display"></param>
         private void AddMapLvItem(TrX_TrackedActivity map, bool bZana = false, int iPos = 0, bool b_display = true)
         {
-            BeginInvoke((MethodInvoker)delegate
+            Invoke((MethodInvoker)delegate
             {
                 ListViewItem lvi = new ListViewItem(" " + map.Started.ToString());
                 string sName = map.Area;
@@ -1783,16 +2024,13 @@ namespace TraXile
                 {
                     _lvmActlog.InsertLvItem(lvi, map.UniqueID, iPos, b_display);
                 }
-
                 _actLogItemCount = _lvmActlog.CurrentItemCount;
 
+                foreach (TrX_TrackedActivity act in map.GetSubActivities())
+                {
+                    AddMapLvItem(act);
+                }
             });
-
-            // Side areas
-            foreach(TrX_TrackedActivity act in map.GetSubActivities())
-            {
-                AddMapLvItem(act);
-            }
         }
 
         /// <summary>
@@ -1836,7 +2074,7 @@ namespace TraXile
                 stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
                 stopwatchToolStripMenuItem1.Checked = _stopwatchOverlay.Visible;
                 _loadScreenWindow.Close();
-                Invoke((MethodInvoker)delegate
+                MethodInvoker mi = delegate
                 {
                     Show();
 
@@ -1864,7 +2102,6 @@ namespace TraXile
                             ActivateStopWatchOverlay();
 
                         }
-
                         _autoStartsDone = true;
                     }
 
@@ -1876,7 +2113,6 @@ namespace TraXile
 
                     if (!_listViewInitielaized)
                     {
-                        DoSearch();
                         _oldestTimeStamp = _logic.Stats.GetOldestTimeStamp();
                         _listViewInitielaized = true;
                     }
@@ -1987,9 +2223,11 @@ namespace TraXile
                     _uiFlagGlobalDashboard ||
                     _uiFlagHeistDashboard ||
                     _uiFlagLabDashboard ||
-                    _uiFlagMapDashboard)
+                    _uiFlagMapDashboard ||
+                    _uiFlagActivityList
+                    )
                     {
-                        SetTimeRangeFilter();
+                       SetFilter();
                     }
 
                     DateTime dtRenderStart = DateTime.Now;
@@ -2087,8 +2325,17 @@ namespace TraXile
                         _log.Debug(string.Format("Updated 'AllStatsChart' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
-                    // Activity List
-                    if (_uiFlagActivityList)
+                    // Rest act list
+                    if (_uiFlagActivityListReset)
+                    {
+                        _log.Debug("_lvmActLog.MasterList.Count = " + _lvmActlog.MasterList.Count);
+                        ResetMapHistory();
+                        DoSearch();
+                        _uiFlagActivityListReset = false;
+                        _uiFlagActivityList = false;
+                        
+                    }
+                    else if (_uiFlagActivityList)
                     {
                         dtRenderStart = DateTime.Now;
 
@@ -2100,13 +2347,45 @@ namespace TraXile
 
                     listView1.Columns[2].Width = listView1.Width;
 
-                });
+                };
+                Invoke(mi);
             }
 
+            // Update stopwatchOverlay
             _stopwatchOverlay.UpdateStopWatch(labelStopWatch.Text,
                            _logic.OverlayPrevActivity != null ? _logic.OverlayPrevActivity.StopWatchValue : "00:00:00",
                            _logic.CurrentActivity != null ? GetImageIndex(_logic.CurrentActivity) : 0,
                            _logic.OverlayPrevActivity != null ? GetImageIndex(_logic.OverlayPrevActivity) : 0);
+            // Update stopwatchOverlay tags
+            bool tag1Status = false, 
+                 tag2Status = false, 
+                 tag3Status = false;
+
+
+            if(_logic.CurrentActivity != null)
+            {
+                if(_overlayTag1 != null)
+                {
+                    tag1Status = _logic.CurrentActivity.HasTag(_overlayTag1);
+                }
+                if (_overlayTag2 != null)
+                {
+                    tag2Status = _logic.CurrentActivity.HasTag(_overlayTag2);
+                }
+                if (_overlayTag3 != null)
+                {
+                    tag3Status = _logic.CurrentActivity.HasTag(_overlayTag3);
+                }
+            }
+
+            _stopwatchOverlay.UpdateTagStatus(
+                _logic.GetTagByID(_overlayTag1),
+                _logic.GetTagByID(_overlayTag2), 
+                _logic.GetTagByID(_overlayTag3), 
+                tag1Status, 
+                tag2Status, 
+                tag3Status);
+
         }
 
         /// <summary>
@@ -2125,12 +2404,15 @@ namespace TraXile
             trackBar1.Value = _stopwatchOverlayOpacity;
             checkBox2.Checked = _stopwatchOverlayShowDefault;
             label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
-            checkBox3.Checked = Convert.ToBoolean(ReadSetting("statistics_auto_refresh", "false"));
+            //checkBox3.Checked = Convert.ToBoolean(ReadSetting("statistics_auto_refresh", "false"));
             textBox9.Text = ReadSetting("lab.profittracking.filter.text", "");
             radioButton1.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "all";
             radioButton2.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "open";
             radioButton3.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "sold";
             textBox6.Text = ReadSetting("labbie.path", "");
+            _overlayTag1 = ReadSetting("overlay.stopwatch.tag1", "blight");
+            _overlayTag2 = ReadSetting("overlay.stopwatch.tag2", "expedition");
+            _overlayTag3 = ReadSetting("overlay.stopwatch.tag3", null);
         }
 
         /// <summary>
@@ -2907,6 +3189,9 @@ namespace TraXile
             {
                 if (act.Type == ACTIVITY_TYPES.MAP)
                 {
+                    if (comboBox3.Text != "All" && comboBox3.Text != act.Area)
+                        continue;
+
                     countByArea[act.Area]++;
                     countByTier[act.MapTier]++;
                 }
@@ -2944,6 +3229,9 @@ namespace TraXile
             {
                 if (act.Type == ACTIVITY_TYPES.MAP)
                 {
+                    if (comboBox3.Text != "All" && comboBox3.Text != act.Area)
+                        continue;
+
                     foreach (string s in act.Tags)
                     {
                         if (!String.IsNullOrEmpty(s))
@@ -2996,6 +3284,9 @@ namespace TraXile
                 {
                     if (act.Type == ACTIVITY_TYPES.MAP && act.MapTier == (i + 1))
                     {
+                        if (comboBox3.Text != "All" && comboBox3.Text != act.Area)
+                            continue;
+
                         if (act.TotalSeconds < _timeCaps[ACTIVITY_TYPES.MAP])
                         {
                             iSum += act.TotalSeconds;
@@ -3127,9 +3418,9 @@ namespace TraXile
             string sLine = TrX_TrackedActivity.GetCSVHeadline();
             wrt.WriteLine(sLine);
 
-            for (int i = 0; i < _logic.ActivityHistory.Count; i++)
+            for (int i = 0; i < _statsDataSource.Count; i++)
             {
-                wrt.WriteLine(_logic.ActivityHistory[i].ToCSVLine());
+                wrt.WriteLine(_statsDataSource[i].ToCSVLine());
             }
             wrt.Close();
         }
@@ -3811,6 +4102,36 @@ namespace TraXile
             }
         }
 
+        private void DeleteActivities()
+        {
+            List<long> timestampsToDelete = new List<long>();
+            List<string> lvItemsToDelete = new List<string>();
+
+            foreach (ListViewItem lvi in _lvmActlog.listView.SelectedItems)
+            {
+                lvItemsToDelete.Add(lvi.Name);
+                timestampsToDelete.Add(_logic.ActivityHistory[FindEventLogIndexByID(lvi.Name)].TimeStamp);
+            }
+
+            string msg;
+            msg = string.Format("Do you really want to delete {0} activitie(s)?", lvItemsToDelete.Count);
+
+            if (MessageBox.Show(msg, "Delete?", MessageBoxButtons.YesNo) == DialogResult.No)
+            {
+                return;
+            }
+
+            foreach (string itemName in lvItemsToDelete)
+            {
+                _lvmActlog.RemoveItemByName(itemName);
+            }
+
+            foreach (long ts in timestampsToDelete)
+            {
+                DeleteActLogEntry(ts);
+            }
+        }
+
         private void timer2_Tick(object sender, EventArgs e)
         {
             if (_logic.EventQueueInitialized)
@@ -3861,28 +4182,11 @@ namespace TraXile
             PauseCurrentActivityOrSide();
         }
 
+       
+
         private void button3_Click(object sender, EventArgs e)
         {
-            if (listViewActLog.SelectedItems.Count == 1)
-            {
-                int iIndex = FindEventLogIndexByID(listViewActLog.SelectedItems[0].Name);
-                long lTimestamp = _logic.ActivityHistory[iIndex].TimeStamp;
-                string sType = listViewActLog.SelectedItems[0].SubItems[1].Text;
-                string sArea = listViewActLog.SelectedItems[0].SubItems[2].Text;
-
-                if (MessageBox.Show("Do you really want to delete this Activity? " + Environment.NewLine
-                    + Environment.NewLine
-                    + "Type: " + sType + Environment.NewLine
-                    + "Area: " + sArea + Environment.NewLine
-                    + "Time: " + listViewActLog.SelectedItems[0].SubItems[0].Text, "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    _lvmActlog.RemoveItemByName(listViewActLog.SelectedItems[0].Name);
-                    _logic.ActivityHistory.RemoveAt(iIndex);
-                    DeleteActLogEntry(lTimestamp);
-                }
-
-                RequestDashboardUpdates();
-            }
+            DeleteActivities();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -4031,13 +4335,13 @@ namespace TraXile
 
         private void panelTags_SizeChanged(object sender, EventArgs e)
         {
-            if (_logic.EventQueueInitialized)
+            if (_logic != null && _logic.EventQueueInitialized)
                 RenderTagsForTracking(true);
         }
 
         private void panelEditTags_SizeChanged(object sender, EventArgs e)
         {
-            if (_logic.EventQueueInitialized)
+            if (_logic != null && _logic.EventQueueInitialized)
                 RenderTagsForConfig(true);
         }
 
@@ -4149,7 +4453,7 @@ namespace TraXile
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             textBox8.Text = "";
-            DoSearch();
+            _uiFlagActivityList = true;
         }
 
         private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -4207,7 +4511,9 @@ namespace TraXile
         private void comboBox2_SelectionChangeCommitted(object sender, EventArgs e)
         {
             AddUpdateAppSettings("actlog.maxitems", comboBoxShowMaxItems.SelectedItem.ToString());
-            DoSearch();
+
+            MethodInvoker mi = delegate { DoSearch(); };
+            BeginInvoke(mi);
         }
 
         private void tabPage1_Enter(object sender, EventArgs e)
@@ -4221,9 +4527,6 @@ namespace TraXile
             AddUpdateAppSettings("dashboard_lab_hide_unknown", _labDashboardHideUnknown.ToString());
             RenderLabDashboard();
         }
-
-       
-
 
         private void button23_Click(object sender, EventArgs e)
         {
@@ -4281,7 +4584,8 @@ namespace TraXile
                 {
                     dateTimePicker1.Enabled = false;
                     dateTimePicker2.Enabled = false;
-                    RequestDashboardUpdates();
+                    // RequestDashboardUpdates();
+                    // RequestActivityListReset();
                 }
             }
         }
@@ -4373,24 +4677,20 @@ namespace TraXile
         private void button3_Click_2(object sender, EventArgs e)
         {
             RequestDashboardUpdates();
+            RequestActivityListReset();
         }
 
-        private void label52_Click(object sender, EventArgs e)
+        private void RequestActivityListReset()
         {
-
-        }
-
-        private void panel22_Paint(object sender, PaintEventArgs e)
-        {
-
+            _uiFlagActivityListReset = true;
         }
 
         private void button7_Click_1(object sender, EventArgs e)
         {
             SaveCurrentLabRun();
             ResetLabRuns();
+            SaveLabProfitTab();
         }
-
        
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -4406,11 +4706,6 @@ namespace TraXile
                 _selectedEnchantID = en.ID;
                 SetEnchantInfoPage(info, en);
             }
-        }
-
-        private void tableLayoutPanel32_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void button8_Click_1(object sender, EventArgs e)
@@ -4445,22 +4740,6 @@ namespace TraXile
             }
         }
 
-        private void button9_Click_1(object sender, EventArgs e)
-        {
-           
-        }
-
-       
-
-        private void button9_Click_2(object sender, EventArgs e)
-        {
-            SaveLabProfitTab();
-        }
-
-        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-        }
-
         private void dataGridView2_RowLeave(object sender, DataGridViewCellEventArgs e)
         {
             //SaveLabProfitTab();
@@ -4481,11 +4760,6 @@ namespace TraXile
             e.Row.Cells["Sold for (Exalts)"].Value = 0;
             e.Row.Cells["Profit (Exalts)"].Value = 0;
             e.Row.Cells["State"].Value = "open";
-        }
-
-        private void tableLayoutPanel37_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void button9_Click_3(object sender, EventArgs e)
@@ -4537,21 +4811,11 @@ namespace TraXile
             SetProfitFilter();
         }
 
-        private void textBox10_TextChanged(object sender, EventArgs e)
-        {
-           
-        }
-
         private void button16_Click_1(object sender, EventArgs e)
         {
             textBox9.Text = "";
             radioButton1.Checked = true;
             SetProfitFilter();
-        }
-
-        private void button17_Click_1(object sender, EventArgs e)
-        {
-            ResetLabRuns();
         }
 
         private void linkLabel2_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
@@ -4570,9 +4834,110 @@ namespace TraXile
             Process.Start(linkLabel4.Text);
         }
 
-        private void checkBox3_CheckedChanged_1(object sender, EventArgs e)
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AddUpdateAppSettings("statistics_auto_refresh", checkBox3.Checked.ToString());
+            // Request update
+            _uiFlagMapDashboard = true;
         }
+
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if(filterBarShown)
+            {
+                tableLayoutPanelMain.RowStyles[1].Height = 0;
+                linkLabel5.Text = "show filters";
+                filterBarShown = false;
+            }
+            else
+            {
+                tableLayoutPanelMain.RowStyles[1].Height = 130;
+                linkLabel5.Text = "hide filters";
+                filterBarShown = true;
+            }
+        }
+
+        private void button17_Click_2(object sender, EventArgs e)
+        {
+            if(!listBox3.Items.Contains(comboBox5.SelectedItem.ToString()))
+            {
+                listBox3.Items.Add(comboBox5.SelectedItem);
+            }
+            comboBox5.Text = "";
+        }
+
+        private void button18_Click_1(object sender, EventArgs e)
+        {
+            if(listBox3.SelectedItem != null)
+            {
+                listBox3.Items.Remove(listBox3.SelectedItem);
+            }
+        }
+
+        private void comboBoxStopWatchTag1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("overlay.stopwatch.tag1", comboBoxStopWatchTag1.SelectedItem.ToString());
+            _overlayTag1 = comboBoxStopWatchTag1.SelectedItem.ToString();
+        }
+
+        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void btt_summary_Click(object sender, EventArgs e)
+        {
+            UI.SummaryWindow summary = new UI.SummaryWindow();
+            _myTheme.Apply(summary);
+
+            double totalSeconds = 0;
+            double avgDuration = 0;
+            int count = 0;
+
+            if (_lvmActlog.listView.SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem lvi in _lvmActlog.listView.SelectedItems)
+                {
+                    TrX_TrackedActivity activity = _logic.ActivityHistory[FindEventLogIndexByID(lvi.Name)];
+                    totalSeconds += activity.TotalSeconds;
+                    count++;
+                }
+
+                avgDuration = Math.Round(totalSeconds / count, 0);
+
+                TimeSpan totalDurationTS = TimeSpan.FromSeconds(totalSeconds);
+                TimeSpan avgDurationTS = TimeSpan.FromSeconds(avgDuration);
+
+                summary.CountLabel.Text = count.ToString();
+                summary.DurationLabel.Text = totalDurationTS.ToString();
+                summary.AverageLabel.Text = avgDurationTS.ToString();
+
+            }
+            else
+            {
+                summary.CountLabel.Text = "You did not select any activities.";
+            }
+
+           
+
+            summary.Show();
+        }
+
+        private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("overlay.stopwatch.tag2", comboBoxStopWatchTag2.SelectedItem.ToString());
+            _overlayTag2 = comboBoxStopWatchTag2.SelectedItem.ToString();
+        }
+
+        private void comboBoxStopWatchTag3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("overlay.stopwatch.tag3", comboBoxStopWatchTag3.SelectedItem.ToString());
+            _overlayTag3 = comboBoxStopWatchTag3.SelectedItem.ToString();
+        }
+
+        private void button5_Click_2(object sender, EventArgs e)
+        {
+            ResetFilter(true);
+        }
+       
     }
 }
