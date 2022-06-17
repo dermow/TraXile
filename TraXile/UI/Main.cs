@@ -431,6 +431,7 @@ namespace TraXile
             comboBox8.SelectedItem = "All";
             comboBox4.SelectedItem = "OR";
             comboBox9.SelectedItem = "=";
+            textBox10.Text = "";
             listBox3.Items.Clear();
 
             if(set)
