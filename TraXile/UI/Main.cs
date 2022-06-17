@@ -214,7 +214,7 @@ namespace TraXile
         private bool _uiFlagActivityListReset;
 
         // OVerlay tags toshow
-        private TrX_ActivityTag _overlayTag1, _overlayTag2, _overlayTag3;
+        private string _overlayTag1, _overlayTag2, _overlayTag3;
 
         /// <summary>
         /// Main Window Constructor
@@ -487,6 +487,10 @@ namespace TraXile
                         break;
                     case "Today":
                         date1 = DateTime.Now;
+                        date2 = DateTime.Now;
+                        break;
+                    case "Last 24 hours":
+                        date1 = DateTime.Now.AddHours(-24);
                         date2 = DateTime.Now;
                         break;
                     case "Last 7 days":
@@ -1037,19 +1041,9 @@ namespace TraXile
                 comboBoxStopWatchTag3.Items.Add(tag.DisplayName);
             }
 
-            // Set Overlay tags
-            string _overlayTagName1 = _mySettings.ReadSetting("overlay.stopwatch.tag_1", null);
-            string _overlayTagName2 = _mySettings.ReadSetting("overlay.stopwatch.tag_2", null);
-            string _overlayTagName3 = _mySettings.ReadSetting("overlay.stopwatch.tag_3", null);
-
-            if(!string.IsNullOrEmpty(_overlayTagName1))
-            {
-
-            }
-
-            comboBoxStopWatchTag1.SelectedItem = _mySettings.ReadSetting("overlay.stopwatch.tag_1", "blight");
-            comboBoxStopWatchTag2.SelectedItem = _mySettings.ReadSetting("overlay.stopwatch.tag_1", "expedition");
-            comboBoxStopWatchTag3.SelectedItem = _mySettings.ReadSetting("overlay.stopwatch.tag_1", "None");
+            comboBoxStopWatchTag1.SelectedItem = _overlayTag1 != null ? _overlayTag1 : "None";
+            comboBoxStopWatchTag2.SelectedItem = _overlayTag2 != null ? _overlayTag2 : "None";
+            comboBoxStopWatchTag3.SelectedItem = _overlayTag3 != null ? _overlayTag3 : "None";
 
             foreach (string s in _defaultMappings.AllAreas)
             {
@@ -1067,10 +1061,10 @@ namespace TraXile
             // Add dummy Labrun for testing
             // ==============================
             bool addDummyLab = false;
-            bool addDummyEnchants = false;
+            bool addDummyEnchants = true;
             if(addDummyLab)
             {
-                AddDummyLabForTesting(addDummyEnchants, 24);
+                AddDummyLabForTesting(addDummyEnchants, 3);
             }
         }
 
@@ -1229,6 +1223,7 @@ namespace TraXile
             _leagues.Add(new TrX_LeagueInfo("Expedition", 3, 15, new DateTime(2021, 7, 23, 20, 0, 0), new DateTime(2021, 10, 19, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Scourge", 3, 16, new DateTime(2021, 10, 22, 20, 0, 0), new DateTime(2022, 01, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Archnemesis", 3, 17, new DateTime(2022, 02, 04, 20, 0, 0), new DateTime(2022, 05, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Sentinel", 3, 18, new DateTime(2022, 05, 13, 22, 0, 0), new DateTime(2022, 07, 31, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
 
             List<TrX_LeagueInfo> litmp = new List<TrX_LeagueInfo>();
             litmp.AddRange(_leagues);
@@ -2361,6 +2356,35 @@ namespace TraXile
                            _logic.OverlayPrevActivity != null ? _logic.OverlayPrevActivity.StopWatchValue : "00:00:00",
                            _logic.CurrentActivity != null ? GetImageIndex(_logic.CurrentActivity) : 0,
                            _logic.OverlayPrevActivity != null ? GetImageIndex(_logic.OverlayPrevActivity) : 0);
+            // Update stopwatchOverlay tags
+            bool tag1Status = false, 
+                 tag2Status = false, 
+                 tag3Status = false;
+
+
+            if(_logic.CurrentActivity != null)
+            {
+                if(_overlayTag1 != null)
+                {
+                    tag1Status = _logic.CurrentActivity.HasTag(_overlayTag1);
+                }
+                if (_overlayTag2 != null)
+                {
+                    tag2Status = _logic.CurrentActivity.HasTag(_overlayTag2);
+                }
+                if (_overlayTag3 != null)
+                {
+                    tag3Status = _logic.CurrentActivity.HasTag(_overlayTag3);
+                }
+            }
+
+            _stopwatchOverlay.UpdateTagStatus(
+                _logic.GetTagByID(_overlayTag1),
+                _logic.GetTagByID(_overlayTag2), 
+                _logic.GetTagByID(_overlayTag3), 
+                tag1Status, 
+                tag2Status, 
+                tag3Status);
 
         }
 
@@ -2386,6 +2410,9 @@ namespace TraXile
             radioButton2.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "open";
             radioButton3.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "sold";
             textBox6.Text = ReadSetting("labbie.path", "");
+            _overlayTag1 = ReadSetting("overlay.stopwatch.tag1", "blight");
+            _overlayTag2 = ReadSetting("overlay.stopwatch.tag2", "expedition");
+            _overlayTag3 = ReadSetting("overlay.stopwatch.tag3", null);
         }
 
         /// <summary>
@@ -4075,6 +4102,36 @@ namespace TraXile
             }
         }
 
+        private void DeleteActivities()
+        {
+            List<long> timestampsToDelete = new List<long>();
+            List<string> lvItemsToDelete = new List<string>();
+
+            foreach (ListViewItem lvi in _lvmActlog.listView.SelectedItems)
+            {
+                lvItemsToDelete.Add(lvi.Name);
+                timestampsToDelete.Add(_logic.ActivityHistory[FindEventLogIndexByID(lvi.Name)].TimeStamp);
+            }
+
+            string msg;
+            msg = string.Format("Do you really want to delete {0} activitie(s)?", lvItemsToDelete.Count);
+
+            if (MessageBox.Show(msg, "Delete?", MessageBoxButtons.YesNo) == DialogResult.No)
+            {
+                return;
+            }
+
+            foreach (string itemName in lvItemsToDelete)
+            {
+                _lvmActlog.RemoveItemByName(itemName);
+            }
+
+            foreach (long ts in timestampsToDelete)
+            {
+                DeleteActLogEntry(ts);
+            }
+        }
+
         private void timer2_Tick(object sender, EventArgs e)
         {
             if (_logic.EventQueueInitialized)
@@ -4125,28 +4182,11 @@ namespace TraXile
             PauseCurrentActivityOrSide();
         }
 
+       
+
         private void button3_Click(object sender, EventArgs e)
         {
-            if (listViewActLog.SelectedItems.Count == 1)
-            {
-                int iIndex = FindEventLogIndexByID(listViewActLog.SelectedItems[0].Name);
-                long lTimestamp = _logic.ActivityHistory[iIndex].TimeStamp;
-                string sType = listViewActLog.SelectedItems[0].SubItems[1].Text;
-                string sArea = listViewActLog.SelectedItems[0].SubItems[2].Text;
-
-                if (MessageBox.Show("Do you really want to delete this Activity? " + Environment.NewLine
-                    + Environment.NewLine
-                    + "Type: " + sType + Environment.NewLine
-                    + "Area: " + sArea + Environment.NewLine
-                    + "Time: " + listViewActLog.SelectedItems[0].SubItems[0].Text, "Delete?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    _lvmActlog.RemoveItemByName(listViewActLog.SelectedItems[0].Name);
-                    _logic.ActivityHistory.RemoveAt(iIndex);
-                    DeleteActLogEntry(lTimestamp);
-                }
-
-                RequestDashboardUpdates();
-            }
+            DeleteActivities();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -4645,22 +4685,12 @@ namespace TraXile
             _uiFlagActivityListReset = true;
         }
 
-        private void label52_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel22_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void button7_Click_1(object sender, EventArgs e)
         {
             SaveCurrentLabRun();
             ResetLabRuns();
+            SaveLabProfitTab();
         }
-
        
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -4676,11 +4706,6 @@ namespace TraXile
                 _selectedEnchantID = en.ID;
                 SetEnchantInfoPage(info, en);
             }
-        }
-
-        private void tableLayoutPanel32_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void button8_Click_1(object sender, EventArgs e)
@@ -4715,22 +4740,6 @@ namespace TraXile
             }
         }
 
-        private void button9_Click_1(object sender, EventArgs e)
-        {
-           
-        }
-
-       
-
-        private void button9_Click_2(object sender, EventArgs e)
-        {
-            SaveLabProfitTab();
-        }
-
-        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-        }
-
         private void dataGridView2_RowLeave(object sender, DataGridViewCellEventArgs e)
         {
             //SaveLabProfitTab();
@@ -4751,11 +4760,6 @@ namespace TraXile
             e.Row.Cells["Sold for (Exalts)"].Value = 0;
             e.Row.Cells["Profit (Exalts)"].Value = 0;
             e.Row.Cells["State"].Value = "open";
-        }
-
-        private void tableLayoutPanel37_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void button9_Click_3(object sender, EventArgs e)
@@ -4807,21 +4811,11 @@ namespace TraXile
             SetProfitFilter();
         }
 
-        private void textBox10_TextChanged(object sender, EventArgs e)
-        {
-           
-        }
-
         private void button16_Click_1(object sender, EventArgs e)
         {
             textBox9.Text = "";
             radioButton1.Checked = true;
             SetProfitFilter();
-        }
-
-        private void button17_Click_1(object sender, EventArgs e)
-        {
-            ResetLabRuns();
         }
 
         private void linkLabel2_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
@@ -4844,11 +4838,6 @@ namespace TraXile
         {
             // Request update
             _uiFlagMapDashboard = true;
-        }
-
-        private void label91_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -4884,20 +4873,71 @@ namespace TraXile
             }
         }
 
-      
+        private void comboBoxStopWatchTag1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("overlay.stopwatch.tag1", comboBoxStopWatchTag1.SelectedItem.ToString());
+            _overlayTag1 = comboBoxStopWatchTag1.SelectedItem.ToString();
+        }
+
+        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void btt_summary_Click(object sender, EventArgs e)
+        {
+            UI.SummaryWindow summary = new UI.SummaryWindow();
+            _myTheme.Apply(summary);
+
+            double totalSeconds = 0;
+            double avgDuration = 0;
+            int count = 0;
+
+            if (_lvmActlog.listView.SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem lvi in _lvmActlog.listView.SelectedItems)
+                {
+                    TrX_TrackedActivity activity = _logic.ActivityHistory[FindEventLogIndexByID(lvi.Name)];
+                    totalSeconds += activity.TotalSeconds;
+                    count++;
+                }
+
+                avgDuration = Math.Round(totalSeconds / count, 0);
+
+                TimeSpan totalDurationTS = TimeSpan.FromSeconds(totalSeconds);
+                TimeSpan avgDurationTS = TimeSpan.FromSeconds(avgDuration);
+
+                summary.CountLabel.Text = count.ToString();
+                summary.DurationLabel.Text = totalDurationTS.ToString();
+                summary.AverageLabel.Text = avgDurationTS.ToString();
+
+            }
+            else
+            {
+                summary.CountLabel.Text = "You did not select any activities.";
+            }
+
+           
+
+            summary.Show();
+        }
+
+        private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("overlay.stopwatch.tag2", comboBoxStopWatchTag2.SelectedItem.ToString());
+            _overlayTag2 = comboBoxStopWatchTag2.SelectedItem.ToString();
+        }
+
+        private void comboBoxStopWatchTag3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            AddUpdateAppSettings("overlay.stopwatch.tag3", comboBoxStopWatchTag3.SelectedItem.ToString());
+            _overlayTag3 = comboBoxStopWatchTag3.SelectedItem.ToString();
+        }
 
         private void button5_Click_2(object sender, EventArgs e)
         {
             ResetFilter(true);
         }
-
-        private void comboBox9_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBox3_CheckedChanged_1(object sender, EventArgs e)
-        {
-        }
+       
     }
 }

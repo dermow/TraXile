@@ -287,7 +287,10 @@ namespace TraXile.UI
 
             foreach (TrX_LabEnchant enchant in _labrun.Enchants)
             {
-                AddEnchant(enchant);
+                if(enchant != null)
+                {
+                    AddEnchant(enchant);
+                }
             }
         }
 

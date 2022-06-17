@@ -67,7 +67,7 @@ namespace TraXile
 
             if (tag3 != null)
             {
-                label7.Text = tag1.DisplayName;
+                label7.Text = tag3.DisplayName;
                 label7.BackColor = status3 ? tag3.BackColor : Color.Gray;
                 label7.ForeColor = status3 ? tag3.ForeColor : Color.LightGray;
             }
