@@ -21,9 +21,10 @@
 * Timeless Domain is now being tracked
 * Auto-Tag 'harvest' added
 
-## 1.0.3
+## 1.0.4
 * Advanced global filtering options (tags, aresas, area level...)
 * StopwatchOverlay: define up to 3 tags to show in overlay
 * Filter info for Sentinel league added
 * Auto save for lab enchants fixed
 * Small summary feature for selected history items (duration, avg. duration...)
+* Entries in lab history doubled until restart

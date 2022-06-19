@@ -110,6 +110,7 @@ namespace TraXile
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel3 = new System.Windows.Forms.Panel();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.btt_summary = new System.Windows.Forms.Button();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.buttonStartSearch = new System.Windows.Forms.Button();
             this.btt_DeleteActivity = new System.Windows.Forms.Button();
@@ -581,7 +582,6 @@ namespace TraXile
             this.panel8 = new System.Windows.Forms.Panel();
             this.pictureBox30 = new System.Windows.Forms.PictureBox();
             this.linkLabel5 = new System.Windows.Forms.LinkLabel();
-            this.btt_summary = new System.Windows.Forms.Button();
             this.listViewNF1 = new TraXile.ListViewNF();
             this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -1337,6 +1337,20 @@ namespace TraXile
             this.groupBox10.TabIndex = 11;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Search";
+            // 
+            // btt_summary
+            // 
+            this.btt_summary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.btt_summary.FlatAppearance.BorderSize = 0;
+            this.btt_summary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btt_summary.ForeColor = System.Drawing.Color.Black;
+            this.btt_summary.Location = new System.Drawing.Point(13, 52);
+            this.btt_summary.Name = "btt_summary";
+            this.btt_summary.Size = new System.Drawing.Size(75, 21);
+            this.btt_summary.TabIndex = 11;
+            this.btt_summary.Text = "summary";
+            this.btt_summary.UseVisualStyleBackColor = false;
+            this.btt_summary.Click += new System.EventHandler(this.btt_summary_Click);
             // 
             // textBox8
             // 
@@ -6001,9 +6015,9 @@ namespace TraXile
             this.btt_apply_filter.BackColor = System.Drawing.Color.Lime;
             this.btt_apply_filter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btt_apply_filter.ForeColor = System.Drawing.Color.Black;
-            this.btt_apply_filter.Location = new System.Drawing.Point(811, 17);
+            this.btt_apply_filter.Location = new System.Drawing.Point(811, 20);
             this.btt_apply_filter.Name = "btt_apply_filter";
-            this.btt_apply_filter.Size = new System.Drawing.Size(75, 25);
+            this.btt_apply_filter.Size = new System.Drawing.Size(75, 21);
             this.btt_apply_filter.TabIndex = 7;
             this.btt_apply_filter.Text = "set filter";
             this.btt_apply_filter.UseVisualStyleBackColor = false;
@@ -6617,9 +6631,9 @@ namespace TraXile
             this.btt_remove_filter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btt_remove_filter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btt_remove_filter.ForeColor = System.Drawing.Color.Black;
-            this.btt_remove_filter.Location = new System.Drawing.Point(811, 42);
+            this.btt_remove_filter.Location = new System.Drawing.Point(811, 47);
             this.btt_remove_filter.Name = "btt_remove_filter";
-            this.btt_remove_filter.Size = new System.Drawing.Size(75, 26);
+            this.btt_remove_filter.Size = new System.Drawing.Size(75, 21);
             this.btt_remove_filter.TabIndex = 20;
             this.btt_remove_filter.Text = "reset";
             this.btt_remove_filter.UseVisualStyleBackColor = false;
@@ -6649,7 +6663,8 @@ namespace TraXile
             // 
             // comboBox8
             // 
-            this.comboBox8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox8.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBox8.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBox8.FormattingEnabled = true;
             this.comboBox8.Items.AddRange(new object[] {
             "All"});
@@ -6671,7 +6686,8 @@ namespace TraXile
             // 
             // comboBox7
             // 
-            this.comboBox7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox7.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBox7.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBox7.FormattingEnabled = true;
             this.comboBox7.Items.AddRange(new object[] {
             "All"});
@@ -6740,20 +6756,6 @@ namespace TraXile
             this.linkLabel5.TabStop = true;
             this.linkLabel5.Text = "hide filters";
             this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
-            // 
-            // btt_summary
-            // 
-            this.btt_summary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.btt_summary.FlatAppearance.BorderSize = 0;
-            this.btt_summary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btt_summary.ForeColor = System.Drawing.Color.Black;
-            this.btt_summary.Location = new System.Drawing.Point(13, 52);
-            this.btt_summary.Name = "btt_summary";
-            this.btt_summary.Size = new System.Drawing.Size(75, 21);
-            this.btt_summary.TabIndex = 11;
-            this.btt_summary.Text = "summary";
-            this.btt_summary.UseVisualStyleBackColor = false;
-            this.btt_summary.Click += new System.EventHandler(this.btt_summary_Click);
             // 
             // listViewNF1
             // 

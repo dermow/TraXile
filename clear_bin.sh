@@ -1,5 +1,5 @@
 #! /bin/bash
 rm -r TraXile/bin
 rm -r TraXile.Updater/bin
-rm -r Setup/Debug
-rm -r Setup/Release
+rm -r TraXile.Installer/Debug
+rm -r TraXile.Installer/Release
