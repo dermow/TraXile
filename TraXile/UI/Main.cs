@@ -1037,9 +1037,9 @@ namespace TraXile
             foreach (TrX_ActivityTag tag in _logic.Tags)
             {
                 comboBox5.Items.Add(tag.DisplayName);
-                comboBoxStopWatchTag1.Items.Add(tag.DisplayName);
-                comboBoxStopWatchTag2.Items.Add(tag.DisplayName);
-                comboBoxStopWatchTag3.Items.Add(tag.DisplayName);
+                comboBoxStopWatchTag1.Items.Add(tag.ID);
+                comboBoxStopWatchTag2.Items.Add(tag.ID);
+                comboBoxStopWatchTag3.Items.Add(tag.ID);
             }
 
             comboBoxStopWatchTag1.SelectedItem = _overlayTag1 != null ? _overlayTag1 : "None";

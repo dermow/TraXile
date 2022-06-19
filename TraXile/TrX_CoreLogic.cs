@@ -3116,11 +3116,6 @@ namespace TraXile
                         }
                     }
 
-                    if(activity.Type == ACTIVITY_TYPES.LABYRINTH)
-                    {
-                        _labHistory.Insert(0, (TrX_TrackedLabrun)activity);
-                    }
-
                     // Trigger event
                     OnActivityFinished(new TrX_CoreLogicActivityEventArgs(this, activity));
                 }
