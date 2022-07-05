@@ -99,7 +99,11 @@ After first start you will be asked for the location of your Client.txt.
   ```
   C:\Program Files\Grinding Gear Games\Path of Exile\logs
   ```
-  
+
+
+After you selected the path TraXile will parse your data and import all activities. It is normal if this takes a while the first time. After first initialization,
+the process should be much faster.
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
