@@ -149,7 +149,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Me - [@twitter_handle](https://twitter.com/der_mow) - blog.mow@gmail.com
+Me - [https://twitter.com/der_mow](https://twitter.com/der_mow) - blog.mow@gmail.com
 
 Project Link: [https://github.com/dermow/TraXile](https://github.com/dermow/TraXile)
 
