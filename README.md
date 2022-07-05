@@ -8,6 +8,14 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
+
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -20,6 +28,8 @@
   <p align="center">
     A tool that collects statistics about your gaming in Path of Exile. The main purpose is to help you optimizing your
     gaming strategies by offering data like average durations, encounters and so on.
+    <br />
+    <br />
     ·
     <a href="https://github.com/detmow/TraXile/issues">Report Bug</a>
     ·
@@ -41,10 +51,6 @@
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -60,83 +66,52 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+ <a href="https://github.com/github_username/repo_name">
+    <img src="https://traxile.com/wp-content/uploads/2021/10/screen_3.png" alt="Logo">
+  </a>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 ### Built With
 
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
-* [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
+* [C#](https://docs.microsoft.com/de-de/dotnet/csharp/)
+* [Visual Studio 2022](https://visualstudio.microsoft.com/de/vs/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+If this is your first installation of TraXile, just download the [latest release on GitHub](https://github.com/dermow/TraXile/releases) and install it. If you are alredy installed TraXile, you will get updates automatically.
 
-### Prerequisites
+### First Steps
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
+After first start you will be asked for the location of your Client.txt. 
+
+* If you are using the Steam client, the file is located at
   ```
-
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-
+  <Path to your steam library>\steamapps\common\Path of Exile\logs\Client.txt
+  ```
+  which is per default:
+  ```
+  C:\Program Files\Steam\steamapps\common\Path of Exile\logs\Client.txt
+  ```
+  
+* For the standalone client it is per default
+  ```
+  C:\Program Files\Grinding Gear Games\Path of Exile\logs
+  ```
+  
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [ ] Add Uber bosses (3.18)
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+
+See the [open issues](https://github.com/dermow/TraXile/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -172,9 +147,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Me - [@twitter_handle](https://twitter.com/der_mow) - blog.mow@gmail.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/dermow/TraXile](https://github.com/dermow/TraXile)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -183,9 +158,9 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+* [Esturnat](https://de.pathofexile.com/account/view-profile/Esturnat2) - Excellent testing and User experience Feedback
+* [Mr__Khan](https://www.twitch.tv/mr__khan?lang=de) - Showing my tool on stream, great feedback and lab running tests
+* [Michi]() - Who makes my UI looking not that uggly :P
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -193,16 +168,16 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/dermow/TraXIle.svg?style=for-the-badge
+[contributors-url]: https://github.com/dermow/TraXile/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/dermow/TraXile.svg?style=for-the-badge
+[forks-url]: https://github.com/dermow/TraXile/network/members
+[stars-shield]: https://img.shields.io/github/stars/dermow/TraXile.svg?style=for-the-badge
+[stars-url]: https://github.com/dermow/TraXile/stargazers
+[issues-shield]: https://img.shields.io/github/issues/dermow/TraXile.svg?style=for-the-badge
+[issues-url]: https://github.com/dermow/TraXile/issues
+[license-shield]: https://img.shields.io/github/license/dermow/TraXile.svg?style=for-the-badge
+[license-url]: https://github.com/dermow/TraXile/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
