@@ -12,22 +12,18 @@
 <br />
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://dev.traxile.com/wp-content/uploads/2021/10/traxile-logo.png" alt="Logo">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">TraXile</h3>
 
   <p align="center">
-    project_description
-    <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    A tool that collects statistics about your gaming in Path of Exile. The main purpose is to help you optimizing your
+    gaming strategies by offering data like average durations, encounters and so on.
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    <a href="https://github.com/detmow/TraXile/issues">Report Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    <a href="https://github.com/dermow/TraXile/issues">Request Feature</a>
   </p>
 </div>
 
