@@ -257,11 +257,20 @@ namespace TraXile
             set { _clientTxtPath = value; }
         }
 
+        // Property Minimum activity cap
+        private int _timeCapMin = 0;
+        public int MinimumCap
+        {
+            get { return _timeCapMin; }
+            set { _timeCapMin = value; }
+        }
+
         /// <summary>
         /// Main Window Constructor
         /// </summary>
-        public TrX_CoreLogic()
+        public TrX_CoreLogic(int minTimeCap = 0)
         {
+            _timeCapMin = minTimeCap;
             Init();
         }
 
@@ -1183,13 +1192,16 @@ namespace TraXile
 
                 if (!_parsedActivities.Contains(map.UniqueID))
                 {
-                    _eventHistory.Add(map);
-                    _parsedActivities.Add(map.UniqueID);
-
-                    if(map.Type == ACTIVITY_TYPES.LABYRINTH)
+                    if(map.TotalSeconds > _timeCapMin)
                     {
-                        _labHistory.Add((TrX_TrackedLabrun)map);
+                        _eventHistory.Add(map);
+
+                        if (map.Type == ACTIVITY_TYPES.LABYRINTH)
+                        {
+                            _labHistory.Add((TrX_TrackedLabrun)map);
+                        }
                     }
+                    _parsedActivities.Add(map.UniqueID);
                 }
             }
             _historyInitialized = true;
@@ -3009,6 +3021,7 @@ namespace TraXile
                     {
                         isValid = false;
                     }
+                   
                 }
                 else
                 {
@@ -3025,9 +3038,14 @@ namespace TraXile
                 {
                     _currentActivity.TotalSeconds = iSeconds;
 
+                    bool greaterThenMinCap = iSeconds > _timeCapMin;
+
                     if (!_eventHistory.Contains(_currentActivity))
                     {
-                        _eventHistory.Insert(0, _currentActivity);
+                        if(greaterThenMinCap)
+                        {
+                            _eventHistory.Insert(0, _currentActivity);
+                        }
                     }
 
                     TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
@@ -3046,7 +3064,8 @@ namespace TraXile
                         TimeSpan tsZanaMap = TimeSpan.FromSeconds(iSecondsZana);
                         activity.SideArea_ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
-                        _eventHistory.Insert(0, _currentActivity.SideArea_ZanaMap);
+                       
+                        if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_ZanaMap);
 
                         if (!_parsedActivities.Contains(activity.SideArea_ZanaMap.UniqueID))
                         {
@@ -3061,7 +3080,7 @@ namespace TraXile
                         TimeSpan tsVaalMap = TimeSpan.FromSeconds(iSecondsVaal);
                         activity.SideArea_VaalArea.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsVaalMap.Hours, tsVaalMap.Minutes, tsVaalMap.Seconds);
-                        _eventHistory.Insert(0, _currentActivity.SideArea_VaalArea);
+                        if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_VaalArea);
 
                         if (!_parsedActivities.Contains(activity.SideArea_VaalArea.UniqueID))
                         {
@@ -3076,7 +3095,7 @@ namespace TraXile
                         TimeSpan tsLBSide = TimeSpan.FromSeconds(iSecondsLogbookSide);
                         activity.SideArea_LogbookSide.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsLBSide.Hours, tsLBSide.Minutes, tsLBSide.Seconds);
-                        _eventHistory.Insert(0, _currentActivity.SideArea_LogbookSide);
+                        if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_LogbookSide);
 
                         if (!_parsedActivities.Contains(activity.SideArea_LogbookSide.UniqueID))
                         {
@@ -3091,7 +3110,7 @@ namespace TraXile
                         TimeSpan tsAbyssMap = TimeSpan.FromSeconds(iSecondsAbyss);
                         activity.SideArea_AbyssArea.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsAbyssMap.Hours, tsAbyssMap.Minutes, tsAbyssMap.Seconds);
-                        _eventHistory.Insert(0, _currentActivity.SideArea_AbyssArea);
+                        if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_AbyssArea);
 
                         if (!_parsedActivities.Contains(activity.SideArea_AbyssArea.UniqueID))
                         {
@@ -3106,7 +3125,7 @@ namespace TraXile
                         TimeSpan tsLabTrial2 = TimeSpan.FromSeconds(iSecondsLabTrial);
                         activity.SideArea_LabTrial.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsLabTrial2.Hours, tsLabTrial2.Minutes, tsLabTrial2.Seconds);
-                        _eventHistory.Insert(0, _currentActivity.SideArea_LabTrial);
+                        if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_LabTrial);
 
                         if (!_parsedActivities.Contains(activity.SideArea_LabTrial.UniqueID))
                         {

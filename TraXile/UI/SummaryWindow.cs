@@ -15,6 +15,7 @@ namespace TraXile.UI
         public Label CountLabel => labelCount;
         public Label DurationLabel => labelDuaration;
         public Label AverageLabel => labelAvgDuration;
+        public ListView ListViewTypes => listView1;
 
         public SummaryWindow()
         {

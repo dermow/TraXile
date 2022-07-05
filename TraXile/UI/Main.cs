@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -49,6 +50,16 @@ namespace TraXile
         EATER_OF_WORLDS_FIGHT,
         TIMELESS_LEGION
     }
+
+    //public static class ModifyProgressBarColor2
+    //{
+    //    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+    //    static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr w, IntPtr l);
+    //    public static void SetState(this ProgressBar pBar, int state)
+    //    {
+    //        SendMessage(pBar.Handle, 1040, (IntPtr)state, IntPtr.Zero);
+    //    }
+    //}
 
     /// <summary>
     /// Main UI
@@ -207,6 +218,9 @@ namespace TraXile
         // DataBInd
         private BindingSource _profitBinding;
 
+        // Datasource for all stats
+        Dictionary<string, int> _dataSourceAllStats;
+
         // Is filter bar visible?
         private bool filterBarShown = true;
 
@@ -215,6 +229,21 @@ namespace TraXile
 
         // OVerlay tags toshow
         private string _overlayTag1, _overlayTag2, _overlayTag3;
+        private int _minimumTimeCap;
+
+        // Background worker All stats Dashboard
+        private BackgroundWorker _workerAllStats;
+
+        // Background worker All stats Dashboard
+        private BackgroundWorker _workerAllStatsChart;
+
+        // Chart results
+        private List<KeyValuePair<long, int>> _allStatChartresults;
+
+        // Chart dynamic config
+        private int _allStatsChartInterval = 1;
+        private DateTime _allStatsChartDT1;
+        private DateTime _allStatsChartDT2;
 
         /// <summary>
         /// Main Window Constructor
@@ -234,6 +263,7 @@ namespace TraXile
 
             // Invisible till initialization complete
             Visible = false;
+            
 
             InitializeComponent();
             Init();
@@ -250,6 +280,15 @@ namespace TraXile
                 _myTheme.Apply(this);
             }
 
+        }
+
+        /// <summary>
+        /// Get status of workers
+        /// </summary>
+        /// <returns>TRUE = at least onw worker not ready</returns>
+        private bool GetWorkerStatus()
+        {
+            return _workerAllStats.IsBusy || _workerAllStatsChart.IsBusy;
         }
 
         private List<TrX_TrackedActivity> FilterActivitiesByAreaLevel(int lvl, string op, List<TrX_TrackedActivity> source)
@@ -402,7 +441,10 @@ namespace TraXile
             {
                 if (act.Started >= date1 && act.Started <= date2)
                 {
-                    results.Add(act);
+                    if(act.TotalSeconds > _minimumTimeCap)
+                    {
+                        results.Add(act);
+                    }
                 }
             }
 
@@ -450,6 +492,7 @@ namespace TraXile
                 return;
 
             _statsDataSource.Clear();
+
             if (comboBox1.SelectedItem.ToString() == "All")
             {
                 _statsDataSource.AddRange(_logic.ActivityHistory);
@@ -700,19 +743,31 @@ namespace TraXile
                 _log.Debug(ex.ToString());
             }
 
-            _logic = new TrX_CoreLogic();
+            _allStatChartresults = new List<KeyValuePair<long, int>>();
+
+            _workerAllStats = new BackgroundWorker();
+            _workerAllStats.DoWork += _workerAllStats_DoWork;
+            _workerAllStats.RunWorkerCompleted += _workerAllStats_RunWorkerCompleted;
+
+            _workerAllStatsChart = new BackgroundWorker();
+            _workerAllStatsChart.DoWork += _workerAllStatsChart_DoWork;
+            _workerAllStatsChart.RunWorkerCompleted += _workerAllStatsChart_RunWorkerCompleted;
+
+            _logic = new TrX_CoreLogic(_minimumTimeCap);
+            //_logic.MinimumCap = _minimumTimeCap;
 
             // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
             _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
             _dateTimeFormatInfo.Calendar = new GregorianCalendar();
             _defaultMappings = new TrX_DefaultMappings();
             _loadScreenWindow = new LoadScreen();
-            
+
 
             SaveVersion();
             CheckForUpdate();
             _UpdateCheckDone = true;
             
+
             _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
             _logic.OnActivityFinished += Logic_OnActivityFinished;
             _logic.OnTagsUpdated += Logic_OnTagsUpdated;
@@ -720,6 +775,9 @@ namespace TraXile
             _logic.OnActivityStarted += _logic_OnActivityStarted;
             _logic.LabbieConnector.LabbieLogPath = ReadSetting("labbie.path", null);
             _logic.Start();
+
+            // Data Sources
+            _dataSourceAllStats = new Dictionary<string, int>();
 
             // Init profit tracker
             _profitTracking = new TrX_ProfitTracking(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
@@ -735,7 +793,6 @@ namespace TraXile
             SetProfitFilter();
                 
             _lvmActlog = new TrX_ListViewManager(listViewActLog);
-            _lvmAllStats = new TrX_ListViewManager(listViewNF1);
           
             _leagues = new List<TrX_LeagueInfo>();
             _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
@@ -1014,6 +1071,12 @@ namespace TraXile
             toolTip7.ToolTipTitle = "Restore Backup";
             toolTip7.AutoPopDelay = 30000;
 
+            sb.Clear();
+            sb.AppendLine("Set the minimum time for a activity to be valid. Helps to filter out ultra short maps and stuff like that.");
+            toolTip7.SetToolTip(pictureBox31, sb.ToString());
+            toolTip7.ToolTipTitle = "Minimum Time Cap";
+            toolTip7.AutoPopDelay = 30000;
+
             // Map filter
             comboBox3.Items.Add("All");
             foreach(string s in _defaultMappings.MapAreas)
@@ -1066,6 +1129,69 @@ namespace TraXile
             if(addDummyLab)
             {
                 AddDummyLabForTesting(addDummyEnchants, 3);
+            }
+        }
+
+        private void _workerAllStatsChart_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MethodInvoker mi = delegate
+            {
+                if (!string.IsNullOrEmpty(_allStatsSelected))
+                {
+                    chart1.ChartAreas[0].AxisX.Interval = _allStatsChartInterval;
+                    chart1.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Days;
+                    chart1.ChartAreas[0].AxisX.IntervalOffset = _allStatsChartInterval;
+
+                    label100.Text = string.Format("{0} ({1} - {2})", GetStatLongName(_allStatsSelected), _allStatsChartDT1, _allStatsChartDT2);
+                    chart1.Series[0].Points.Clear();
+
+                    foreach (KeyValuePair<long, int> kvp in _allStatChartresults)
+                    {
+                        chart1.Series[0].Points.AddXY(DateTimeOffset.FromUnixTimeSeconds(kvp.Key).DateTime, kvp.Value);
+                    }
+                }
+
+
+            };
+            BeginInvoke(mi);
+        }
+
+        private void _workerAllStatsChart_DoWork(object sender, DoWorkEventArgs e)
+        {
+            GenerateAllStatsData();
+        }
+
+        private void _workerAllStats_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            listViewNF1.SuspendLayout();
+            listViewNF1.VirtualListSize = _dataSourceAllStats.Count;
+            listViewNF1.ResumeLayout();
+            listViewNF1.Update();
+            listViewNF1.ResumeLayout();
+        }
+
+        private void _workerAllStats_DoWork(object sender, DoWorkEventArgs e)
+        {
+            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dateTimeFormatInfo.Calendar);
+            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59, _dateTimeFormatInfo.Calendar);
+
+            if (_dataSourceAllStats.Count == 0)
+            {
+                for (int i = 0; i < _logic.Stats.NumericStats.Keys.Count; i++)
+                {
+                    string sStatKey = _logic.Stats.NumericStats.Keys.ElementAt(i);
+                    string sStatLong = GetStatLongName(sStatKey);
+
+                    _dataSourceAllStats.Add(sStatKey, Convert.ToInt32(_logic.Stats.GetIncrementValue(sStatKey, ((DateTimeOffset)dt1).ToUnixTimeSeconds(), ((DateTimeOffset)dt2).ToUnixTimeSeconds())));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _logic.Stats.NumericStats.Keys.Count; i++)
+                {
+                    string sStatKey = _logic.Stats.NumericStats.Keys.ElementAt(i);
+                    _dataSourceAllStats[sStatKey] = Convert.ToInt32(_logic.Stats.GetIncrementValue(sStatKey, ((DateTimeOffset)dt1).ToUnixTimeSeconds(), ((DateTimeOffset)dt2).ToUnixTimeSeconds()));
+                }
             }
         }
 
@@ -1453,6 +1579,59 @@ namespace TraXile
                         _tagLabels[tag.ID].ForeColor = Color.LightGray;
                     }
                 }
+
+                iX += lbl.Width + 5;
+                iCurrCols++;
+            }
+        }
+
+        /// <summary>
+        /// RenderTags in tracking tab
+        /// </summary>
+        /// <param name="b_reinit"></param>
+        private void RenderTagsForSummary(UI.SummaryWindow targetSummaryWindow, Dictionary<string,int> dict, bool b_reinit = false)
+        {
+            Control targetControl = targetSummaryWindow.groupBox2;
+
+            if (b_reinit)
+            {
+                targetControl.Controls.Clear();
+            }
+
+            int iOffsetX = 10;
+            int ioffsetY = 20;
+            int iLabelWidth = 100;
+            int iMaxCols = 5;
+
+            int iX = iOffsetX;
+            int iY = ioffsetY;
+
+            int iCols = targetControl.Width / iLabelWidth;
+            if (iCols > iMaxCols) iCols = iMaxCols;
+            int iCurrCols = 0;
+
+            foreach(KeyValuePair<string,int> kvp in dict)
+            {
+                TrX_ActivityTag tag = _logic.GetTagByID(kvp.Key);
+                Label lbl = new Label
+                {
+                    Width = iLabelWidth
+                };
+
+                if (iCurrCols > (iCols - 1))
+                {
+                    iY += 28;
+                    iX = iOffsetX;
+                    iCurrCols = 0;
+                }
+
+                lbl.Text = string.Format("{0}: {1}x", tag.DisplayName, kvp.Value);
+                lbl.Name = "lbl_tag_" + tag.ID;
+                lbl.TextAlign = ContentAlignment.MiddleCenter;
+                lbl.BackColor = tag.BackColor;
+                lbl.ForeColor = tag.ForeColor;
+                lbl.Location = new Point(iX, iY);
+                targetControl.Controls.Add(lbl);
 
                 iX += lbl.Width + 5;
                 iCurrCols++;
@@ -2059,11 +2238,46 @@ namespace TraXile
             return a_type.ToString().ToLower();
         }
 
+        private void SetUILoading()
+        {
+            btt_remove_filter.Enabled = false;
+            btt_apply_filter.Enabled = false;
+            btt_apply_filter.BackColor = Color.Gray;
+            btt_remove_filter.BackColor = Color.Gray;
+            progressBar1.Show();
+            
+            label142.Show();
+        }
+
+        private void SetUIReady()
+        {
+            btt_remove_filter.Enabled = true;
+            btt_apply_filter.Enabled = true;
+            btt_apply_filter.BackColor = Color.LightGreen;
+            listViewNF1.Enabled = true;
+            progressBar1.Hide();
+            label142.Hide();
+        }
+
         /// <summary>
         /// Handle the GUI updates
         /// </summary>
         private void UpdateUI()
         {
+            bool workerStatus = GetWorkerStatus();
+
+            if(workerStatus)
+            {
+                SetUILoading();
+            }
+            else
+            {
+                SetUIReady();
+            }
+
+            btt_summary.Text = String.Format("summary ({0})", listViewActLog.SelectedIndices.Count);
+
+
             TimeSpan tsAreaTime = (DateTime.Now - _inAreaSince);
             checkBoxShowGridInAct.Checked = _showGridInActLog;
             checkBoxShowGridInStats.Checked = _showGridInStats;
@@ -2414,6 +2628,8 @@ namespace TraXile
             _overlayTag1 = ReadSetting("overlay.stopwatch.tag1", "blight");
             _overlayTag2 = ReadSetting("overlay.stopwatch.tag2", "expedition");
             _overlayTag3 = ReadSetting("overlay.stopwatch.tag3", null);
+            _minimumTimeCap = Convert.ToInt32(ReadSetting("TimeCapMinimum", "10"));
+            textBox11.Text = _minimumTimeCap.ToString();
         }
 
         /// <summary>
@@ -3089,33 +3305,20 @@ namespace TraXile
         /// </summary>
         private void RenderAllStatsDashboard()
         {
-            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dateTimeFormatInfo.Calendar);
-            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59, _dateTimeFormatInfo.Calendar);
-
-            if (listViewNF1.Items.Count == 0)
+            if(!_workerAllStats.IsBusy)
             {
-                for (int i = 0; i < _logic.Stats.NumericStats.Keys.Count; i++)
-                {
-                    string sStatKey = _logic.Stats.NumericStats.Keys.ElementAt(i);
-                    string sStatLong = GetStatLongName(sStatKey);
-
-                    ListViewItem lvi = new ListViewItem(sStatLong)
-                    {
-                        Name = "allstats_" + sStatKey
-                    };
-                    lvi.SubItems.Add(_logic.Stats.GetIncrementValue(sStatKey, ((DateTimeOffset)dt1).ToUnixTimeSeconds(), ((DateTimeOffset)dt2).ToUnixTimeSeconds()).ToString());
-                    _lvmAllStats.AddLvItem(lvi, lvi.Name, true);
-                }
+                _workerAllStats.RunWorkerAsync();
             }
-            else
-            {
-                for (int i = 0; i < _logic.Stats.NumericStats.Keys.Count; i++)
-                {
-                    string sStatKey = _logic.Stats.NumericStats.Keys.ElementAt(i);
+        }
 
-                    // TODO: Optimize performance
-                    _lvmAllStats.GetLvItem("allstats_" + sStatKey).SubItems[1].Text = _logic.Stats.GetIncrementValue(sStatKey, ((DateTimeOffset)dt1).ToUnixTimeSeconds(), ((DateTimeOffset)dt2).ToUnixTimeSeconds()).ToString();
-                }
+        private void GenerateAllStatsData()
+        {
+            double days = (_allStatsChartDT2 - _allStatsChartDT1).TotalDays;
+
+            if (!string.IsNullOrEmpty(_allStatsSelected))
+            {
+                _allStatChartresults.Clear();
+                _allStatChartresults = _logic.Stats.GetByDayValues(_allStatsSelected, ((DateTimeOffset)_allStatsChartDT1).ToUnixTimeSeconds(), ((DateTimeOffset)_allStatsChartDT2).ToUnixTimeSeconds(), _allStatsChartInterval);
             }
         }
 
@@ -3124,43 +3327,29 @@ namespace TraXile
         /// </summary>
         private void UpdateAllStatsChart()
         {
-            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dateTimeFormatInfo.Calendar);
-            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59, _dateTimeFormatInfo.Calendar);
+            _allStatsChartDT1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dateTimeFormatInfo.Calendar);
+            _allStatsChartDT2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59, _dateTimeFormatInfo.Calendar);
 
-            int interval = 1;
-            double days = (dt2 - dt1).TotalDays;
+            double days = (_allStatsChartDT2 - _allStatsChartDT1).TotalDays;
+            _allStatsChartInterval = 1;
 
             if (days >= 365)
             {
-                interval = 14;
+                _allStatsChartInterval = 14;
             }
             else if (days > 150)
             {
-                interval = 7;
+                _allStatsChartInterval = 7;
             }
             else if (days > 30)
             {
-                interval = 2;
+                _allStatsChartInterval = 2;
             }
 
-            MethodInvoker mi = delegate
+            if(!_workerAllStatsChart.IsBusy)
             {
-                if (!string.IsNullOrEmpty(_allStatsSelected))
-                {
-                    chart1.ChartAreas[0].AxisX.Interval = interval;
-                    chart1.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Days;
-                    chart1.ChartAreas[0].AxisX.IntervalOffset = interval;
-
-                    label100.Text = string.Format("{0} ({1} - {2})", GetStatLongName(_allStatsSelected), dt1, dt2);
-                    chart1.Series[0].Points.Clear();
-                    List<KeyValuePair<long, int>> results = _logic.Stats.GetByDayValues(_allStatsSelected, ((DateTimeOffset)dt1).ToUnixTimeSeconds(), ((DateTimeOffset)dt2).ToUnixTimeSeconds(), 1);
-                    foreach (KeyValuePair<long, int> kvp in results)
-                    {
-                        chart1.Series[0].Points.AddXY(DateTimeOffset.FromUnixTimeSeconds(kvp.Key).DateTime, kvp.Value);
-                    }
-                }
-            };
-            BeginInvoke(mi);
+                _workerAllStatsChart.RunWorkerAsync();
+            }
         }
 
         /// <summary>
@@ -3974,6 +4163,11 @@ namespace TraXile
             int value;
             string sett;
 
+            sett = "TimeCapMinimum";
+            int minTime = Convert.ToInt32(textBox11.Text);
+
+            _mySettings.AddOrUpdateSetting(sett, minTime.ToString());
+
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 type = (ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), row.Cells[0].Value.ToString());
@@ -4599,9 +4793,9 @@ namespace TraXile
 
         private void listViewNF1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_lvmAllStats.listView.SelectedItems.Count > 0)
+            if (listViewNF1.SelectedIndices.Count > 0)
             {
-                _allStatsSelected = _lvmAllStats.listView.SelectedItems[0].Name.Replace("allstats_", "");
+                _allStatsSelected = listViewNF1.Items[listViewNF1.SelectedIndices[0]].Name;
                 UpdateAllStatsChart();
             }
         }
@@ -4885,7 +5079,7 @@ namespace TraXile
 
         }
 
-        private void btt_summary_Click(object sender, EventArgs e)
+        private void BuildAndShowSummary()
         {
             UI.SummaryWindow summary = new UI.SummaryWindow();
             _myTheme.Apply(summary);
@@ -4894,12 +5088,50 @@ namespace TraXile
             double avgDuration = 0;
             int count = 0;
 
+            Dictionary<string, int> dictLabelCount = new Dictionary<string, int>();
+            Dictionary<string, int> dictTypeCount = new Dictionary<string, int>();
+            Dictionary<string, double> dictTypeDuration = new Dictionary<string, double>();
+
             if (_lvmActlog.listView.SelectedItems.Count > 0)
             {
                 foreach (ListViewItem lvi in _lvmActlog.listView.SelectedItems)
                 {
                     TrX_TrackedActivity activity = _logic.ActivityHistory[FindEventLogIndexByID(lvi.Name)];
-                    totalSeconds += activity.TotalSeconds;
+                    totalSeconds += (activity.TotalSeconds > TimeCaps[activity.Type] ? TimeCaps[activity.Type] : activity.TotalSeconds);
+
+                    if (dictTypeCount.ContainsKey(activity.Type.ToString()))
+                    {
+                        dictTypeCount[activity.Type.ToString()]++;
+                    }
+                    else
+                    {
+                        dictTypeCount.Add(activity.Type.ToString(), 1);
+                    }
+
+                    if (dictTypeDuration.ContainsKey(activity.Type.ToString()))
+                    {
+                        dictTypeDuration[activity.Type.ToString()] += (activity.TotalSeconds > TimeCaps[activity.Type] ? TimeCaps[activity.Type] : activity.TotalSeconds);
+                    }
+                    else
+                    {
+                        dictTypeDuration.Add(activity.Type.ToString(), (activity.TotalSeconds > TimeCaps[activity.Type] ? TimeCaps[activity.Type] : activity.TotalSeconds));
+                    }
+
+                    foreach (string tag in activity.Tags)
+                    {
+                        if(!string.IsNullOrEmpty(tag))
+                        {
+                            if (dictLabelCount.ContainsKey(tag))
+                            {
+                                dictLabelCount[tag]++;
+                            }
+                            else
+                            {
+                                dictLabelCount.Add(tag, 1);
+                            }
+                        }
+                    }
+
                     count++;
                 }
 
@@ -4909,8 +5141,34 @@ namespace TraXile
                 TimeSpan avgDurationTS = TimeSpan.FromSeconds(avgDuration);
 
                 summary.CountLabel.Text = count.ToString();
-                summary.DurationLabel.Text = totalDurationTS.ToString();
+
+                // print long version for durations over one day
+                if (totalDurationTS.TotalDays >= 1)
+                {
+                    summary.DurationLabel.Text = string.Format("{0}d {1}h {2}m {3}s", totalDurationTS.Days, totalDurationTS.Hours, totalDurationTS.Minutes, totalDurationTS.Seconds);
+                }
+                else
+                {
+                    summary.DurationLabel.Text = totalDurationTS.ToString();
+                }
+
                 summary.AverageLabel.Text = avgDurationTS.ToString();
+
+                // Tags
+                RenderTagsForSummary(summary, dictLabelCount, false);
+
+                // Types
+                foreach(KeyValuePair<string, int> kvp in dictTypeCount)
+                {
+                    TimeSpan tsDuration = TimeSpan.FromSeconds(dictTypeDuration[kvp.Key]);
+                    TimeSpan tsAvg = TimeSpan.FromSeconds(Math.Round(tsDuration.TotalSeconds / dictTypeCount[kvp.Key], 0));
+
+                    ListViewItem listViewItem = new ListViewItem(kvp.Key);
+                    listViewItem.SubItems.Add(kvp.Value.ToString());
+                    listViewItem.SubItems.Add(tsDuration.ToString());
+                    listViewItem.SubItems.Add(tsAvg.ToString());
+                    summary.ListViewTypes.Items.Add(listViewItem);
+                }
 
             }
             else
@@ -4918,9 +5176,23 @@ namespace TraXile
                 summary.CountLabel.Text = "You did not select any activities.";
             }
 
-           
-
             summary.Show();
+        }
+
+        private void btt_summary_Click(object sender, EventArgs e)
+        {
+            BuildAndShowSummary();
+        }
+
+        private void listViewNF1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            if(_dataSourceAllStats.Count > 0)
+            {
+                string longName = GetStatLongName(_dataSourceAllStats.ElementAt(e.ItemIndex).Key);
+                e.Item = new ListViewItem(longName);
+                e.Item.SubItems.Add(_dataSourceAllStats.ElementAt(e.ItemIndex).Value.ToString());
+                e.Item.Name = _dataSourceAllStats.ElementAt(e.ItemIndex).Key;
+            }
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
