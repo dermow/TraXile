@@ -51,16 +51,6 @@ namespace TraXile
         TIMELESS_LEGION
     }
 
-    //public static class ModifyProgressBarColor2
-    //{
-    //    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
-    //    static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr w, IntPtr l);
-    //    public static void SetState(this ProgressBar pBar, int state)
-    //    {
-    //        SendMessage(pBar.Handle, 1040, (IntPtr)state, IntPtr.Zero);
-    //    }
-    //}
-
     /// <summary>
     /// Main UI
     /// </summary>
@@ -1625,7 +1615,7 @@ namespace TraXile
                     iCurrCols = 0;
                 }
 
-                lbl.Text = string.Format("{0}: {1}x", tag.DisplayName, kvp.Value);
+                lbl.Text = string.Format("{0}: {1}", tag.DisplayName, kvp.Value);
                 lbl.Name = "lbl_tag_" + tag.ID;
                 lbl.TextAlign = ContentAlignment.MiddleCenter;
                 lbl.BackColor = tag.BackColor;
@@ -5078,7 +5068,11 @@ namespace TraXile
         {
 
         }
+       
 
+        /// <summary>
+        /// Build Summary for selected activities
+        /// </summary>
         private void BuildAndShowSummary()
         {
             UI.SummaryWindow summary = new UI.SummaryWindow();
@@ -5193,6 +5187,11 @@ namespace TraXile
                 e.Item.SubItems.Add(_dataSourceAllStats.ElementAt(e.ItemIndex).Value.ToString());
                 e.Item.Name = _dataSourceAllStats.ElementAt(e.ItemIndex).Key;
             }
+        }
+
+        private void listViewActLog_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            btt_summary.Text = "summary (" + listViewActLog.SelectedIndices.Count + ")";
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

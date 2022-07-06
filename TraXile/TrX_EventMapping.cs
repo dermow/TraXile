@@ -123,7 +123,7 @@ namespace TraXile
                 { "] Oshabi: ", EVENT_TYPES.HARVEST },
 
                 // Veritania Fight Events
-            { "You and I both know this isn't over.", EVENT_TYPES.VERITANIA_KILLED },
+                { "You and I both know this isn't over.", EVENT_TYPES.VERITANIA_KILLED },
                 { "The roots have taken hold. We shall see each other again.", EVENT_TYPES.VERITANIA_KILLED },
                 { "You insist on dooming yourself...", EVENT_TYPES.VERITANIA_KILLED },
                 { "The thrill of victory shall forever be your prison...", EVENT_TYPES.VERITANIA_KILLED },
