@@ -1341,6 +1341,7 @@ namespace TraXile
             _leagues.Add(new TrX_LeagueInfo("Scourge", 3, 16, new DateTime(2021, 10, 22, 20, 0, 0), new DateTime(2022, 01, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Archnemesis", 3, 17, new DateTime(2022, 02, 04, 20, 0, 0), new DateTime(2022, 05, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
             _leagues.Add(new TrX_LeagueInfo("Sentinel", 3, 18, new DateTime(2022, 05, 13, 22, 0, 0), new DateTime(2022, 07, 31, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
+            _leagues.Add(new TrX_LeagueInfo("Lake of Kalandra", 3, 19, new DateTime(2022, 08, 19, 22, 0, 0), new DateTime(2022, 11, 30, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
 
             List<TrX_LeagueInfo> litmp = new List<TrX_LeagueInfo>();
             litmp.AddRange(_leagues);
