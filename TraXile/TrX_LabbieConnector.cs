@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Converters;
+
 
 namespace TraXile
 {
@@ -247,6 +249,12 @@ namespace TraXile
         /// <returns></returns>
         public List<string> GetListFromJSONLine(string line)
         {
+            // HOTFIX: Convert json line to old Format
+            if(line.Contains("timestamp"))
+            {
+                line = line.Split(new string[] { "\"enchants\":" }, StringSplitOptions.None)[1].Replace("}", "");
+            }
+
             List<string> results;
             results = new List<string>();
 

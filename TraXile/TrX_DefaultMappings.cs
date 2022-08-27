@@ -128,6 +128,10 @@ namespace TraXile
         private List<string> _timelessLeagionAreas;
         public List<string> TimelessLegionAreas => _timelessLeagionAreas;
 
+        // Kalandra
+        private List<string> _lakeOfKalandraAreas;
+        public List<string> LakeOfKalandraAreas => _lakeOfKalandraAreas;
+
         // All
         public List<string> AllAreas
         {
@@ -171,6 +175,11 @@ namespace TraXile
             _wikiLinks = new Dictionary<string, string>
             {
                 {  "Elder", "https://pathofexile.fandom.com/wiki/The_Elder" },
+            };
+
+            _lakeOfKalandraAreas = new List<string>()
+            {
+                "The Lake of Kalandra"
             };
 
             _breachstoneAreas = new List<string>

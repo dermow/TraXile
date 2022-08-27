@@ -48,7 +48,8 @@ namespace TraXile
         BLACK_STAR_FIGHT,
         INFINITE_HUNGER_FIGHT,
         EATER_OF_WORLDS_FIGHT,
-        TIMELESS_LEGION
+        TIMELESS_LEGION,
+        LAKE_OF_KALANDRA,
     }
 
     /// <summary>
@@ -2137,6 +2138,10 @@ namespace TraXile
             {
                 iIndex = 50;
             }
+            else if (map.Type == ACTIVITY_TYPES.LAKE_OF_KALANDRA)
+            {
+                iIndex = 51;
+            }
             return iIndex;
         }
 
@@ -2821,7 +2826,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.BLACK_STAR_FIGHT, 0 },
                 { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, 0 },
                 { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 },
-                { ACTIVITY_TYPES.TIMELESS_LEGION, 0 }
+                { ACTIVITY_TYPES.TIMELESS_LEGION, 0 },
+                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2852,7 +2858,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.BLACK_STAR_FIGHT, 0 },
                 { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, 0 },
                 { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 },
-                { ACTIVITY_TYPES.TIMELESS_LEGION, 0 }
+                { ACTIVITY_TYPES.TIMELESS_LEGION, 0 },
+                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2883,7 +2890,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.SEARING_EXARCH_FIGHT, Color.Red },
                 { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, Color.Blue },
                 { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.TIMELESS_LEGION, Color.BlueViolet }
+                { ACTIVITY_TYPES.TIMELESS_LEGION, Color.BlueViolet },
+                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, Color.Silver }
             };
             double hideOutTime = 0;
             double totalCount = 0;
@@ -4793,13 +4801,12 @@ namespace TraXile
 
         private void button6_Click_1(object sender, EventArgs e)
         {
-            _lvmAllStats.ApplyFullTextFilter(textBox1.Text);
+
         }
 
         private void linkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            textBox1.Clear();
-            _lvmAllStats.Reset();
+
         }
 
         private void checkBoxLabHideUnknown_CheckedChanged(object sender, EventArgs e)

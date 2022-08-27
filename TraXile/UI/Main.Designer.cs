@@ -1312,6 +1312,7 @@ namespace TraXile
             this.imageList1.Images.SetKeyName(48, "writhing-invitation.png");
             this.imageList1.Images.SetKeyName(49, "screaming-invitation.png");
             this.imageList1.Images.SetKeyName(50, "MarakethFragment.png");
+            this.imageList1.Images.SetKeyName(51, "LakeItemisedTablet.png");
             // 
             // panel3
             // 
@@ -1776,6 +1777,7 @@ namespace TraXile
             this.button6.TabIndex = 13;
             this.button6.Text = "search";
             this.button6.UseVisualStyleBackColor = false;
+            this.button6.Visible = false;
             this.button6.Click += new System.EventHandler(this.button6_Click_1);
             // 
             // linkLabel1
@@ -1790,6 +1792,7 @@ namespace TraXile
             this.linkLabel1.TabIndex = 12;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Clear";
+            this.linkLabel1.Visible = false;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked_1);
             // 
             // textBox1
@@ -1798,6 +1801,7 @@ namespace TraXile
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(267, 20);
             this.textBox1.TabIndex = 11;
+            this.textBox1.Visible = false;
             // 
             // label101
             // 
@@ -1809,6 +1813,7 @@ namespace TraXile
             this.label101.Size = new System.Drawing.Size(56, 13);
             this.label101.TabIndex = 10;
             this.label101.Text = "Search:";
+            this.label101.Visible = false;
             // 
             // tabPage1
             // 
@@ -6545,6 +6550,7 @@ namespace TraXile
             this.imageList2.Images.SetKeyName(48, "writhing-invitation.png");
             this.imageList2.Images.SetKeyName(49, "screaming-invitation.png");
             this.imageList2.Images.SetKeyName(50, "MarakethFragment.png");
+            this.imageList2.Images.SetKeyName(51, "LakeItemisedTablet.png");
             // 
             // toolTip1
             // 

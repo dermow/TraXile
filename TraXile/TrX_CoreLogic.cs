@@ -1095,6 +1095,8 @@ namespace TraXile
                     return ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT;
                 case "timeless_legion":
                     return ACTIVITY_TYPES.TIMELESS_LEGION;
+                case "lake_of_kalandra":
+                    return ACTIVITY_TYPES.LAKE_OF_KALANDRA;
             }
             return ACTIVITY_TYPES.OTHER;
         }
@@ -1525,7 +1527,8 @@ namespace TraXile
             bTargetAreaIsBlackStar = _defaultMappings.BlackStarAreas.Contains(sTargetArea),
             bTargetAreaIsInfinitetHunger = _defaultMappings.InfiniteHungerAreas.Contains(sTargetArea),
             bTargetAreaIsEaterOfWorlds = _defaultMappings.EaterOfWorldsAreas.Contains(sTargetArea),
-            bTargetAreaIsLegion = _defaultMappings.TimelessLegionAreas.Contains(sTargetArea);
+            bTargetAreaIsLegion = _defaultMappings.TimelessLegionAreas.Contains(sTargetArea),
+            bTargetAreaIsKalandra = _defaultMappings.LakeOfKalandraAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1718,6 +1721,10 @@ namespace TraXile
             else if (bTargetAreaIsLegion)
             {
                 actType = ACTIVITY_TYPES.TIMELESS_LEGION;
+            }
+            else if (bTargetAreaIsKalandra)
+            {
+                actType = ACTIVITY_TYPES.LAKE_OF_KALANDRA;
             }
 
             // Special handling for logbook cemetery + vaal temple
@@ -1997,7 +2004,8 @@ namespace TraXile
                     || _defaultMappings.BlackStarAreas.Contains(sSourceArea)
                     || _defaultMappings.EaterOfWorldsAreas.Contains(sSourceArea)
                     || _defaultMappings.InfiniteHungerAreas.Contains(sSourceArea)
-                    || _defaultMappings.TimelessLegionAreas.Contains(sSourceArea);
+                    || _defaultMappings.TimelessLegionAreas.Contains(sSourceArea)
+                    || _defaultMappings.LakeOfKalandraAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
                 if (!_StartedFlag && !bFromActivity)
@@ -2084,7 +2092,8 @@ namespace TraXile
                 bTargetAreaIsBlackStar ||
                 bTargetAreaIsEaterOfWorlds ||
                 bTargetAreaIsInfinitetHunger ||
-                bTargetAreaIsLegion;
+                bTargetAreaIsLegion ||
+                bTargetAreaIsKalandra;
 
             // Check if opened activity needs to be opened on Mapdevice
             bool isMapDeviceActivity =
@@ -2105,7 +2114,8 @@ namespace TraXile
                 bTargetAreaIsBlackStar ||
                 bTargetAreaIsInfinitetHunger ||
                 bTargetAreaIsEaterOfWorlds ||
-                bTargetAreaIsLegion;
+                bTargetAreaIsLegion ||
+                bTargetAreaIsKalandra;
 
             if (isMapDeviceActivity)
             {
