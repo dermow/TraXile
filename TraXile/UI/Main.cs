@@ -252,6 +252,12 @@ namespace TraXile
                 Directory.CreateDirectory(TrX_AppInfo.APPDATA_PATH);
             }
 
+            // Create Metadata path if not existing
+            if (!Directory.Exists(TrX_AppInfo.APPDATA_PATH + @"\metadata"))
+            {
+                Directory.CreateDirectory(TrX_AppInfo.APPDATA_PATH + @"\metadata");
+            }
+
             // Invisible till initialization complete
             Visible = false;
             
@@ -615,6 +621,35 @@ namespace TraXile
         }
 
         /// <summary>
+        /// Download metadata such as League specific data 
+        /// </summary>
+        private void DownloadMetaData()
+        {
+            try
+            {
+                string updateURL, updateBranch;
+
+                updateBranch = ReadSetting("metadata_meta_branch", "main");
+                updateURL = "https://raw.githubusercontent.com/dermow/traxile-metadata/" + updateBranch + "/metadata.xml";
+
+                WebClient webClient = new WebClient();
+                Uri uri = new Uri(updateURL);
+                string data = webClient.DownloadString(uri);
+
+                XmlDocument xml = new XmlDocument();
+                xml.LoadXml(data);
+                xml.Save(TrX_AppInfo.APPDATA_PATH + @"\metadata\metadata.xml");
+
+                _log.Info("Metadata successfully updated from '" + updateURL + "'");
+                
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Could not update Metadata: " + ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Check if a new version is available on GitHub and ask for update.
         /// </summary>
         /// <param name="b_notify_ok"></param>
@@ -622,8 +657,10 @@ namespace TraXile
         {
             try
             {
-                string updateURL = ReadSetting("update_check_url", "https://dermow.github.io/traxile-update-info/version.xml");
-                string updateXMLNode = ReadSetting("update_path", "latest");
+                string updateURL, updateBranch; 
+
+                updateBranch = ReadSetting("metadata_updates_branch", "main");
+                updateURL = "https://raw.githubusercontent.com/dermow/traxile-metadata/" + updateBranch + "/versions.xml";
 
                 WebClient webClient = new WebClient();
                 Uri uri = new Uri(updateURL);
@@ -633,7 +670,7 @@ namespace TraXile
                 xml.LoadXml(releases);
 
                 string sVersion;
-                sVersion = xml.SelectSingleNode(string.Format("/version/{0}", updateXMLNode)).InnerText;
+                sVersion = xml.SelectSingleNode(string.Format("/version/{0}", "latest")).InnerText;
 
                 StringBuilder sbChanges = new StringBuilder();
 
@@ -755,6 +792,7 @@ namespace TraXile
 
 
             SaveVersion();
+            DownloadMetaData();
             CheckForUpdate();
             _UpdateCheckDone = true;
             
@@ -1323,26 +1361,33 @@ namespace TraXile
         private void InitLeagueInfo()
         {
             _leagues.Clear();
-            _leagues.Add(new TrX_LeagueInfo("Harbinger", 3, 0, new DateTime(2017, 8, 4, 20, 0, 0), new DateTime(2017, 12, 4, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Abyss", 3, 1, new DateTime(2017, 12, 8, 20, 0, 0), new DateTime(2018, 2, 26, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Bestiary", 3, 2, new DateTime(2018, 3, 2, 20, 0, 0), new DateTime(2018, 5, 28, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Incursion", 3, 3, new DateTime(2018, 6, 1, 20, 0, 0), new DateTime(2018, 8, 27, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Delve", 3, 4, new DateTime(2018, 8, 31, 20, 0, 0), new DateTime(2018, 12, 3, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Betrayal", 3, 5, new DateTime(2018, 12, 7, 20, 0, 0), new DateTime(2019, 3, 4, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Synthesis", 3, 6, new DateTime(2019, 3, 8, 20, 0, 0), new DateTime(2019, 6, 3, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Legion", 3, 7, new DateTime(2019, 6, 7, 20, 0, 0), new DateTime(2019, 9, 3, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Blight", 3, 8, new DateTime(2019, 9, 6, 20, 0, 0), new DateTime(2019, 12, 9, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Metamorph", 3, 9, new DateTime(2019, 12, 13, 20, 0, 0), new DateTime(2020, 3, 9, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Delirium", 3, 10, new DateTime(2020, 3, 13, 20, 0, 0), new DateTime(2020, 6, 15, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Harvest", 3, 11, new DateTime(2020, 6, 19, 20, 0, 0), new DateTime(2020, 9, 14, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Heist", 3, 12, new DateTime(2020, 9, 18, 20, 0, 0), new DateTime(2021, 1, 11, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Ritual", 3, 13, new DateTime(2021, 1, 15, 20, 0, 0), new DateTime(2021, 1, 15, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Ultimatum", 3, 14, new DateTime(2021, 4, 16, 20, 0, 0), new DateTime(2021, 07, 19, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Expedition", 3, 15, new DateTime(2021, 7, 23, 20, 0, 0), new DateTime(2021, 10, 19, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Scourge", 3, 16, new DateTime(2021, 10, 22, 20, 0, 0), new DateTime(2022, 01, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Archnemesis", 3, 17, new DateTime(2022, 02, 04, 20, 0, 0), new DateTime(2022, 05, 31, 21, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Sentinel", 3, 18, new DateTime(2022, 05, 13, 22, 0, 0), new DateTime(2022, 07, 31, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
-            _leagues.Add(new TrX_LeagueInfo("Lake of Kalandra", 3, 19, new DateTime(2022, 08, 19, 22, 0, 0), new DateTime(2022, 11, 30, 22, 0, 0, _dateTimeFormatInfo.Calendar)));
+
+
+            // Update league info from metadata
+            XmlDocument xml = new XmlDocument();
+            xml.Load(TrX_AppInfo.APPDATA_PATH + @"\metadata\metadata.xml");
+
+            TrX_LeagueInfo currentLeague = null;
+
+            foreach(XmlNode node in xml.SelectSingleNode("/metadata/leagues").SelectNodes("league"))
+            {
+                DateTime start = DateTime.Parse(node.Attributes["start"].Value);
+                DateTime end = DateTime.Parse(node.Attributes["end"].Value);
+
+                TrX_LeagueInfo li = new TrX_LeagueInfo(
+                    node.Attributes["name"].Value,
+                    Convert.ToInt32(node.Attributes["major"].Value),
+                    Convert.ToInt32(node.Attributes["minor"].Value),
+                    new DateTime(start.Year, start.Month, start.Day, start.Hour, start.Minute, start.Second, _dateTimeFormatInfo.Calendar),
+                    new DateTime(end.Year, end.Month, end.Day, end.Hour, end.Minute, end.Second, _dateTimeFormatInfo.Calendar));
+
+                if(Convert.ToBoolean(node.Attributes["current"].Value))
+                {
+                    currentLeague = li;
+                }
+
+                _leagues.Add(li);
+            }
 
             List<TrX_LeagueInfo> litmp = new List<TrX_LeagueInfo>();
             litmp.AddRange(_leagues);
@@ -1350,7 +1395,15 @@ namespace TraXile
 
             foreach (TrX_LeagueInfo li in litmp)
             {
-                comboBox1.Items.Add(string.Format("League: {0} ({1})", li.Name, li.Version));
+                if (currentLeague != null && li.Name == currentLeague.Name)
+                {
+                    comboBox1.Items.Add(string.Format("Current League: {0} ({1})", li.Name, li.Version));
+                }
+                else
+                {
+                    comboBox1.Items.Add(string.Format("League: {0} ({1})", li.Name, li.Version));
+                }
+                
             }
         }
 
@@ -4778,8 +4831,6 @@ namespace TraXile
                 {
                     dateTimePicker1.Enabled = false;
                     dateTimePicker2.Enabled = false;
-                    // RequestDashboardUpdates();
-                    // RequestActivityListReset();
                 }
             }
         }

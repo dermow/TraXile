@@ -636,6 +636,7 @@ namespace TraXile
                 new TrX_ActivityTag("exp-side-area") { BackColor = Color.Turquoise, ForeColor = Color.Black },
                 new TrX_ActivityTag("twice-blessed") { BackColor = Color.DarkTurquoise, ForeColor = Color.Black },
                 new TrX_ActivityTag("harvest") { BackColor = Color.Blue, ForeColor = Color.White },
+                new TrX_ActivityTag("blueprint") { BackColor = Color.IndianRed, ForeColor = Color.AliceBlue },
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -2725,7 +2726,16 @@ namespace TraXile
                         {
                             if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
-                                _currentActivity.AddTag("gianna");
+                                if (!_currentActivity.HasTag("gianna"))
+                                {
+                                    _currentActivity.RougeCont++;
+                                    _currentActivity.AddTag("gianna");
+
+                                    if (_currentActivity.RougeCont >= 3)
+                                    {
+                                        _currentActivity.AddTag("blueprint");
+                                    }
+                                }
                             }
                         }
                         break;
@@ -2734,7 +2744,16 @@ namespace TraXile
                         {
                             if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
-                                _currentActivity.AddTag("huck");
+                                if(!_currentActivity.HasTag("huck"))
+                                {
+                                    _currentActivity.RougeCont++;
+                                    _currentActivity.AddTag("huck");
+
+                                    if (_currentActivity.RougeCont >= 3)
+                                    {
+                                        _currentActivity.AddTag("blueprint");
+                                    }
+                                }
                             }
                         }
                         break;
@@ -2743,7 +2762,16 @@ namespace TraXile
                         {
                             if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
-                                _currentActivity.AddTag("isla");
+                                if (!_currentActivity.HasTag("isla"))
+                                {
+                                    _currentActivity.RougeCont++;
+                                    _currentActivity.AddTag("isla");
+
+                                    if (_currentActivity.RougeCont >= 3)
+                                    {
+                                        _currentActivity.AddTag("blueprint");
+                                    }
+                                }
                             }
                         }
                         break;
@@ -2752,7 +2780,16 @@ namespace TraXile
                         {
                             if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
-                                _currentActivity.AddTag("nenet");
+                                if (!_currentActivity.HasTag("nenet"))
+                                {
+                                    _currentActivity.RougeCont++;
+                                    _currentActivity.AddTag("nenet");
+
+                                    if (_currentActivity.RougeCont >= 3)
+                                    {
+                                        _currentActivity.AddTag("blueprint");
+                                    }
+                                }
                             }
                         }
                         break;
@@ -2761,7 +2798,16 @@ namespace TraXile
                         {
                             if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
-                                _currentActivity.AddTag("niles");
+                                if (!_currentActivity.HasTag("niles"))
+                                {
+                                    _currentActivity.RougeCont++;
+                                    _currentActivity.AddTag("niles");
+
+                                    if (_currentActivity.RougeCont >= 3)
+                                    {
+                                        _currentActivity.AddTag("blueprint");
+                                    }
+                                }
                             }
                         }
                         break;
@@ -2770,7 +2816,16 @@ namespace TraXile
                         {
                             if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
-                                _currentActivity.AddTag("tibbs");
+                                if (!_currentActivity.HasTag("tibbs"))
+                                {
+                                    _currentActivity.RougeCont++;
+                                    _currentActivity.AddTag("tibbs");
+
+                                    if (_currentActivity.RougeCont >= 3)
+                                    {
+                                        _currentActivity.AddTag("blueprint");
+                                    }
+                                }
                             }
                         }
                         break;
@@ -2779,7 +2834,16 @@ namespace TraXile
                         {
                             if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
-                                _currentActivity.AddTag("tullina");
+                                if (!_currentActivity.HasTag("tullina"))
+                                {
+                                    _currentActivity.RougeCont++;
+                                    _currentActivity.AddTag("tullina");
+
+                                    if (_currentActivity.RougeCont >= 3)
+                                    {
+                                        _currentActivity.AddTag("blueprint");
+                                    }
+                                }
                             }
                         }
                         break;
@@ -2788,7 +2852,16 @@ namespace TraXile
                         {
                             if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
-                                _currentActivity.AddTag("vinderi");
+                                if (!_currentActivity.HasTag("vinderi"))
+                                {
+                                    _currentActivity.RougeCont++;
+                                    _currentActivity.AddTag("vinderi");
+
+                                    if (_currentActivity.RougeCont >= 3)
+                                    {
+                                        _currentActivity.AddTag("blueprint");
+                                    }
+                                }
                             }
                         }
                         break;
@@ -2797,7 +2870,16 @@ namespace TraXile
                         {
                             if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
                             {
-                                _currentActivity.AddTag("karst");
+                                if (!_currentActivity.HasTag("karst"))
+                                {
+                                    _currentActivity.RougeCont++;
+                                    _currentActivity.AddTag("karst");
+
+                                    if (_currentActivity.RougeCont >= 3)
+                                    {
+                                        _currentActivity.AddTag("blueprint");
+                                    }
+                                }
                             }
                         }
                         break;

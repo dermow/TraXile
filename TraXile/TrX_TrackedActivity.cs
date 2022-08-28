@@ -304,6 +304,14 @@ namespace TraXile
         private readonly List<string> _tagIDs;
         public List<string> Tags => _tagIDs;
 
+        // Rouge Count
+        private int _rougeCount;
+        public int RougeCont
+        {
+            get { return _rougeCount; }
+            set { _rougeCount = value; }
+        }
+
         // number of pauses
         private int _pauseCount;
         public int PauseCount => _pauseCount;
@@ -318,6 +326,7 @@ namespace TraXile
             _vaalArea = null;
             _logbbookSide = null;
             _tagIDs = new List<string>();
+            _rougeCount = 0;
         }
 
         /// <summary>
