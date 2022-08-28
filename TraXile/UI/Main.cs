@@ -729,8 +729,11 @@ namespace TraXile
                 {
                     _log.Info("UpdateCheck -> Already up to date :)");
                     if (b_notify_ok)
-                        MessageBox.Show("Your version: " + TrX_AppInfo.VERSION
-                            + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine + Environment.NewLine
+                        MessageBox.Show(
+                            "================="
+                            + Environment.NewLine + "Your version: " + TrX_AppInfo.VERSION
+                            + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine
+                            + "================="  + Environment.NewLine + Environment.NewLine
                             + "Your version is already up to date :)");
                 }
             }
