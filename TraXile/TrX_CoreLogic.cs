@@ -812,6 +812,7 @@ namespace TraXile
                 { "TrialMasterTookReward", 0 },
                 { "TrialMasterVictory", 0 },
                 { "TrialMasterSuccess", 0 },
+                { "UberShaperTried", 0 },
                 { "VeritaniaKilled", 0 },
                 { "VeritaniaStarted", 0 },
             };
@@ -868,6 +869,7 @@ namespace TraXile
                 { "EaterOfWorldsKilled", "Eater of Worlds killed" },
                 { "InfiniteHungerTried", "Infinite Hunger tried" },
                 { "InfiniteHungerKilled", "Infinite Hunger killed" },
+                { "UberShaperTried", "Uber Shaper tried" },
             };
 
             labs = new List<string>
@@ -1541,14 +1543,21 @@ namespace TraXile
             // Shaper
             if (bTargetAreaIsShaper && _currentInstanceEndpoint != _lastShaperInstance)
             {
-                IncrementStat("ShaperTried", ev.EventTime, 1);
+                if(_nextAreaLevel == 85)
+                {
+                    IncrementStat("UberShaperTried", ev.EventTime, 1);
+                }
+                else
+                {
+                    IncrementStat("ShaperTried", ev.EventTime, 1);
+                }
+                
                 _lastShaperInstance = _currentInstanceEndpoint;
             }
 
             // Elder
             if (bTargetAreaIsElder && _currentInstanceEndpoint != _lastElderInstance)
             {
-                _log.Debug("ELDER_TRIED");
                 IncrementStat("ElderTried", ev.EventTime, 1);
                 _lastElderInstance = _currentInstanceEndpoint;
             }
