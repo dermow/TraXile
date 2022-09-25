@@ -210,7 +210,10 @@ namespace TraXile
         private BindingSource _profitBinding;
 
         // Datasource for all stats
-        Dictionary<string, int> _dataSourceAllStats;
+        private Dictionary<string, int> _dataSourceAllStats;
+
+        // Filtered source for all stats
+        private Dictionary<string, int> _filteredDataSourceAllStats;
 
         // Is filter bar visible?
         private bool filterBarShown = true;
@@ -235,6 +238,7 @@ namespace TraXile
         private int _allStatsChartInterval = 1;
         private DateTime _allStatsChartDT1;
         private DateTime _allStatsChartDT2;
+        private bool _allStatsSearchActive;
 
         /// <summary>
         /// Main Window Constructor
@@ -810,6 +814,7 @@ namespace TraXile
 
             // Data Sources
             _dataSourceAllStats = new Dictionary<string, int>();
+            _filteredDataSourceAllStats = new Dictionary<string, int>();
 
             // Init profit tracker
             _profitTracking = new TrX_ProfitTracking(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
@@ -4853,14 +4858,11 @@ namespace TraXile
             }
         }
 
-        private void button6_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
         private void linkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
-
+            textBox1.Clear();
+            _allStatsSearchActive = false;
+            listViewNF1.VirtualListSize = _dataSourceAllStats.Count;
         }
 
         private void checkBoxLabHideUnknown_CheckedChanged(object sender, EventArgs e)
@@ -5242,18 +5244,44 @@ namespace TraXile
 
         private void listViewNF1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            if(_dataSourceAllStats.Count > 0)
+            Dictionary<string, int> source = _allStatsSearchActive ? _filteredDataSourceAllStats : _dataSourceAllStats;
+
+            if(source.Count > 0)
             {
-                string longName = GetStatLongName(_dataSourceAllStats.ElementAt(e.ItemIndex).Key);
+                string longName = GetStatLongName(source.ElementAt(e.ItemIndex).Key);
                 e.Item = new ListViewItem(longName);
-                e.Item.SubItems.Add(_dataSourceAllStats.ElementAt(e.ItemIndex).Value.ToString());
-                e.Item.Name = _dataSourceAllStats.ElementAt(e.ItemIndex).Key;
+                e.Item.SubItems.Add(source.ElementAt(e.ItemIndex).Value.ToString());
+                e.Item.Name = source.ElementAt(e.ItemIndex).Key;
             }
         }
 
         private void listViewActLog_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
             btt_summary.Text = "summary (" + listViewActLog.SelectedIndices.Count + ")";
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            _allStatsSearchActive = !String.IsNullOrEmpty(textBox1.Text);
+
+            if (_allStatsSearchActive)
+            {
+                _filteredDataSourceAllStats.Clear();
+                foreach (KeyValuePair<string, int> kvp in _dataSourceAllStats)
+                {
+                    string statName = GetStatLongName(kvp.Key);
+                    if (statName.ToLower().Contains(textBox1.Text.ToLower()))
+                    {
+                        _filteredDataSourceAllStats.Add(kvp.Key, kvp.Value);
+                    }
+                }
+
+                listViewNF1.VirtualListSize = _filteredDataSourceAllStats.Count;
+            }
+            else
+            {
+                listViewNF1.VirtualListSize = _dataSourceAllStats.Count;
+            }
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

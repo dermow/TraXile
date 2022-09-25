@@ -812,6 +812,7 @@ namespace TraXile
                 { "TrialMasterTookReward", 0 },
                 { "TrialMasterVictory", 0 },
                 { "TrialMasterSuccess", 0 },
+                { "UberShaperTried", 0 },
                 { "VeritaniaKilled", 0 },
                 { "VeritaniaStarted", 0 },
             };
@@ -868,6 +869,7 @@ namespace TraXile
                 { "EaterOfWorldsKilled", "Eater of Worlds killed" },
                 { "InfiniteHungerTried", "Infinite Hunger tried" },
                 { "InfiniteHungerKilled", "Infinite Hunger killed" },
+                { "UberShaperTried", "Uber Shaper tried" },
             };
 
             labs = new List<string>
@@ -1541,14 +1543,21 @@ namespace TraXile
             // Shaper
             if (bTargetAreaIsShaper && _currentInstanceEndpoint != _lastShaperInstance)
             {
-                IncrementStat("ShaperTried", ev.EventTime, 1);
+                if(_nextAreaLevel == 85)
+                {
+                    IncrementStat("UberShaperTried", ev.EventTime, 1);
+                }
+                else
+                {
+                    IncrementStat("ShaperTried", ev.EventTime, 1);
+                }
+                
                 _lastShaperInstance = _currentInstanceEndpoint;
             }
 
             // Elder
             if (bTargetAreaIsElder && _currentInstanceEndpoint != _lastElderInstance)
             {
-                _log.Debug("ELDER_TRIED");
                 IncrementStat("ElderTried", ev.EventTime, 1);
                 _lastElderInstance = _currentInstanceEndpoint;
             }
@@ -1816,6 +1825,10 @@ namespace TraXile
                     };
                     _currentActivity.AddTag("vaal-area");
                 }
+
+                _currentActivity.Pause();
+                _currentActivity.StartPauseTime(ev.EventTime);
+
                 _currentActivity.SideArea_VaalArea.StartStopWatch();
                 _currentActivity.SideArea_VaalArea.EndPauseTime(ev.EventTime);
                 _isMapVaalArea = true;
@@ -1833,6 +1846,9 @@ namespace TraXile
                     _currentActivity.SideArea_VaalArea.LastEnded = ev.EventTime;
                     _currentActivity.SideArea_VaalArea.StopStopWatch();
                     _currentActivity.SideArea_VaalArea.StartPauseTime(ev.EventTime);
+
+                    _currentActivity.Resume();
+                    _currentActivity.EndPauseTime(ev.EventTime);
                 }
             }
 
@@ -1853,6 +1869,10 @@ namespace TraXile
                     _currentActivity.AddTag("exp-side-area");
 
                 }
+
+                _currentActivity.Pause();
+                _currentActivity.StartPauseTime(ev.EventTime);
+
                 _currentActivity.SideArea_LogbookSide.StartStopWatch();
                 _currentActivity.SideArea_LogbookSide.EndPauseTime(ev.EventTime);
                 _isMapLogbookSide = true;
@@ -1870,6 +1890,9 @@ namespace TraXile
                     _currentActivity.SideArea_LogbookSide.LastEnded = ev.EventTime;
                     _currentActivity.SideArea_LogbookSide.StopStopWatch();
                     _currentActivity.SideArea_LogbookSide.StartPauseTime(ev.EventTime);
+
+                    _currentActivity.Resume();
+                    _currentActivity.EndPauseTime(ev.EventTime);
                 }
             }
 
@@ -1889,6 +1912,10 @@ namespace TraXile
                     };
                     _currentActivity.AddTag("abyss-depths");
                 }
+
+                _currentActivity.Pause();
+                _currentActivity.StartPauseTime(ev.EventTime);
+
                 _currentActivity.SideArea_AbyssArea.StartStopWatch();
                 _currentActivity.SideArea_AbyssArea.EndPauseTime(ev.EventTime);
                 _isMapAbyssArea = true;
@@ -1906,6 +1933,9 @@ namespace TraXile
                     _currentActivity.SideArea_AbyssArea.LastEnded = ev.EventTime;
                     _currentActivity.SideArea_AbyssArea.StopStopWatch();
                     _currentActivity.SideArea_AbyssArea.StartPauseTime(ev.EventTime);
+
+                    _currentActivity.Resume();
+                    _currentActivity.EndPauseTime(ev.EventTime);
                 }
             }
 
@@ -1925,6 +1955,10 @@ namespace TraXile
                     };
                     _currentActivity.AddTag("lab-trial");
                 }
+
+                _currentActivity.Pause();
+                _currentActivity.StartPauseTime(ev.EventTime);
+
                 _currentActivity.SideArea_LabTrial.StartStopWatch();
                 _currentActivity.SideArea_LabTrial.EndPauseTime(ev.EventTime);
                 _isMapLabTrial = true;
@@ -1934,7 +1968,7 @@ namespace TraXile
                 _isMapLabTrial = false;
             }
 
-            // Left Abyss Side area?
+            // Left Lab Side area?
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && bSourceAreaIsLabTrial)
             {
                 if (_currentActivity.SideArea_LabTrial != null)
@@ -1942,6 +1976,9 @@ namespace TraXile
                     _currentActivity.SideArea_LabTrial.LastEnded = ev.EventTime;
                     _currentActivity.SideArea_LabTrial.StopStopWatch();
                     _currentActivity.SideArea_LabTrial.StartPauseTime(ev.EventTime);
+
+                    _currentActivity.Resume();
+                    _currentActivity.EndPauseTime(ev.EventTime);
                 }
             }
 
@@ -3028,18 +3065,18 @@ namespace TraXile
 
             if (!stats_only)
             {
-                TimeSpan ts;
-                TimeSpan tsZana;
-                TimeSpan tsVaal;
-                TimeSpan tsAbyss;
-                TimeSpan tsLabTrial;
-                TimeSpan tsLogbookSide;
-                int iSeconds;
-                int iSecondsZana = 0;
-                int iSecondsVaal = 0;
-                int iSecondsAbyss = 0;
-                int iSecondsLabTrial = 0;
-                int iSecondsLogbookSide = 0;
+                TimeSpan ts = new TimeSpan();
+                TimeSpan tsZana = new TimeSpan();
+                TimeSpan tsVaal = new TimeSpan();
+                TimeSpan tsAbyss = new TimeSpan();
+                TimeSpan tsLabTrial = new TimeSpan();
+                TimeSpan tsLogbookSide = new TimeSpan();
+                int totalSecondsMainActivity;
+                int totalSecondsZanaMap = 0;
+                int totalSecondsVallSideArea = 0;
+                int totalSecondsAbyss = 0;
+                int totalSecondsLabTrial = 0;
+                int totalSecondsLogBookSide = 0;
 
                 // Filter out invalid labs (discnnect etc)
                 if (activity.Type == ACTIVITY_TYPES.LABYRINTH)
@@ -3059,47 +3096,43 @@ namespace TraXile
                     }
                 }
 
+                // When parsing at startup
                 if (!_eventQueueInitizalized)
                 {
                     ts = (activity.LastEnded - activity.Started);
                     try
                     {
-                        iSeconds = Convert.ToInt32(ts.TotalSeconds);
-                        iSeconds -= Convert.ToInt32(activity.PausedTime);
+                        totalSecondsMainActivity = Convert.ToInt32(ts.TotalSeconds);
+                        totalSecondsMainActivity -= Convert.ToInt32(activity.PausedTime);
                     }
                     catch
                     {
-                        iSeconds = 0;
+                        totalSecondsMainActivity = 0;
                     }
 
                     if (activity.SideArea_ZanaMap != null)
                     {
                         tsZana = (activity.SideArea_ZanaMap.LastEnded - activity.SideArea_ZanaMap.Started);
-                        iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
                     }
 
                     if (activity.SideArea_VaalArea != null)
                     {
                         tsVaal = (activity.SideArea_VaalArea.LastEnded - activity.SideArea_VaalArea.Started);
-                        iSecondsVaal = Convert.ToInt32(tsVaal.TotalSeconds);
                     }
 
                     if (activity.SideArea_LogbookSide != null)
                     {
                         tsLogbookSide = (activity.SideArea_LogbookSide.LastEnded - activity.SideArea_LogbookSide.Started);
-                        iSecondsLogbookSide = Convert.ToInt32(tsLogbookSide.TotalSeconds);
                     }
 
                     if (activity.SideArea_AbyssArea != null)
                     {
                         tsAbyss = (activity.SideArea_AbyssArea.LastEnded - activity.SideArea_AbyssArea.Started);
-                        iSecondsAbyss = Convert.ToInt32(tsAbyss.TotalSeconds);
                     }
 
                     if (activity.SideArea_LabTrial != null)
                     {
                         tsLabTrial = (activity.SideArea_LabTrial.LastEnded - activity.SideArea_LabTrial.Started);
-                        iSecondsLabTrial = Convert.ToInt32(tsLabTrial.TotalSeconds);
                     }
 
                     // Filter out town activities without end date
@@ -3109,28 +3142,55 @@ namespace TraXile
                     }
 
                     // Filter out 0-second town visits
-                    if (activity.Type == ACTIVITY_TYPES.CAMPAIGN && iSeconds == 0)
+                    if (activity.Type == ACTIVITY_TYPES.CAMPAIGN && totalSecondsMainActivity == 0)
                     {
                         isValid = false;
                     }
                    
                 }
-                else
+                else // when tracking live
                 {
                     ts = activity.StopWatchTimeSpan;
-                    iSeconds = Convert.ToInt32(ts.TotalSeconds);
+                    totalSecondsMainActivity = Convert.ToInt32(ts.TotalSeconds);
+
                     if (activity.SideArea_ZanaMap != null)
                     {
                         tsZana = activity.SideArea_ZanaMap.StopWatchTimeSpan;
-                        iSecondsZana = Convert.ToInt32(tsZana.TotalSeconds);
+                    }
+
+                    if (activity.SideArea_VaalArea != null)
+                    {
+                        tsVaal = (activity.SideArea_VaalArea.StopWatchTimeSpan);
+                    }
+
+                    if (activity.SideArea_LogbookSide != null)
+                    {
+                        tsLogbookSide = (activity.SideArea_LogbookSide.StopWatchTimeSpan);
+                    }
+
+                    if (activity.SideArea_AbyssArea != null)
+                    {
+                        tsAbyss = (activity.SideArea_AbyssArea.StopWatchTimeSpan);
+                    }
+
+                    if (activity.SideArea_LabTrial != null)
+                    {
+                        tsLabTrial = (activity.SideArea_LabTrial.StopWatchTimeSpan);
                     }
                 }
 
+                // Calculate times
+                totalSecondsZanaMap = Convert.ToInt32(tsZana.TotalSeconds); // historic, no zana side aras
+                totalSecondsVallSideArea = Convert.ToInt32(tsVaal.TotalSeconds);
+                totalSecondsLogBookSide = Convert.ToInt32(tsLogbookSide.TotalSeconds);
+                totalSecondsAbyss = Convert.ToInt32(tsAbyss.TotalSeconds);
+                totalSecondsLabTrial = Convert.ToInt32(tsLabTrial.TotalSeconds);
+
                 if (isValid)
                 {
-                    _currentActivity.TotalSeconds = iSeconds;
+                    _currentActivity.TotalSeconds = totalSecondsMainActivity;
 
-                    bool greaterThenMinCap = iSeconds > _timeCapMin;
+                    bool greaterThenMinCap = totalSecondsMainActivity > _timeCapMin;
 
                     if (!_eventHistory.Contains(_currentActivity))
                     {
@@ -3140,81 +3200,91 @@ namespace TraXile
                         }
                     }
 
-                    TimeSpan tsMain = TimeSpan.FromSeconds(iSeconds);
+                    TimeSpan tsMain = TimeSpan.FromSeconds(totalSecondsMainActivity);
                     activity.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                               tsMain.Hours, tsMain.Minutes, tsMain.Seconds);
 
                     if (!_parsedActivities.Contains(activity.UniqueID))
                     {
                         // Save to DB
-                        SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, iSeconds, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
+                        SaveToActivityLog(((DateTimeOffset)activity.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.Type), activity.Area, activity.AreaLevel, totalSecondsMainActivity, activity.DeathCounter, activity.TrialMasterCount, false, activity.Tags, activity.Success, Convert.ToInt32(activity.PausedTime));
                     }
-
 
                     if (activity.SideArea_ZanaMap != null)
                     {
-                        TimeSpan tsZanaMap = TimeSpan.FromSeconds(iSecondsZana);
+                        TimeSpan tsZanaMap = TimeSpan.FromSeconds(totalSecondsZanaMap);
                         activity.SideArea_ZanaMap.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsZanaMap.Hours, tsZanaMap.Minutes, tsZanaMap.Seconds);
-                       
+
+                        activity.SideArea_ZanaMap.TotalSeconds = totalSecondsZanaMap;
+
                         if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_ZanaMap);
 
                         if (!_parsedActivities.Contains(activity.SideArea_ZanaMap.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_ZanaMap.Type), activity.SideArea_ZanaMap.Area, activity.SideArea_ZanaMap.AreaLevel, iSecondsZana, activity.SideArea_ZanaMap.DeathCounter, activity.SideArea_ZanaMap.TrialMasterCount, true, activity.SideArea_ZanaMap
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_ZanaMap.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_ZanaMap.Type), activity.SideArea_ZanaMap.Area, activity.SideArea_ZanaMap.AreaLevel, totalSecondsZanaMap, activity.SideArea_ZanaMap.DeathCounter, activity.SideArea_ZanaMap.TrialMasterCount, true, activity.SideArea_ZanaMap
                                 .Tags, activity.SideArea_ZanaMap.Success, Convert.ToInt32(activity.SideArea_ZanaMap.PausedTime));
                         }
                     }
 
                     if (activity.SideArea_VaalArea != null)
                     {
-                        TimeSpan tsVaalMap = TimeSpan.FromSeconds(iSecondsVaal);
+                        TimeSpan tsVaalMap = TimeSpan.FromSeconds(totalSecondsVallSideArea);
                         activity.SideArea_VaalArea.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsVaalMap.Hours, tsVaalMap.Minutes, tsVaalMap.Seconds);
+
+                        activity.SideArea_VaalArea.TotalSeconds = totalSecondsVallSideArea;
+
                         if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_VaalArea);
 
                         if (!_parsedActivities.Contains(activity.SideArea_VaalArea.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_VaalArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_VaalArea.Type), activity.SideArea_VaalArea.Area, activity.SideArea_VaalArea.AreaLevel, iSecondsVaal, activity.SideArea_VaalArea.DeathCounter, activity.SideArea_VaalArea.TrialMasterCount, true, activity.SideArea_VaalArea
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_VaalArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_VaalArea.Type), activity.SideArea_VaalArea.Area, activity.SideArea_VaalArea.AreaLevel, totalSecondsVallSideArea, activity.SideArea_VaalArea.DeathCounter, activity.SideArea_VaalArea.TrialMasterCount, true, activity.SideArea_VaalArea
                                 .Tags, activity.SideArea_VaalArea.Success, Convert.ToInt32(activity.SideArea_VaalArea.PausedTime));
                         }
                     }
 
                     if (activity.SideArea_LogbookSide != null)
                     {
-                        TimeSpan tsLBSide = TimeSpan.FromSeconds(iSecondsLogbookSide);
+                        TimeSpan tsLBSide = TimeSpan.FromSeconds(totalSecondsLogBookSide);
                         activity.SideArea_LogbookSide.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsLBSide.Hours, tsLBSide.Minutes, tsLBSide.Seconds);
+
+                        activity.SideArea_LogbookSide.TotalSeconds = totalSecondsLogBookSide;
+
                         if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_LogbookSide);
 
                         if (!_parsedActivities.Contains(activity.SideArea_LogbookSide.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LogbookSide.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LogbookSide.Type), activity.SideArea_LogbookSide.Area, activity.SideArea_LogbookSide.AreaLevel, iSecondsVaal, activity.SideArea_LogbookSide.DeathCounter, activity.SideArea_LogbookSide.TrialMasterCount, true, activity.SideArea_LogbookSide
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LogbookSide.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LogbookSide.Type), activity.SideArea_LogbookSide.Area, activity.SideArea_LogbookSide.AreaLevel, totalSecondsVallSideArea, activity.SideArea_LogbookSide.DeathCounter, activity.SideArea_LogbookSide.TrialMasterCount, true, activity.SideArea_LogbookSide
                                 .Tags, activity.SideArea_LogbookSide.Success, Convert.ToInt32(activity.SideArea_LogbookSide.PausedTime));
                         }
                     }
 
                     if (activity.SideArea_AbyssArea != null)
                     {
-                        TimeSpan tsAbyssMap = TimeSpan.FromSeconds(iSecondsAbyss);
+                        TimeSpan tsAbyssMap = TimeSpan.FromSeconds(totalSecondsAbyss);
                         activity.SideArea_AbyssArea.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsAbyssMap.Hours, tsAbyssMap.Minutes, tsAbyssMap.Seconds);
+
+                        activity.SideArea_AbyssArea.TotalSeconds = totalSecondsAbyss;
+
                         if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_AbyssArea);
 
                         if (!_parsedActivities.Contains(activity.SideArea_AbyssArea.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_AbyssArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_AbyssArea.Type), activity.SideArea_AbyssArea.Area, activity.SideArea_AbyssArea.AreaLevel, iSecondsAbyss, activity.SideArea_AbyssArea.DeathCounter, activity.SideArea_AbyssArea.TrialMasterCount, true, activity.SideArea_AbyssArea
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_AbyssArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_AbyssArea.Type), activity.SideArea_AbyssArea.Area, activity.SideArea_AbyssArea.AreaLevel, totalSecondsAbyss, activity.SideArea_AbyssArea.DeathCounter, activity.SideArea_AbyssArea.TrialMasterCount, true, activity.SideArea_AbyssArea
                                 .Tags, activity.SideArea_AbyssArea.Success, Convert.ToInt32(activity.SideArea_AbyssArea.PausedTime));
                         }
                     }
 
                     if (activity.SideArea_LabTrial != null)
                     {
-                        TimeSpan tsLabTrial2 = TimeSpan.FromSeconds(iSecondsLabTrial);
+                        TimeSpan tsLabTrial2 = TimeSpan.FromSeconds(totalSecondsLabTrial);
                         activity.SideArea_LabTrial.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsLabTrial2.Hours, tsLabTrial2.Minutes, tsLabTrial2.Seconds);
                         if(greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_LabTrial);
@@ -3222,7 +3292,7 @@ namespace TraXile
                         if (!_parsedActivities.Contains(activity.SideArea_LabTrial.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LabTrial.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LabTrial.Type), activity.SideArea_LabTrial.Area, activity.SideArea_LabTrial.AreaLevel, iSecondsLabTrial, activity.SideArea_LabTrial.DeathCounter, activity.SideArea_LabTrial.TrialMasterCount, true, activity.SideArea_LabTrial
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LabTrial.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LabTrial.Type), activity.SideArea_LabTrial.Area, activity.SideArea_LabTrial.AreaLevel, totalSecondsLabTrial, activity.SideArea_LabTrial.DeathCounter, activity.SideArea_LabTrial.TrialMasterCount, true, activity.SideArea_LabTrial
                                 .Tags, activity.SideArea_LabTrial.Success, Convert.ToInt32(activity.SideArea_LabTrial.PausedTime));
                         }
                     }

@@ -144,7 +144,6 @@ namespace TraXile
             this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label100 = new System.Windows.Forms.Label();
             this.panel19 = new System.Windows.Forms.Panel();
-            this.button6 = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label101 = new System.Windows.Forms.Label();
@@ -1756,7 +1755,6 @@ namespace TraXile
             // 
             // panel19
             // 
-            this.panel19.Controls.Add(this.button6);
             this.panel19.Controls.Add(this.linkLabel1);
             this.panel19.Controls.Add(this.textBox1);
             this.panel19.Controls.Add(this.label101);
@@ -1766,33 +1764,18 @@ namespace TraXile
             this.panel19.Size = new System.Drawing.Size(1077, 29);
             this.panel19.TabIndex = 3;
             // 
-            // button6
-            // 
-            this.button6.BackColor = System.Drawing.Color.White;
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.ForeColor = System.Drawing.Color.Black;
-            this.button6.Location = new System.Drawing.Point(356, 5);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 22);
-            this.button6.TabIndex = 13;
-            this.button6.Text = "search";
-            this.button6.UseVisualStyleBackColor = false;
-            this.button6.Visible = false;
-            this.button6.Click += new System.EventHandler(this.button6_Click_1);
-            // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkLabel1.ForeColor = System.Drawing.Color.Red;
             this.linkLabel1.LinkColor = System.Drawing.Color.Red;
-            this.linkLabel1.Location = new System.Drawing.Point(438, 10);
+            this.linkLabel1.Location = new System.Drawing.Point(356, 10);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(42, 13);
             this.linkLabel1.TabIndex = 12;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Clear";
-            this.linkLabel1.Visible = false;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked_1);
             // 
             // textBox1
@@ -1801,7 +1784,7 @@ namespace TraXile
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(267, 20);
             this.textBox1.TabIndex = 11;
-            this.textBox1.Visible = false;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label101
             // 
@@ -7271,7 +7254,6 @@ namespace TraXile
         private System.Windows.Forms.ColumnHeader columnHeader24;
         private System.Windows.Forms.Label label100;
         private System.Windows.Forms.Panel panel19;
-        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label101;
