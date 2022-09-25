@@ -70,6 +70,18 @@
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- CORE FEATURES -->
+### Core features
+* Live time tracking of your ingame Activities like Map, Contracts, Invitations ans so on
+* Tracking of encounters and metadata in your activities (Harvest, expedition ...)
+* Calculation of historical data (Event history, long term statistics)
+* Data visualization (Charts)
+
+<!-- WORKS -->
+### How it works
+Basicly all data is parsed from the logfile of the PoE Client. TraXile scans it for new events and calculates all data based on that
+
+
 ### Built With
 
 * [C#](https://docs.microsoft.com/de-de/dotnet/csharp/)
@@ -77,12 +89,7 @@
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- CORE FEATURES -->
-### Core features
-* Live time tracking of your ingame Activities like Map, Contracts, Invitations ans so on
-* Tracking of encounters and metadata in your activities (Harvest, expedition ...)
-* Calculation of historical data (Event history, long term statistics)
-* Data visualization (Charts)
+
 
 <!-- GETTING STARTED -->
 ## Getting Started
