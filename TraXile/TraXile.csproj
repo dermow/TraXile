@@ -86,7 +86,7 @@
     <OutputPath>bin\x86\TEST\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>B517E086AAAE3A0217B95764E96730B1770006E7</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>8534DF8BB822D1DFD75BD6F9DC511CD3C482F7DA</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>TraXile_TemporaryKey.pfx</ManifestKeyFile>
@@ -334,6 +334,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="TraXile_TemporaryKey.pfx" />
     <None Include="UI\TraXile_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
