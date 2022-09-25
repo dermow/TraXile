@@ -77,6 +77,13 @@
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- CORE FEATURES -->
+### Core features
+* Live time tracking of your ingame Activities like Map, Contracts, Invitations ans so on
+* Tracking of encounters and metadata in your activities (Harvest, expedition ...)
+* Calculation of historical data (Event history, long term statistics)
+* Data visualization (Charts)
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
