@@ -3788,6 +3788,7 @@ namespace TraXile
                 + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom', " + (tag.ShowInListView ? "1" : "0") + ")");
 
             listViewActLog.Columns.Add(tag.DisplayName);
+            comboBox5.Items.Add(tag.DisplayName);
             ResetMapHistory();
             RequestHistoryUpdate();
             RenderTagsForConfig(true);
