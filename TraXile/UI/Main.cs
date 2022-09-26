@@ -239,6 +239,8 @@ namespace TraXile
         private DateTime _allStatsChartDT1;
         private DateTime _allStatsChartDT2;
         private bool _allStatsSearchActive;
+        private bool _minimizeToTray;
+        private bool _filterActive;
 
         /// <summary>
         /// Main Window Constructor
@@ -1150,6 +1152,9 @@ namespace TraXile
             {
                 comboBox8.Items.Add(s);
             }
+
+            lbl_filter.Visible = false;
+            pictureBox32.Visible = false;
 
             ResetFilter();
 
@@ -2303,7 +2308,8 @@ namespace TraXile
             btt_remove_filter.BackColor = Color.Gray;
             progressBar1.Show();
             
-            label142.Show();
+            lbl_background_update.Show();
+            pictureBox33.Show();
         }
 
         private void SetUIReady()
@@ -2313,7 +2319,8 @@ namespace TraXile
             btt_apply_filter.BackColor = Color.LightGreen;
             listViewNF1.Enabled = true;
             progressBar1.Hide();
-            label142.Hide();
+            lbl_background_update.Hide();
+            pictureBox33.Hide();
         }
 
         /// <summary>
@@ -2667,6 +2674,7 @@ namespace TraXile
         {
             _showGridInActLog = Convert.ToBoolean(ReadSetting("ActivityLogShowGrid"));
             _showGridInStats = Convert.ToBoolean(ReadSetting("StatsShowGrid"));
+            _minimizeToTray = Convert.ToBoolean(ReadSetting("MinimizeToTray"));
             _labDashboardHideUnknown = Convert.ToBoolean(ReadSetting("dashboard_lab_hide_unknown", "false"));
             _showHideoutInPie = Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true"));
             _stopwatchOverlayOpacity = Convert.ToInt32(ReadSetting("overlay.stopwatch.opacity", "100"));
@@ -2675,6 +2683,7 @@ namespace TraXile
             listViewActLog.GridLines = _showGridInActLog;
             trackBar1.Value = _stopwatchOverlayOpacity;
             checkBox2.Checked = _stopwatchOverlayShowDefault;
+            checkBox3.Checked = _minimizeToTray;
             label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
             //checkBox3.Checked = Convert.ToBoolean(ReadSetting("statistics_auto_refresh", "false"));
             textBox9.Text = ReadSetting("lab.profittracking.filter.text", "");
@@ -4925,6 +4934,11 @@ namespace TraXile
 
         private void button3_Click_2(object sender, EventArgs e)
         {
+            _filterActive = true;
+            lbl_filter.Visible = true;
+            pictureBox32.Visible = true;
+            lbl_filter.Text = "Your data is filtered!";
+
             RequestDashboardUpdates();
             RequestActivityListReset();
         }
@@ -5284,6 +5298,36 @@ namespace TraXile
             }
         }
 
+        private void checkBox3_CheckedChanged_1(object sender, EventArgs e)
+        {
+            _minimizeToTray = checkBox3.Checked;
+            AddUpdateAppSettings("MinimizeToTray", _minimizeToTray.ToString());
+        }
+
+        private void checkBox3_Resize(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            this.ShowInTaskbar = true;
+        }
+
+        private void Main_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                if (_minimizeToTray)
+                {
+                    Hide();
+                    this.ShowInTaskbar = false;
+                }
+            }
+        }
+
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
         {
             AddUpdateAppSettings("overlay.stopwatch.tag2", comboBoxStopWatchTag2.SelectedItem.ToString());
@@ -5299,6 +5343,9 @@ namespace TraXile
         private void button5_Click_2(object sender, EventArgs e)
         {
             ResetFilter(true);
+            _filterActive = false;
+            lbl_filter.Visible = false;
+            pictureBox32.Visible = false;
         }
        
     }
