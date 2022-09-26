@@ -5304,11 +5304,6 @@ namespace TraXile
             AddUpdateAppSettings("MinimizeToTray", _minimizeToTray.ToString());
         }
 
-        private void checkBox3_Resize(object sender, EventArgs e)
-        {
-           
-        }
-
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();

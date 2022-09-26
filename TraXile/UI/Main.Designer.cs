@@ -6792,7 +6792,6 @@ namespace TraXile
             this.checkBox3.Text = "Minimize to tray and hide in taskbar";
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged_1);
-            this.checkBox3.Resize += new System.EventHandler(this.checkBox3_Resize);
             // 
             // lbl_filter
             // 
