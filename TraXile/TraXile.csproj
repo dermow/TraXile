@@ -240,6 +240,7 @@
     <Compile Include="UI\SummaryWindow.Designer.cs">
       <DependentUpon>SummaryWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\TrX_HelpDefinitions.cs" />
     <Compile Include="UI\TrX_ListViewManager.cs" />
     <Compile Include="UI\LoadScreen.cs">
       <SubType>Form</SubType>

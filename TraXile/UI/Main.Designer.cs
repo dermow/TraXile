@@ -354,15 +354,13 @@ namespace TraXile
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.pictureBox31 = new System.Windows.Forms.PictureBox();
             this.textBox11 = new System.Windows.Forms.TextBox();
-            this.label143 = new System.Windows.Forms.Label();
+            this.labelMinTimeCap = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Cap = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pictureBox20 = new System.Windows.Forms.PictureBox();
+            this.timeCaps = new System.Windows.Forms.PictureBox();
             this.buttonSaveCaps = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.pictureBox23 = new System.Windows.Forms.PictureBox();
@@ -370,12 +368,11 @@ namespace TraXile
             this.buttonRestoreBackup = new System.Windows.Forms.Button();
             this.listBoxRestoreBackup = new System.Windows.Forms.ListBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.pictureBox22 = new System.Windows.Forms.PictureBox();
             this.label62 = new System.Windows.Forms.Label();
             this.textBoxBackupName = new System.Windows.Forms.TextBox();
             this.buttonCreateBackup = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBoxMinimizeToTray = new System.Windows.Forms.CheckBox();
             this.button2 = new System.Windows.Forms.Button();
             this.checkBoxShowGridInStats = new System.Windows.Forms.CheckBox();
             this.checkBoxShowGridInAct = new System.Windows.Forms.CheckBox();
@@ -386,10 +383,6 @@ namespace TraXile
             this.textBoxLogFilePath = new System.Windows.Forms.TextBox();
             this.label56 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.pictureBox19 = new System.Windows.Forms.PictureBox();
-            this.pictureBox18 = new System.Windows.Forms.PictureBox();
-            this.pictureBox17 = new System.Windows.Forms.PictureBox();
-            this.pictureBox11 = new System.Windows.Forms.PictureBox();
             this.buttonRollLog = new System.Windows.Forms.Button();
             this.buttonFullReset = new System.Windows.Forms.Button();
             this.buttonChangeLogReload = new System.Windows.Forms.Button();
@@ -699,20 +692,14 @@ namespace TraXile
             this.tabControl2.SuspendLayout();
             this.tabPage6.SuspendLayout();
             this.groupBox9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox31)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox20)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timeCaps)).BeginInit();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox23)).BeginInit();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox22)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox19)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
             this.tabPage7.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.panelEditTags.SuspendLayout();
@@ -1802,7 +1789,6 @@ namespace TraXile
             this.label101.Size = new System.Drawing.Size(56, 13);
             this.label101.TabIndex = 10;
             this.label101.Text = "Search:";
-            this.label101.Visible = false;
             // 
             // tabPage1
             // 
@@ -4314,7 +4300,6 @@ namespace TraXile
             // 
             this.tabPage6.AutoScroll = true;
             this.tabPage6.BackColor = System.Drawing.Color.Black;
-            this.tabPage6.Controls.Add(this.button1);
             this.tabPage6.Controls.Add(this.groupBox9);
             this.tabPage6.Controls.Add(this.groupBox6);
             this.tabPage6.Controls.Add(this.groupBox5);
@@ -4328,26 +4313,12 @@ namespace TraXile
             this.tabPage6.TabIndex = 0;
             this.tabPage6.Text = "Settings";
             // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(751, 6);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Wiki help";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
             // groupBox9
             // 
-            this.groupBox9.Controls.Add(this.pictureBox31);
             this.groupBox9.Controls.Add(this.textBox11);
-            this.groupBox9.Controls.Add(this.label143);
+            this.groupBox9.Controls.Add(this.labelMinTimeCap);
             this.groupBox9.Controls.Add(this.dataGridView1);
-            this.groupBox9.Controls.Add(this.pictureBox20);
+            this.groupBox9.Controls.Add(this.timeCaps);
             this.groupBox9.Controls.Add(this.buttonSaveCaps);
             this.groupBox9.ForeColor = System.Drawing.Color.Red;
             this.groupBox9.Location = new System.Drawing.Point(6, 292);
@@ -4357,16 +4328,6 @@ namespace TraXile
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Time Caps";
             // 
-            // pictureBox31
-            // 
-            this.pictureBox31.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox31.Image")));
-            this.pictureBox31.Location = new System.Drawing.Point(233, 25);
-            this.pictureBox31.Name = "pictureBox31";
-            this.pictureBox31.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox31.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox31.TabIndex = 20;
-            this.pictureBox31.TabStop = false;
-            // 
             // textBox11
             // 
             this.textBox11.Location = new System.Drawing.Point(142, 27);
@@ -4375,14 +4336,14 @@ namespace TraXile
             this.textBox11.TabIndex = 19;
             this.textBox11.Text = "10";
             // 
-            // label143
+            // labelMinTimeCap
             // 
-            this.label143.AutoSize = true;
-            this.label143.Location = new System.Drawing.Point(14, 30);
-            this.label143.Name = "label143";
-            this.label143.Size = new System.Drawing.Size(122, 13);
-            this.label143.TabIndex = 18;
-            this.label143.Text = "Minimum time (seconds):";
+            this.labelMinTimeCap.AutoSize = true;
+            this.labelMinTimeCap.Location = new System.Drawing.Point(14, 30);
+            this.labelMinTimeCap.Name = "labelMinTimeCap";
+            this.labelMinTimeCap.Size = new System.Drawing.Size(122, 13);
+            this.labelMinTimeCap.TabIndex = 18;
+            this.labelMinTimeCap.Text = "Minimum time (seconds):";
             // 
             // dataGridView1
             // 
@@ -4407,15 +4368,15 @@ namespace TraXile
             this.Cap.HeaderText = "Cap (Seconds)";
             this.Cap.Name = "Cap";
             // 
-            // pictureBox20
+            // timeCaps
             // 
-            this.pictureBox20.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox20.Image")));
-            this.pictureBox20.Location = new System.Drawing.Point(333, 53);
-            this.pictureBox20.Name = "pictureBox20";
-            this.pictureBox20.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox20.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox20.TabIndex = 15;
-            this.pictureBox20.TabStop = false;
+            this.timeCaps.Image = ((System.Drawing.Image)(resources.GetObject("timeCaps.Image")));
+            this.timeCaps.Location = new System.Drawing.Point(325, 53);
+            this.timeCaps.Name = "timeCaps";
+            this.timeCaps.Size = new System.Drawing.Size(24, 24);
+            this.timeCaps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.timeCaps.TabIndex = 15;
+            this.timeCaps.TabStop = false;
             // 
             // buttonSaveCaps
             // 
@@ -4488,7 +4449,6 @@ namespace TraXile
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.pictureBox22);
             this.groupBox5.Controls.Add(this.label62);
             this.groupBox5.Controls.Add(this.textBoxBackupName);
             this.groupBox5.Controls.Add(this.buttonCreateBackup);
@@ -4500,16 +4460,6 @@ namespace TraXile
             this.groupBox5.TabIndex = 4;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Create Backup";
-            // 
-            // pictureBox22
-            // 
-            this.pictureBox22.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox22.Image")));
-            this.pictureBox22.Location = new System.Drawing.Point(405, 9);
-            this.pictureBox22.Name = "pictureBox22";
-            this.pictureBox22.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox22.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox22.TabIndex = 15;
-            this.pictureBox22.TabStop = false;
             // 
             // label62
             // 
@@ -4542,7 +4492,7 @@ namespace TraXile
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.checkBox3);
+            this.groupBox4.Controls.Add(this.checkBoxMinimizeToTray);
             this.groupBox4.Controls.Add(this.button2);
             this.groupBox4.Controls.Add(this.checkBoxShowGridInStats);
             this.groupBox4.Controls.Add(this.checkBoxShowGridInAct);
@@ -4558,17 +4508,17 @@ namespace TraXile
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "UI";
             // 
-            // checkBox3
+            // checkBoxMinimizeToTray
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.ForeColor = System.Drawing.Color.White;
-            this.checkBox3.Location = new System.Drawing.Point(12, 65);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(278, 17);
-            this.checkBox3.TabIndex = 7;
-            this.checkBox3.Text = "Minimize to tray and hide in taskbar";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged_1);
+            this.checkBoxMinimizeToTray.AutoSize = true;
+            this.checkBoxMinimizeToTray.ForeColor = System.Drawing.Color.White;
+            this.checkBoxMinimizeToTray.Location = new System.Drawing.Point(12, 65);
+            this.checkBoxMinimizeToTray.Name = "checkBoxMinimizeToTray";
+            this.checkBoxMinimizeToTray.Size = new System.Drawing.Size(278, 17);
+            this.checkBoxMinimizeToTray.TabIndex = 7;
+            this.checkBoxMinimizeToTray.Text = "Minimize to tray and hide in taskbar";
+            this.checkBoxMinimizeToTray.UseVisualStyleBackColor = true;
+            this.checkBoxMinimizeToTray.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged_1);
             // 
             // button2
             // 
@@ -4668,10 +4618,6 @@ namespace TraXile
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.pictureBox19);
-            this.groupBox1.Controls.Add(this.pictureBox18);
-            this.groupBox1.Controls.Add(this.pictureBox17);
-            this.groupBox1.Controls.Add(this.pictureBox11);
             this.groupBox1.Controls.Add(this.buttonRollLog);
             this.groupBox1.Controls.Add(this.buttonFullReset);
             this.groupBox1.Controls.Add(this.buttonChangeLogReload);
@@ -4684,46 +4630,6 @@ namespace TraXile
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Advanced";
-            // 
-            // pictureBox19
-            // 
-            this.pictureBox19.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox19.Image")));
-            this.pictureBox19.Location = new System.Drawing.Point(233, 107);
-            this.pictureBox19.Name = "pictureBox19";
-            this.pictureBox19.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox19.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox19.TabIndex = 14;
-            this.pictureBox19.TabStop = false;
-            // 
-            // pictureBox18
-            // 
-            this.pictureBox18.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox18.Image")));
-            this.pictureBox18.Location = new System.Drawing.Point(233, 79);
-            this.pictureBox18.Name = "pictureBox18";
-            this.pictureBox18.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox18.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox18.TabIndex = 13;
-            this.pictureBox18.TabStop = false;
-            // 
-            // pictureBox17
-            // 
-            this.pictureBox17.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox17.Image")));
-            this.pictureBox17.Location = new System.Drawing.Point(233, 49);
-            this.pictureBox17.Name = "pictureBox17";
-            this.pictureBox17.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox17.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox17.TabIndex = 12;
-            this.pictureBox17.TabStop = false;
-            // 
-            // pictureBox11
-            // 
-            this.pictureBox11.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox11.Image")));
-            this.pictureBox11.Location = new System.Drawing.Point(233, 19);
-            this.pictureBox11.Name = "pictureBox11";
-            this.pictureBox11.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox11.TabIndex = 11;
-            this.pictureBox11.TabStop = false;
             // 
             // buttonRollLog
             // 
@@ -7031,23 +6937,17 @@ namespace TraXile
             this.tabPage6.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox31)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox20)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timeCaps)).EndInit();
             this.groupBox6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox23)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox22)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox19)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox18)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox17)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
             this.tabPage7.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
             this.panelEditTags.ResumeLayout(false);
@@ -7225,7 +7125,6 @@ namespace TraXile
         private System.Windows.Forms.CheckBox checkBox4;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Button buttonSaveCaps;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox comboBoxTheme;
         private System.Windows.Forms.Label label55;
@@ -7356,20 +7255,15 @@ namespace TraXile
         private System.Windows.Forms.Button buttonFullReset;
         private System.Windows.Forms.Button buttonChangeLogReload;
         private System.Windows.Forms.Button buttonReloadLogfile;
-        private System.Windows.Forms.PictureBox pictureBox11;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.PictureBox pictureBox17;
         private System.Windows.Forms.ToolTip toolTip2;
-        private System.Windows.Forms.PictureBox pictureBox18;
         private System.Windows.Forms.ToolTip toolTip3;
-        private System.Windows.Forms.PictureBox pictureBox19;
         private System.Windows.Forms.ToolTip toolTip4;
-        private System.Windows.Forms.PictureBox pictureBox20;
+        private System.Windows.Forms.PictureBox timeCaps;
         private System.Windows.Forms.ToolTip toolTip5;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn Cap;
-        private System.Windows.Forms.PictureBox pictureBox22;
         private System.Windows.Forms.ToolTip toolTip6;
         private System.Windows.Forms.PictureBox pictureBox23;
         private System.Windows.Forms.ToolTip toolTip7;
@@ -7642,9 +7536,8 @@ namespace TraXile
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label lbl_background_update;
         private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.Label label143;
-        private System.Windows.Forms.PictureBox pictureBox31;
-        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.Label labelMinTimeCap;
+        private System.Windows.Forms.CheckBox checkBoxMinimizeToTray;
         private System.Windows.Forms.Label lbl_filter;
         private System.Windows.Forms.PictureBox pictureBox32;
         private System.Windows.Forms.PictureBox pictureBox33;

@@ -10,12 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
+using TraXile.UI;
 
 namespace TraXile
 {
@@ -239,8 +239,9 @@ namespace TraXile
         private DateTime _allStatsChartDT1;
         private DateTime _allStatsChartDT2;
         private bool _allStatsSearchActive;
+
+        // Setting: Mimimize to tray
         private bool _minimizeToTray;
-        private bool _filterActive;
 
         /// <summary>
         /// Main Window Constructor
@@ -294,7 +295,7 @@ namespace TraXile
             return _workerAllStats.IsBusy || _workerAllStatsChart.IsBusy;
         }
 
-        private List<TrX_TrackedActivity> FilterActivitiesByAreaLevel(int lvl, string op, List<TrX_TrackedActivity> source)
+        private List<TrX_TrackedActivity> FilterActivitiesByAreaLevel(int level, string op, List<TrX_TrackedActivity> source)
         {
             List<TrX_TrackedActivity> results;
             results = new List<TrX_TrackedActivity>();
@@ -305,19 +306,19 @@ namespace TraXile
                 switch (op)
                 {
                     case "=":
-                        result = act.AreaLevel == lvl;
+                        result = act.AreaLevel == level;
                         break;
                     case ">":
-                        result = act.AreaLevel > lvl;
+                        result = act.AreaLevel > level;
                         break;
                     case ">=":
-                        result = act.AreaLevel >= lvl;
+                        result = act.AreaLevel >= level;
                         break;
                     case "<":
-                        result = act.AreaLevel < lvl;
+                        result = act.AreaLevel < level;
                         break;
                     case "<=":
-                        result = act.AreaLevel <= lvl;
+                        result = act.AreaLevel <= level;
                         break;
                 }
 
@@ -494,6 +495,16 @@ namespace TraXile
             if (comboBox1.SelectedItem == null || _statsDataSource == null)
                 return;
 
+            if(comboBox7.SelectedItem == null)
+            {
+                comboBox7.SelectedItem = "All";
+            }
+
+            if (comboBox8.SelectedItem == null)
+            {
+                comboBox8.SelectedItem = "All";
+            }
+
             _statsDataSource.Clear();
 
             if (comboBox1.SelectedItem.ToString() == "All")
@@ -585,8 +596,8 @@ namespace TraXile
                 }
                 catch(Exception ex)
                 {
+                    textBox10.Text = String.Empty;
                     MessageBox.Show(ex.Message);
-
                 }
             }
 
@@ -633,10 +644,8 @@ namespace TraXile
         {
             try
             {
-                string updateURL, updateBranch;
-
-                updateBranch = ReadSetting("metadata_meta_branch", "main");
-                updateURL = "https://raw.githubusercontent.com/dermow/traxile-metadata/" + updateBranch + "/metadata.xml";
+                string updateBranch = ReadSetting("metadata_meta_branch", "main");
+                string updateURL = "https://raw.githubusercontent.com/dermow/traxile-metadata/" + updateBranch + "/metadata.xml";
 
                 WebClient webClient = new WebClient();
                 Uri uri = new Uri(updateURL);
@@ -1060,61 +1069,15 @@ namespace TraXile
             _uiFlagActivityListReset = true;
             _uiFlagAllStatsDashboard = true;
 
-            // Tool tips
-            StringBuilder sb;
-            sb = new StringBuilder();
-            sb.AppendLine("This action resets all data and reloads the current Client.txt");
-            toolTip1.SetToolTip(pictureBox11, sb.ToString());
-            toolTip1.ToolTipTitle = buttonReloadLogfile.Text;
-            toolTip1.AutoPopDelay = 30000;
+            // Set Tooltips. Mapping in UI/Trx_HelpDefinitions.cs
+            foreach(KeyValuePair<string,string> kvp in TrX_HelpDefinitions.ToolTips)
+            {
+                Control cnt = this.Controls.Find(kvp.Key, true)[0];
 
-            sb.Clear();
-            sb.AppendLine("This action changes the path to the Client.txt, resets all data ");
-            sb.AppendLine("and reloads the logfile with the new path");
-            toolTip2.SetToolTip(pictureBox17, sb.ToString());
-            toolTip2.ToolTipTitle = buttonChangeLogReload.Text;
-            toolTip2.AutoPopDelay = 30000;
-
-            sb.Clear();
-            sb.AppendLine("With this action all statistics will be set to 0, all entries in history ");
-            sb.AppendLine("will be deleted and your current Client.txt will be cleared. A backup will be ");
-            sb.AppendLine("created. Path of Exile needs to be closed first!");
-            toolTip3.SetToolTip(pictureBox18, sb.ToString());
-            toolTip3.ToolTipTitle = buttonFullReset.Text;
-            toolTip3.AutoPopDelay = 30000;
-
-            sb.Clear();
-            sb.AppendLine("Roll (rename) your current Client.txt (if it gets too big) so that you can safely delete it. ");
-            sb.AppendLine("Keeping all data in TraXile. Path of Exile needs to be closed first!");
-            toolTip4.SetToolTip(pictureBox19, sb.ToString());
-            toolTip4.ToolTipTitle = buttonRollLog.Text;
-            toolTip4.AutoPopDelay = 30000;
-
-            sb.Clear();
-            sb.AppendLine("You can set time caps (in seconds) for all activity types. Activities that take longer are capped to this value.");
-            sb.AppendLine("This is used to filter out very long idle times.");
-            toolTip5.SetToolTip(pictureBox20, sb.ToString());
-            toolTip5.ToolTipTitle = "Time caps";
-            toolTip5.AutoPopDelay = 30000;
-
-            sb.Clear();
-            sb.AppendLine("Creates a backup of your current database, config and Client.txt");
-            toolTip6.SetToolTip(pictureBox22, sb.ToString());
-            toolTip6.ToolTipTitle = "Create Backup";
-            toolTip6.AutoPopDelay = 30000;
-
-            sb.Clear();
-            sb.AppendLine("Restores TraXile to the state of a previously created backup. Application will be restarted. Path of Exile needs");
-            sb.AppendLine("to be closed first!");
-            toolTip7.SetToolTip(pictureBox23, sb.ToString());
-            toolTip7.ToolTipTitle = "Restore Backup";
-            toolTip7.AutoPopDelay = 30000;
-
-            sb.Clear();
-            sb.AppendLine("Set the minimum time for a activity to be valid. Helps to filter out ultra short maps and stuff like that.");
-            toolTip7.SetToolTip(pictureBox31, sb.ToString());
-            toolTip7.ToolTipTitle = "Minimum Time Cap";
-            toolTip7.AutoPopDelay = 30000;
+                ToolTip toolTip = new ToolTip();
+                toolTip.AutoPopDelay = 30000;
+                toolTip.SetToolTip(cnt, kvp.Value);
+            }
 
             // Map filter
             comboBox3.Items.Add("All");
@@ -1957,258 +1920,258 @@ namespace TraXile
         /// <summary>
         /// Get matching image indax for an activity
         /// </summary>
-        /// <param name="map">Activity</param>
+        /// <param name="activity">Activity</param>
         /// <returns>numeric index in image list to use</returns>
-        public int GetImageIndex(TrX_TrackedActivity map)
+        public int GetImageIndex(TrX_TrackedActivity activity)
         {
-            int iIndex = 0;
+            int imageIndex = 0;
             // Calculate Image Index
-            if (map.Type == ACTIVITY_TYPES.MAP)
+            if (activity.Type == ACTIVITY_TYPES.MAP)
             {
-                if (map.MapTier > 0 && map.MapTier <= 5)
+                if (activity.MapTier > 0 && activity.MapTier <= 5)
                 {
-                    iIndex = 0;
+                    imageIndex = 0;
                 }
-                else if (map.MapTier >= 6 && map.MapTier <= 10)
+                else if (activity.MapTier >= 6 && activity.MapTier <= 10)
                 {
-                    iIndex = 1;
+                    imageIndex = 1;
                 }
-                else if (map.MapTier >= 11)
+                else if (activity.MapTier >= 11)
                 {
-                    iIndex = 2;
+                    imageIndex = 2;
                 }
             }
-            else if (map.Type == ACTIVITY_TYPES.TEMPLE)
+            else if (activity.Type == ACTIVITY_TYPES.TEMPLE)
             {
-                iIndex = 3;
+                imageIndex = 3;
             }
-            else if (map.Type == ACTIVITY_TYPES.HEIST)
+            else if (activity.Type == ACTIVITY_TYPES.HEIST)
             {
-                iIndex = 4;
+                imageIndex = 4;
             }
-            else if (map.Type == ACTIVITY_TYPES.ABYSSAL_DEPTHS)
+            else if (activity.Type == ACTIVITY_TYPES.ABYSSAL_DEPTHS)
             {
-                iIndex = 5;
+                imageIndex = 5;
             }
-            else if (map.Type == ACTIVITY_TYPES.LABYRINTH || map.Type == ACTIVITY_TYPES.LAB_TRIAL)
+            else if (activity.Type == ACTIVITY_TYPES.LABYRINTH || activity.Type == ACTIVITY_TYPES.LAB_TRIAL)
             {
-                iIndex = 6;
+                imageIndex = 6;
             }
-            else if (map.Type == ACTIVITY_TYPES.CAMPAIGN)
+            else if (activity.Type == ACTIVITY_TYPES.CAMPAIGN)
             {
-                iIndex = 7;
+                imageIndex = 7;
             }
-            else if (map.Type == ACTIVITY_TYPES.LOGBOOK || map.Type == ACTIVITY_TYPES.LOGBOOK_SIDE)
+            else if (activity.Type == ACTIVITY_TYPES.LOGBOOK || activity.Type == ACTIVITY_TYPES.LOGBOOK_SIDE)
             {
-                iIndex = 8;
+                imageIndex = 8;
             }
-            else if (map.Type == ACTIVITY_TYPES.VAAL_SIDEAREA)
+            else if (activity.Type == ACTIVITY_TYPES.VAAL_SIDEAREA)
             {
-                iIndex = 9;
+                imageIndex = 9;
             }
-            else if (map.Type == ACTIVITY_TYPES.CATARINA_FIGHT)
+            else if (activity.Type == ACTIVITY_TYPES.CATARINA_FIGHT)
             {
-                iIndex = 10;
+                imageIndex = 10;
             }
-            else if (map.Type == ACTIVITY_TYPES.SAFEHOUSE)
+            else if (activity.Type == ACTIVITY_TYPES.SAFEHOUSE)
             {
-                iIndex = 11;
+                imageIndex = 11;
             }
-            else if (map.Type == ACTIVITY_TYPES.DELVE)
+            else if (activity.Type == ACTIVITY_TYPES.DELVE)
             {
-                iIndex = 12;
+                imageIndex = 12;
             }
-            else if (map.Type == ACTIVITY_TYPES.MAVEN_INVITATION)
+            else if (activity.Type == ACTIVITY_TYPES.MAVEN_INVITATION)
             {
-                iIndex = 13;
+                imageIndex = 13;
             }
-            else if (map.Type == ACTIVITY_TYPES.SIRUS_FIGHT)
+            else if (activity.Type == ACTIVITY_TYPES.SIRUS_FIGHT)
             {
-                iIndex = 14;
+                imageIndex = 14;
             }
-            else if (map.Type == ACTIVITY_TYPES.ATZIRI)
+            else if (activity.Type == ACTIVITY_TYPES.ATZIRI)
             {
-                iIndex = 15;
+                imageIndex = 15;
             }
-            else if (map.Type == ACTIVITY_TYPES.UBER_ATZIRI)
+            else if (activity.Type == ACTIVITY_TYPES.UBER_ATZIRI)
             {
-                iIndex = 16;
+                imageIndex = 16;
             }
-            else if (map.Type == ACTIVITY_TYPES.ELDER_FIGHT)
+            else if (activity.Type == ACTIVITY_TYPES.ELDER_FIGHT)
             {
-                iIndex = 17;
+                imageIndex = 17;
             }
-            else if (map.Type == ACTIVITY_TYPES.SHAPER_FIGHT)
+            else if (activity.Type == ACTIVITY_TYPES.SHAPER_FIGHT)
             {
-                iIndex = 18;
+                imageIndex = 18;
             }
-            else if (map.Type == ACTIVITY_TYPES.SIMULACRUM)
+            else if (activity.Type == ACTIVITY_TYPES.SIMULACRUM)
             {
-                iIndex = 19;
+                imageIndex = 19;
             }
-            else if (map.Type == ACTIVITY_TYPES.MAVEN_FIGHT)
+            else if (activity.Type == ACTIVITY_TYPES.MAVEN_FIGHT)
             {
-                iIndex = 20;
+                imageIndex = 20;
             }
-            else if (map.Type == ACTIVITY_TYPES.BREACHSTONE)
+            else if (activity.Type == ACTIVITY_TYPES.BREACHSTONE)
             {
-                if (map.Area.Contains("Chayula"))
+                if (activity.Area.Contains("Chayula"))
                 {
-                    switch (map.AreaLevel)
+                    switch (activity.AreaLevel)
                     {
                         // Normal
                         case 80:
-                            iIndex = 21;
+                            imageIndex = 21;
                             break;
                         // Charged
                         case 81:
-                            iIndex = 41;
+                            imageIndex = 41;
                             break;
                         // Enriched
                         case 82:
-                            iIndex = 40;
+                            imageIndex = 40;
                             break;
                         // Pure
                         case 83:
-                            iIndex = 39;
+                            imageIndex = 39;
                             break;
                         // Flawless
                         case 84:
-                            iIndex = 38;
+                            imageIndex = 38;
                             break;
                     }
                 }
-                else if (map.Area.Contains("Esh"))
+                else if (activity.Area.Contains("Esh"))
                 {
-                    switch (map.AreaLevel)
+                    switch (activity.AreaLevel)
                     {
                         // Normal
                         case 70:
-                            iIndex = 22;
+                            imageIndex = 22;
                             break;
                         // Charged
                         case 74:
-                            iIndex = 45;
+                            imageIndex = 45;
                             break;
                         // Enriched
                         case 79:
-                            iIndex = 44;
+                            imageIndex = 44;
                             break;
                         // Pure
                         case 81:
-                            iIndex = 43;
+                            imageIndex = 43;
                             break;
                         // Flawless
                         case 84:
-                            iIndex = 42;
+                            imageIndex = 42;
                             break;
                     }
                 }
-                else if (map.Area.Contains("Xoph"))
+                else if (activity.Area.Contains("Xoph"))
                 {
-                    switch (map.AreaLevel)
+                    switch (activity.AreaLevel)
                     {
                         // Normal
                         case 70:
-                            iIndex = 23;
+                            imageIndex = 23;
                             break;
                         // Charged
                         case 74:
-                            iIndex = 37;
+                            imageIndex = 37;
                             break;
                         // Enriched
                         case 79:
-                            iIndex = 36;
+                            imageIndex = 36;
                             break;
                         // Pure
                         case 81:
-                            iIndex = 35;
+                            imageIndex = 35;
                             break;
                         // Flawless
                         case 84:
-                            iIndex =
+                            imageIndex =
                                 34;
                             break;
                     }
                 }
-                else if (map.Area.Contains("Uul-Netol"))
+                else if (activity.Area.Contains("Uul-Netol"))
                 {
-                    switch (map.AreaLevel)
+                    switch (activity.AreaLevel)
                     {
                         // Normal
                         case 75:
-                            iIndex = 24;
+                            imageIndex = 24;
                             break;
                         // Charged
                         case 78:
-                            iIndex = 33;
+                            imageIndex = 33;
                             break;
                         // Enriched
                         case 81:
-                            iIndex = 32;
+                            imageIndex = 32;
                             break;
                         // Pure
                         case 82:
-                            iIndex = 31;
+                            imageIndex = 31;
                             break;
                         // Flawless
                         case 84:
-                            iIndex = 30;
+                            imageIndex = 30;
                             break;
                     }
                 }
-                else if (map.Area.Contains("Tul"))
+                else if (activity.Area.Contains("Tul"))
                 {
-                    switch (map.AreaLevel)
+                    switch (activity.AreaLevel)
                     {
                         // Normal
                         case 70:
-                            iIndex = 25;
+                            imageIndex = 25;
                             break;
                         // Charged
                         case 74:
-                            iIndex = 29;
+                            imageIndex = 29;
                             break;
                         // Enriched
                         case 79:
-                            iIndex = 28;
+                            imageIndex = 28;
                             break;
                         // Pure
                         case 81:
-                            iIndex = 27;
+                            imageIndex = 27;
                             break;
                         // Flawless
                         case 84:
-                            iIndex = 26;
+                            imageIndex = 26;
                             break;
                     }
                 }
             }
-            else if (map.Type == ACTIVITY_TYPES.SEARING_EXARCH_FIGHT)
+            else if (activity.Type == ACTIVITY_TYPES.SEARING_EXARCH_FIGHT)
             {
-                iIndex = 46;
+                imageIndex = 46;
             }
-            else if (map.Type == ACTIVITY_TYPES.BLACK_STAR_FIGHT)
+            else if (activity.Type == ACTIVITY_TYPES.BLACK_STAR_FIGHT)
             {
-                iIndex = 47;
+                imageIndex = 47;
             }
-            else if (map.Type == ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT)
+            else if (activity.Type == ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT)
             {
-                iIndex = 48;
+                imageIndex = 48;
             }
-            else if (map.Type == ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT)
+            else if (activity.Type == ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT)
             {
-                iIndex = 49;
+                imageIndex = 49;
             }
-            else if (map.Type == ACTIVITY_TYPES.TIMELESS_LEGION)
+            else if (activity.Type == ACTIVITY_TYPES.TIMELESS_LEGION)
             {
-                iIndex = 50;
+                imageIndex = 50;
             }
-            else if (map.Type == ACTIVITY_TYPES.LAKE_OF_KALANDRA)
+            else if (activity.Type == ACTIVITY_TYPES.LAKE_OF_KALANDRA)
             {
-                iIndex = 51;
+                imageIndex = 51;
             }
-            return iIndex;
+            return imageIndex;
         }
 
         /// <summary>
@@ -2278,14 +2241,14 @@ namespace TraXile
         /// <summary>
         /// Find matching activity to Item name
         /// </summary>
-        /// <param name="s_name"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        private TrX_TrackedActivity GetActivityFromListItemName(string s_name)
+        private TrX_TrackedActivity GetActivityFromListItemName(string name)
         {
-            foreach (TrX_TrackedActivity ta in _logic.ActivityHistory)
+            foreach (TrX_TrackedActivity activity in _logic.ActivityHistory)
             {
-                if (ta.UniqueID == s_name)
-                    return ta;
+                if (activity.UniqueID == name)
+                    return activity;
             }
             return null;
         }
@@ -2683,7 +2646,7 @@ namespace TraXile
             listViewActLog.GridLines = _showGridInActLog;
             trackBar1.Value = _stopwatchOverlayOpacity;
             checkBox2.Checked = _stopwatchOverlayShowDefault;
-            checkBox3.Checked = _minimizeToTray;
+            checkBoxMinimizeToTray.Checked = _minimizeToTray;
             label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
             //checkBox3.Checked = Convert.ToBoolean(ReadSetting("statistics_auto_refresh", "false"));
             textBox9.Text = ReadSetting("lab.profittracking.filter.text", "");
@@ -4935,7 +4898,6 @@ namespace TraXile
 
         private void button3_Click_2(object sender, EventArgs e)
         {
-            _filterActive = true;
             lbl_filter.Visible = true;
             pictureBox32.Visible = true;
             lbl_filter.Text = "Your data is filtered!";
@@ -5122,11 +5084,14 @@ namespace TraXile
 
         private void button17_Click_2(object sender, EventArgs e)
         {
-            if(!listBox3.Items.Contains(comboBox5.SelectedItem.ToString()))
+            if(comboBox5.SelectedItem != null)
             {
-                listBox3.Items.Add(comboBox5.SelectedItem);
+                if (!listBox3.Items.Contains(comboBox5.SelectedItem.ToString()))
+                {
+                    listBox3.Items.Add(comboBox5.SelectedItem);
+                }
+                comboBox5.Text = "";
             }
-            comboBox5.Text = "";
         }
 
         private void button18_Click_1(object sender, EventArgs e)
@@ -5301,7 +5266,7 @@ namespace TraXile
 
         private void checkBox3_CheckedChanged_1(object sender, EventArgs e)
         {
-            _minimizeToTray = checkBox3.Checked;
+            _minimizeToTray = checkBoxMinimizeToTray.Checked;
             AddUpdateAppSettings("MinimizeToTray", _minimizeToTray.ToString());
         }
 
@@ -5339,7 +5304,6 @@ namespace TraXile
         private void button5_Click_2(object sender, EventArgs e)
         {
             ResetFilter(true);
-            _filterActive = false;
             lbl_filter.Visible = false;
             pictureBox32.Visible = false;
         }

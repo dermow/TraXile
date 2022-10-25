@@ -3298,7 +3298,10 @@ namespace TraXile
                     }
 
                     // Trigger event
-                    OnActivityFinished(new TrX_CoreLogicActivityEventArgs(this, activity));
+                    if(greaterThenMinCap)
+                    {
+                        OnActivityFinished(new TrX_CoreLogicActivityEventArgs(this, activity));
+                    }
                 }
                 else
                 {
