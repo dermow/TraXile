@@ -23,7 +23,7 @@ namespace TraXile
 
             labelTime.Text = ta.Started.ToString();
             labelType.Text = ta.Type.ToString();
-            label12.Text = "ID: " + ta.UniqueID;
+            label12.Text = $"ID: {ta.UniqueID}";
             if (ta.IsZana)
             {
                 labelType.Text += " (Zana)";
@@ -31,7 +31,7 @@ namespace TraXile
             labelArea.Text = ta.Area;
             labelStopWatch.Text = ta.GetCappedStopwatchValue(main.TimeCaps[ta.Type]);
             labelDeaths.Text = ta.DeathCounter.ToString();
-            Text = ta.Type + " Details: " + ta.Area;
+            Text = ta.Type + $" Details: {ta.Area}";
             label9.Text = ta.Type == ACTIVITY_TYPES.BREACHSTONE ? main.Logic.GetBreachStoneName(ta.Area, ta.AreaLevel) : ta.Type.ToString();
             label13.Text = ta.Area.ToString();
 
@@ -44,11 +44,11 @@ namespace TraXile
             {
                 if (_trackedActivity.Type == ACTIVITY_TYPES.MAP)
                 {
-                    label10.Text = "T" + _trackedActivity.MapTier.ToString();
+                    label10.Text = $"T{_trackedActivity.MapTier}";
                 }
                 else
                 {
-                    label10.Text = "Lvl. " + _trackedActivity.AreaLevel.ToString();
+                    label10.Text = $"Lvl. {_trackedActivity.AreaLevel}";
                 }
             }
             else
@@ -98,7 +98,7 @@ namespace TraXile
                 }
 
                 lbl.Text = tag.DisplayName;
-                lbl.Name = "lbl_tag_" + tag.ID;
+                lbl.Name = $"lbl_tag_{tag.ID}";
                 lbl.TextAlign = ContentAlignment.MiddleCenter;
                 lbl.BackColor = tag.BackColor;
                 lbl.ForeColor = tag.ForeColor;
@@ -166,7 +166,6 @@ namespace TraXile
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(_trackedActivity.LastEnded.ToString());
             sb.Append(_trackedActivity.InstanceEndpoint);
-
             MessageBox.Show(sb.ToString());
         }
     }

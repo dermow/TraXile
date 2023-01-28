@@ -37,6 +37,14 @@ namespace TraXile
             set { _vaalArea = value; }
         }
 
+        // Sub-Activity: Sanctum
+        private TrX_TrackedActivity _sanctumArea;
+        public TrX_TrackedActivity SideArea_Sanctum
+        {
+            get { return _sanctumArea; }
+            set { _sanctumArea = value; }
+        }
+
         // Sub-Activity: Abyssal Dephts
         private TrX_TrackedActivity _abyssArea;
         public TrX_TrackedActivity SideArea_AbyssArea
@@ -546,6 +554,11 @@ namespace TraXile
             if(_abyssArea != null)
             {
                 results.Add(_abyssArea);
+            }
+
+            if (_sanctumArea != null)
+            {
+                results.Add(_sanctumArea);
             }
 
             return results;

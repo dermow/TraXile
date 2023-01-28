@@ -249,7 +249,7 @@ namespace TraXile
             this.linkLabel3.Size = new System.Drawing.Size(524, 22);
             this.linkLabel3.TabIndex = 13;
             this.linkLabel3.TabStop = true;
-            this.linkLabel3.Text = "https://de.pathofexile.com/account/view-profile/Esturnat2";
+            this.linkLabel3.Text = "https://www.youtube.com/@esturnat";
             this.linkLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
             // 
@@ -304,7 +304,7 @@ namespace TraXile
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "AboutW";
             this.ShowIcon = false;
-            this.Text = "AboutW";
+            this.Text = "About";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

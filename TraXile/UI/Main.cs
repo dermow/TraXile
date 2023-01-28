@@ -50,6 +50,9 @@ namespace TraXile
         EATER_OF_WORLDS_FIGHT,
         TIMELESS_LEGION,
         LAKE_OF_KALANDRA,
+        SANCTUM,
+        TRIALMASTER_FIGHT,
+        TANES_LABORATORY
     }
 
     /// <summary>
@@ -109,9 +112,6 @@ namespace TraXile
         private bool _uiFlagMapDashboard;
         private bool _uiFlagStatisticsChart;
 
-        // UI Update Flag: Lab enchants
-        private bool _uiFlagEnchants;
-
         // UI Update Flag: Global Dashboard
         private bool _uiFlagGlobalDashboard;
 
@@ -159,9 +159,6 @@ namespace TraXile
 
         // Listview Manager: Activity log
         private TrX_ListViewManager _lvmActlog;
-        
-        // ListView Manager: All stats
-        private TrX_ListViewManager _lvmAllStats;
 
         // Current theme
         private TrX_Theme _myTheme;
@@ -193,9 +190,6 @@ namespace TraXile
 
         // Property: Timecaps to be accessible
         public Dictionary<ACTIVITY_TYPES, int> TimeCaps => _timeCaps;
-
-        // User Controls labruns
-        private List<UI.UserControlLabRun> _labRunControls;
 
         // Current labrun user control
         private UI.UserControlLabRun _currentLabrunControl;
@@ -251,18 +245,18 @@ namespace TraXile
             Thread.CurrentThread.Name = "MainThread";
 
             // Initialize Settings
-            _mySettings = new TrX_SettingsManager(TrX_AppInfo.CONFIG_PATH);
+            _mySettings = new TrX_SettingsManager(TrX_Static.CONFIG_PATH);
 
             // Create Appdata if not existing
-            if (!Directory.Exists(TrX_AppInfo.APPDATA_PATH))
+            if (!Directory.Exists(TrX_Static.APPDATA_PATH))
             {
-                Directory.CreateDirectory(TrX_AppInfo.APPDATA_PATH);
+                CreateOwnAppDataSubdir();   
             }
 
             // Create Metadata path if not existing
-            if (!Directory.Exists(TrX_AppInfo.APPDATA_PATH + @"\metadata"))
+            if (!Directory.Exists(TrX_Static.METADATA_PATH))
             {
-                Directory.CreateDirectory(TrX_AppInfo.APPDATA_PATH + @"\metadata");
+                CreateMetaDataSubdir();
             }
 
             // Invisible till initialization complete
@@ -273,7 +267,7 @@ namespace TraXile
             Init();
 
             // Set Theme
-            if (ReadSetting("theme", "Dark") == "Light")
+            if (ReadSetting("theme", TrX_Static.DEFAULT_THEME_NAME) == "Light")
             {
                 _myTheme = new TrX_ThemeLight();
                 _myTheme.Apply(this);
@@ -284,6 +278,31 @@ namespace TraXile
                 _myTheme.Apply(this);
             }
 
+        }
+
+        private void CreateOwnAppDataSubdir()
+        {
+            try
+            {
+                Directory.CreateDirectory(TrX_Static.APPDATA_PATH);
+            }
+            catch(Exception exception)
+            {
+                MessageBox.Show($"Cannot create appdata directory: {exception.Message}");
+                Application.Exit();
+            }
+        }
+
+        private void CreateMetaDataSubdir()
+        {
+            try
+            {
+                Directory.CreateDirectory(TrX_Static.METADATA_PATH);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Cannot create metadata directory: {exception.Message}");
+            }
         }
 
         /// <summary>
@@ -644,8 +663,8 @@ namespace TraXile
         {
             try
             {
-                string updateBranch = ReadSetting("metadata_meta_branch", "main");
-                string updateURL = "https://raw.githubusercontent.com/dermow/traxile-metadata/" + updateBranch + "/metadata.xml";
+                string updateBranch = ReadSetting("metadata_meta_branch", TrX_Static.METADATA_DEFAULT_BRANCH);
+                string updateURL = $"{TrX_Static.METADATA_BASE_URL}/{updateBranch}/{TrX_Static.METADATA_XML_FILE}";
 
                 WebClient webClient = new WebClient();
                 Uri uri = new Uri(updateURL);
@@ -653,14 +672,14 @@ namespace TraXile
 
                 XmlDocument xml = new XmlDocument();
                 xml.LoadXml(data);
-                xml.Save(TrX_AppInfo.APPDATA_PATH + @"\metadata\metadata.xml");
+                xml.Save($@"{TrX_Static.METADATA_PATH}\{TrX_Static.METADATA_XML_FILE}");
 
-                _log.Info("Metadata successfully updated from '" + updateURL + "'");
+                _log.Info($"Metadata successfully updated from '{updateURL}'");
                 
             }
             catch (Exception ex)
             {
-                _log.Error("Could not update Metadata: " + ex.Message);
+                _log.Error($"Could not update Metadata: {ex.Message}");
             }
         }
 
@@ -674,8 +693,8 @@ namespace TraXile
             {
                 string updateURL, updateBranch; 
 
-                updateBranch = ReadSetting("metadata_updates_branch", "main");
-                updateURL = "https://raw.githubusercontent.com/dermow/traxile-metadata/" + updateBranch + "/versions.xml";
+                updateBranch = ReadSetting("metadata_updates_branch", TrX_Static.UPDATE_DEFAULT_BRANCH);
+                updateURL = $"{TrX_Static.METADATA_BASE_URL}/{updateBranch}/{TrX_Static.UPDATES_XML_FILE}";
 
                 WebClient webClient = new WebClient();
                 Uri uri = new Uri(updateURL);
@@ -685,20 +704,20 @@ namespace TraXile
                 xml.LoadXml(releases);
 
                 string sVersion;
-                sVersion = xml.SelectSingleNode(string.Format("/version/{0}", "latest")).InnerText;
+                sVersion = xml.SelectSingleNode("/version/latest").InnerText;
 
                 StringBuilder sbChanges = new StringBuilder();
 
-                foreach (XmlNode xn in xml.SelectNodes(string.Format("/version/changelog/chg[@version='{0}']", sVersion)))
+                foreach (XmlNode xn in xml.SelectNodes($"/version/changelog/chg[@version='{sVersion}']"))
                 {
                     sbChanges.AppendLine(" - " + xn.InnerText);
                 }
 
-                _log.Info(string.Format("UpdateCheck -> My version: {0}, Remote version: {1}", TrX_AppInfo.VERSION, sVersion));
+                _log.Info($"My version: {TrX_Static.VERSION}, Remote version: {sVersion}");
 
-                int myMajor = Assembly.GetExecutingAssembly().GetName().Version.Major;
-                int myMinor = Assembly.GetExecutingAssembly().GetName().Version.Minor;
-                int myBuild = Assembly.GetExecutingAssembly().GetName().Version.Build;
+                int myMajor = TrX_Static.MAJOR;
+                int myMinor = TrX_Static.MINOR;
+                int myBuild = TrX_Static.BUILD;
 
                 int remoteMajor = Convert.ToInt32(sVersion.Split('.')[0]);
                 int remoteMinor = Convert.ToInt32(sVersion.Split('.')[1]);
@@ -722,9 +741,9 @@ namespace TraXile
                 {
                     _log.Info("UpdateCheck -> New version available");
                     StringBuilder sbMessage = new StringBuilder();
-                    sbMessage.AppendLine(string.Format("There is a new version for TraXile available ({0} => {1})", TrX_AppInfo.VERSION, sVersion));
+                    sbMessage.AppendLine($"There is a new version for TraXile available ({TrX_Static.VERSION} => {sVersion})");
                     sbMessage.AppendLine();
-                    sbMessage.AppendLine(string.Format("Changelog: ", sVersion));
+                    sbMessage.AppendLine($"Changelog: {sVersion}");
                     sbMessage.AppendLine("===========");
                     sbMessage.AppendLine(sbChanges.ToString());
                     sbMessage.AppendLine();
@@ -735,7 +754,7 @@ namespace TraXile
                         ProcessStartInfo psi = new ProcessStartInfo
                         {
                             Arguments = sVersion,
-                            FileName = Application.StartupPath + @"\TraXile.Updater.exe"
+                            FileName = $@"{Application.StartupPath}\TraXile.Updater.exe"
                         };
                         Process.Start(psi).WaitForExit();
                     }
@@ -746,7 +765,7 @@ namespace TraXile
                     if (b_notify_ok)
                         MessageBox.Show(
                             "================="
-                            + Environment.NewLine + "Your version: " + TrX_AppInfo.VERSION
+                            + Environment.NewLine + "Your version: " + TrX_Static.VERSION
                             + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine
                             + "================="  + Environment.NewLine + Environment.NewLine
                             + "Your version is already up to date :)");
@@ -754,7 +773,7 @@ namespace TraXile
             }
             catch (Exception ex)
             {
-                _log.Error("Could not check for Update: " + ex.Message);
+                _log.Error($"Could not check for Update: {ex.Message}");
             }
         }
 
@@ -785,7 +804,7 @@ namespace TraXile
                 _restoreMode = true;
                 _restoreOk = false;
                 _failedRestoreReason = ex.Message;
-                _log.Error("FailedRestore -> " + ex.Message);
+                _log.Error($"Restore failed: {ex.Message}");
                 _log.Debug(ex.ToString());
             }
 
@@ -798,9 +817,8 @@ namespace TraXile
             _workerAllStatsChart = new BackgroundWorker();
             _workerAllStatsChart.DoWork += _workerAllStatsChart_DoWork;
             _workerAllStatsChart.RunWorkerCompleted += _workerAllStatsChart_RunWorkerCompleted;
-
+            
             _logic = new TrX_CoreLogic(_minimumTimeCap);
-            //_logic.MinimumCap = _minimumTimeCap;
 
             // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
             _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
@@ -808,13 +826,11 @@ namespace TraXile
             _defaultMappings = new TrX_DefaultMappings();
             _loadScreenWindow = new LoadScreen();
 
-
             SaveVersion();
             DownloadMetaData();
             CheckForUpdate();
             _UpdateCheckDone = true;
             
-
             _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
             _logic.OnActivityFinished += Logic_OnActivityFinished;
             _logic.OnTagsUpdated += Logic_OnTagsUpdated;
@@ -828,8 +844,7 @@ namespace TraXile
             _filteredDataSourceAllStats = new Dictionary<string, int>();
 
             // Init profit tracker
-            _profitTracking = new TrX_ProfitTracking(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
-            _profitTracking.DataFilePath = TrX_AppInfo.APPDATA_PATH + @"\labdata.xml";
+            _profitTracking = new TrX_ProfitTracking(TrX_Static.LABDATA_XML_FULLPATH);
             _profitBinding = new BindingSource();
             _profitBinding.DataSource = _profitTracking.Data;
             
@@ -1042,7 +1057,7 @@ namespace TraXile
                 dataGridView1.Rows.Add(new string[] { t.ToString(),  cap.ToString()});
             }
 
-            Text = TrX_AppInfo.NAME;
+            Text = TrX_Static.NAME;
             _loadScreenWindow = new LoadScreen
             {
                 StartPosition = FormStartPosition.CenterScreen,
@@ -1121,8 +1136,6 @@ namespace TraXile
 
             ResetFilter();
 
-            //tableLayoutPanelMain.RowStyles[1].Height = 0;
-
             // Start UI Thread
             timer1.Enabled = true;
             timer1.Start();
@@ -1147,7 +1160,7 @@ namespace TraXile
                     chart1.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Days;
                     chart1.ChartAreas[0].AxisX.IntervalOffset = _allStatsChartInterval;
 
-                    label100.Text = string.Format("{0} ({1} - {2})", GetStatLongName(_allStatsSelected), _allStatsChartDT1, _allStatsChartDT2);
+                    label100.Text = $"{GetStatLongName(_allStatsSelected)} ({_allStatsChartDT1} - {_allStatsChartDT2})";
                     chart1.Series[0].Points.Clear();
 
                     foreach (KeyValuePair<long, int> kvp in _allStatChartresults)
@@ -1275,8 +1288,6 @@ namespace TraXile
         /// <param name="e"></param>
         private void _logic_LabEnchantsReceived(TrX_LabbieEventArgs e)
         {
-            _uiFlagEnchants = true;
-
             if(_currentLabrunControl != null)
             {
                 MethodInvoker mi = delegate
@@ -1341,7 +1352,7 @@ namespace TraXile
 
             // Update league info from metadata
             XmlDocument xml = new XmlDocument();
-            xml.Load(TrX_AppInfo.APPDATA_PATH + @"\metadata\metadata.xml");
+            xml.Load(TrX_Static.METADATA_XML_FULLPATH);
 
             TrX_LeagueInfo currentLeague = null;
 
@@ -1373,11 +1384,11 @@ namespace TraXile
             {
                 if (currentLeague != null && li.Name == currentLeague.Name)
                 {
-                    comboBox1.Items.Add(string.Format("Current League: {0} ({1})", li.Name, li.Version));
+                    comboBox1.Items.Add($"Current League: {li.Name} ({li.Version})");
                 }
                 else
                 {
-                    comboBox1.Items.Add(string.Format("League: {0} ({1})", li.Name, li.Version));
+                    comboBox1.Items.Add($"League: {li.Name} ({li.Version})");
                 }
                 
             }
@@ -1392,7 +1403,7 @@ namespace TraXile
             {
                 if (ch.Width > 0)
                 {
-                    AddUpdateAppSettings("layout.listview.cols." + ch.Name + ".width", ch.Width.ToString());
+                    AddUpdateAppSettings($"layout.listview.cols.{ch.Name}.width", ch.Width.ToString());
                 }
             }
             if (Width > 50 && Height > 50)
@@ -1409,7 +1420,7 @@ namespace TraXile
         {
             foreach (ColumnHeader ch in listViewActLog.Columns)
             {
-                int w = Convert.ToInt32(ReadSetting("layout.listview.cols." + ch.Name + ".width"));
+                int w = Convert.ToInt32(ReadSetting($"layout.listview.cols." + ch.Name + ".width"));
                 if (w > 0)
                 {
                     ch.Width = w;
@@ -1469,7 +1480,7 @@ namespace TraXile
                 if (!_tagLabelsConfig.ContainsKey(tag.ID))
                 {
                     lbl.Text = tag.DisplayName;
-                    lbl.Name = "lbl_tag_" + tag.ID;
+                    lbl.Name = $"lbl_tag_{tag.ID}";
                     lbl.TextAlign = ContentAlignment.MiddleCenter;
                     lbl.BackColor = tag.BackColor;
                     lbl.ForeColor = tag.ForeColor;
@@ -1565,7 +1576,7 @@ namespace TraXile
                 if (!_tagLabels.ContainsKey(tag.ID))
                 {
                     lbl.Text = tag.DisplayName;
-                    lbl.Name = "lbl_tag_" + tag.ID;
+                    lbl.Name = $"lbl_tag_{tag.ID}";
                     lbl.TextAlign = ContentAlignment.MiddleCenter;
                     lbl.BackColor = Color.Gray;
                     lbl.ForeColor = Color.LightGray;
@@ -1646,8 +1657,8 @@ namespace TraXile
                     iCurrCols = 0;
                 }
 
-                lbl.Text = string.Format("{0}: {1}", tag.DisplayName, kvp.Value);
-                lbl.Name = "lbl_tag_" + tag.ID;
+                lbl.Text = $"{tag.DisplayName}: {kvp.Value}";
+                lbl.Name = $"lbl_tag_{tag.ID}";
                 lbl.TextAlign = ContentAlignment.MiddleCenter;
                 lbl.BackColor = tag.BackColor;
                 lbl.ForeColor = tag.ForeColor;
@@ -1712,16 +1723,6 @@ namespace TraXile
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Mouse over handler for label
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Lbl_MouseHover(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -1805,13 +1806,13 @@ namespace TraXile
         /// </summary>
         private void ReadBackupList()
         {
-            if (Directory.Exists(TrX_AppInfo.APPDATA_PATH + @"\backups"))
+            if (Directory.Exists(TrX_Static.APPDATA_PATH + @"\backups"))
             {
-                foreach (string s in Directory.GetDirectories(TrX_AppInfo.APPDATA_PATH + @"\backups"))
+                foreach (string s in Directory.GetDirectories(TrX_Static.APPDATA_PATH + @"\backups"))
                 {
                     foreach (string s2 in Directory.GetDirectories(s))
                     {
-                        string s_name = s2.Replace(TrX_AppInfo.APPDATA_PATH, "");
+                        string s_name = s2.Replace(TrX_Static.APPDATA_PATH, "");
 
                         if (!_backups.Contains(s_name))
                             _backups.Add(s_name);
@@ -1826,7 +1827,7 @@ namespace TraXile
         /// <param name="timestamp"></param>
         private void DeleteActLogEntry(long timestamp)
         {
-            _logic.Database.DoNonQuery("delete from tx_activity_log where timestamp = " + timestamp.ToString());
+            _logic.Database.DoNonQuery($"delete from tx_activity_log where timestamp = {timestamp}");
         }
 
         /// <summary>
@@ -1834,8 +1835,8 @@ namespace TraXile
         /// </summary>
         private void SaveVersion()
         {
-            StreamWriter streamWriter = new StreamWriter(TrX_AppInfo.APPDATA_PATH + @"\VERSION.txt");
-            streamWriter.WriteLine(TrX_AppInfo.VERSION);
+            StreamWriter streamWriter = new StreamWriter($@"{TrX_Static.APPDATA_PATH}\VERSION.txt");
+            streamWriter.WriteLine(TrX_Static.VERSION);
             streamWriter.Close();
         }
 
@@ -1894,14 +1895,13 @@ namespace TraXile
                     {
                         Name = "actlog_tag_" + tag.ID,
                         Text = tag.DisplayName,
-                        Width = Convert.ToInt32(ReadSetting("layout.listview.cols.actlog_tag_" + tag.ID + ".width", "60"))
+                        Width = Convert.ToInt32(ReadSetting($"layout.listview.cols.actlog_tag_{tag.ID}.width", "60"))
                     };
                     _lvmActlog.Columns.Add(ch);
                 }
             }
 
             AddActivityLvItems();
-            _log.Debug("2 _lvmActLog.MasterList.Count = " + _lvmActlog.MasterList.Count);
         }
 
         /// <summary>
@@ -1914,7 +1914,6 @@ namespace TraXile
             {
                 AddMapLvItem(act, act.IsZana, -1, false);
             }
-            //_lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
         }
 
         /// <summary>
@@ -2171,6 +2170,18 @@ namespace TraXile
             {
                 imageIndex = 51;
             }
+            else if (activity.Type == ACTIVITY_TYPES.SANCTUM)
+            {
+                imageIndex = 52;
+            }
+            else if (activity.Type == ACTIVITY_TYPES.TRIALMASTER_FIGHT)
+            {
+                imageIndex = 53;
+            }
+            else if (activity.Type == ACTIVITY_TYPES.TANES_LABORATORY)
+            {
+                imageIndex = 54;
+            }
             return imageIndex;
         }
 
@@ -2185,7 +2196,7 @@ namespace TraXile
         {
             Invoke((MethodInvoker)delegate
             {
-                ListViewItem lvi = new ListViewItem(" " + map.Started.ToString());
+                ListViewItem lvi = new ListViewItem($"  {map.Started}");
                 string sName = map.Area;
                 string sTier = "";
 
@@ -2195,7 +2206,7 @@ namespace TraXile
                 }
                 else if (map.Type == ACTIVITY_TYPES.MAP)
                 {
-                    sTier = "T" + map.MapTier.ToString();
+                    sTier = $"T{map.MapTier}";
                 }
                 else
                 {
@@ -2302,9 +2313,7 @@ namespace TraXile
                 SetUIReady();
             }
 
-            btt_summary.Text = String.Format("summary ({0})", listViewActLog.SelectedIndices.Count);
-
-
+            btt_summary.Text = $"summary ({listViewActLog.SelectedIndices.Count})";
             TimeSpan tsAreaTime = (DateTime.Now - _inAreaSince);
             checkBoxShowGridInAct.Checked = _showGridInActLog;
             checkBoxShowGridInStats.Checked = _showGridInStats;
@@ -2350,8 +2359,7 @@ namespace TraXile
                     RenderTagsForTracking();
                     RenderTagsForConfig();
                     textBoxLogFilePath.Text = ReadSetting("poe_logfile_path");
-
-                    labelItemCount.Text = "items: " + _actLogItemCount.ToString();
+                    labelItemCount.Text = $"items: {_actLogItemCount}";
 
                     if (!_listViewInitielaized)
                     {
@@ -2359,7 +2367,7 @@ namespace TraXile
                         _listViewInitielaized = true;
                     }
 
-                    label80.Text = string.Format("{0} (lvl. {1})", _logic.CurrentArea, _logic.CurrentAreaLevel);
+                    label80.Text = $"{_logic.CurrentArea} (lvl. {_logic.CurrentAreaLevel})";
 
                     if (_logic.CurrentArea.Contains("Hideout") && !(_logic.CurrentArea.Contains("Syndicate")))
                     {
@@ -2390,11 +2398,11 @@ namespace TraXile
                         {
                             if (_logic.CurrentActivity.Type == ACTIVITY_TYPES.MAP)
                             {
-                                sTier = "T" + _logic.CurrentActivity.MapTier.ToString();
+                                sTier = $"T{_logic.CurrentActivity.MapTier}";
                             }
                             else
                             {
-                                sTier = "Lvl. " + _logic.CurrentActivity.AreaLevel.ToString();
+                                sTier = $"Lvl. {_logic.CurrentActivity.AreaLevel}";
                             }
                         }
 
@@ -2442,6 +2450,15 @@ namespace TraXile
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_LabTrial)];
                             pictureBoxStop.Hide();
                         }
+                        else if ((_logic.IsMapSanctum && _logic.CurrentActivity.SideArea_Sanctum != null))
+                        {
+                            labelStopWatch.Text = _logic.CurrentActivity.SideArea_Sanctum.StopWatchValue.ToString();
+                            labelTrackingArea.Text = _logic.CurrentActivity.SideArea_Sanctum.Area;
+                            labelTrackingDied.Text = _logic.CurrentActivity.SideArea_Sanctum.DeathCounter.ToString();
+                            labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_Sanctum.Type));
+                            pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_Sanctum)];
+                            pictureBoxStop.Hide();
+                        }
                         else
                         {
                             labelStopWatch.Text = _logic.CurrentActivity.StopWatchValue.ToString();
@@ -2483,66 +2500,43 @@ namespace TraXile
                     // MAP Dashbaord
                     if (_uiFlagMapDashboard)
                     {
-                        dtRenderStart = DateTime.Now;
-                        
                         RenderMappingDashboard();
                         _uiFlagMapDashboard = false;
-
-                        _log.Debug(string.Format("Updated 'MapDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // LAB Dashbaord
                     if (_uiFlagLabDashboard)
                     {
-                        dtRenderStart = DateTime.Now;
-
                         RenderLabDashboard();
                         _uiFlagLabDashboard = false;
-
-                        _log.Debug(string.Format("Updated 'LabDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // HEIST Dashbaord
                     if (_uiFlagHeistDashboard)
                     {
-                        dtRenderStart = DateTime.Now;
-
                         RenderHeistDashboard();
                         _uiFlagHeistDashboard = false;
-
-                        _log.Debug(string.Format("Updated 'HeistDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // AllStats Dashbaord
                     if (_uiFlagAllStatsDashboard)
                     {
-                        dtRenderStart = DateTime.Now;
-
                         RenderAllStatsDashboard();
                         _uiFlagAllStatsDashboard = false;
-
-                        _log.Debug(string.Format("Updated 'AllStatsDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     //Bossing
                     if (_uiFlagBossDashboard)
                     {
-                        dtRenderStart = DateTime.Now;
-
                         RenderBossingDashboard();
                         _uiFlagBossDashboard = false;
-
-                        _log.Debug(string.Format("Updated 'BossDashboard' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // Global Dashbaord
                     if (_uiFlagGlobalDashboard)
                     {
-                        dtRenderStart = DateTime.Now;
-
                         RenderGlobalDashboard();
                         _uiFlagGlobalDashboard = false;
-
                         if (checkBoxLabHideUnknown.Checked != _labDashboardHideUnknown)
                         {
                             checkBoxLabHideUnknown.Checked = _labDashboardHideUnknown;
@@ -2552,25 +2546,18 @@ namespace TraXile
                         {
                             checkBox1.Checked = _showHideoutInPie;
                         }
-
-                        _log.Debug(string.Format("Updated 'ActivityOverview' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // All stats chart
                     if(_uiFlagStatisticsChart)
                     {
-                        dtRenderStart = DateTime.Now;
-
                         UpdateAllStatsChart();
                         _uiFlagStatisticsChart = false;
-
-                        _log.Debug(string.Format("Updated 'AllStatsChart' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     // Rest act list
                     if (_uiFlagActivityListReset)
                     {
-                        _log.Debug("_lvmActLog.MasterList.Count = " + _lvmActlog.MasterList.Count);
                         ResetMapHistory();
                         DoSearch();
                         _uiFlagActivityListReset = false;
@@ -2579,12 +2566,8 @@ namespace TraXile
                     }
                     else if (_uiFlagActivityList)
                     {
-                        dtRenderStart = DateTime.Now;
-
                         DoSearch();
                         _uiFlagActivityList = false;
-
-                        _log.Debug(string.Format("Updated 'ActivityList' in {0}ms", (DateTime.Now - dtRenderStart).TotalMilliseconds));
                     }
 
                     listView1.Columns[2].Width = listView1.Width;
@@ -2598,7 +2581,7 @@ namespace TraXile
                            _logic.OverlayPrevActivity != null ? _logic.OverlayPrevActivity.StopWatchValue : "00:00:00",
                            _logic.CurrentActivity != null ? GetImageIndex(_logic.CurrentActivity) : 0,
                            _logic.OverlayPrevActivity != null ? GetImageIndex(_logic.OverlayPrevActivity) : 0);
-            // Update stopwatchOverlay tags
+
             bool tag1Status = false, 
                  tag2Status = false, 
                  tag3Status = false;
@@ -2627,7 +2610,6 @@ namespace TraXile
                 tag1Status, 
                 tag2Status, 
                 tag3Status);
-
         }
 
         /// <summary>
@@ -2648,7 +2630,6 @@ namespace TraXile
             checkBox2.Checked = _stopwatchOverlayShowDefault;
             checkBoxMinimizeToTray.Checked = _minimizeToTray;
             label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
-            //checkBox3.Checked = Convert.ToBoolean(ReadSetting("statistics_auto_refresh", "false"));
             textBox9.Text = ReadSetting("lab.profittracking.filter.text", "");
             radioButton1.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "all";
             radioButton2.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "open";
@@ -2860,7 +2841,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, 0 },
                 { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 },
                 { ACTIVITY_TYPES.TIMELESS_LEGION, 0 },
-                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, 0 }
+                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, 0 },
+                { ACTIVITY_TYPES.SANCTUM, 0 },
+                { ACTIVITY_TYPES.OTHER, 0 },
+                { ACTIVITY_TYPES.TRIALMASTER_FIGHT, 0 },
+                { ACTIVITY_TYPES.TANES_LABORATORY, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2892,7 +2877,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, 0 },
                 { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, 0 },
                 { ACTIVITY_TYPES.TIMELESS_LEGION, 0 },
-                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, 0 }
+                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, 0 },
+                { ACTIVITY_TYPES.SANCTUM, 0 },
+                { ACTIVITY_TYPES.OTHER, 0 },
+                { ACTIVITY_TYPES.TRIALMASTER_FIGHT, 0 },
+                { ACTIVITY_TYPES.TANES_LABORATORY, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2924,7 +2913,10 @@ namespace TraXile
                 { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, Color.Blue },
                 { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, Color.Blue },
                 { ACTIVITY_TYPES.TIMELESS_LEGION, Color.BlueViolet },
-                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, Color.Silver }
+                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, Color.Silver },
+                { ACTIVITY_TYPES.SANCTUM, Color.Purple },
+                { ACTIVITY_TYPES.TRIALMASTER_FIGHT, Color.Red },
+                { ACTIVITY_TYPES.TANES_LABORATORY, Color.LimeGreen }
             };
             double hideOutTime = 0;
             double totalCount = 0;
@@ -2938,21 +2930,29 @@ namespace TraXile
 
             foreach (TrX_TrackedActivity act in _statsDataSource)
             {
-                int iCap = _timeCaps[act.Type];
-
-                typeListCount[act.Type]++;
-
-                // Filter out
-                if (act.TotalSeconds < iCap)
+                try
                 {
-                    typeList[act.Type] += act.TotalSeconds;
-                    totalCount += act.TotalSeconds;
+                    int iCap = _timeCaps[act.Type];
+
+                    typeListCount[act.Type]++;
+
+                    // Filter out
+                    if (act.TotalSeconds < iCap)
+                    {
+                        typeList[act.Type] += act.TotalSeconds;
+                        totalCount += act.TotalSeconds;
+                    }
+                    else
+                    {
+                        typeList[act.Type] += iCap;
+                        totalCount += iCap;
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
-                    typeList[act.Type] += iCap;
-                    totalCount += iCap;
+                    MessageBox.Show(ex.ToString());
                 }
+               
             }
 
             chartGlobalDashboard.Series[0].Points.Clear();
@@ -2978,7 +2978,7 @@ namespace TraXile
                     chartGlobalDashboard.Series[0].Points.AddXY(kvp.Key.ToString(), Math.Round(kvp.Value / 60 / 60, 1));
                     chartGlobalDashboard.Series[0].Points.Last().Color = colorList[kvp.Key];
                     chartGlobalDashboard.Series[0].Points.Last().Label = kvp.Value > 0 ? string.Format("{0} h", Math.Round(tsDuration.TotalHours, 1)) : " ";
-                    chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", kvp.Key.ToString(), percentVal);
+                    chartGlobalDashboard.Series[0].Points.Last().LegendText = $"{kvp.Key} ({percentVal}%)";
 
                     lvi = new ListViewItem(kvp.Key.ToString());
                     lvi.SubItems.Add(typeListCount[kvp.Key].ToString());
@@ -3006,8 +3006,8 @@ namespace TraXile
             TimeSpan tsDurationOther = TimeSpan.FromSeconds(dOther);
             chartGlobalDashboard.Series[0].Points.AddXY("Other", Math.Round(dOther / 60 / 60, 1));
             chartGlobalDashboard.Series[0].Points.Last().Color = colorList[ACTIVITY_TYPES.OTHER];
-            chartGlobalDashboard.Series[0].Points.Last().Label = dOther > 0 ? string.Format("{0} h", Math.Round(tsDurationOther.TotalHours, 1)) : " ";
-            chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", "Other", percentValOther);
+            chartGlobalDashboard.Series[0].Points.Last().Label = dOther > 0 ? $"{Math.Round(tsDurationOther.TotalHours, 1)} h" : " ";
+            chartGlobalDashboard.Series[0].Points.Last().LegendText = $"Other ({percentValOther}%)";
 
             if (_showHideoutInPie)
             {
@@ -3018,7 +3018,7 @@ namespace TraXile
                 chartGlobalDashboard.Series[0].Points.AddXY("Hideout", Math.Round(tsDurationHO.TotalSeconds / 60 / 60, 1));
                 chartGlobalDashboard.Series[0].Points.Last().Color = Color.Blue; ;
                 chartGlobalDashboard.Series[0].Points.Last().Label = tsDurationHO.TotalSeconds > 0 ? string.Format("{0} h", Math.Round(tsDurationHO.TotalHours, 1)) : " ";
-                chartGlobalDashboard.Series[0].Points.Last().LegendText = string.Format("{0} ({1}%)", "Hideout", percentValHO);
+                chartGlobalDashboard.Series[0].Points.Last().LegendText = $"Hideout ({percentValHO}%)";
 
                 ListViewItem lvi = new ListViewItem("HIDEOUT");
                 lvi.SubItems.Add("-");
@@ -3029,7 +3029,7 @@ namespace TraXile
                 listView1.Items.Add(lvi);
             }
 
-            label46.Text = String.Format("Total play time: {0} hours", Math.Round(totalCount / 60 / 60, 2));
+            label46.Text = String.Format($"Total play time: {Math.Round(totalCount / 60 / 60, 2)} hours");
         }
 
         /// <summary>
@@ -3578,19 +3578,19 @@ namespace TraXile
         /// <param name="s_name"></param>
         private void CreateBackup(string s_name)
         {
-            string sBackupDir = TrX_AppInfo.APPDATA_PATH + @"/backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+            string sBackupDir = TrX_Static.APPDATA_PATH + @"/backups/" + s_name + @"/" + DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
             System.IO.Directory.CreateDirectory(sBackupDir);
 
             if (System.IO.File.Exists(_logic.ClientTxtPath))
                 System.IO.File.Copy(_logic.ClientTxtPath, sBackupDir + @"/Client.txt");
-            if (System.IO.File.Exists(TrX_AppInfo.CACHE_PATH))
-                System.IO.File.Copy(TrX_AppInfo.CACHE_PATH, sBackupDir + @"/stats.cache");
-            if (System.IO.File.Exists(TrX_AppInfo.DB_PATH))
-                System.IO.File.Copy(TrX_AppInfo.DB_PATH, sBackupDir + @"/data.db");
-            if (System.IO.File.Exists(TrX_AppInfo.APPDATA_PATH + @"\config.xml"))
-                System.IO.File.Copy(TrX_AppInfo.APPDATA_PATH + @"\config.xml", sBackupDir + @"/config.xml");
-            if (System.IO.File.Exists(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml"))
-                System.IO.File.Copy(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml", sBackupDir + @"/labdata.xml");
+            if (System.IO.File.Exists(TrX_Static.CACHE_PATH))
+                System.IO.File.Copy(TrX_Static.CACHE_PATH, sBackupDir + @"/stats.cache");
+            if (System.IO.File.Exists(TrX_Static.DB_PATH))
+                System.IO.File.Copy(TrX_Static.DB_PATH, sBackupDir + @"/data.db");
+            if (System.IO.File.Exists(TrX_Static.APPDATA_PATH + @"\config.xml"))
+                System.IO.File.Copy(TrX_Static.APPDATA_PATH + @"\config.xml", sBackupDir + @"/config.xml");
+            if (System.IO.File.Exists(TrX_Static.APPDATA_PATH + @"\labdata.xml"))
+                System.IO.File.Copy(TrX_Static.APPDATA_PATH + @"\labdata.xml", sBackupDir + @"/labdata.xml");
         }
 
         /// <summary>
@@ -3653,12 +3653,12 @@ namespace TraXile
         /// <param name="sPath"></param>
         private void PrepareBackupRestore(string sPath)
         {
-            File.Copy(sPath + @"/data.db", TrX_AppInfo.DB_PATH + ".restore");
+            File.Copy(sPath + @"/data.db", TrX_Static.DB_PATH + ".restore");
             File.Copy(sPath + @"/Client.txt", Directory.GetParent(_logic.ClientTxtPath) + @"/_Client.txt.restore");
-            File.Copy(sPath + @"/config.xml", TrX_AppInfo.APPDATA_PATH + @"/config.xml.restore");
+            File.Copy(sPath + @"/config.xml", TrX_Static.APPDATA_PATH + @"/config.xml.restore");
             if(File.Exists(sPath + @"/labdata.xml"))
             {
-                File.Copy(sPath + @"/labdata.xml", TrX_AppInfo.APPDATA_PATH + @"/labdata.xml.restore");
+                File.Copy(sPath + @"/labdata.xml", TrX_Static.APPDATA_PATH + @"/labdata.xml.restore");
             }
             _log.Info("Backup restore successfully prepared! Restarting Application");
             Application.Restart();
@@ -3669,35 +3669,35 @@ namespace TraXile
         /// </summary>
         private void DoBackupRestoreIfPrepared()
         {
-            if (File.Exists(TrX_AppInfo.DB_PATH + ".restore"))
+            if (File.Exists(TrX_Static.DB_PATH + ".restore"))
             {
-                File.Delete(TrX_AppInfo.DB_PATH);
-                File.Move(TrX_AppInfo.DB_PATH + ".restore", TrX_AppInfo.DB_PATH);
-                _log.Info("BackupRestored -> Source: _data.db.restore, Destination: " + TrX_AppInfo.DB_PATH);
+                File.Delete(TrX_Static.DB_PATH);
+                File.Move(TrX_Static.DB_PATH + ".restore", TrX_Static.DB_PATH);
+                _log.Info($"BackupRestored -> Source: _data.db.restore, Destination: {TrX_Static.DB_PATH}");
                 _restoreMode = true;
             }
 
-            if (File.Exists(TrX_AppInfo.APPDATA_PATH + @"\config.xml.restore"))
+            if (File.Exists(TrX_Static.APPDATA_PATH + @"\config.xml.restore"))
             {
-                File.Delete(TrX_AppInfo.APPDATA_PATH + @"\config.xml");
-                File.Move(TrX_AppInfo.APPDATA_PATH + @"\config.xml.restore", TrX_AppInfo.APPDATA_PATH + @"\config.xml");
-                _log.Info("BackupRestored -> Source: config.xml.restore, Destination: " + TrX_AppInfo.APPDATA_PATH + @"\config.xml");
+                File.Delete(TrX_Static.APPDATA_PATH + @"\config.xml");
+                File.Move(TrX_Static.APPDATA_PATH + @"\config.xml.restore", TrX_Static.APPDATA_PATH + @"\config.xml");
+                _log.Info($@"BackupRestored -> Source: config.xml.restore, Destination: {TrX_Static.APPDATA_PATH}\config.xml");
                 _restoreMode = true;
             }
 
-            if (File.Exists(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml.restore"))
+            if (File.Exists(TrX_Static.APPDATA_PATH + @"\labdata.xml.restore"))
             {
                 try
                 {
-                    File.Delete(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
+                    File.Delete(TrX_Static.APPDATA_PATH + @"\labdata.xml");
                 }
                 catch(Exception ex)
                 {
-                    _log.Warn("cannot delete labdata.xml: " + ex.Message);
+                    _log.Warn($"cannot delete labdata.xml: {ex.Message}");
                 }
                 
-                File.Move(TrX_AppInfo.APPDATA_PATH + @"\labdata.xml.restore", TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
-                _log.Info("BackupRestored -> Source: labdata.xml.restore, Destination: " + TrX_AppInfo.APPDATA_PATH + @"\labdata.xml");
+                File.Move(TrX_Static.APPDATA_PATH + @"\labdata.xml.restore", TrX_Static.APPDATA_PATH + @"\labdata.xml");
+                _log.Info($@"BackupRestored -> Source: labdata.xml.restore, Destination: {TrX_Static.APPDATA_PATH}\labdata.xml");
                 _restoreMode = true;
             }
 
@@ -3710,8 +3710,8 @@ namespace TraXile
                 {
                     File.Delete(clientTxtPath);
                     File.Move(Directory.GetParent(clientTxtPath) + @"/_Client.txt.restore", clientTxtPath);
-                    _log.Info("BackupRestored -> Source: " + Directory.GetParent(clientTxtPath) + @"/_Client.txt.restore" +
-                        ", Destination: " + Directory.GetParent(clientTxtPath) + @"/_Client.txt");
+                    _log.Info($@"BackupRestored -> Source: {Directory.GetParent(clientTxtPath)}/_Client.txt.restore" +
+                        $@", Destination: {Directory.GetParent(clientTxtPath)}/_Client.txt");
                     _restoreMode = true;
                 }
 
@@ -3748,7 +3748,7 @@ namespace TraXile
         {
             _logic.Tags.Add(tag);
             _logic.Database.DoNonQuery("INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) VALUES "
-                + "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'custom', " + (tag.ShowInListView ? "1" : "0") + ")");
+                + $"('{tag.ID}', '{tag.DisplayName}', '{tag.BackColor.ToArgb()}', '{tag.ForeColor.ToArgb()}', 'custom', {(tag.ShowInListView ? "1" : "0")})");
 
             listViewActLog.Columns.Add(tag.DisplayName);
             comboBox5.Items.Add(tag.DisplayName);
@@ -3824,7 +3824,7 @@ namespace TraXile
                         if (i < (act.Tags.Count - 1))
                             sTags += "|";
                     }
-                    _logic.Database.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
+                    _logic.Database.DoNonQuery($"UPDATE tx_activity_log SET act_tags = '{sTags}' WHERE timestamp = {act.TimeStamp}");
                 }
             }
         }
@@ -3848,7 +3848,7 @@ namespace TraXile
                     sTags += act.Tags[i];
                     if (i < (act.Tags.Count - 1))
                         sTags += "|";
-                    _logic.Database.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
+                    _logic.Database.DoNonQuery($"UPDATE tx_activity_log SET act_tags = '{sTags}' WHERE timestamp = {act.TimeStamp}");
                 }
             }
         }
@@ -3872,8 +3872,8 @@ namespace TraXile
                 _logic.Tags[iTagIndex].BackColor = Color.FromArgb(Convert.ToInt32(s_backcolor));
                 _logic.Tags[iTagIndex].ShowInListView = b_show_in_hist;
 
-                _logic.Database.DoNonQuery("UPDATE tx_tags SET tag_display = '" + s_display_name + "', tag_forecolor = '" + s_forecolor + "', tag_bgcolor = '" + s_backcolor + "', " +
-                    "tag_show_in_lv = " + (b_show_in_hist ? "1" : "0") + " WHERE tag_id = '" + s_id + "'");
+                _logic.Database.DoNonQuery($"UPDATE tx_tags SET tag_display = '{s_display_name}', tag_forecolor = '{s_forecolor}', tag_bgcolor = '{s_backcolor}', " +
+                    $"tag_show_in_lv = {(b_show_in_hist ? "1" : "0")} WHERE tag_id = '{s_id}'");
             }
 
             RenderTagsForConfig(true);
@@ -3946,11 +3946,11 @@ namespace TraXile
                 }
                 else
                 {
-                    DialogResult dr = MessageBox.Show("Do you really want to delete the tag '" + s_id + "'?", "Warning", MessageBoxButtons.YesNo);
+                    DialogResult dr = MessageBox.Show($"Do you really want to delete the tag '{s_id}'?", "Warning", MessageBoxButtons.YesNo);
                     if (dr == DialogResult.Yes)
                     {
                         _logic.Tags.RemoveAt(iIndex);
-                        _logic.Database.DoNonQuery("DELETE FROM tx_tags WHERE tag_id = '" + s_id + "' AND tag_type != 'default'");
+                        _logic.Database.DoNonQuery($"DELETE FROM tx_tags WHERE tag_id = '{s_id}' AND tag_type != 'default'");
                     }
                 }
                 RenderTagsForConfig(true);
@@ -4107,6 +4107,13 @@ namespace TraXile
                         _logic.CurrentActivity.SideArea_VaalArea.Pause();
                     }
                 }
+                else if (_logic.IsMapSanctum && _logic.CurrentActivity.SideArea_Sanctum != null)
+                {
+                    if (!_logic.CurrentActivity.SideArea_Sanctum.ManuallyPaused)
+                    {
+                        _logic.CurrentActivity.SideArea_Sanctum.Pause();
+                    }
+                }
                 else if (_logic.IsMapAbyssArea && _logic.CurrentActivity.SideArea_AbyssArea != null)
                 {
                     if (!_logic.CurrentActivity.SideArea_AbyssArea.ManuallyPaused)
@@ -4205,7 +4212,7 @@ namespace TraXile
             {
                 type = (ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), row.Cells[0].Value.ToString());
                 value = Convert.ToInt32(row.Cells[1].Value);
-                sett = string.Format("TimeCap{0}", TrX_Helpers.CapitalFirstLetter(type.ToString()));
+                sett = $"TimeCap{TrX_Helpers.CapitalFirstLetter(type.ToString())}";
                 _timeCaps[type] = value;
                 _mySettings.AddOrUpdateSetting(sett, value.ToString());
             }
@@ -4283,7 +4290,6 @@ namespace TraXile
             }
         }
 
-
         public void SetEnchantInfoPage(TrX_EnchantInfo enchantInfo, TrX_LabEnchant enchant)
         {
             label72.Text = enchant.Text;
@@ -4294,7 +4300,7 @@ namespace TraXile
             listBox1.Items.Clear();
             foreach (TrX_EnchantNote note in enchantInfo.EnchantNotes)
             {
-                listBox1.Items.Add(string.Format("{0}: {1}{2}", DateTimeOffset.FromUnixTimeSeconds(note.LabTimeStamp).DateTime, note.Note, Environment.NewLine));
+                listBox1.Items.Add($"{DateTimeOffset.FromUnixTimeSeconds(note.LabTimeStamp).DateTime}: {note.Note}{Environment.NewLine}");
             }
 
             listBox2.Items.Clear();
@@ -4302,7 +4308,6 @@ namespace TraXile
             {
                 listBox2.Items.Add(s);
             }
-
         }
 
         private void UpdateProfitSummary()
@@ -4326,7 +4331,7 @@ namespace TraXile
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Invalid input: " + ex.Message);
+                MessageBox.Show($"Invalid input: {ex.Message}");
             }
         }
 
@@ -4342,7 +4347,7 @@ namespace TraXile
             }
 
             string msg;
-            msg = string.Format("Do you really want to delete {0} activitie(s)?", lvItemsToDelete.Count);
+            msg = $"Do you really want to delete {lvItemsToDelete.Count} activitie(s)?";
 
             if (MessageBox.Show(msg, "Delete?", MessageBoxButtons.YesNo) == DialogResult.No)
             {
@@ -4357,13 +4362,6 @@ namespace TraXile
             foreach (long ts in timestampsToDelete)
             {
                 DeleteActLogEntry(ts);
-            }
-        }
-
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            if (_logic.EventQueueInitialized)
-            {
             }
         }
 
@@ -4396,10 +4394,6 @@ namespace TraXile
                 _logic.CurrentActivity.Pause();
         }
 
-        private void listView2_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-        }
-
         private void pictureBox17_Click(object sender, EventArgs e)
         {
             ResumeCurrentActivityOrSide();
@@ -4409,8 +4403,6 @@ namespace TraXile
         {
             PauseCurrentActivityOrSide();
         }
-
-       
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -4556,7 +4548,7 @@ namespace TraXile
                 dr = MessageBox.Show("Do you really want to restore the selected Backup? The Application will be restarted. Please make sure that your PathOfExile Client is not running.", "Warning", MessageBoxButtons.YesNo);
                 if (dr == DialogResult.Yes)
                 {
-                    PrepareBackupRestore(TrX_AppInfo.APPDATA_PATH + listBoxRestoreBackup.SelectedItem.ToString());
+                    PrepareBackupRestore(TrX_Static.APPDATA_PATH + listBoxRestoreBackup.SelectedItem.ToString());
                 }
             }
         }
@@ -4642,7 +4634,7 @@ namespace TraXile
             DialogResult dr = MessageBox.Show("Do you really want to delete the selected Backup?", "Warning", MessageBoxButtons.YesNo);
             if (dr == DialogResult.Yes)
             {
-                DeleteBackup(TrX_AppInfo.APPDATA_PATH + listBoxRestoreBackup.SelectedItem.ToString());
+                DeleteBackup(TrX_Static.APPDATA_PATH + listBoxRestoreBackup.SelectedItem.ToString());
             }
         }
 
@@ -4723,7 +4715,7 @@ namespace TraXile
 
         private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start(TrX_AppInfo.WIKI_URL);
+            Process.Start(TrX_Static.WIKI_URL);
         }
 
         private void button22_Click(object sender, EventArgs e)
@@ -4764,13 +4756,13 @@ namespace TraXile
             }
             catch(Exception ex)
             {
-                MessageBox.Show("Invalid input: " + ex.Message);
+                MessageBox.Show($"Invalid input: {ex.Message}");
             }
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            Process.Start(TrX_AppInfo.WIKI_URL_SETTINGS);
+            Process.Start(TrX_Static.WIKI_URL_SETTINGS);
         }
 
         private void button2_Click_1(object sender, EventArgs e)
@@ -4794,7 +4786,7 @@ namespace TraXile
             DialogResult dr = MessageBox.Show(sb.ToString(), "Warning", MessageBoxButtons.YesNo); ;
             if (dr == DialogResult.Yes)
             {
-                File.Create(TrX_AppInfo.APPDATA_PATH + @"\IS_SAFE_RELOAD");
+                File.Create(TrX_Static.APPDATA_PATH + @"\IS_SAFE_RELOAD");
                 ReloadLogFile();
             }
         }
@@ -4815,7 +4807,6 @@ namespace TraXile
                 }
             }
         }
-
 
         private void button5_Click_1(object sender, EventArgs e)
         {
@@ -4844,7 +4835,6 @@ namespace TraXile
             AddUpdateAppSettings("dashboard_lab_hide_unknown", _labDashboardHideUnknown.ToString());
             RenderLabDashboard();
         }
-
       
         private void stopwatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -4966,11 +4956,6 @@ namespace TraXile
             }
         }
 
-        private void dataGridView2_RowLeave(object sender, DataGridViewCellEventArgs e)
-        {
-            //SaveLabProfitTab();
-        }
-
         private void dataGridView2_KeyUp(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Enter)
@@ -5000,7 +4985,7 @@ namespace TraXile
 
             if (!String.IsNullOrEmpty(textBox9.Text))
             {
-                textFilter = string.Format("Enchant LIKE '%{0}%' OR Note LIKE '%{0}%' OR Base LIKE '%{0}%'", textBox9.Text);
+                textFilter = $"Enchant LIKE '%{textBox9.Text}%' OR Note LIKE '%{textBox9.Text}%' OR Base LIKE '%{textBox9.Text}%'";
             }
 
             // All
@@ -5024,7 +5009,7 @@ namespace TraXile
                 _mySettings.AddOrUpdateSetting("lab.profittracking.filter.state", "sold");
             }
 
-            string filter = string.Format("({0}) AND ({1})", textFilter, stateFilter);
+            string filter = $"({textFilter}) AND ({stateFilter})";
             _profitTracking.Data.DefaultView.RowFilter = filter;
 
             // Settings
@@ -5108,12 +5093,6 @@ namespace TraXile
             _overlayTag1 = comboBoxStopWatchTag1.SelectedItem.ToString();
         }
 
-        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-       
-
         /// <summary>
         /// Build Summary for selected activities
         /// </summary>
@@ -5183,7 +5162,7 @@ namespace TraXile
                 // print long version for durations over one day
                 if (totalDurationTS.TotalDays >= 1)
                 {
-                    summary.DurationLabel.Text = string.Format("{0}d {1}h {2}m {3}s", totalDurationTS.Days, totalDurationTS.Hours, totalDurationTS.Minutes, totalDurationTS.Seconds);
+                    summary.DurationLabel.Text = $"{totalDurationTS.Days}d {totalDurationTS.Hours}h {totalDurationTS.Minutes}m {totalDurationTS.Seconds}s";
                 }
                 else
                 {
@@ -5237,7 +5216,7 @@ namespace TraXile
 
         private void listViewActLog_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            btt_summary.Text = "summary (" + listViewActLog.SelectedIndices.Count + ")";
+            btt_summary.Text = $"summary ({listViewActLog.SelectedIndices.Count})";
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)

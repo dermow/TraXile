@@ -59,7 +59,7 @@ namespace TraXile.UI
             _parent = parent;
             _isCurrent = current;
             _rememberInputs = new Dictionary<string, string>();
-            label1.Text = string.Format("{0}, {1}", labrun.Area, labrun.Started);
+            label1.Text = $"{labrun.Area}, {labrun.Started}";
             label3.Text = labrun.StopWatchValue;
             linkLabel1.LinkColor = Color.LightGreen;
             linkLabel1.VisitedLinkColor = Color.LightGreen;
@@ -178,7 +178,7 @@ namespace TraXile.UI
                 panel3.Controls.Add(cb);
 
                 LinkLabel lbl = new LinkLabel();
-                lbl.Text = string.Format("found: {0}, selected: {1}", enchant.EnchantInfo.Found, enchant.EnchantInfo.Taken);
+                lbl.Text = $"found: {enchant.EnchantInfo.Found}, selected: {enchant.EnchantInfo.Taken}";
                 lbl.AutoSize = true;
                 lbl.Name = enchant.ID.ToString();
                 lbl.ForeColor = Color.LightBlue;

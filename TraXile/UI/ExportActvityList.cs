@@ -23,7 +23,7 @@ namespace TraXile
                     SaveFileDialog sfd = new SaveFileDialog
                     {
                         Filter = "CSV-Files|*.csv",
-                        FileName = "TraXile_Activities_" + DateTime.Now.ToString("yyyy-MM-dd-H-m-s") + ".csv"
+                        FileName = $"TraXile_Activities_{DateTime.Now.ToString("yyyy-MM-dd-H-m-s")}.csv"
                     };
                     DialogResult rs = sfd.ShowDialog();
                     if (rs == DialogResult.OK && sfd.FileName != null)

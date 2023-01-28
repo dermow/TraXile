@@ -9,15 +9,6 @@ namespace TraXile
         private readonly Main _main;
         private ImageList _images;
 
-        public TrX_ActivityTag Tag1 => _tag1;
-        private TrX_ActivityTag _tag1;
-
-        public TrX_ActivityTag Tag2 => _tag2;
-        private TrX_ActivityTag _tag2;
-
-        public TrX_ActivityTag Tag3 => _tag3;
-        private TrX_ActivityTag _tag3;
-
         public StopWatchOverlay(Main main, ImageList images)
         {
             InitializeComponent();

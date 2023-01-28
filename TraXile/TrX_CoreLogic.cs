@@ -12,20 +12,9 @@ using System.Windows.Forms;
 
 namespace TraXile
 {
-    /// <summary>
-    /// History initizalized event handler
-    /// </summary>
     public delegate void Trx_GenericEventHandler(TrX_CoreLogicGenericEventArgs e);
-
-    /// <summary>
-    /// Event handler for activity based events
-    /// </summary>
-    /// <param name="e"></param>
     public delegate void TrX_ActivityEventHandler(TrX_CoreLogicActivityEventArgs e);
 
-    /// <summary>
-    /// Event args for generic events
-    /// </summary>
     public class TrX_CoreLogicGenericEventArgs : EventArgs
     {
         // Core logic
@@ -38,9 +27,6 @@ namespace TraXile
         }
     }
 
-    /// <summary>
-    /// Event args for Activity based events
-    /// </summary>
     public class TrX_CoreLogicActivityEventArgs : EventArgs
     {
         // Core logic
@@ -58,9 +44,6 @@ namespace TraXile
         }
     }
 
-    /// <summary>
-    /// Core parsing logic
-    /// </summary>
     public class TrX_CoreLogic
     {
         // Event: initialization of history is finished
@@ -198,6 +181,10 @@ namespace TraXile
         private bool _isMapVaalArea;
         public bool IsMapVaalArea => _isMapVaalArea;
 
+        // Property: Is current map sanctum
+        private bool _isMapSanctum;
+        public bool IsMapSanctum => _isMapSanctum;
+
         // Property: Is current map logbook
         private bool _isMapLogbookSide;
         public bool IsMapLogbookSide => _isMapLogbookSide;
@@ -298,7 +285,7 @@ namespace TraXile
             _lastSimuEndpoint = "";
             _tags = new List<TrX_ActivityTag>();
             _initStartTime = DateTime.Now;
-            _dataBackend = new TrX_DataBackend(TrX_AppInfo.DB_PATH, ref _log);
+            _dataBackend = new TrX_DataBackend(TrX_Static.DB_PATH, ref _log);
             _myStats = new TrX_StatsManager(_dataBackend);
             _lastEventTypeConq = EVENT_TYPES.APP_STARTED;
             _labbieConnector = new TrX_LabbieConnector(_dataBackend, ref _log);
@@ -314,7 +301,7 @@ namespace TraXile
             _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
 
             // Since 0.9.2 stats cache is DB only, do first import if file is still existing
-            if(File.Exists(TrX_AppInfo.CACHE_PATH))
+            if(File.Exists(TrX_Static.CACHE_PATH))
             {
                 // Import is only needed when last hash is not in kvstore
                 string last = _dataBackend.GetKVStoreValue("last_hash");
@@ -325,7 +312,7 @@ namespace TraXile
                     _log.Info("File 'stats.cache' found wich is deprecated -> importing to database.");
 
                     string firstLine;
-                    firstLine = File.ReadAllLines(TrX_AppInfo.CACHE_PATH).First();
+                    firstLine = File.ReadAllLines(TrX_Static.CACHE_PATH).First();
 
                     if(!string.IsNullOrEmpty(firstLine))
                     {
@@ -335,7 +322,7 @@ namespace TraXile
                             _dataBackend.SetKVStoreValue("last_hash", hash.ToString());
                             _log.Info("Successfully imported stats.cache to database.");
 
-                            File.Delete(TrX_AppInfo.CACHE_PATH);
+                            File.Delete(TrX_Static.CACHE_PATH);
                         }
                         catch(Exception ex)
                         {
@@ -379,7 +366,7 @@ namespace TraXile
             // Log enchants
             foreach(TrX_LabEnchant en in e.Enchants)
             {
-                _log.Info(string.Format("Received enchante from Labbie: {0}:  {1}", en.ID, en.Text));
+                _log.Info($"Received enchante from Labbie: {en.ID}:  {en.Text}");
                 en.EnchantInfo = GetEnchantInfo(en.ID);
             }
 
@@ -400,8 +387,7 @@ namespace TraXile
             foreach(TrX_EnchantNote note in list)
             {
                 string query;
-                query = string.Format("INSERT INTO tx_enchant_notes (lab_timestamp, enchant_id, enchant_note) VALUES ({0}, {1}, '{2}')"
-                    , note.LabTimeStamp, note.EnchantID, note.Note);
+                query = $"INSERT INTO tx_enchant_notes (lab_timestamp, enchant_id, enchant_note) VALUES ({note.LabTimeStamp}, {note.EnchantID}, '{note.Note}')";
 
                 try
                 {
@@ -409,13 +395,11 @@ namespace TraXile
                 }
                 catch(Exception ex)
                 {
-                    _log.Error("Could not save enchant notes: " + ex.Message);
+                    _log.Error($"Could not save enchant notes: {ex.Message}");
                     _log.Debug(ex);
                 }
             }
         }
-
-       
 
         /// <summary>
         /// Get several informations about an enchant
@@ -432,7 +416,7 @@ namespace TraXile
             try
             {
                 // Get notes
-                reader = _dataBackend.GetSQLReader("SELECT * FROM tx_enchant_notes WHERE enchant_id = " + enchantID);
+                reader = _dataBackend.GetSQLReader($"SELECT * FROM tx_enchant_notes WHERE enchant_id = {enchantID}");
                 TrX_EnchantNote note;
                 while (reader.Read())
                 {
@@ -441,8 +425,7 @@ namespace TraXile
                 }
 
                 // Get found count
-                string res = _dataBackend.GetSingleValue(string.Format(
-                    "SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {0} AND action = 'found'", enchantID));
+                string res = _dataBackend.GetSingleValue($"SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {enchantID} AND action = 'found'");
                 if (res != null)
                 {
                     info.Found = Convert.ToInt32(res);
@@ -453,8 +436,7 @@ namespace TraXile
                 }
 
                 // Get taken count
-                res = _dataBackend.GetSingleValue(string.Format(
-                    "SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {0} AND action = 'taken'", enchantID));
+                res = _dataBackend.GetSingleValue($"SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {enchantID} AND action = 'taken'");
                 if (res != null)
                 {
                     info.Taken = Convert.ToInt32(res);
@@ -465,8 +447,7 @@ namespace TraXile
                 }
 
                 // Get taken count
-                res = _dataBackend.GetSingleValue(string.Format(
-                    "SELECT MAX(lab_timestamp) FROM tx_enchant_history WHERE enchant_id = {0}", enchantID));
+                res = _dataBackend.GetSingleValue($"SELECT MAX(lab_timestamp) FROM tx_enchant_history WHERE enchant_id = {enchantID}");
                 if (res != null)
                 {
                     info.LastFound = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt32(res)).DateTime;
@@ -477,8 +458,7 @@ namespace TraXile
                 }
 
                 // Get history
-                reader = _dataBackend.GetSQLReader(string.Format(
-                    "SELECT * FROM tx_enchant_history WHERE enchant_id = {0}", enchantID));
+                reader = _dataBackend.GetSQLReader($"SELECT * FROM tx_enchant_history WHERE enchant_id = {enchantID}");
                 while (reader.Read())
                 {
                     info.History.Add(string.Format("{0}: {1}", DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(0)).DateTime, reader.GetString(2)));
@@ -486,10 +466,9 @@ namespace TraXile
             }
             catch(Exception ex)
             {
-                _log.Error("Error getting enchant info object for enchant " + enchantID + ": " + ex.Message);
+                _log.Error($"Error getting enchant info object for enchant {enchantID}: {ex.Message}");
                 _log.Debug(ex.ToString());
             }
-            
 
             return info;
         }
@@ -504,12 +483,12 @@ namespace TraXile
                 foreach(TrX_LabEnchant e in _currentLabRun.Enchants)
                 {
                     _dataBackend.DoNonQuery("INSERT INTO tx_enchant_history (lab_timestamp, enchant_id, action) " +
-                        "VALUES (" + _currentLabRun.TimeStamp.ToString() + ", " + e.ID.ToString() + ", 'found')");
+                        $"VALUES ({_currentLabRun.TimeStamp}, {e.ID}, 'found')");
                 }
                 foreach (TrX_LabEnchant e in _currentLabRun.EnchantsTaken)
                 {
                     _dataBackend.DoNonQuery("INSERT INTO tx_enchant_history (lab_timestamp, enchant_id, action) " +
-                        "VALUES (" + _currentLabRun.TimeStamp.ToString() + ", " + e.ID.ToString() + ", 'taken')");
+                         $"VALUES ({_currentLabRun.TimeStamp}, {e.ID}, 'taken')");
                 }
 
                 _labHistory.Insert(0, _currentLabRun);
@@ -581,7 +560,7 @@ namespace TraXile
 
             foreach (string s in stats)
             {
-                dataReader = _dataBackend.GetSQLReader(string.Format("select stat_value from tx_stats where stat_name ='{0}' order by timestamp desc limit 1", s));
+                dataReader = _dataBackend.GetSQLReader($"select stat_value from tx_stats where stat_name ='{s}' order by timestamp desc limit 1");
                 while (dataReader.Read())
                 {
                     _myStats.NumericStats[s] = dataReader.GetInt32(0);
@@ -637,6 +616,7 @@ namespace TraXile
                 new TrX_ActivityTag("twice-blessed") { BackColor = Color.DarkTurquoise, ForeColor = Color.Black },
                 new TrX_ActivityTag("harvest") { BackColor = Color.Blue, ForeColor = Color.White },
                 new TrX_ActivityTag("blueprint") { BackColor = Color.IndianRed, ForeColor = Color.AliceBlue },
+                new TrX_ActivityTag("sanctum") { BackColor = Color.Purple, ForeColor = Color.White },
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -644,8 +624,8 @@ namespace TraXile
                 try
                 {
                     _dataBackend.DoNonQueryNoErrorHandling("insert into tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) values " +
-                                  "('" + tag.ID + "', '" + tag.DisplayName + "', '" + tag.BackColor.ToArgb() + "', '" + tag.ForeColor.ToArgb() + "', 'default', " + (tag.ShowInListView ? "1" : "0") + ")", false);
-                    _log.Info("Default tag '" + tag.ID + "' added to database");
+                                  $"('{tag.ID}', '{tag.DisplayName}', '{tag.BackColor.ToArgb()}', '{tag.ForeColor.ToArgb()}', 'default', {(tag.ShowInListView ? "1" : "0")})", false);
+                    _log.Info($"Default tag '{tag.ID}' added to database");
                 }
                 catch (SqliteException e)
                 {
@@ -797,6 +777,8 @@ namespace TraXile
                 { "MavenKilled", 0 },
                 { "TotalMapsDone", 0 },
                 { "TotalHeistsDone", 0 },
+                { "SanctumKilledLycia1", 0 },
+                { "SanctumKilledLycia2", 0 },
                 { "SearingExarchTried", 0 },
                 { "SearingExarchKilled", 0 },
                 { "ShaperTried", 0 },
@@ -812,7 +794,22 @@ namespace TraXile
                 { "TrialMasterTookReward", 0 },
                 { "TrialMasterVictory", 0 },
                 { "TrialMasterSuccess", 0 },
-                { "UberShaperTried", 0 },
+                //{ "UberCortexTried", 0 },
+                //{ "UberCortexKilled", 0 },
+                //{ "UberElderTried", 0 },
+                //{ "UberElderKilled", 0 },
+                //{ "UberUberElderTried", 0 },
+                //{ "UberUberElderKilled", 0 },
+                //{ "UberMavenTried", 0 },
+                //{ "UberMavenKilled", 0 },
+                //{ "UberEaterTried", 0 },
+                //{ "UberEaterKilled", 0 },
+                //{ "UberExarchTried", 0 },
+                //{ "UberExarchKilled", 0 },
+                //{ "UberShaperTried", 0 },
+                //{ "UberShaperKilled", 0 },
+                //{ "UberSirusTried", 0 },
+                //{ "UberSirusKilled", 0 },
                 { "VeritaniaKilled", 0 },
                 { "VeritaniaStarted", 0 },
             };
@@ -869,7 +866,18 @@ namespace TraXile
                 { "EaterOfWorldsKilled", "Eater of Worlds killed" },
                 { "InfiniteHungerTried", "Infinite Hunger tried" },
                 { "InfiniteHungerKilled", "Infinite Hunger killed" },
-                { "UberShaperTried", "Uber Shaper tried" },
+                { "SanctumKilledLycia1", "Sanctum: Lycia 1 killed" },
+                { "SanctumKilledLycia2", "Sanctum: Lycia 2 killed" },
+                //{ "UberMavenTried", "Uber Maven tried" },
+                //{ "UberMavenKilled", "Uber Maven killed" },
+                //{ "UberEaterTried", "Uber Eater of Worlds tried" },
+                //{ "UberEaterKilled", "Uber Eater of Worlds killed" },
+                //{ "UberExarchTried", "Uber Searing Exarch tried" },
+                //{ "UberExarchKilled", "Uber Searing Exarch killed" },
+                //{ "UberShaperTried", "Uber Shaper tried" },
+                //{ "UberShaperKilled", "Uber Shaper killed" },
+                //{ "UberSirusTried", "Uber Sirus tried" },
+                //{ "UberSirusKilled", "Uber Sirus killed" },
             };
 
             labs = new List<string>
@@ -885,34 +893,34 @@ namespace TraXile
             foreach (string s in _defaultMappings.HeistAreas)
             {
                 string sName = s.Replace("'", "");
-                if (!_myStats.NumericStats.ContainsKey("HeistsFinished_" + sName))
-                    _myStats.NumericStats.Add("HeistsFinished_" + sName, 0);
-                if (!_statNamesLong.ContainsKey("HeistsFinished_" + sName))
-                    _statNamesLong.Add("HeistsFinished_" + sName, "Heists done: " + sName);
+                if (!_myStats.NumericStats.ContainsKey($"HeistsFinished_{sName}"))
+                    _myStats.NumericStats.Add($"HeistsFinished_{sName}", 0);
+                if (!_statNamesLong.ContainsKey($"HeistsFinished_{sName}"))
+                    _statNamesLong.Add($"HeistsFinished_{sName}", $"Heists done: {sName}");
             }
 
             foreach (string s in labs)
             {
                 string sName = s.Replace("'", "");
-                if (!_myStats.NumericStats.ContainsKey("LabsCompleted_" + sName))
-                    _myStats.NumericStats.Add("LabsCompleted_" + sName, 0);
-                if (!_statNamesLong.ContainsKey("LabsCompleted_" + sName))
-                    _statNamesLong.Add("LabsCompleted_" + sName, "Labs completed: " + sName);
+                if (!_myStats.NumericStats.ContainsKey($"LabsCompleted_{sName}"))
+                    _myStats.NumericStats.Add($"LabsCompleted_{sName}", 0);
+                if (!_statNamesLong.ContainsKey($"LabsCompleted_{sName}"))
+                    _statNamesLong.Add($"LabsCompleted_{sName}", $"Labs completed: {sName}");
             }
 
             foreach (string s in _defaultMappings.MapAreas)
             {
                 string sName = s.Replace("'", "");
-                if (!_myStats.NumericStats.ContainsKey("MapsFinished_" + sName))
-                    _myStats.NumericStats.Add("MapsFinished_" + sName, 0);
-                if (!_statNamesLong.ContainsKey("MapsFinished_" + sName))
-                    _statNamesLong.Add("MapsFinished_" + sName, "Maps done: " + sName);
+                if (!_myStats.NumericStats.ContainsKey($"MapsFinished_{sName}"))
+                    _myStats.NumericStats.Add($"MapsFinished_{sName}", 0);
+                if (!_statNamesLong.ContainsKey($"MapsFinished_{sName}"))
+                    _statNamesLong.Add($"MapsFinished_{sName}", $"Maps done: {sName}");
             }
 
             for (int i = 0; i <= 19; i++)
             {
-                string sShort = "MapTierFinished_T" + i.ToString();
-                string sLong = i > 0 ? ("Maps done: T" + i.ToString()) : "Maps done: Tier unknown";
+                string sShort = $"MapTierFinished_T{i}";
+                string sLong = i > 0 ? ($"Maps done: T{i}") : "Maps done: Tier unknown";
                 if (!_myStats.NumericStats.ContainsKey(sShort))
                     _myStats.NumericStats.Add(sShort, 0);
                 if (!_statNamesLong.ContainsKey(sShort))
@@ -922,10 +930,10 @@ namespace TraXile
             foreach (string s in _defaultMappings.SimulacrumAreas)
             {
                 string sName = s.Replace("'", "");
-                if (!_myStats.NumericStats.ContainsKey("SimulacrumFinished_" + sName))
-                    _myStats.NumericStats.Add("SimulacrumFinished_" + sName, 0);
-                if (!_statNamesLong.ContainsKey("SimulacrumFinished_" + sName))
-                    _statNamesLong.Add("SimulacrumFinished_" + sName, "Simulacrum done: " + sName);
+                if (!_myStats.NumericStats.ContainsKey($"SimulacrumFinished_{sName}"))
+                    _myStats.NumericStats.Add($"SimulacrumFinished_{sName}", 0);
+                if (!_statNamesLong.ContainsKey($"SimulacrumFinished_{sName}"))
+                    _statNamesLong.Add($"SimulacrumFinished_{sName}", $"Simulacrum done: {sName}");
             }
         }
 
@@ -963,8 +971,8 @@ namespace TraXile
             if (!_knownPlayerNames.Contains(s_name))
             {
                 _knownPlayerNames.Add(s_name);
-                _dataBackend.DoNonQuery("insert into tx_known_players (player_name) VALUES ('" + s_name + "')");
-                _log.Info("KnownPlayerAdded -> name: " + s_name);
+                _dataBackend.DoNonQuery($"insert into tx_known_players (player_name) VALUES ('{s_name}')");
+                _log.Info($"KnownPlayerAdded -> name: {s_name}");
             }
         }
 
@@ -1100,6 +1108,12 @@ namespace TraXile
                     return ACTIVITY_TYPES.TIMELESS_LEGION;
                 case "lake_of_kalandra":
                     return ACTIVITY_TYPES.LAKE_OF_KALANDRA;
+                case "sanctum":
+                    return ACTIVITY_TYPES.SANCTUM;
+                case "trialmaster_fight":
+                    return ACTIVITY_TYPES.TRIALMASTER_FIGHT;
+                case "tanes_laboratory":
+                    return ACTIVITY_TYPES.TANES_LABORATORY;
             }
             return ACTIVITY_TYPES.OTHER;
         }
@@ -1138,7 +1152,7 @@ namespace TraXile
 
                     // Get Enchants
                     SqliteDataReader subReader;
-                    string query = "SELECT * FROM tx_enchant_history WHERE lab_timestamp = " + map.TimeStamp.ToString();
+                    string query = $"SELECT * FROM tx_enchant_history WHERE lab_timestamp = {map.TimeStamp}";
                     subReader = _dataBackend.GetSQLReader(query);
 
                     while(subReader.Read())
@@ -1250,7 +1264,7 @@ namespace TraXile
         /// </summary>
         private void ParseLogFile()
         {
-            _log.Info("Started logfile parsing. Last hash was " + _lastHash.ToString());
+            _log.Info($"Started logfile parsing. Last hash was {_lastHash}");
             _logLinesTotal = Convert.ToDouble(GetLogFileLineCount());
 
             var fs = new FileStream(_clientTxtPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -1278,10 +1292,9 @@ namespace TraXile
                             _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_READY)
                             {
                                 EventTime = DateTime.Now,
-                                LogLine = "Application initialized in "
-                                  + Math.Round(tsInitDuration.TotalSeconds, 2) + " seconds."
+                                LogLine = $"Application initialized in {Math.Round(tsInitDuration.TotalSeconds, 2)} seconds."
                             });
-                            _log.Info(string.Format("Initialized in {0} seconds.", tsInitDuration.TotalSeconds));
+                            _log.Info($"Initialized in {tsInitDuration.TotalSeconds} seconds.");
                             _lastHash = lineHash;
 
                             // Trigger ready event
@@ -1327,7 +1340,7 @@ namespace TraXile
                                 };
                                 try
                                 {
-                                    DateTime dt = DateTime.Parse(line.Split(' ')[0] + " " + line.Split(' ')[1], _dateTimeFormatInfo);
+                                    DateTime dt = DateTime.Parse($"{line.Split(' ')[0]} {line.Split(' ')[1]}", _dateTimeFormatInfo);
                                     ev.EventTime = dt;
                                     lastEvTime = ev.EventTime;
                                 }
@@ -1436,7 +1449,7 @@ namespace TraXile
         /// <param name="s_command"></param>
         private void HandleChatCommand(string s_command)
         {
-            _log.Info("ChatCommand -> " + s_command);
+            _log.Info($"ChatCommand -> {s_command}");
             string[] spl = s_command.Split(' ');
             string sMain;
             string sArgs = "";
@@ -1501,6 +1514,7 @@ namespace TraXile
             string sAreaName = GetAreaNameFromEvent(ev);
             bool bSourceAreaIsMap = CheckIfAreaIsMap(sSourceArea),
             bSourceAreaIsVaal = _defaultMappings.VaalSideAreas.Contains(sSourceArea),
+            bSourceAreaIsSanctum = _defaultMappings.SanctumAreas.Contains(sSourceArea),
             bSourceAreaIsAbyss = _defaultMappings.AbyssalAreas.Contains(sSourceArea),
             bSourceAreaIsLabTrial = sSourceArea.Contains("Trial of"),
             bSourceAreaIsLogbookSide = _defaultMappings.LogbookSideAreas.Contains(sSourceArea),
@@ -1508,6 +1522,7 @@ namespace TraXile
             bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea),
             bTargetAreaIsSimu = false,
             bTargetAreaMine = _defaultMappings.DelveAreas.Contains(sTargetArea),
+            bTargetAreaIsTane = _defaultMappings.TaneAreas.Contains(sTargetArea),
             bTargetAreaTemple = _defaultMappings.TempleAreas.Contains(sTargetArea),
             bTargetAreaIsLab = _defaultMappings.LabyrinthStartAreas.Contains(sTargetArea),
             bTargetAreaIsMI = _defaultMappings.MavenInvitationAreas.Contains(sTargetArea),
@@ -1531,7 +1546,9 @@ namespace TraXile
             bTargetAreaIsInfinitetHunger = _defaultMappings.InfiniteHungerAreas.Contains(sTargetArea),
             bTargetAreaIsEaterOfWorlds = _defaultMappings.EaterOfWorldsAreas.Contains(sTargetArea),
             bTargetAreaIsLegion = _defaultMappings.TimelessLegionAreas.Contains(sTargetArea),
-            bTargetAreaIsKalandra = _defaultMappings.LakeOfKalandraAreas.Contains(sTargetArea);
+            bTargetAreaIsKalandra = _defaultMappings.LakeOfKalandraAreas.Contains(sTargetArea),
+            bTargetAreaIsSanctum = _defaultMappings.SanctumAreas.Contains(sTargetArea),
+            bTargetAreaIsTrialmaster = _defaultMappings.TrialMasterAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1540,18 +1557,24 @@ namespace TraXile
             // Calculate Instance change based statistics:
             // ===========================================
 
+            // Moving between two sanctums?
+            if(bSourceAreaIsSanctum && bTargetAreaIsSanctum)
+            {
+                return;
+            }
+
             // Shaper
             if (bTargetAreaIsShaper && _currentInstanceEndpoint != _lastShaperInstance)
             {
-                if(_nextAreaLevel == 85)
-                {
-                    IncrementStat("UberShaperTried", ev.EventTime, 1);
-                }
-                else
-                {
-                    IncrementStat("ShaperTried", ev.EventTime, 1);
-                }
-                
+                //if(_nextAreaLevel == 85)
+                //{
+                //    IncrementStat("UberShaperTried", ev.EventTime, 1);
+                //}
+                //else
+                //{
+                //    IncrementStat("ShaperTried", ev.EventTime, 1);
+                //}
+                IncrementStat("ShaperTried", ev.EventTime, 1);
                 _lastShaperInstance = _currentInstanceEndpoint;
             }
 
@@ -1594,6 +1617,11 @@ namespace TraXile
             }
 
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE)
+            {
+                _currentActivity.LastEnded = ev.EventTime;
+            }
+
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.TANES_LABORATORY)
             {
                 _currentActivity.LastEnded = ev.EventTime;
             }
@@ -1688,6 +1716,10 @@ namespace TraXile
             {
                 actType = ACTIVITY_TYPES.LAB_TRIAL;
             }
+            else if (bTargetAreaIsSanctum)
+            {
+                actType = ACTIVITY_TYPES.SANCTUM;
+            }
             else if (bTargetAreaIsVaal)
             {
                 actType = ACTIVITY_TYPES.VAAL_SIDEAREA;
@@ -1735,6 +1767,14 @@ namespace TraXile
             else if (bTargetAreaIsKalandra)
             {
                 actType = ACTIVITY_TYPES.LAKE_OF_KALANDRA;
+            }
+            else if (bTargetAreaIsTrialmaster)
+            {
+                actType = ACTIVITY_TYPES.TRIALMASTER_FIGHT;
+            }
+            else if (bTargetAreaIsTane)
+            {
+                actType = ACTIVITY_TYPES.TANES_LABORATORY;
             }
 
             // Special handling for logbook cemetery + vaal temple
@@ -1806,6 +1846,49 @@ namespace TraXile
                 if (sTargetArea.Contains("Hideout") || _defaultMappings.CampAreas.Contains(sTargetArea))
                 {
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.LABYRINTH, DateTime.Now);
+                }
+            }
+
+            // Sanctum entered?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && actType == ACTIVITY_TYPES.SANCTUM)
+            {
+                if (_currentActivity.SideArea_Sanctum == null)
+                {
+                    _currentActivity.SideArea_Sanctum = new TrX_TrackedActivity
+                    {
+                        Area = sTargetArea,
+                        AreaLevel = _nextAreaLevel,
+                        Type = actType,
+                        Started = ev.EventTime,
+                        TimeStamp = lTS,
+                        InstanceEndpoint = _currentActivity.InstanceEndpoint
+                    };
+                    _currentActivity.AddTag("sanctum");
+                }
+
+                _currentActivity.Pause();
+                _currentActivity.StartPauseTime(ev.EventTime);
+
+                _currentActivity.SideArea_Sanctum.StartStopWatch();
+                _currentActivity.SideArea_Sanctum.EndPauseTime(ev.EventTime);
+                _isMapSanctum = true;
+            }
+            else
+            {
+                _isMapSanctum = false;
+            }
+
+            // Left Sanctum area?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && bSourceAreaIsSanctum)
+            {
+                if (_currentActivity.SideArea_Sanctum != null)
+                {
+                    _currentActivity.SideArea_Sanctum.LastEnded = ev.EventTime;
+                    _currentActivity.SideArea_Sanctum.StopStopWatch();
+                    _currentActivity.SideArea_Sanctum.StartPauseTime(ev.EventTime);
+
+                    _currentActivity.Resume();
+                    _currentActivity.EndPauseTime(ev.EventTime);
                 }
             }
 
@@ -2004,6 +2087,29 @@ namespace TraXile
                 OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
             }
 
+            // Tane?
+            if ((_currentActivity == null || _currentActivity.Type != ACTIVITY_TYPES.TANES_LABORATORY) && actType == ACTIVITY_TYPES.TANES_LABORATORY)
+            {
+                // Finish activity
+                if (_currentActivity != null)
+                {
+                    FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                }
+
+                _currentActivity = new TrX_TrackedActivity
+                {
+                    Area = _defaultMappings.TaneAreas[0],
+                    Type = actType,
+                    Started = ev.EventTime,
+                    AreaLevel = 68,
+                    TimeStamp = lTS,
+                    InstanceEndpoint = _currentInstanceEndpoint
+                };
+
+                _prevActivityOverlay = GetLastActivityByType(actType);
+                OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
+            }
+
             // Update Delve level
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE && actType == ACTIVITY_TYPES.DELVE)
             {
@@ -2017,6 +2123,12 @@ namespace TraXile
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.DELVE && !bTargetAreaMine)
             {
                 FinishActivity(_currentActivity, null, ACTIVITY_TYPES.DELVE, DateTime.Now);
+            }
+
+            // End Tane?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.TANES_LABORATORY && !bTargetAreaIsTane)
+            {
+                FinishActivity(_currentActivity, null, ACTIVITY_TYPES.TANES_LABORATORY, DateTime.Now);
             }
 
 
@@ -2043,6 +2155,7 @@ namespace TraXile
                     || _defaultMappings.EaterOfWorldsAreas.Contains(sSourceArea)
                     || _defaultMappings.InfiniteHungerAreas.Contains(sSourceArea)
                     || _defaultMappings.TimelessLegionAreas.Contains(sSourceArea)
+                    || _defaultMappings.TrialMasterAreas.Contains(sSourceArea)
                     || _defaultMappings.LakeOfKalandraAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
@@ -2114,6 +2227,7 @@ namespace TraXile
                 bTargetAreaIsSimu ||
                 //bTargetAreaIsLab ||
                 bTargetAreaMine ||
+                bTargetAreaIsTane ||
                 bTargetAreaTemple ||
                 bTargetAreaIsMI ||
                 bTargetAreaIsUberAtziri ||
@@ -2131,6 +2245,7 @@ namespace TraXile
                 bTargetAreaIsEaterOfWorlds ||
                 bTargetAreaIsInfinitetHunger ||
                 bTargetAreaIsLegion ||
+                bTargetAreaIsTrialmaster ||
                 bTargetAreaIsKalandra;
 
             // Check if opened activity needs to be opened on Mapdevice
@@ -2153,6 +2268,7 @@ namespace TraXile
                 bTargetAreaIsInfinitetHunger ||
                 bTargetAreaIsEaterOfWorlds ||
                 bTargetAreaIsLegion ||
+                bTargetAreaIsTrialmaster ||
                 bTargetAreaIsKalandra;
 
             if (isMapDeviceActivity)
@@ -2238,7 +2354,7 @@ namespace TraXile
                     _isMapZana = false; //TMP_DEBUG
 
                     // Do not track Lab-Trials
-                    if ((!sSourceArea.Contains("Trial of")) && (_currentActivity.Type != ACTIVITY_TYPES.LABYRINTH) && (_currentActivity.Type != ACTIVITY_TYPES.DELVE))
+                    if ((!sSourceArea.Contains("Trial of")) && (_currentActivity.Type != ACTIVITY_TYPES.LABYRINTH) && (_currentActivity.Type != ACTIVITY_TYPES.DELVE) && (_currentActivity.Type != ACTIVITY_TYPES.TANES_LABORATORY))
                     {
                         if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
                         {
@@ -2328,6 +2444,14 @@ namespace TraXile
                         {
                             _currentActivity.SideArea_VaalArea.DeathCounter++;
                             _currentActivity.SideArea_VaalArea.LastEnded = ev.EventTime;
+                        }
+                    }
+                    else if (_isMapSanctum)
+                    {
+                        if (_currentActivity.SideArea_Sanctum != null)
+                        {
+                            _currentActivity.SideArea_Sanctum.DeathCounter++;
+                            _currentActivity.SideArea_Sanctum.LastEnded = ev.EventTime;
                         }
                     }
                     else if (_isMapAbyssArea)
@@ -2480,7 +2604,6 @@ namespace TraXile
                         HandlePlayerDiedEvent(ev);
                         break;
                     case EVENT_TYPES.ELDER_KILLED:
-                        _log.Debug("Elder killed on instance: " + _currentActivity.InstanceEndpoint);
                         IncrementStat("ElderKilled", ev.EventTime, 1);
                         _lastElderInstance = ""; //TODO: could be a problem if protaled back to already finished elder fight. But fixes multi fights on same instance...
                         break;
@@ -2702,7 +2825,7 @@ namespace TraXile
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH)
                         {
                             IncrementStat("LabsFinished", ev.EventTime, 1);
-                            IncrementStat("LabsCompleted_" + _currentActivity.Area, ev.EventTime, 1);
+                            IncrementStat($"LabsCompleted_{_currentActivity.Area}", ev.EventTime, 1);
                             _currentActivity.Success = true;
                             PauseCurrentActivityOrSide();
                         }
@@ -2962,6 +3085,12 @@ namespace TraXile
                             _currentActivity.AddTag("harvest");
                         }
                         break;
+                    case EVENT_TYPES.SANCTUM_LYCIA_2_KILLED:
+                        IncrementStat("SanctumKilledLycia2", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.SANCTUM_LYCIA_1_KILLED:
+                        IncrementStat("SanctumKilledLycia1", ev.EventTime);
+                        break;
                 }
 
                 // Sometimes conqueror fire their death speech twice...
@@ -2990,7 +3119,6 @@ namespace TraXile
             }
             catch (Exception ex)
             {
-                _log.Warn("Error -> Ex.Message: " + ex.Message + ", LogLine: " + ev.LogLine);
                 _log.Debug(ex.ToString());
             }
         }
@@ -3058,7 +3186,7 @@ namespace TraXile
         /// <param name="dtNextMapStarted"></param>
         public void FinishActivity(TrX_TrackedActivity activity, string sNextMap, ACTIVITY_TYPES sNextMapType, DateTime dtNextMapStarted, bool stats_only = false)
         {
-            _log.Debug("Finishing activity: " + activity.UniqueID);
+            _log.Debug($"Finishing activity: {activity.UniqueID}");
             _currentActivity.StopStopWatch();
 
             bool isValid = true;
@@ -3071,9 +3199,11 @@ namespace TraXile
                 TimeSpan tsAbyss = new TimeSpan();
                 TimeSpan tsLabTrial = new TimeSpan();
                 TimeSpan tsLogbookSide = new TimeSpan();
+                TimeSpan tsSanctum = new TimeSpan();
                 int totalSecondsMainActivity;
                 int totalSecondsZanaMap = 0;
                 int totalSecondsVallSideArea = 0;
+                int totalSecondsSanctum = 0;
                 int totalSecondsAbyss = 0;
                 int totalSecondsLabTrial = 0;
                 int totalSecondsLogBookSide = 0;
@@ -3090,7 +3220,7 @@ namespace TraXile
                     // Labs must be successfull or death counter 1
                     if ((activity.Success != true && activity.DeathCounter == 0) && ((TrX_TrackedLabrun)activity).TrialCount < 3)
                     {
-                        _log.Warn("Filtered out lab run [time=" + activity.Started + ", area: " + activity.Area + "]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
+                        _log.Warn($"Filtered out lab run [time={activity.Started}, area: {activity.Area}]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
                         _currentActivity = null;
                         return;
                     }
@@ -3118,6 +3248,11 @@ namespace TraXile
                     if (activity.SideArea_VaalArea != null)
                     {
                         tsVaal = (activity.SideArea_VaalArea.LastEnded - activity.SideArea_VaalArea.Started);
+                    }
+
+                    if (activity.SideArea_Sanctum != null)
+                    {
+                        tsSanctum = (activity.SideArea_Sanctum.LastEnded - activity.SideArea_Sanctum.Started);
                     }
 
                     if (activity.SideArea_LogbookSide != null)
@@ -3163,6 +3298,11 @@ namespace TraXile
                         tsVaal = (activity.SideArea_VaalArea.StopWatchTimeSpan);
                     }
 
+                    if (activity.SideArea_Sanctum != null)
+                    {
+                        tsSanctum = (activity.SideArea_Sanctum.StopWatchTimeSpan);
+                    }
+
                     if (activity.SideArea_LogbookSide != null)
                     {
                         tsLogbookSide = (activity.SideArea_LogbookSide.StopWatchTimeSpan);
@@ -3185,6 +3325,7 @@ namespace TraXile
                 totalSecondsLogBookSide = Convert.ToInt32(tsLogbookSide.TotalSeconds);
                 totalSecondsAbyss = Convert.ToInt32(tsAbyss.TotalSeconds);
                 totalSecondsLabTrial = Convert.ToInt32(tsLabTrial.TotalSeconds);
+                totalSecondsSanctum = Convert.ToInt32(tsSanctum.TotalSeconds);
 
                 if (isValid)
                 {
@@ -3243,6 +3384,24 @@ namespace TraXile
                             //Save to DB
                             SaveToActivityLog(((DateTimeOffset)activity.SideArea_VaalArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_VaalArea.Type), activity.SideArea_VaalArea.Area, activity.SideArea_VaalArea.AreaLevel, totalSecondsVallSideArea, activity.SideArea_VaalArea.DeathCounter, activity.SideArea_VaalArea.TrialMasterCount, true, activity.SideArea_VaalArea
                                 .Tags, activity.SideArea_VaalArea.Success, Convert.ToInt32(activity.SideArea_VaalArea.PausedTime));
+                        }
+                    }
+
+                    if (activity.SideArea_Sanctum != null)
+                    {
+                        TimeSpan tsSanctumArea = TimeSpan.FromSeconds(totalSecondsSanctum);
+                        activity.SideArea_Sanctum.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                               tsSanctumArea.Hours, tsSanctumArea.Minutes, tsSanctumArea.Seconds);
+
+                        activity.SideArea_Sanctum.TotalSeconds = totalSecondsSanctum;
+
+                        if (greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_Sanctum);
+
+                        if (!_parsedActivities.Contains(activity.SideArea_Sanctum.UniqueID))
+                        {
+                            //Save to DB
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_Sanctum.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_Sanctum.Type), activity.SideArea_Sanctum.Area, activity.SideArea_Sanctum.AreaLevel, totalSecondsSanctum, activity.SideArea_Sanctum.DeathCounter, activity.SideArea_Sanctum.TrialMasterCount, true, activity.SideArea_Sanctum
+                                .Tags, activity.SideArea_Sanctum.Success, Convert.ToInt32(activity.SideArea_Sanctum.PausedTime));
                         }
                     }
 
@@ -3305,7 +3464,7 @@ namespace TraXile
                 }
                 else
                 {
-                    _log.Warn(string.Format("Filtered out invalid activity: {0}, Started: {1}, LastEnded: {2}, Type: {3}, Instance: {4}", activity.UniqueID, activity.Started, activity.LastEnded, activity.Type, activity.InstanceEndpoint));
+                    _log.Warn($"Filtered out invalid activity: {activity.UniqueID}, Started: {activity.Started}, LastEnded: {activity.LastEnded}, Type: {activity.Type}, Instance: {activity.InstanceEndpoint}");
                 }
 
                 if (activity.Type == ACTIVITY_TYPES.HEIST)
@@ -3367,8 +3526,8 @@ namespace TraXile
         /// </summary>
         private void SaveVersion()
         {
-            StreamWriter wrt = new StreamWriter(TrX_AppInfo.VERSION_FILE_PATH);
-            wrt.WriteLine(TrX_AppInfo.VERSION);
+            StreamWriter wrt = new StreamWriter(TrX_Static.VERSION_FILE_PATH);
+            wrt.WriteLine(TrX_Static.VERSION);
             wrt.Close();
         }
 

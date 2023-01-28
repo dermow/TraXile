@@ -70,6 +70,8 @@ namespace TraXile
 
         // Abyss areas
         private List<string> _abyssAreas;
+        
+
         public List<string> AbyssalAreas => _abyssAreas;
 
         // Vaal side areas
@@ -132,6 +134,18 @@ namespace TraXile
         private List<string> _lakeOfKalandraAreas;
         public List<string> LakeOfKalandraAreas => _lakeOfKalandraAreas;
 
+        // Sanctum
+        private List<string> _sanctumAreas;
+        public List<string> SanctumAreas => _sanctumAreas;
+
+        // TrialMaster
+        private List<string> _trialMasterAreas;
+        public List<string> TrialMasterAreas => _trialMasterAreas;
+
+        // Tane
+        private List<string> _taneAreas;
+        public List<string> TaneAreas => _taneAreas;
+
         // All
         public List<string> AllAreas
         {
@@ -162,6 +176,7 @@ namespace TraXile
                 lst.AddRange(UberAtziriAreas);
                 lst.AddRange(VaalSideAreas);
                 lst.AddRange(LabTrialAreas);
+                lst.AddRange(SanctumAreas);
                 lst.Sort();
                 return lst;
             }
@@ -177,9 +192,19 @@ namespace TraXile
                 {  "Elder", "https://pathofexile.fandom.com/wiki/The_Elder" },
             };
 
+            _taneAreas = new List<string>()
+            {
+                "Tanes Laboratory"
+            };
+
             _lakeOfKalandraAreas = new List<string>()
             {
                 "The Lake of Kalandra"
+            };
+
+            _trialMasterAreas = new List<string>()
+            {
+                "The Tower of Ordeals"
             };
 
             _breachstoneAreas = new List<string>
@@ -616,12 +641,20 @@ namespace TraXile
                 "The Feeding Trough",
                 "The Reliquary",
                 "The Ossuary",
-                "Oriath Docks",
+                "Oriath Docks"
             };
 
             _abyssAreas = new List<string>
             {
                 "Abyssal Depths"
+            };
+
+            _sanctumAreas = new List<string>
+            {
+                "Sanctum Archives",
+                "Sanctum Cathedral",
+                "Sanctum Necropolis",
+                "Sanctum Vaults"
             };
 
             _vaalSideAreas = new List<string>
@@ -813,6 +846,8 @@ namespace TraXile
             _deathCountEnabledAreas.AddRange(EaterOfWorldsAreas);
             _deathCountEnabledAreas.AddRange(InfiniteHungerAreas);
             _deathCountEnabledAreas.AddRange(TimelessLegionAreas);
+            _deathCountEnabledAreas.AddRange(SanctumAreas);
+            _deathCountEnabledAreas.AddRange(TrialMasterAreas);
         }
     }
 }
