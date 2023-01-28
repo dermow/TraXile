@@ -79,7 +79,9 @@ namespace TraXile
         INFINITE_HUNGER_KILLED,
         EATER_OF_WORLDS_TRIED,
         EATER_OF_WORLDS_KILLED,
-        HARVEST
+        HARVEST,
+        SANCTUM_LYCIA_1_KILLED,
+        SANCTUM_LYCIA_2_KILLED,
     }
 
     public class TrX_EventMapping
@@ -414,6 +416,22 @@ namespace TraXile
                 {"] The Eater of Worlds: This is not a battle you can win, hatchling.", EVENT_TYPES.EATER_OF_WORLDS_TRIED },
                 {"] The Eater of Worlds: You deny us... escape from pain...", EVENT_TYPES.EATER_OF_WORLDS_KILLED },
 
+                // SANCTUM: Lycia 2
+                {"] Lycia, Herald of the Scourge: *laughter*", EVENT_TYPES.SANCTUM_LYCIA_2_KILLED },
+                {"] Lycia, Herald of the Scourge: You have accomplished nothing... I have achieved eternal life...", EVENT_TYPES.SANCTUM_LYCIA_2_KILLED },
+                {"] Lycia, Herald of the Scourge: You are only delaying the inevitable.", EVENT_TYPES.SANCTUM_LYCIA_2_KILLED },
+                {"] Lycia, Herald of the Scourge: I cannot die. You know this.", EVENT_TYPES.SANCTUM_LYCIA_2_KILLED },
+                {"] Lycia, Herald of the Scourge: Beidat beckons just beyond the door...", EVENT_TYPES.SANCTUM_LYCIA_2_KILLED },
+                {"] Lycia, Herald of the Scourge: You've accomplished nothing.", EVENT_TYPES.SANCTUM_LYCIA_2_KILLED },
+
+                // SANCTUM: Lycia 1
+                {"] Lycia, Unholy Heretic: The moment is nigh. The ritual is nearly complete. Give me your all!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
+                {"] Lycia, Unholy Heretic: The Scourge will consume this world of sinners!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
+                {"] Lycia, Unholy Heretic: None are innocent. All will be consumed!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
+                {"] Lycia, Unholy Heretic: Beidat, take my flesh!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
+                {"] Lycia, Unholy Heretic: I have such sights to show you...", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
+                {"] Lycia, Unholy Heretic: Beidat, give me your power!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
+                {"] Lycia, Unholy Heretic: Yes! The blood moon rises! Beidat, give me your power!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
 
                 // Campaign
                 { "] Sin: May a new dawn arise!", EVENT_TYPES.CAMPAIGN_FINISHED },

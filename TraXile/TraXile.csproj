@@ -192,7 +192,7 @@
     <Compile Include="UI\ActivityDetails.Designer.cs">
       <DependentUpon>ActivityDetails.cs</DependentUpon>
     </Compile>
-    <Compile Include="TrX_AppInfo.cs" />
+    <Compile Include="TrX_Static.cs" />
     <Compile Include="UI\DataGridViewNF.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -225,12 +225,6 @@
     </Compile>
     <Compile Include="UI\FileSelectScreen.Designer.cs">
       <DependentUpon>FileSelectScreen.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\FilterScreen.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\FilterScreen.Designer.cs">
-      <DependentUpon>FilterScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="TrX_LeagueInfo.cs" />
@@ -292,9 +286,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\FileSelectScreen.resx">
       <DependentUpon>FileSelectScreen.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\FilterScreen.resx">
-      <DependentUpon>FilterScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\LoadScreen.resx">
       <DependentUpon>LoadScreen.cs</DependentUpon>
