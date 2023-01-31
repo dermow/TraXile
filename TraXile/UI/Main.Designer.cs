@@ -581,6 +581,8 @@ namespace TraXile
             this.linkLabel5 = new System.Windows.Forms.LinkLabel();
             this.lbl_filter = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.textBox13 = new System.Windows.Forms.TextBox();
             this.listViewNF1 = new TraXile.ListViewNF();
             this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -5933,7 +5935,7 @@ namespace TraXile
             this.btt_apply_filter.BackColor = System.Drawing.Color.Lime;
             this.btt_apply_filter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btt_apply_filter.ForeColor = System.Drawing.Color.Black;
-            this.btt_apply_filter.Location = new System.Drawing.Point(811, 20);
+            this.btt_apply_filter.Location = new System.Drawing.Point(903, 23);
             this.btt_apply_filter.Name = "btt_apply_filter";
             this.btt_apply_filter.Size = new System.Drawing.Size(75, 21);
             this.btt_apply_filter.TabIndex = 7;
@@ -6436,7 +6438,7 @@ namespace TraXile
             this.label133.AutoSize = true;
             this.label133.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label133.ForeColor = System.Drawing.Color.White;
-            this.label133.Location = new System.Drawing.Point(620, 1);
+            this.label133.Location = new System.Drawing.Point(712, 4);
             this.label133.Name = "label133";
             this.label133.Size = new System.Drawing.Size(47, 15);
             this.label133.TabIndex = 9;
@@ -6450,7 +6452,7 @@ namespace TraXile
             "OR",
             "AND",
             "NOT"});
-            this.comboBox4.Location = new System.Drawing.Point(705, 89);
+            this.comboBox4.Location = new System.Drawing.Point(797, 92);
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(65, 21);
             this.comboBox4.TabIndex = 10;
@@ -6460,7 +6462,7 @@ namespace TraXile
             this.comboBox5.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.comboBox5.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(623, 19);
+            this.comboBox5.Location = new System.Drawing.Point(715, 22);
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(151, 21);
             this.comboBox5.TabIndex = 11;
@@ -6487,6 +6489,8 @@ namespace TraXile
             // groupBox11
             // 
             this.groupBox11.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBox11.Controls.Add(this.textBox13);
+            this.groupBox11.Controls.Add(this.textBox12);
             this.groupBox11.Controls.Add(this.comboBox9);
             this.groupBox11.Controls.Add(this.textBox10);
             this.groupBox11.Controls.Add(this.label138);
@@ -6527,14 +6531,14 @@ namespace TraXile
             ">=",
             "<",
             "<="});
-            this.comboBox9.Location = new System.Drawing.Point(411, 69);
+            this.comboBox9.Location = new System.Drawing.Point(503, 72);
             this.comboBox9.Name = "comboBox9";
             this.comboBox9.Size = new System.Drawing.Size(42, 21);
             this.comboBox9.TabIndex = 23;
             // 
             // textBox10
             // 
-            this.textBox10.Location = new System.Drawing.Point(460, 70);
+            this.textBox10.Location = new System.Drawing.Point(552, 73);
             this.textBox10.Name = "textBox10";
             this.textBox10.Size = new System.Drawing.Size(82, 20);
             this.textBox10.TabIndex = 22;
@@ -6544,7 +6548,7 @@ namespace TraXile
             this.label138.AutoSize = true;
             this.label138.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label138.ForeColor = System.Drawing.Color.White;
-            this.label138.Location = new System.Drawing.Point(327, 71);
+            this.label138.Location = new System.Drawing.Point(419, 74);
             this.label138.Name = "label138";
             this.label138.Size = new System.Drawing.Size(79, 15);
             this.label138.TabIndex = 21;
@@ -6555,7 +6559,7 @@ namespace TraXile
             this.btt_remove_filter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.btt_remove_filter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btt_remove_filter.ForeColor = System.Drawing.Color.Black;
-            this.btt_remove_filter.Location = new System.Drawing.Point(811, 47);
+            this.btt_remove_filter.Location = new System.Drawing.Point(903, 50);
             this.btt_remove_filter.Name = "btt_remove_filter";
             this.btt_remove_filter.Size = new System.Drawing.Size(75, 21);
             this.btt_remove_filter.TabIndex = 20;
@@ -6568,7 +6572,7 @@ namespace TraXile
             this.label137.AutoSize = true;
             this.label137.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label137.ForeColor = System.Drawing.Color.White;
-            this.label137.Location = new System.Drawing.Point(620, 91);
+            this.label137.Location = new System.Drawing.Point(712, 94);
             this.label137.Name = "label137";
             this.label137.Size = new System.Drawing.Size(79, 15);
             this.label137.TabIndex = 19;
@@ -6579,7 +6583,7 @@ namespace TraXile
             this.label136.AutoSize = true;
             this.label136.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label136.ForeColor = System.Drawing.Color.White;
-            this.label136.Location = new System.Drawing.Point(327, 47);
+            this.label136.Location = new System.Drawing.Point(419, 50);
             this.label136.Name = "label136";
             this.label136.Size = new System.Drawing.Size(39, 15);
             this.label136.TabIndex = 17;
@@ -6592,7 +6596,7 @@ namespace TraXile
             this.comboBox8.FormattingEnabled = true;
             this.comboBox8.Items.AddRange(new object[] {
             "All"});
-            this.comboBox8.Location = new System.Drawing.Point(411, 45);
+            this.comboBox8.Location = new System.Drawing.Point(503, 48);
             this.comboBox8.Name = "comboBox8";
             this.comboBox8.Size = new System.Drawing.Size(171, 21);
             this.comboBox8.TabIndex = 18;
@@ -6602,7 +6606,7 @@ namespace TraXile
             this.label135.AutoSize = true;
             this.label135.Font = new System.Drawing.Font("Noto Mono", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label135.ForeColor = System.Drawing.Color.White;
-            this.label135.Location = new System.Drawing.Point(327, 23);
+            this.label135.Location = new System.Drawing.Point(419, 26);
             this.label135.Name = "label135";
             this.label135.Size = new System.Drawing.Size(47, 15);
             this.label135.TabIndex = 15;
@@ -6615,7 +6619,7 @@ namespace TraXile
             this.comboBox7.FormattingEnabled = true;
             this.comboBox7.Items.AddRange(new object[] {
             "All"});
-            this.comboBox7.Location = new System.Drawing.Point(411, 21);
+            this.comboBox7.Location = new System.Drawing.Point(503, 24);
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(171, 21);
             this.comboBox7.TabIndex = 16;
@@ -6623,7 +6627,7 @@ namespace TraXile
             // button18
             // 
             this.button18.ForeColor = System.Drawing.Color.Black;
-            this.button18.Location = new System.Drawing.Point(780, 43);
+            this.button18.Location = new System.Drawing.Point(872, 46);
             this.button18.Name = "button18";
             this.button18.Size = new System.Drawing.Size(22, 23);
             this.button18.TabIndex = 14;
@@ -6634,7 +6638,7 @@ namespace TraXile
             // button17
             // 
             this.button17.ForeColor = System.Drawing.Color.Black;
-            this.button17.Location = new System.Drawing.Point(780, 17);
+            this.button17.Location = new System.Drawing.Point(872, 20);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(22, 23);
             this.button17.TabIndex = 13;
@@ -6645,7 +6649,7 @@ namespace TraXile
             // listBox3
             // 
             this.listBox3.FormattingEnabled = true;
-            this.listBox3.Location = new System.Drawing.Point(623, 43);
+            this.listBox3.Location = new System.Drawing.Point(715, 46);
             this.listBox3.Name = "listBox3";
             this.listBox3.Size = new System.Drawing.Size(151, 43);
             this.listBox3.TabIndex = 12;
@@ -6735,6 +6739,24 @@ namespace TraXile
             this.progressBar1.Size = new System.Drawing.Size(123, 20);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 14;
+            // 
+            // textBox12
+            // 
+            this.textBox12.Enabled = false;
+            this.textBox12.Location = new System.Drawing.Point(322, 48);
+            this.textBox12.Name = "textBox12";
+            this.textBox12.Size = new System.Drawing.Size(63, 20);
+            this.textBox12.TabIndex = 24;
+            this.textBox12.Text = "00:00:00";
+            // 
+            // textBox13
+            // 
+            this.textBox13.Enabled = false;
+            this.textBox13.Location = new System.Drawing.Point(322, 74);
+            this.textBox13.Name = "textBox13";
+            this.textBox13.Size = new System.Drawing.Size(63, 20);
+            this.textBox13.TabIndex = 25;
+            this.textBox13.Text = "23:59:59";
             // 
             // listViewNF1
             // 
@@ -7546,6 +7568,8 @@ namespace TraXile
         private System.Windows.Forms.Label lbl_filter;
         private System.Windows.Forms.PictureBox pictureBox32;
         private System.Windows.Forms.PictureBox pictureBox33;
+        private System.Windows.Forms.TextBox textBox13;
+        private System.Windows.Forms.TextBox textBox12;
     }
 }
 
