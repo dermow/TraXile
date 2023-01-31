@@ -2205,7 +2205,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -2794,7 +2794,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -3941,7 +3941,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -4406,7 +4406,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -4705,7 +4705,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -6315,15 +6315,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TraXile"
-        "ProductCode" = "8:{B66566DE-9634-4E89-B9A1-22264B17444D}"
-        "PackageCode" = "8:{49FAABC1-89D7-46FB-B12A-67C53D6BB889}"
+        "ProductCode" = "8:{B53F8C67-7BB7-4788-8937-A2F5E5C4EC9E}"
+        "PackageCode" = "8:{112DFEB5-7202-4A35-B681-849D32D8F689}"
         "UpgradeCode" = "8:{CA3D4BAB-946B-44EB-8393-F8DAABBD5441}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.1.13"
+        "ProductVersion" = "8:1.1.14"
         "Manufacturer" = "8:dermow"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
