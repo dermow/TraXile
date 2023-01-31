@@ -455,7 +455,7 @@ namespace TraXile
             results = new List<TrX_TrackedActivity>();
 
             DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, dt1.Hour, dt1.Minute, dt1.Second, _dateTimeFormatInfo.Calendar);
-            DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, dt1.Hour, dt1.Minute, dt1.Second, _dateTimeFormatInfo.Calendar);
+            DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, dt2.Hour, dt2.Minute, dt2.Second, _dateTimeFormatInfo.Calendar);
 
             _statsDate1 = date1;
             _statsDate2 = date2;
