@@ -454,8 +454,8 @@ namespace TraXile
             List<TrX_TrackedActivity> results;
             results = new List<TrX_TrackedActivity>();
 
-            DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, 0, 0, 0, _dateTimeFormatInfo.Calendar);
-            DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, 23, 59, 59, _dateTimeFormatInfo.Calendar);
+            DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, dt1.Hour, dt1.Minute, dt1.Second, _dateTimeFormatInfo.Calendar);
+            DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, dt1.Hour, dt1.Minute, dt1.Second, _dateTimeFormatInfo.Calendar);
 
             _statsDate1 = date1;
             _statsDate2 = date2;
@@ -496,6 +496,8 @@ namespace TraXile
             comboBox8.SelectedItem = "All";
             comboBox4.SelectedItem = "OR";
             comboBox9.SelectedItem = "=";
+            textBox12.Text = "00:00:00";
+            textBox13.Text = "23:59:59";
             textBox10.Text = "";
             listBox3.Items.Clear();
 
@@ -544,12 +546,6 @@ namespace TraXile
                 DateTime dt2 = li.End;
 
                 _statsDataSource = FilterActivitiesByTimeRange(dt1, dt2, _logic.ActivityHistory);
-
-                if (comboBox1.SelectedItem.ToString() != "Custom")
-                {
-                    dateTimePicker1.Value = dt1;
-                    dateTimePicker2.Value = dt2;
-                }
             }
             else
             {
@@ -559,8 +555,26 @@ namespace TraXile
                 switch (comboBox1.SelectedItem.ToString())
                 {
                     case "Custom":
-                        date1 = dateTimePicker1.Value;
-                        date2 = dateTimePicker2.Value;
+                        string s = $"{dateTimePicker1.Value.Date} {textBox12.Text.ToString()}";
+                       
+                        try
+                        {
+                            DateTime tmpDate1 = dateTimePicker1.Value.Date;
+                            DateTime tmpDate2 = tmpDate1.Add(TimeSpan.Parse(textBox12.Text));
+                            DateTime tmpDate3 = dateTimePicker2.Value.Date;
+                            DateTime tmpDate4 = tmpDate3.Add(TimeSpan.Parse(textBox13.Text));
+
+                            date1 = tmpDate2;
+                            date2 = tmpDate4;
+                        }
+                        catch(Exception ex)
+                        {
+                            _log.Error($"Could not add time to date filter: {ex.Message}");
+                            _log.Debug(ex.ToString());
+                            date1 = dateTimePicker1.Value;
+                            date2 = dateTimePicker2.Value;
+                        }
+                        
                         break;
                     case "Today":
                         date1 = DateTime.Now;
@@ -4799,11 +4813,32 @@ namespace TraXile
                 {
                     dateTimePicker1.Enabled = true;
                     dateTimePicker2.Enabled = true;
+                    textBox12.Enabled = true;
+                    textBox13.Enabled = true;
+                }
+                else if (comboBox1.SelectedItem.ToString().Contains("League:"))
+                {
+                    string sLeague = comboBox1.SelectedItem.ToString().Split(new string[] { "League: " }, StringSplitOptions.None)[1]
+                        .Split(new string[] { " (" }, StringSplitOptions.None)[0];
+                    TrX_LeagueInfo li = GetLeagueByName(sLeague);
+
+                    DateTime dt1 = li.Start;
+                    DateTime dt2 = li.End;
+
+                    if (comboBox1.SelectedItem.ToString() != "Custom")
+                    {
+                        dateTimePicker1.Value = dt1;
+                        dateTimePicker2.Value = dt2;
+                        textBox12.Text = dt1.TimeOfDay.ToString();
+                        textBox13.Text = dt2.TimeOfDay.ToString();
+                    }
                 }
                 else
                 {
                     dateTimePicker1.Enabled = false;
                     dateTimePicker2.Enabled = false;
+                    textBox12.Enabled = false;
+                    textBox13.Enabled = false;
                 }
             }
         }
