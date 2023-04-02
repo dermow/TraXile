@@ -890,15 +890,6 @@ namespace TraXile
                 "Advanced Uber-Lab"
             };
 
-            foreach (string s in _defaultMappings.HeistAreas)
-            {
-                string sName = s.Replace("'", "");
-                if (!_myStats.NumericStats.ContainsKey($"HeistsFinished_{sName}"))
-                    _myStats.NumericStats.Add($"HeistsFinished_{sName}", 0);
-                if (!_statNamesLong.ContainsKey($"HeistsFinished_{sName}"))
-                    _statNamesLong.Add($"HeistsFinished_{sName}", $"Heists done: {sName}");
-            }
-
             foreach (string s in labs)
             {
                 string sName = s.Replace("'", "");
@@ -906,34 +897,6 @@ namespace TraXile
                     _myStats.NumericStats.Add($"LabsCompleted_{sName}", 0);
                 if (!_statNamesLong.ContainsKey($"LabsCompleted_{sName}"))
                     _statNamesLong.Add($"LabsCompleted_{sName}", $"Labs completed: {sName}");
-            }
-
-            foreach (string s in _defaultMappings.MapAreas)
-            {
-                string sName = s.Replace("'", "");
-                if (!_myStats.NumericStats.ContainsKey($"MapsFinished_{sName}"))
-                    _myStats.NumericStats.Add($"MapsFinished_{sName}", 0);
-                if (!_statNamesLong.ContainsKey($"MapsFinished_{sName}"))
-                    _statNamesLong.Add($"MapsFinished_{sName}", $"Maps done: {sName}");
-            }
-
-            for (int i = 0; i <= 19; i++)
-            {
-                string sShort = $"MapTierFinished_T{i}";
-                string sLong = i > 0 ? ($"Maps done: T{i}") : "Maps done: Tier unknown";
-                if (!_myStats.NumericStats.ContainsKey(sShort))
-                    _myStats.NumericStats.Add(sShort, 0);
-                if (!_statNamesLong.ContainsKey(sShort))
-                    _statNamesLong.Add(sShort, sLong);
-            }
-
-            foreach (string s in _defaultMappings.SimulacrumAreas)
-            {
-                string sName = s.Replace("'", "");
-                if (!_myStats.NumericStats.ContainsKey($"SimulacrumFinished_{sName}"))
-                    _myStats.NumericStats.Add($"SimulacrumFinished_{sName}", 0);
-                if (!_statNamesLong.ContainsKey($"SimulacrumFinished_{sName}"))
-                    _statNamesLong.Add($"SimulacrumFinished_{sName}", $"Simulacrum done: {sName}");
             }
         }
 
@@ -3470,24 +3433,15 @@ namespace TraXile
                 if (activity.Type == ACTIVITY_TYPES.HEIST)
                 {
                     IncrementStat("TotalHeistsDone", activity.Started, 1);
-                    IncrementStat("HeistsFinished_" + activity.Area, activity.Started, 1);
                 }
                 else if (activity.Type == ACTIVITY_TYPES.MAP)
                 {
                     IncrementStat("TotalMapsDone", activity.Started, 1);
-                    IncrementStat("MapsFinished_" + activity.Area, activity.Started, 1);
-                    IncrementStat("MapTierFinished_T" + activity.MapTier.ToString(), activity.Started, 1);
 
                     if (activity.SideArea_ZanaMap != null)
                     {
                         IncrementStat("TotalMapsDone", activity.SideArea_ZanaMap.Started, 1);
-                        IncrementStat("MapsFinished_" + activity.SideArea_ZanaMap.Area, activity.SideArea_ZanaMap.Started, 1);
-                        IncrementStat("MapTierFinished_T" + activity.SideArea_ZanaMap.MapTier.ToString(), activity.SideArea_ZanaMap.Started, 1);
                     }
-                }
-                else if (activity.Type == ACTIVITY_TYPES.SIMULACRUM)
-                {
-                    IncrementStat("SimulacrumFinished_" + activity.Area, activity.Started, 1);
                 }
                 else if (activity.Type == ACTIVITY_TYPES.TEMPLE)
                 {
