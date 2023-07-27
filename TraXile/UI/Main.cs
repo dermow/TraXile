@@ -236,6 +236,7 @@ namespace TraXile
 
         // Setting: Mimimize to tray
         private bool _minimizeToTray;
+        private bool _uiFlagLeagueDashboard;
 
         /// <summary>
         /// Main Window Constructor
@@ -457,8 +458,7 @@ namespace TraXile
             DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, dt1.Hour, dt1.Minute, dt1.Second, _dateTimeFormatInfo.Calendar);
             DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, dt2.Hour, dt2.Minute, dt2.Second, _dateTimeFormatInfo.Calendar);
 
-            _statsDate1 = date1;
-            _statsDate2 = date2;
+          
 
             foreach (TrX_TrackedActivity act in source)
             {
@@ -546,6 +546,8 @@ namespace TraXile
                 DateTime dt2 = li.End;
 
                 _statsDataSource = FilterActivitiesByTimeRange(dt1, dt2, _logic.ActivityHistory);
+                _statsDate1 = dt1;
+                _statsDate2 = dt2;
             }
             else
             {
@@ -577,8 +579,9 @@ namespace TraXile
                         
                         break;
                     case "Today":
-                        date1 = DateTime.Now;
-                        date2 = DateTime.Now;
+                        DateTime date = DateTime.Now;
+                        date1 = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
+                        date2 = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 999);
                         break;
                     case "Last 24 hours":
                         date1 = DateTime.Now.AddHours(-24);
@@ -599,6 +602,8 @@ namespace TraXile
                 }
 
                 _statsDataSource = FilterActivitiesByTimeRange(date1, date2, _logic.ActivityHistory);
+                _statsDate1 = date1;
+                _statsDate2 = date2;
 
                 if (comboBox1.SelectedItem.ToString() != "Custom")
                 {
@@ -791,111 +796,18 @@ namespace TraXile
             }
         }
 
-        /// <summary>
-        /// Do main initialization
-        /// </summary>
-        private void Init()
+        private void InitCharts()
         {
-            _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            _log.Info("Application started");
+            List<Chart> leagueInfoCharts = new List<Chart>();
+            leagueInfoCharts.Add(chartLeagueActTime);
+            leagueInfoCharts.Add(chartLeagueMapsDone);
+            leagueInfoCharts.Add(chartLeagueMapT16);
+            leagueInfoCharts.Add(chartLeagueTotalActivities);
+            leagueInfoCharts.Add(chartLeagueAvgMap);
+            leagueInfoCharts.Add(chartLeagueAvgMapT16);
+            leagueInfoCharts.Add(chartLeagueDeath);
+            leagueInfoCharts.Add(chartLeagueCampaign);
 
-            Opacity = 0;
-            _mySettings.LoadFromXml();
-
-            _overlayTag1 = null;
-            _overlayTag2 = null;
-            _overlayTag3 = null;
-
-            ReadSettings();
-
-            // Backup restore mode?
-            try
-            {
-                DoBackupRestoreIfPrepared();
-            }
-            catch (Exception ex)
-            {
-                _restoreMode = true;
-                _restoreOk = false;
-                _failedRestoreReason = ex.Message;
-                _log.Error($"Restore failed: {ex.Message}");
-                _log.Debug(ex.ToString());
-            }
-
-            _allStatChartresults = new List<KeyValuePair<long, int>>();
-
-            _workerAllStats = new BackgroundWorker();
-            _workerAllStats.DoWork += _workerAllStats_DoWork;
-            _workerAllStats.RunWorkerCompleted += _workerAllStats_RunWorkerCompleted;
-
-            _workerAllStatsChart = new BackgroundWorker();
-            _workerAllStatsChart.DoWork += _workerAllStatsChart_DoWork;
-            _workerAllStatsChart.RunWorkerCompleted += _workerAllStatsChart_RunWorkerCompleted;
-            
-            _logic = new TrX_CoreLogic(_minimumTimeCap);
-
-            // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
-            _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
-            _dateTimeFormatInfo.Calendar = new GregorianCalendar();
-            _defaultMappings = new TrX_DefaultMappings();
-            _loadScreenWindow = new LoadScreen();
-
-            SaveVersion();
-            DownloadMetaData();
-            CheckForUpdate();
-            _UpdateCheckDone = true;
-            
-            _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
-            _logic.OnActivityFinished += Logic_OnActivityFinished;
-            _logic.OnTagsUpdated += Logic_OnTagsUpdated;
-            _logic.LabEnchantsReceived += _logic_LabEnchantsReceived;
-            _logic.OnActivityStarted += _logic_OnActivityStarted;
-            _logic.LabbieConnector.LabbieLogPath = ReadSetting("labbie.path", null);
-            _logic.Start();
-
-            // Data Sources
-            _dataSourceAllStats = new Dictionary<string, int>();
-            _filteredDataSourceAllStats = new Dictionary<string, int>();
-
-            // Init profit tracker
-            _profitTracking = new TrX_ProfitTracking(TrX_Static.LABDATA_XML_FULLPATH);
-            _profitBinding = new BindingSource();
-            _profitBinding.DataSource = _profitTracking.Data;
-            
-            dataGridView2.DataSource = _profitBinding.DataSource;
-            dataGridView2.ForeColor = Color.Black;
-            dataGridView2.Columns[5].ReadOnly = true;
-
-            UpdateProfitSummary();
-            SetProfitFilter();
-                
-            _lvmActlog = new TrX_ListViewManager(listViewActLog);
-          
-            _leagues = new List<TrX_LeagueInfo>();
-            _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
-            
-            _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
-
-            if (String.IsNullOrEmpty(_logic.ClientTxtPath))
-            {
-                FileSelectScreen fs = new FileSelectScreen(this)
-                {
-                    StartPosition = FormStartPosition.CenterParent,
-                    ShowInTaskbar = false
-                };
-                fs.ShowDialog();
-                _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
-            }
-
-            comboBoxShowMaxItems.SelectedItem = ReadSetting("actlog.maxitems", "500");
-            comboBox1.SelectedIndex = 0;
-            listViewActLog.Columns[0].Width = 120;
-            listViewActLog.Columns[1].Width = 50;
-            listViewActLog.Columns[2].Width = 110;
-            listViewActLog.Columns[3].Width = 100;
-            listViewActLog.Columns[4].Width = 50;
-            listViewTop10Maps.Columns[0].Width = 300;
-            
             chart1.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
             chart1.ChartAreas[0].AxisX.LineColor = Color.Red;
             chart1.ChartAreas[0].AxisY.LineColor = Color.Red;
@@ -913,6 +825,27 @@ namespace TraXile
             chart1.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
             chart1.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
             chart1.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
+
+            foreach(Chart chart in leagueInfoCharts)
+            {
+                chart.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
+                chart.ChartAreas[0].AxisX.LineColor = Color.Red;
+                chart.ChartAreas[0].AxisY.LineColor = Color.Red;
+                chart.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
+                chart.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
+                chart.ChartAreas[0].AxisX.Interval = 1;
+                chart.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Auto;
+                chart.ChartAreas[0].AxisX.IntervalOffset = 1;
+                chart.Series[0].XValueType = ChartValueType.Auto;
+                chart.Series[0].LabelForeColor = Color.White;
+                chart.Series[0].LabelBackColor = Color.Black;
+                chart.Series[0].LabelBorderColor = Color.Black;
+                chart.Series[0].Color = Color.White;
+                chart.Legends[0].Enabled = false;
+                chart.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+                chart.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
+                chart.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
+            }
 
             chartMapTierCount.BackColor = Color.Black;
             chartMapTierCount.ChartAreas[0].BackColor = Color.Black;
@@ -1040,6 +973,116 @@ namespace TraXile
             chartGlobalDashboard.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
             chartGlobalDashboard.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
             chartGlobalDashboard.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
+        }
+
+        /// <summary>
+        /// Do main initialization
+        /// </summary>
+        private void Init()
+        {
+            _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            _log.Info("Application started");
+
+            Opacity = 0;
+            _mySettings.LoadFromXml();
+
+            _overlayTag1 = null;
+            _overlayTag2 = null;
+            _overlayTag3 = null;
+
+            ReadSettings();
+
+            // Backup restore mode?
+            try
+            {
+                DoBackupRestoreIfPrepared();
+            }
+            catch (Exception ex)
+            {
+                _restoreMode = true;
+                _restoreOk = false;
+                _failedRestoreReason = ex.Message;
+                _log.Error($"Restore failed: {ex.Message}");
+                _log.Debug(ex.ToString());
+            }
+
+            _allStatChartresults = new List<KeyValuePair<long, int>>();
+
+            _workerAllStats = new BackgroundWorker();
+            _workerAllStats.DoWork += _workerAllStats_DoWork;
+            _workerAllStats.RunWorkerCompleted += _workerAllStats_RunWorkerCompleted;
+
+            _workerAllStatsChart = new BackgroundWorker();
+            _workerAllStatsChart.DoWork += _workerAllStatsChart_DoWork;
+            _workerAllStatsChart.RunWorkerCompleted += _workerAllStatsChart_RunWorkerCompleted;
+            
+            _logic = new TrX_CoreLogic(_minimumTimeCap);
+
+            // Fixing the DateTimeFormatInfo to Gregorian Calendar, to avoid wrong timestamps with other calendars
+            _dateTimeFormatInfo = DateTimeFormatInfo.GetInstance(new CultureInfo("en-CA"));
+            _dateTimeFormatInfo.Calendar = new GregorianCalendar();
+            _defaultMappings = new TrX_DefaultMappings();
+            _loadScreenWindow = new LoadScreen();
+
+            SaveVersion();
+            DownloadMetaData();
+            CheckForUpdate();
+            _UpdateCheckDone = true;
+            
+            _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
+            _logic.OnActivityFinished += Logic_OnActivityFinished;
+            _logic.OnTagsUpdated += Logic_OnTagsUpdated;
+            _logic.LabEnchantsReceived += _logic_LabEnchantsReceived;
+            _logic.OnActivityStarted += _logic_OnActivityStarted;
+            _logic.LabbieConnector.LabbieLogPath = ReadSetting("labbie.path", null);
+            _logic.Start();
+
+            // Data Sources
+            _dataSourceAllStats = new Dictionary<string, int>();
+            _filteredDataSourceAllStats = new Dictionary<string, int>();
+
+            // Init profit tracker
+            _profitTracking = new TrX_ProfitTracking(TrX_Static.LABDATA_XML_FULLPATH);
+            _profitBinding = new BindingSource();
+            _profitBinding.DataSource = _profitTracking.Data;
+            
+            dataGridView2.DataSource = _profitBinding.DataSource;
+            dataGridView2.ForeColor = Color.Black;
+            dataGridView2.Columns[5].ReadOnly = true;
+
+            UpdateProfitSummary();
+            SetProfitFilter();
+                
+            _lvmActlog = new TrX_ListViewManager(listViewActLog);
+          
+            _leagues = new List<TrX_LeagueInfo>();
+            _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
+            
+            _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
+
+            if (String.IsNullOrEmpty(_logic.ClientTxtPath))
+            {
+                FileSelectScreen fs = new FileSelectScreen(this)
+                {
+                    StartPosition = FormStartPosition.CenterParent,
+                    ShowInTaskbar = false
+                };
+                fs.ShowDialog();
+                _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
+            }
+
+            comboBoxShowMaxItems.SelectedItem = ReadSetting("actlog.maxitems", "500");
+            comboBox1.SelectedIndex = 0;
+            listViewActLog.Columns[0].Width = 120;
+            listViewActLog.Columns[1].Width = 50;
+            listViewActLog.Columns[2].Width = 110;
+            listViewActLog.Columns[3].Width = 100;
+            listViewActLog.Columns[4].Width = 50;
+            listViewMapsByArea.Columns[0].Width = 300;
+
+            comboBox10.SelectedItem = "5";
+
+            InitCharts();
 
             pictureBox10.Image = imageList2.Images[0];
             labelTrackingType.Text = "not tracking";
@@ -1097,6 +1140,7 @@ namespace TraXile
             _uiFlagGlobalDashboard = true;
             _uiFlagActivityListReset = true;
             _uiFlagAllStatsDashboard = true;
+            _uiFlagLeagueDashboard = true;
 
             // Set Tooltips. Mapping in UI/Trx_HelpDefinitions.cs
             foreach(KeyValuePair<string,string> kvp in TrX_HelpDefinitions.ToolTips)
@@ -1635,7 +1679,7 @@ namespace TraXile
         /// RenderTags in tracking tab
         /// </summary>
         /// <param name="b_reinit"></param>
-        private void RenderTagsForSummary(UI.SummaryWindow targetSummaryWindow, Dictionary<string,int> dict, bool b_reinit = false)
+        private void RenderTagsForSummary(UI.SummaryWindow targetSummaryWindow, Dictionary<string,int> dict, int total_count, bool b_reinit = false)
         {
             Control targetControl = targetSummaryWindow.groupBox2;
 
@@ -1646,7 +1690,7 @@ namespace TraXile
 
             int iOffsetX = 10;
             int ioffsetY = 20;
-            int iLabelWidth = 100;
+            int iLabelWidth = 120;
             int iMaxCols = 5;
 
             int iX = iOffsetX;
@@ -1671,7 +1715,12 @@ namespace TraXile
                     iCurrCols = 0;
                 }
 
-                lbl.Text = $"{tag.DisplayName}: {kvp.Value}";
+
+                double rate = ((double)kvp.Value / total_count);
+                double percent = rate * 100;
+                percent = Math.Round(percent, 1);
+
+                lbl.Text = $"{tag.DisplayName}: {kvp.Value} ({percent}%)";
                 lbl.Name = $"lbl_tag_{tag.ID}";
                 lbl.TextAlign = ContentAlignment.MiddleCenter;
                 lbl.BackColor = tag.BackColor;
@@ -2509,6 +2558,13 @@ namespace TraXile
                     if(_logic.CurrentLab != null && _currentLabrunControl != null)
                     {
                         _currentLabrunControl.UpdateInfo();
+                    }
+
+                    // League Stats
+                    if(_uiFlagLeagueDashboard)
+                    {
+                        RenderLeagueDashboard();
+                        _uiFlagLeagueDashboard = false;
                     }
 
                     // MAP Dashbaord
@@ -3398,6 +3454,193 @@ namespace TraXile
             }
         }
 
+        public void RenderLeagueDashboard()
+        {
+            // Get last 5 leagues
+            List<TrX_LeagueInfo> leagues, tmp;
+            leagues = new List<TrX_LeagueInfo>();
+            tmp = new List<TrX_LeagueInfo>();
+            tmp.AddRange(_leagues);
+            tmp.Reverse();
+            leagues = tmp.GetRange(0, Convert.ToInt32(comboBox10.SelectedItem.ToString()));
+            leagues.Reverse();
+
+            // Stats dict
+            Dictionary<TrX_LeagueInfo, double> totalActCount = new Dictionary<TrX_LeagueInfo, double>();
+            Dictionary<TrX_LeagueInfo, double> totalActTime = new Dictionary<TrX_LeagueInfo, double>();
+            Dictionary<TrX_LeagueInfo, double> totalMapsDone = new Dictionary<TrX_LeagueInfo, double>();
+            Dictionary<TrX_LeagueInfo, double> totalMapsDone16 = new Dictionary<TrX_LeagueInfo, double>();
+            Dictionary<TrX_LeagueInfo, double> avgMapDuration = new Dictionary<TrX_LeagueInfo, double>();
+            Dictionary<TrX_LeagueInfo, double> avgMapDuration16 = new Dictionary<TrX_LeagueInfo, double>();
+            Dictionary<TrX_LeagueInfo, double> deathCount = new Dictionary<TrX_LeagueInfo, double>();
+            Dictionary<TrX_LeagueInfo, double> timeInCampaign = new Dictionary<TrX_LeagueInfo, double>();
+
+            DateTime dt1, dt2;
+            long ts1, ts2;
+            foreach(TrX_LeagueInfo li in leagues)
+            {
+                dt1 = li.Start;
+                dt2 = li.End;
+                ts1 = ((DateTimeOffset)li.Start).ToUnixTimeSeconds();
+                ts2 = ((DateTimeOffset)li.End).ToUnixTimeSeconds();
+
+                List<TrX_TrackedActivity> _leagueActivities;
+                _leagueActivities = FilterActivitiesByTimeRange(dt1, dt2, _logic.ActivityHistory);
+
+
+                long totalActTimeLeague = 0;
+                long totalMapsCount = 0;
+                long totalMapsT16 = 0;
+                long totalMapDuration = 0;
+                long totalMapDuration16 = 0;
+                long durationValue = 0;
+                long campaignTime = 0;
+                int death = 0;
+                foreach(TrX_TrackedActivity act in _leagueActivities)
+                {
+                    if(act.TotalSeconds <= _timeCaps[act.Type])
+                    {
+                        durationValue = act.TotalSeconds;
+                    }
+                    else
+                    {
+                        durationValue = _timeCaps[act.Type];
+                    }
+
+                    totalActTimeLeague += durationValue;
+                    if(act.Type == ACTIVITY_TYPES.MAP)
+                    {
+                        totalMapsCount++;
+                        totalMapDuration += durationValue;
+                        if(act.AreaLevel >= 83)
+                        {
+                            totalMapsT16++;
+                            totalMapDuration16 += durationValue;
+                        }
+                    }
+
+                    if (act.Type == ACTIVITY_TYPES.CAMPAIGN)
+                    {
+                        campaignTime += durationValue;
+                    }
+
+                    death += act.DeathCounter;
+                }
+
+                totalActCount[li] = _leagueActivities.Count;
+                totalActTime[li] = totalActTimeLeague;
+                totalMapsDone[li] = totalMapsCount;
+                totalMapsDone16[li] = totalMapsT16;
+
+                if(totalMapsCount > 0)
+                {
+                    avgMapDuration[li] = totalMapDuration / totalMapsCount;
+                }
+                else
+                {
+                    avgMapDuration[li] = 0;
+                }
+
+                if(totalMapDuration16 > 0)
+                {
+                    avgMapDuration16[li] = totalMapDuration16 / totalMapsT16;
+                }
+                else
+                {
+                    avgMapDuration16[li] = 0;
+                }
+
+                deathCount[li] = death;
+                timeInCampaign[li] = campaignTime;
+            }
+
+            MethodInvoker mi = delegate
+            {
+                chartLeagueMapsDone.Series[0].Points.Clear();
+                chartLeagueTotalActivities.Series[0].Points.Clear();
+                chartLeagueActTime.Series[0].Points.Clear();
+                chartLeagueMapT16.Series[0].Points.Clear();
+                chartLeagueAvgMapT16.Series[0].Points.Clear();
+                chartLeagueAvgMap.Series[0].Points.Clear();
+                chartLeagueDeath.Series[0].Points.Clear();
+                chartLeagueCampaign.Series[0].Points.Clear();
+
+                foreach (KeyValuePair<TrX_LeagueInfo, double> kvp in totalMapsDone)
+                {
+                    chartLeagueMapsDone.Series[0].Points.AddXY(kvp.Key.Name, kvp.Value);
+
+                    DataPoint dp = chartLeagueMapsDone.Series[0].Points.Last();
+                    dp.Label = kvp.Value > 0 ? kvp.Value.ToString() : "";
+                }
+
+                foreach (KeyValuePair<TrX_LeagueInfo, double> kvp in totalMapsDone16)
+                {
+                    chartLeagueMapT16.Series[0].Points.AddXY(kvp.Key.Name, kvp.Value);
+
+                    DataPoint dp = chartLeagueMapT16.Series[0].Points.Last();
+                    dp.Label = kvp.Value > 0 ? kvp.Value.ToString() : "";
+                }
+
+                foreach (KeyValuePair<TrX_LeagueInfo, double> kvp in totalActCount)
+                {
+                    chartLeagueTotalActivities.Series[0].Points.AddXY(kvp.Key.Name, kvp.Value);
+
+                    DataPoint dp = chartLeagueTotalActivities.Series[0].Points.Last();
+                    dp.Label = kvp.Value > 0 ? kvp.Value.ToString() : "";
+                }
+
+                foreach (KeyValuePair<TrX_LeagueInfo, double> kvp in totalActTime)
+                {
+                    double hours = Math.Round(kvp.Value / 60 / 60, 1);
+
+                    chartLeagueActTime.Series[0].Points.AddXY(kvp.Key.Name, hours);
+
+                    DataPoint dp = chartLeagueActTime.Series[0].Points.Last();
+                    dp.Label = hours > 0 ? $"{hours} hours" : "";
+                }
+
+                foreach (KeyValuePair<TrX_LeagueInfo, double> kvp in avgMapDuration)
+                {
+                    double minutes = Math.Round(kvp.Value / 60, 1);
+
+                    chartLeagueAvgMap.Series[0].Points.AddXY(kvp.Key.Name, minutes);
+
+                    DataPoint dp = chartLeagueAvgMap.Series[0].Points.Last();
+                    dp.Label = minutes > 0 ? $"{minutes} minutes" : "";
+                }
+
+                foreach (KeyValuePair<TrX_LeagueInfo, double> kvp in avgMapDuration16)
+                {
+                    double minutes = Math.Round(kvp.Value / 60, 1);
+
+                    chartLeagueAvgMapT16.Series[0].Points.AddXY(kvp.Key.Name, minutes);
+
+                    DataPoint dp = chartLeagueAvgMapT16.Series[0].Points.Last();
+                    dp.Label = minutes > 0 ? $"{minutes} minutes" : "";
+                }
+
+                foreach (KeyValuePair<TrX_LeagueInfo, double> kvp in deathCount)
+                {
+                    chartLeagueDeath.Series[0].Points.AddXY(kvp.Key.Name, kvp.Value);
+
+                    DataPoint dp = chartLeagueDeath.Series[0].Points.Last();
+                    dp.Label = kvp.Value > 0 ? (kvp.Value).ToString() : "";
+                }
+
+                foreach (KeyValuePair<TrX_LeagueInfo, double> kvp in timeInCampaign)
+                {
+                    double hours = Math.Round(kvp.Value / 60 / 60, 1);
+
+                    chartLeagueCampaign.Series[0].Points.AddXY(kvp.Key.Name, hours);
+
+                    DataPoint dp = chartLeagueCampaign.Series[0].Points.Last();
+                    dp.Label = hours > 0 ? $"{hours} hours" : "";
+                }
+
+            };
+            BeginInvoke(mi);
+        }
+
         /// <summary>
         /// Update the mapping dashboard
         /// </summary>
@@ -3406,7 +3649,6 @@ namespace TraXile
             List<KeyValuePair<string, int>> tmpList = new List<KeyValuePair<string, int>>();
             List<KeyValuePair<string, int>> top10 = new List<KeyValuePair<string, int>>();
             Dictionary<string, int> tmpListTags = new Dictionary<string, int>();
-            List<KeyValuePair<string, int>> top10Tags = new List<KeyValuePair<string, int>>();
             Dictionary<string, int> countByArea = new Dictionary<string, int>();
             Dictionary<int, int> countByTier = new Dictionary<int, int>();
 
@@ -3445,13 +3687,12 @@ namespace TraXile
                     return pair1.Value.CompareTo(pair2.Value);
                 });
             tmpList.Reverse();
-            top10.AddRange(tmpList.GetRange(0, 10));
-            listViewTop10Maps.Items.Clear();
-            foreach (KeyValuePair<string, int> kvp in top10)
+            listViewMapsByArea.Items.Clear();
+            foreach (KeyValuePair<string, int> kvp in tmpList)
             {
                 ListViewItem lvi = new ListViewItem(kvp.Key);
                 lvi.SubItems.Add(kvp.Value.ToString());
-                listViewTop10Maps.Items.Add(lvi);
+                listViewMapsByArea.Items.Add(lvi);
             }
 
             // TAG CALC
@@ -3494,9 +3735,8 @@ namespace TraXile
                     return pair1.Value.CompareTo(pair2.Value);
                 });
             tmpList.Reverse();
-            top10Tags.AddRange(tmpList);
             listViewTaggingOverview.Items.Clear();
-            foreach (KeyValuePair<string, int> kvp in top10Tags)
+            foreach (KeyValuePair<string, int> kvp in tmpList)
             {
                 if (kvp.Value > 0)
                 {
@@ -4004,6 +4244,7 @@ namespace TraXile
             _uiFlagAllStatsDashboard = true;
             _uiFlagMapDashboard = true;
             _uiFlagStatisticsChart = true;
+            _uiFlagLeagueDashboard = true;
         }
 
         /// <summary>
@@ -4016,63 +4257,6 @@ namespace TraXile
                 //_lvmActlog.Clear();
                 _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
 
-            }
-            else if (textBox8.Text.Contains("tags=="))
-            {
-                List<string> itemNames = new List<string>();
-                try
-                {
-                    string[] sTagFilter = textBox8.Text.Split(new string[] { "==" }, StringSplitOptions.None)[1].Split(',');
-                    int iMatched = 0;
-                    foreach (TrX_TrackedActivity ta in _logic.ActivityHistory)
-                    {
-                        iMatched = 0;
-                        foreach (string tag in sTagFilter)
-                        {
-                            if (ta.HasTag(tag))
-                            {
-                                iMatched++;
-                            }
-                            else
-                            {
-                                iMatched = 0;
-                                break;
-                            }
-                        }
-                        if (iMatched > 0)
-                        {
-                            itemNames.Add(ta.UniqueID);
-                        }
-                    }
-                    _lvmActlog.FilterByNameList(itemNames);
-                }
-                catch { }
-            }
-            else if (textBox8.Text.Contains("tags="))
-            {
-                List<string> itemNames = new List<string>();
-                try
-                {
-                    string[] sTagFilter = textBox8.Text.Split('=')[1].Split(',');
-                    int iMatched = 0;
-                    foreach (TrX_TrackedActivity ta in _logic.ActivityHistory)
-                    {
-                        iMatched = 0;
-                        foreach (string tag in sTagFilter)
-                        {
-                            if (ta.HasTag(tag))
-                            {
-                                iMatched++;
-                            }
-                        }
-                        if (iMatched > 0)
-                        {
-                            itemNames.Add(ta.UniqueID);
-                        }
-                    }
-                    _lvmActlog.FilterByNameList(itemNames);
-                }
-                catch { }
             }
             else
             {
@@ -5207,7 +5391,7 @@ namespace TraXile
                 summary.AverageLabel.Text = avgDurationTS.ToString();
 
                 // Tags
-                RenderTagsForSummary(summary, dictLabelCount, false);
+                RenderTagsForSummary(summary, dictLabelCount, _lvmActlog.listView.SelectedItems.Count, false);
 
                 // Types
                 foreach(KeyValuePair<string, int> kvp in dictTypeCount)
@@ -5301,6 +5485,20 @@ namespace TraXile
                     this.ShowInTaskbar = false;
                 }
             }
+        }
+
+        private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            RenderLeagueDashboard();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            RenderLeagueDashboard();
+        }
+
+        private void comboBox10_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

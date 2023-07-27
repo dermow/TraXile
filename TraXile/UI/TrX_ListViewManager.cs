@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using static System.Windows.Forms.ListViewItem;
+using System;
 
 namespace TraXile
 {
@@ -62,30 +64,38 @@ namespace TraXile
         {
             List<string> names = new List<string>();
 
-            foreach (ListViewItem lvi in _masterList)
+            try
             {
-                if (lvi.Text.ToLower().Contains(s_filter.ToLower()))
+                foreach (ListViewItem lvi in _masterList)
                 {
-                    if (!names.Contains(lvi.Name))
+                    if (Regex.IsMatch(lvi.Text, s_filter))
                     {
-                        names.Add(lvi.Name);
-                    }
-                }
-                else
-                {
-                    foreach (ListViewSubItem si in lvi.SubItems)
-                    {
-                        if (si.Text.ToLower().Contains(s_filter.ToLower()))
+                        if (!names.Contains(lvi.Name))
                         {
-                            if (!names.Contains(lvi.Name))
+                            names.Add(lvi.Name);
+                        }
+                    }
+                    else
+                    {
+                        foreach (ListViewSubItem si in lvi.SubItems)
+                        {
+                            if (Regex.IsMatch(si.Text, s_filter))
                             {
-                                names.Add(lvi.Name);
+                                if (!names.Contains(lvi.Name))
+                                {
+                                    names.Add(lvi.Name);
+                                }
+                                continue;
                             }
-                            continue;
                         }
                     }
                 }
             }
+            catch(Exception ex)
+            {
+                
+            }
+           
             FilterByNameList(names);
         }
 

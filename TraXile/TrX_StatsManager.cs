@@ -159,6 +159,7 @@ namespace TraXile
             //Request HO time first
             string q1 = string.Format("SELECT min(stat_value) FROM tx_stats WHERE stat_name = '{0}' AND timestamp between {1} and {2}", stat_name, ts1, ts2);
             string q2 = string.Format("SELECT max(stat_value) FROM tx_stats WHERE stat_name = '{0}' AND timestamp between {1} and {2}", stat_name, ts1, ts2);
+
             SqliteDataReader dr1, dr2;
             dr1 = _myDB.GetSQLReader(q1);
             dr2 = _myDB.GetSQLReader(q2);
