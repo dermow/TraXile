@@ -579,8 +579,9 @@ namespace TraXile
                         
                         break;
                     case "Today":
-                        date1 = DateTime.Now;
-                        date2 = DateTime.Now;
+                        DateTime date = DateTime.Now;
+                        date1 = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
+                        date2 = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, 999);
                         break;
                     case "Last 24 hours":
                         date1 = DateTime.Now.AddHours(-24);
