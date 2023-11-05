@@ -35,6 +35,7 @@ namespace TraXile
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -107,12 +108,26 @@ namespace TraXile
             this.label6.TabIndex = 5;
             this.label6.Text = "trax::finish    = Manually finish current activity";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Noto Mono", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.Red;
+            this.label7.Location = new System.Drawing.Point(12, 158);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(879, 19);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "trax::split     = Manually finish current activity and start a new within the sam" +
+    "e area";
+            this.label7.Click += new System.EventHandler(this.label7_Click);
+            // 
             // ChatCommandHelp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(905, 176);
+            this.ClientSize = new System.Drawing.Size(1003, 195);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -135,5 +150,6 @@ namespace TraXile
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
     }
 }

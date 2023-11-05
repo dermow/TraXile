@@ -138,6 +138,10 @@ namespace TraXile
         private List<string> _sanctumAreas;
         public List<string> SanctumAreas => _sanctumAreas;
 
+        // TotA
+        private List<string> _totaAreas;
+        public List<string> TotAAreas => _totaAreas;
+
         // TrialMaster
         private List<string> _trialMasterAreas;
         public List<string> TrialMasterAreas => _trialMasterAreas;
@@ -177,6 +181,7 @@ namespace TraXile
                 lst.AddRange(VaalSideAreas);
                 lst.AddRange(LabTrialAreas);
                 lst.AddRange(SanctumAreas);
+                lst.AddRange(TotAAreas);
                 lst.Sort();
                 return lst;
             }
@@ -654,7 +659,13 @@ namespace TraXile
                 "Sanctum Archives",
                 "Sanctum Cathedral",
                 "Sanctum Necropolis",
-                "Sanctum Vaults"
+                "Sanctum Vaults",
+                "The Forbidden Sanctum"
+            };
+
+            _totaAreas = new List<string>
+            {
+                "The Halls of the Dead"
             };
 
             _vaalSideAreas = new List<string>

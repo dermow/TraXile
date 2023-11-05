@@ -292,6 +292,7 @@ namespace TraXile
             _labbieConnector.EnchantsReceived += _labbieConnector_EnchantsReceived;
             _labHistory = new List<TrX_TrackedLabrun>();
 
+
             InitDefaultTags();
             InitNumStats();
             ReadKnownPlayers();
@@ -794,24 +795,12 @@ namespace TraXile
                 { "TrialMasterTookReward", 0 },
                 { "TrialMasterVictory", 0 },
                 { "TrialMasterSuccess", 0 },
-                //{ "UberCortexTried", 0 },
-                //{ "UberCortexKilled", 0 },
-                //{ "UberElderTried", 0 },
-                //{ "UberElderKilled", 0 },
-                //{ "UberUberElderTried", 0 },
-                //{ "UberUberElderKilled", 0 },
-                //{ "UberMavenTried", 0 },
-                //{ "UberMavenKilled", 0 },
-                //{ "UberEaterTried", 0 },
-                //{ "UberEaterKilled", 0 },
-                //{ "UberExarchTried", 0 },
-                //{ "UberExarchKilled", 0 },
-                //{ "UberShaperTried", 0 },
-                //{ "UberShaperKilled", 0 },
-                //{ "UberSirusTried", 0 },
-                //{ "UberSirusKilled", 0 },
                 { "VeritaniaKilled", 0 },
                 { "VeritaniaStarted", 0 },
+                { "AncestorMatchesWon", 0 },
+                { "AncestorMatchesLost", 0 },
+                { "AncestorTournamentsWon", 0 },
+                { "AncestorTournamentsLost", 0 },
             };
 
             _statNamesLong = new Dictionary<string, string>
@@ -868,16 +857,10 @@ namespace TraXile
                 { "InfiniteHungerKilled", "Infinite Hunger killed" },
                 { "SanctumKilledLycia1", "Sanctum: Lycia 1 killed" },
                 { "SanctumKilledLycia2", "Sanctum: Lycia 2 killed" },
-                //{ "UberMavenTried", "Uber Maven tried" },
-                //{ "UberMavenKilled", "Uber Maven killed" },
-                //{ "UberEaterTried", "Uber Eater of Worlds tried" },
-                //{ "UberEaterKilled", "Uber Eater of Worlds killed" },
-                //{ "UberExarchTried", "Uber Searing Exarch tried" },
-                //{ "UberExarchKilled", "Uber Searing Exarch killed" },
-                //{ "UberShaperTried", "Uber Shaper tried" },
-                //{ "UberShaperKilled", "Uber Shaper killed" },
-                //{ "UberSirusTried", "Uber Sirus tried" },
-                //{ "UberSirusKilled", "Uber Sirus killed" },
+                { "AncestorMatchesWon", "Ancestor: Matches won" },
+                { "AncestorMatchesLost", "Ancestor: Matches lost" },
+                { "AncestorTournamentsWon", "Ancestor: Tournaments won" },
+                { "AncestorTournamentsLost", "Ancestor: Tournaments lost" }
             };
 
             labs = new List<string>
@@ -1013,72 +996,18 @@ namespace TraXile
         /// <returns></returns>
         private ACTIVITY_TYPES GetActTypeFromString(string s_type)
         {
-            switch (s_type)
+            ACTIVITY_TYPES returnType;
+
+            try
             {
-                case "map":
-                    return ACTIVITY_TYPES.MAP;
-                case "heist":
-                    return ACTIVITY_TYPES.HEIST;
-                case "simulacrum":
-                    return ACTIVITY_TYPES.SIMULACRUM;
-                case "labyrinth":
-                    return ACTIVITY_TYPES.LABYRINTH;
-                case "delve":
-                    return ACTIVITY_TYPES.DELVE;
-                case "temple":
-                    return ACTIVITY_TYPES.TEMPLE;
-                case "maven_invitation":
-                    return ACTIVITY_TYPES.MAVEN_INVITATION;
-                case "atziri":
-                    return ACTIVITY_TYPES.ATZIRI;
-                case "uber_atziri":
-                    return ACTIVITY_TYPES.UBER_ATZIRI;
-                case "elder_fight":
-                    return ACTIVITY_TYPES.ELDER_FIGHT;
-                case "shaper_fight":
-                    return ACTIVITY_TYPES.SHAPER_FIGHT;
-                case "maven_fight":
-                    return ACTIVITY_TYPES.MAVEN_FIGHT;
-                case "sirus_fight":
-                    return ACTIVITY_TYPES.SIRUS_FIGHT;
-                case "campaign":
-                    return ACTIVITY_TYPES.CAMPAIGN;
-                case "vaal_sidearea":
-                    return ACTIVITY_TYPES.VAAL_SIDEAREA;
-                case "abyssal_depths":
-                    return ACTIVITY_TYPES.ABYSSAL_DEPTHS;
-                case "lab_trial":
-                    return ACTIVITY_TYPES.LAB_TRIAL;
-                case "logbook":
-                    return ACTIVITY_TYPES.LOGBOOK;
-                case "logbook_side":
-                    return ACTIVITY_TYPES.LOGBOOK_SIDE;
-                case "catarina_fight":
-                    return ACTIVITY_TYPES.CATARINA_FIGHT;
-                case "safehouse":
-                    return ACTIVITY_TYPES.SAFEHOUSE;
-                case "breachstone":
-                    return ACTIVITY_TYPES.BREACHSTONE;
-                case "searing_exarch_fight":
-                    return ACTIVITY_TYPES.SEARING_EXARCH_FIGHT;
-                case "black_star_fight":
-                    return ACTIVITY_TYPES.BLACK_STAR_FIGHT;
-                case "infinite_hunger_fight":
-                    return ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT;
-                case "eater_of_worlds_fight":
-                    return ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT;
-                case "timeless_legion":
-                    return ACTIVITY_TYPES.TIMELESS_LEGION;
-                case "lake_of_kalandra":
-                    return ACTIVITY_TYPES.LAKE_OF_KALANDRA;
-                case "sanctum":
-                    return ACTIVITY_TYPES.SANCTUM;
-                case "trialmaster_fight":
-                    return ACTIVITY_TYPES.TRIALMASTER_FIGHT;
-                case "tanes_laboratory":
-                    return ACTIVITY_TYPES.TANES_LABORATORY;
+                returnType = (ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), s_type, true);
             }
-            return ACTIVITY_TYPES.OTHER;
+            catch
+            {
+                returnType = ACTIVITY_TYPES.OTHER;
+            }
+
+            return returnType;
         }
 
         /// <summary>
@@ -1406,6 +1335,24 @@ namespace TraXile
             return false;
         }
 
+        private void SplitCurrentActivity()
+        {
+            if (_currentActivity != null)
+            {
+                _log.Debug($"splitting activity {_currentActivity.UniqueID}");
+                
+                // set same level for next area
+                _nextAreaLevel = _currentActivity.AreaLevel;
+                
+                FinishActivity(_currentActivity, _currentActivity.Area, _currentActivity.Type, DateTime.Now);
+
+                if(_currentArea != _currentActivity.Area)
+                {
+                    _currentActivity.Pause();
+                }
+            }
+        }
+
         /// <summary>
         /// Process a command entered via ingame chat
         /// </summary>
@@ -1417,52 +1364,67 @@ namespace TraXile
             string sMain;
             string sArgs = "";
 
-            sMain = spl[0];
-
-            if (spl.Length > 1)
+            try
             {
-                sArgs = spl[1];
-            }
+                sMain = spl[0];
 
-            TrX_TrackedActivity currentAct = null;
-            if (_currentActivity != null)
-            {
-                if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
+                if (spl.Length > 1)
                 {
-                    currentAct = _currentActivity.SideArea_ZanaMap;
+                    sArgs = spl[1];
                 }
-                else
+
+                TrX_TrackedActivity currentAct = null;
+                if (_currentActivity != null)
                 {
-                    currentAct = _currentActivity;
+                    if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
+                    {
+                        currentAct = _currentActivity.SideArea_ZanaMap;
+                    }
+                    else
+                    {
+                        currentAct = _currentActivity;
+                    }
+                }
+
+                switch (sMain)
+                {
+                    case "tag":
+                        if (currentAct != null)
+                        {
+                            AddTagAutoCreate(sArgs, currentAct);
+                        }
+                        break;
+                    case "untag":
+                        if (currentAct != null)
+                        {
+                            RemoveTagFromActivity(sArgs, currentAct);
+                        }
+                        break;
+                    case "pause":
+                        PauseCurrentActivityOrSide();
+                        break;
+                    case "resume":
+                        ResumeCurrentActivityOrSide();
+                        break;
+                    case "split":
+                        SplitCurrentActivity();
+                        break;
+                    case "counter":
+                        string cmdArgs = sArgs;
+                        _log.Debug(sArgs);
+                        break;
+                    case "finish":
+                        if (currentAct != null && !_isMapZana)
+                        {
+                            FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, DateTime.Now);
+                        }
+                        break;
                 }
             }
-
-            switch (sMain)
+            catch(Exception ex)
             {
-                case "tag":
-                    if (currentAct != null)
-                    {
-                        AddTagAutoCreate(sArgs, currentAct);
-                    }
-                    break;
-                case "untag":
-                    if (currentAct != null)
-                    {
-                        RemoveTagFromActivity(sArgs, currentAct);
-                    }
-                    break;
-                case "pause":
-                    PauseCurrentActivityOrSide();
-                    break;
-                case "resume":
-                    ResumeCurrentActivityOrSide();
-                    break;
-                case "finish":
-                    if (currentAct != null && !_isMapZana)
-                    {
-                        FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, DateTime.Now);
-                    }
-                    break;
+                _log.Error($"Error handling chat command '{s_command}' -> {ex.Message}");
+                _log.Debug(ex.ToString());
             }
         }
 
@@ -1511,19 +1473,40 @@ namespace TraXile
             bTargetAreaIsLegion = _defaultMappings.TimelessLegionAreas.Contains(sTargetArea),
             bTargetAreaIsKalandra = _defaultMappings.LakeOfKalandraAreas.Contains(sTargetArea),
             bTargetAreaIsSanctum = _defaultMappings.SanctumAreas.Contains(sTargetArea),
-            bTargetAreaIsTrialmaster = _defaultMappings.TrialMasterAreas.Contains(sTargetArea);
+            bTargetAreaIsTrialmaster = _defaultMappings.TrialMasterAreas.Contains(sTargetArea),
+            bTargetAreaIsToTa = _defaultMappings.TotAAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
             IncrementStat("AreaChanges", ev.EventTime, 1);
 
+            // Re-Entered?
+            if(_currentActivity != null && _currentActivity.Area == sTargetArea && _currentActivity.InstanceEndpoint == _currentInstanceEndpoint)
+            {
+                _currentActivity.LastTimeEntered = ev.EventTime;
+                _log.Debug($"re-entered activity: {_currentActivity.UniqueID}");
+            }
+
             // Calculate Instance change based statistics:
             // ===========================================
 
             // Moving between two sanctums?
-            if(bSourceAreaIsSanctum && bTargetAreaIsSanctum)
+            if(bSourceAreaIsSanctum && bTargetAreaIsSanctum && _currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.SANCTUM)
             {
+                // Set the level to non-entering-area, so it will not be always level 1 
+                if(sTargetArea != "The Forbidden Sanctum")
+                {
+                    _currentActivity.AreaLevel = _nextAreaLevel;
+                }
+
+                // if moving between sacntums, do no further calculations.
                 return;
+            }
+
+            // Always show same ara for sanctums / after initial calculations
+            if(bTargetAreaIsSanctum)
+            {
+                sTargetArea = "The Forbidden Sanctum";
             }
 
             // Shaper
@@ -1738,6 +1721,10 @@ namespace TraXile
             else if (bTargetAreaIsTane)
             {
                 actType = ACTIVITY_TYPES.TANES_LABORATORY;
+            }
+            else if (bTargetAreaIsToTa)
+            {
+                actType = ACTIVITY_TYPES.ANCESTOR_TRIAL;
             }
 
             // Special handling for logbook cemetery + vaal temple
@@ -2126,7 +2113,6 @@ namespace TraXile
                 {
                     if (_currentActivity != null)
                     {
-
                         if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
                         {
                             _currentActivity.LastEnded = ev.EventTime;
@@ -2182,14 +2168,19 @@ namespace TraXile
                 }
             }
 
+            // Sanctum runs after sanctum league are tracked differently -> not started from inside map.
+            bool isOutsideSanctum = (ev.EventTime > new DateTime(2023, 4, 5));
+
             // Mechanisms that can be tracked with default logic:
             // One Area + Own instance
             bool enteringDefaultTrackableActivity =
                 bTargetAreaIsMap ||
                 bTargetAreaIsHeist ||
                 bTargetAreaIsSimu ||
-                //bTargetAreaIsLab ||
+                bTargetAreaIsLab ||
+                (bTargetAreaIsSanctum && isOutsideSanctum) ||
                 bTargetAreaMine ||
+                bTargetAreaIsToTa ||
                 bTargetAreaIsTane ||
                 bTargetAreaTemple ||
                 bTargetAreaIsMI ||

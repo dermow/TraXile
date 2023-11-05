@@ -261,7 +261,11 @@ namespace TraXile
         public DateTime Started
         {
             get { return _startTime; }
-            set { _startTime = value; }
+            set 
+            { 
+                _startTime = value;
+                _lastTimeEntered = value;
+            }
         }
 
         // Time the activity was last ended
@@ -323,6 +327,14 @@ namespace TraXile
         // number of pauses
         private int _pauseCount;
         public int PauseCount => _pauseCount;
+
+        // Last time entered
+        private DateTime _lastTimeEntered;
+        public DateTime LastTimeEntered
+        {
+            get {  return _lastTimeEntered; }
+            set { _lastTimeEntered = value; }
+        }
 
         /// <summary>
         /// Constructor

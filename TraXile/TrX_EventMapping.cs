@@ -82,6 +82,10 @@ namespace TraXile
         HARVEST,
         SANCTUM_LYCIA_1_KILLED,
         SANCTUM_LYCIA_2_KILLED,
+        ANCESTOR_TOURNAMENT_WON,
+        ANCESTOR_TOURNAMENT_LOST,
+        ANCESTOR_MATCH_WON,
+        ANCESTOR_MATCH_LOST
     }
 
     public class TrX_EventMapping
@@ -432,6 +436,40 @@ namespace TraXile
                 {"] Lycia, Unholy Heretic: I have such sights to show you...", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
                 {"] Lycia, Unholy Heretic: Beidat, give me your power!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
                 {"] Lycia, Unholy Heretic: Yes! The blood moon rises! Beidat, give me your power!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
+
+                // ANCESTOR: Lost Matches
+                {"] Navali: There is no shame in defeat... at least, not yet.", EVENT_TYPES.ANCESTOR_MATCH_LOST },
+                {"] Navali: Defeat is inevitable, as is the rematch.", EVENT_TYPES.ANCESTOR_MATCH_LOST },
+                {"] Navali: The Trial is not over. Not yet.", EVENT_TYPES.ANCESTOR_MATCH_LOST },
+                {"] Navali: You will have another chance in this Trial.", EVENT_TYPES.ANCESTOR_MATCH_LOST },
+
+                // ANCESTOR: Won Matches
+                {"] Navali: The outsider claims another victory!", EVENT_TYPES.ANCESTOR_MATCH_WON },
+                {"] Navali: Our mortal challenger wins!", EVENT_TYPES.ANCESTOR_MATCH_WON },
+                {"] Navali: The reigning Champion emerges triumphant once more!", EVENT_TYPES.ANCESTOR_MATCH_WON },
+                {"] Navali: The Trial continues, and the outsider moves forward!", EVENT_TYPES.ANCESTOR_MATCH_WON },
+
+                // ANCESTOR: Tournament won
+                {"] Navali: The tournament is over. The outsider... has won.", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The tournament is over. The outsider has done well.", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The tournament is over.", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: We have our new Champion... the outsider!", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The Witch is our new Champion!", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The Templar... is our new Champion.", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: Our proud son, the Marauder, is our new Champion.", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The Duelist is our new Champion!", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The Ranger has bested our warriors, and is now our new Champion!", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The Shadow has proven his skills, and become our Champion!", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The Scion is our new Champion!", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: Our Champion has defended his title.", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: Our Champion has defended her title.", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The reigning Champion has defended his title.", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+                {"] Navali: The reigning Champion has defended her title.", EVENT_TYPES.ANCESTOR_TOURNAMENT_WON },
+
+                // ANCESTOR: Tournament lost
+                {"] Navali: A painful defeat. Time to rest and recover for the next tournament.", EVENT_TYPES.ANCESTOR_TOURNAMENT_LOST },
+                {"] Navali: The war is over for the outsider.", EVENT_TYPES.ANCESTOR_TOURNAMENT_LOST },
+                {"] Navali: The outsider has been eliminated from the tournament.", EVENT_TYPES.ANCESTOR_TOURNAMENT_LOST },
 
                 // Campaign
                 { "] Sin: May a new dawn arise!", EVENT_TYPES.CAMPAIGN_FINISHED },
