@@ -21,9 +21,17 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-[[_TOC_]]
-
 # About the project
+TraXile is a tool that records activities and statistics for your Path of Exile gaming and allows you to 
+investigate, evaluate and visualize the collected data.
+
+# Features
+## Activity Tracking (Live and backwards)
+
+## Statistic collection
+
+## Data visualization
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
