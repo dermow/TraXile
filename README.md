@@ -85,8 +85,13 @@ ans also for all activities that are logged to your Client.txt. TraXile records 
 additonal data and information. It also records mechanics you encounter in your activity (harvest, expedition, blight...).
 
 #### Statistic collection
+Based on you tracked activities and other Events, TraXile calculates some statistics additional to your activities (Death Counter...)
 
 #### Data visualization
+Visualize your data using charts and tables. 
+
+#### Ingame Overlay
+A small overlay you can display and place in PoE.
 
 
 
