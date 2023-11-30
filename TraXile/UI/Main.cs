@@ -716,6 +716,8 @@ namespace TraXile
                 updateBranch = ReadSetting("metadata_updates_branch", TrX_Static.UPDATE_DEFAULT_BRANCH);
                 updateURL = $"{TrX_Static.METADATA_BASE_URL}/{updateBranch}/{TrX_Static.UPDATES_XML_FILE}";
 
+                _log.Info($"Update check url: {updateURL}");
+
                 WebClient webClient = new WebClient();
                 Uri uri = new Uri(updateURL);
                 string releases = webClient.DownloadString(uri);
@@ -794,6 +796,34 @@ namespace TraXile
             catch (Exception ex)
             {
                 _log.Error($"Could not check for Update: {ex.Message}");
+            }
+        }
+
+        private void CleanupMSIFiles()
+        {
+            string[] files = Directory.GetFiles($@"{TrX_Static.APPDATA_PATH}", "*.msi");
+            
+            foreach(string s in files)
+            {
+                _log.Info($"Found installer package: {s}");
+                
+                try
+                {
+                    FileInfo fi = new FileInfo(s);
+                    double fileAgeHours = (DateTime.Now - fi.LastWriteTime).TotalHours;
+                    if (fileAgeHours > 24)
+                    {
+                        _log.Info($"Age of {s} is {Math.Round(fileAgeHours, 1)} hours, deleting.");
+                        File.Delete(s);
+
+                        _log.Info($"Deleted: {s}");
+                    }
+                }
+                catch(Exception ex)
+                {
+                    _log.Error($"Error cleaning up {s}: {ex.Message}");
+                    _log.Debug(ex);
+                }
             }
         }
 
@@ -1028,6 +1058,7 @@ namespace TraXile
             SaveVersion();
             DownloadMetaData();
             CheckForUpdate();
+            CleanupMSIFiles();
             _UpdateCheckDone = true;
             
             _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;

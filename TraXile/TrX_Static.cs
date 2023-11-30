@@ -57,7 +57,8 @@ namespace TraXile
         public static string DEFAULT_THEME_NAME = "Dark";
 
         // MetaData URL
-        public static string METADATA_BASE_URL = "https://raw.githubusercontent.com/dermow/traxile-metadata";
+        //public static string METADATA_BASE_URL = "https://raw.githubusercontent.com/dermow/traxile-metadata";
+        public static string METADATA_BASE_URL = "https://traxile-backend.exile-tools.com";
 
         // Default Metadata Branch
         public static string METADATA_DEFAULT_BRANCH = "main";

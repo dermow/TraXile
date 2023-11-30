@@ -660,7 +660,8 @@ namespace TraXile
                 "Sanctum Cathedral",
                 "Sanctum Necropolis",
                 "Sanctum Vaults",
-                "The Forbidden Sanctum"
+                "The Forbidden Sanctum",
+                "Sanctum Mausoleum"
             };
 
             _totaAreas = new List<string>

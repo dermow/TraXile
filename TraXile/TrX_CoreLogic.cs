@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -1478,6 +1479,9 @@ namespace TraXile
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
+            // Sanctum runs after sanctum league are tracked differently -> not started from inside map.
+            bool isOutSideSanctumLeague = (ev.EventTime > new DateTime(2023, 4, 5));
+
             IncrementStat("AreaChanges", ev.EventTime, 1);
 
             // Re-Entered?
@@ -1490,8 +1494,14 @@ namespace TraXile
             // Calculate Instance change based statistics:
             // ===========================================
 
-            // Moving between two sanctums?
-            if(bSourceAreaIsSanctum && bTargetAreaIsSanctum && _currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.SANCTUM)
+            //Moving between two sanctums -handling in sanctum league?
+            if (bSourceAreaIsSanctum && bTargetAreaIsSanctum && !isOutSideSanctumLeague)
+            {
+                return;
+            }
+
+            // Moving between two sanctums - handling after sanctum league?
+            if (bSourceAreaIsSanctum && bTargetAreaIsSanctum && _currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.SANCTUM)
             {
                 // Set the level to non-entering-area, so it will not be always level 1 
                 if(sTargetArea != "The Forbidden Sanctum")
@@ -1504,7 +1514,7 @@ namespace TraXile
             }
 
             // Always show same ara for sanctums / after initial calculations
-            if(bTargetAreaIsSanctum)
+            if(bTargetAreaIsSanctum && isOutSideSanctumLeague)
             {
                 sTargetArea = "The Forbidden Sanctum";
             }
@@ -1800,7 +1810,7 @@ namespace TraXile
             }
 
             // Sanctum entered?
-            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && actType == ACTIVITY_TYPES.SANCTUM)
+            if (isOutSideSanctumLeague == false && _currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && actType == ACTIVITY_TYPES.SANCTUM)
             {
                 if (_currentActivity.SideArea_Sanctum == null)
                 {
@@ -2168,8 +2178,7 @@ namespace TraXile
                 }
             }
 
-            // Sanctum runs after sanctum league are tracked differently -> not started from inside map.
-            bool isOutsideSanctum = (ev.EventTime > new DateTime(2023, 4, 5));
+           
 
             // Mechanisms that can be tracked with default logic:
             // One Area + Own instance
@@ -2178,7 +2187,7 @@ namespace TraXile
                 bTargetAreaIsHeist ||
                 bTargetAreaIsSimu ||
                 bTargetAreaIsLab ||
-                (bTargetAreaIsSanctum && isOutsideSanctum) ||
+                (bTargetAreaIsSanctum && isOutSideSanctumLeague) ||
                 bTargetAreaMine ||
                 bTargetAreaIsToTa ||
                 bTargetAreaIsTane ||
@@ -3045,6 +3054,18 @@ namespace TraXile
                     case EVENT_TYPES.SANCTUM_LYCIA_1_KILLED:
                         IncrementStat("SanctumKilledLycia1", ev.EventTime);
                         break;
+                    case EVENT_TYPES.ANCESTOR_MATCH_LOST:
+                        IncrementStat("AncestorMatchesLost", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.ANCESTOR_MATCH_WON:
+                        IncrementStat("AncestorMatchesWon", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.ANCESTOR_TOURNAMENT_LOST:
+                        IncrementStat("AncestorTournamentsLost", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.ANCESTOR_TOURNAMENT_WON:
+                        IncrementStat("AncestorTournamentsWon", ev.EventTime);
+                        break;
                 }
 
                 // Sometimes conqueror fire their death speech twice...
@@ -3073,6 +3094,7 @@ namespace TraXile
             }
             catch (Exception ex)
             {
+                _log.Error($"Error handling event: {ex.Message}.");
                 _log.Debug(ex.ToString());
             }
         }
@@ -3140,7 +3162,7 @@ namespace TraXile
         /// <param name="dtNextMapStarted"></param>
         public void FinishActivity(TrX_TrackedActivity activity, string sNextMap, ACTIVITY_TYPES sNextMapType, DateTime dtNextMapStarted, bool stats_only = false)
         {
-            _log.Debug($"Finishing activity: {activity.UniqueID}");
+            _log.Debug($"Finishing activity: {activity.UniqueID} | Started: {activity.Started}");
             _currentActivity.StopStopWatch();
 
             bool isValid = true;

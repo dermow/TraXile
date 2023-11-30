@@ -56,15 +56,27 @@ namespace TraXile
             _data.Columns.Add("Time", System.Type.GetType("System.DateTime"));
             _data.Columns.Add("Enchant", System.Type.GetType("System.String"));
             _data.Columns.Add("Base", System.Type.GetType("System.String"));
-            _data.Columns.Add("Base Cost (Divines", System.Type.GetType("System.Double"));
+            _data.Columns.Add("Base Cost (Divines)", System.Type.GetType("System.Double"));
             _data.Columns.Add("Sold For (Divines)", System.Type.GetType("System.Double"));
             _data.Columns.Add("Profit (Divines)", System.Type.GetType("System.Double"));
             _data.Columns.Add("State", System.Type.GetType("System.String"));
             _data.Columns.Add("Note", System.Type.GetType("System.String"));
 
-
             if (File.Exists(_xmlSavePath))
             {
+                // Patch Exalts -> Divines
+                StreamReader r = new StreamReader(_xmlSavePath);
+                string xmlstr = r.ReadToEnd();
+
+                if(xmlstr.Contains("Exalts"))
+                {
+                    xmlstr = xmlstr.Replace("Exalts", "Divines");
+                    r.Close();
+                    StreamWriter w = new StreamWriter(_xmlSavePath);
+                    w.Write(xmlstr);
+                    w.Close();
+                }
+
                 _data.ReadXml(_xmlSavePath);
                 Calculate();
             }
