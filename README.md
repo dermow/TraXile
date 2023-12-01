@@ -1,19 +1,6 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING!<div id="top"></div>
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
+
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -22,7 +9,7 @@
 [![MIT License][license-shield]][license-url]
 
 # Table of Contents
-[About the project](#About the project)
+[About the project] (#About the project)
 
 # About the project
 TraXile is a tool that records activities and statistics for your Path of Exile gaming and allows you to 
@@ -30,10 +17,32 @@ investigate, evaluate and visualize the collected data.
 
 # Features
 ## Activity Tracking (Live and backwards)
+Track time and other stats for your ingame activities (maps, heist contracts, sanctum...). Works for live tracking (TraXile open while you are playing)
+and backwards for all data in your Client.txt logfile.
 
 ## Statistic collection
+Collect statistics around the Game.
 
 ## Data visualization
+Visualize collected statistics in charts and tables.
+
+# Getting started
+## Installation
+Download the latest release and execute the MSI-Installer file.
+
+## First steps
+After the first start, you have to select the path to your Client.txt logfile. The most common default paths listed below:
+
+|   |   |   |   |   |
+|---|---|---|---|---|
+| Windows (Steam)  | <SteamLibrary>\steamapps\commmon\Logs\Client.txt  |
+|   |   |   |   |   |
+|   |   |   |   |   |
+
+## Update
+You will be automatically notified when a new version is available. Just follow the instructions to update.
+If this is not working for any reason, you can always download the latest relase here and install it manually.
+
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
