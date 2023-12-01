@@ -33,11 +33,11 @@ Download the latest release and execute the MSI-Installer file.
 ## First steps
 After the first start, you have to select the path to your Client.txt logfile. The most common default paths listed below:
 
-|   |   |   |   |   |
-|---|---|---|---|---|
-| Windows (Steam)  | <SteamLibrary>\steamapps\commmon\Logs\Client.txt  |
-|   |   |   |   |   |
-|   |   |   |   |   |
+|   |   |   |
+|---|---|---|
+| Windows (Steam)  | <SteamLibrary>\steamapps\commmon\Path of Exile\Logs\Client.txt  | C:\Steam\steamapps\common\Path of Exile\logs\Client.txt |
+| Windows (Standalone)  | <InstallDirectory>\Logs\Client.txt  | C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt |
+
 
 ## Update
 You will be automatically notified when a new version is available. Just follow the instructions to update.
