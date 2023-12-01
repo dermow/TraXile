@@ -196,6 +196,12 @@
     <Compile Include="UI\DataGridViewNF.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\MinimalStopWatchOverlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MinimalStopWatchOverlay.Designer.cs">
+      <DependentUpon>MinimalStopWatchOverlay.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\StopWatchOverlay.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -304,6 +310,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UI\MinimalStopWatchOverlay.resx">
+      <DependentUpon>MinimalStopWatchOverlay.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\SearchHelp.resx">
       <DependentUpon>SearchHelp.cs</DependentUpon>
     </EmbeddedResource>
