@@ -64,7 +64,7 @@ As I am developing TraXile completely in my sparetime, I am not paying for a Cod
 ### Is this app sending any data in the Internet?
 Only internet connections are the check for a new version and the download of some metadata (league start and end-dates for example)
 
-### I ran two maps of the same area - and TraXile conted them as one map?
+### I ran two maps of the same area - and TraXile counted them as one map?
 This could happen if you are running the same map multiple time in a row, and randomly two maps in a row gets the same server instance. In that case TraXile has no chance to 
 seperate this maps automatically. There is an ingame chat command "trax::split" you could use to solve this (if it is very important for you).
 
