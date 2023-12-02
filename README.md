@@ -8,6 +8,13 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
+
+<div align="center">
+  <a href="https://github.com/github_username/repo_name">
+    <img src="https://dev.traxile.com/wp-content/uploads/2021/10/traxile-logo.png" alt="Logo">
+  </a>
+</div>
+
 # Table of Contents
 [About the project] (#About the project)
 
