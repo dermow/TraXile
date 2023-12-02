@@ -20,7 +20,7 @@
    * [About](#About)
    * [Features](#Features)
    * [Installation](#Installation)
-   * [First Steps](#First_Steps)
+   * [First Steps](#First-Steps)
     
 <!--te-->
 
