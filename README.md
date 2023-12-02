@@ -51,20 +51,20 @@ You will be automatically notified when a new version is available. Just follow 
 If this is not working for any reason, you can always download the latest relase here and install it manually.
 
 # FAQ
-## Why can´t the data be filtered by character name?
+### Why can´t the data be filtered by character name?
 Unfornately, the name of your in character is not written to the Client logfile.
 
-## Are only activities tracked if I have TraXile running while playing?
+### Are only activities tracked if I have TraXile running while playing?
 No, TraXile reads all data that is in your Client.txt logfile, so even If TraXile is not running, your maps and stuff like that will still appear in history. But you have a bunch of
 options while TraXile is running - for exampel you can manually pause the stopwatch.
 
-## Why is Windows warning me during the installation?
+### Why is Windows warning me during the installation?
 As I am developing TraXile completely in my sparetime, I am not paying for a Code Signing certificate, which is needed to be a trusted developer for Windows.
 
-## Is this app sending any data in the Internet?
+### Is this app sending any data in the Internet?
 Only internet connections are the check for a new version and the download of some metadata (league start and end-dates for example)
 
-## I ran two maps of the same area - and TraXile conted them as one map?
+### I ran two maps of the same area - and TraXile conted them as one map?
 This could happen if you are running the same map multiple time in a row, and randomly two maps in a row gets the same server instance. In that case TraXile has no chance to 
 seperate this maps automatically. There is an ingame chat command "trax::split" you could use to solve this (if it is very important for you).
 
