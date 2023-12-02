@@ -44,10 +44,20 @@ After the first start, you have to select the path to your Client.txt logfile. T
 |---|---|---|
 | Windows (Steam)  | <SteamLibrary>\steamapps\commmon\Path of Exile\Logs\Client.txt  | C:\Steam\steamapps\common\Path of Exile\logs\Client.txt |
 | Windows (Standalone)  | <InstallDirectory>\Logs\Client.txt  | C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt |
+| Mac OS (with Crossover or similar)  | /Users/YOUR_USERNAME/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt  | /Users/mow/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt |
 
 ## Update
 You will be automatically notified when a new version is available. Just follow the instructions to update.
 If this is not working for any reason, you can always download the latest relase here and install it manually.
+
+# FAQ
+## Why can´t the data be filtered by character name?
+Unfornately, the name of your in character is not written to the Client logfile.
+
+## Are only activities tracked if I have TraXile running while playing?
+No, TraXile reads all data that is in your Client.txt logfile, so even If TraXile is not running, your maps and stuff like that will still appear in history. But you have a bunch of
+options while TraXile is running - for exampel you can manually pause the stopwatch.
+
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
