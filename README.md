@@ -18,6 +18,7 @@
    * [About](#About)
    * [Features](#Features)
    * [Getting Started](#Getting-Started)
+        * [Video](#Video)
         * [Installation](#Installation)
         * [First Steps](#First-Steps)
         * [Update](#Update)
