@@ -19,8 +19,11 @@
 <!--ts-->
    * [About](#About)
    * [Features](#Features)
-   * [Installation](#Installation)
-   * [First Steps](#First-Steps)
+   * [Getting Started](#Getting-Started)
+        * [Installation](#Installation)
+        * [First Steps](#First-Steps)
+        * [Update](#Update)
+   * [FAQ](#FAQ)
     
 <!--te-->
 
@@ -39,10 +42,11 @@ Collect statistics around the Game.
 ## Data visualization
 Visualize collected statistics in charts and tables.
 
-# Installation
+# Getting Started
+## Installation
 Download the latest release and execute the MSI-Installer file.
 
-# First steps
+## First steps
 After the first start, you have to select the path to your Client.txt logfile. The most common default paths listed below:
 
 | Client  | Path | Example |
