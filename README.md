@@ -1,13 +1,11 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 
-
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-
 
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
@@ -24,7 +22,6 @@
         * [First Steps](#First-Steps)
         * [Update](#Update)
    * [FAQ](#FAQ)
-    
 <!--te-->
 
 # About
@@ -43,6 +40,10 @@ Collect statistics around the Game.
 Visualize collected statistics in charts and tables.
 
 # Getting Started
+## Video
+You can check out my introduction video to get started:
+https://www.youtube.com/watch?v=jZ8eiCNOiM4
+
 ## Installation
 Download the latest release and execute the MSI-Installer file.
 
@@ -79,6 +80,9 @@ Only internet connections are the check for a new version and the download of so
 ### I ran two maps of the same area - and TraXile counted them as one map?
 This could happen if you are running the same map multiple time in a row, and randomly two maps in a row gets the same server instance. In that case TraXile has no chance to 
 seperate this maps automatically. There is an ingame chat command "trax::split" you could use to solve this (if it is very important for you).
+
+### Why isn´t that a web based appliation?
+Because TraXile permanently reads you Client.txt logfile - thats much easier with a desktop application.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
