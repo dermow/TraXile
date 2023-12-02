@@ -17,7 +17,7 @@
 
 # Table of Contents
 <!--ts-->
-   * [Installation](#installation)
+   * [About the project](#About the project)
    * [Usage](#usage)
       * [STDIN](#stdin)
       * [Local files](#local-files)
