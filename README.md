@@ -27,7 +27,8 @@
 
 # About
 TraXile is a tool that records activities and statistics for your Path of Exile gaming and allows you to 
-investigate, evaluate and visualize the collected data.
+investigate, evaluate and visualize the collected data. That works for new activities while you have TraXile running, but also for 
+activities in the past based on your logfile.
 
 # Features
 ## Activity Tracking (Live and backwards)
@@ -76,7 +77,7 @@ options while TraXile is running - for exampel you can manually pause the stopwa
 ### Why is Windows warning me during the installation?
 As I am developing TraXile completely in my sparetime, I am not paying for a Code Signing certificate, which is needed to be a trusted developer for Windows.
 
-### Is this app sending any data in the Internet?
+### Is this app sending any data to the Internet?
 Only internet connections are the check for a new version and the download of some metadata (league start and end-dates for example)
 
 ### I ran two maps of the same area - and TraXile counted them as one map?

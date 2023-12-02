@@ -491,7 +491,7 @@ namespace TraXile
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage15 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel30 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel22 = new System.Windows.Forms.Panel();
+            this.pnl_deprecated = new System.Windows.Forms.Panel();
             this.panel23 = new System.Windows.Forms.Panel();
             this.label53 = new System.Windows.Forms.Label();
             this.label54 = new System.Windows.Forms.Label();
@@ -635,6 +635,8 @@ namespace TraXile
             this.linkLabel5 = new System.Windows.Forms.LinkLabel();
             this.lbl_filter = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.pnl_deprecated_1 = new System.Windows.Forms.Panel();
+            this.lbl_deprecated_1 = new System.Windows.Forms.Label();
             this.tabCtl1.SuspendLayout();
             this.tabPageTracking.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -813,6 +815,7 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox33)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox32)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox30)).BeginInit();
+            this.pnl_deprecated_1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabCtl1
@@ -5723,6 +5726,7 @@ namespace TraXile
             // 
             // tabPage14
             // 
+            this.tabPage14.Controls.Add(this.pnl_deprecated_1);
             this.tabPage14.Controls.Add(this.tabControl1);
             this.tabPage14.Location = new System.Drawing.Point(4, 25);
             this.tabPage14.Name = "tabPage14";
@@ -5737,10 +5741,10 @@ namespace TraXile
             this.tabControl1.Controls.Add(this.tabPage15);
             this.tabControl1.Controls.Add(this.tabPage17);
             this.tabControl1.Controls.Add(this.tabPage16);
-            this.tabControl1.Location = new System.Drawing.Point(3, 3);
+            this.tabControl1.Location = new System.Drawing.Point(3, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1103, 682);
+            this.tabControl1.Size = new System.Drawing.Size(1103, 658);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage15
@@ -5749,7 +5753,7 @@ namespace TraXile
             this.tabPage15.Location = new System.Drawing.Point(4, 22);
             this.tabPage15.Name = "tabPage15";
             this.tabPage15.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage15.Size = new System.Drawing.Size(1095, 656);
+            this.tabPage15.Size = new System.Drawing.Size(1095, 632);
             this.tabPage15.TabIndex = 0;
             this.tabPage15.Text = "Lab runs";
             this.tabPage15.UseVisualStyleBackColor = true;
@@ -5758,7 +5762,7 @@ namespace TraXile
             // 
             this.tableLayoutPanel30.ColumnCount = 1;
             this.tableLayoutPanel30.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel30.Controls.Add(this.panel22, 0, 4);
+            this.tableLayoutPanel30.Controls.Add(this.pnl_deprecated, 0, 4);
             this.tableLayoutPanel30.Controls.Add(this.panel23, 0, 1);
             this.tableLayoutPanel30.Controls.Add(this.label53, 0, 3);
             this.tableLayoutPanel30.Controls.Add(this.label54, 0, 0);
@@ -5772,18 +5776,18 @@ namespace TraXile
             this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
             this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
             this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel30.Size = new System.Drawing.Size(1089, 650);
+            this.tableLayoutPanel30.Size = new System.Drawing.Size(1089, 626);
             this.tableLayoutPanel30.TabIndex = 0;
             // 
-            // panel22
+            // pnl_deprecated
             // 
-            this.panel22.AutoScroll = true;
-            this.panel22.AutoSize = true;
-            this.panel22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel22.Location = new System.Drawing.Point(3, 84);
-            this.panel22.Name = "panel22";
-            this.panel22.Size = new System.Drawing.Size(1083, 563);
-            this.panel22.TabIndex = 0;
+            this.pnl_deprecated.AutoScroll = true;
+            this.pnl_deprecated.AutoSize = true;
+            this.pnl_deprecated.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnl_deprecated.Location = new System.Drawing.Point(3, 84);
+            this.pnl_deprecated.Name = "pnl_deprecated";
+            this.pnl_deprecated.Size = new System.Drawing.Size(1083, 539);
+            this.pnl_deprecated.TabIndex = 0;
             // 
             // panel23
             // 
@@ -7253,6 +7257,26 @@ namespace TraXile
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 14;
             // 
+            // pnl_deprecated_1
+            // 
+            this.pnl_deprecated_1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.pnl_deprecated_1.Controls.Add(this.lbl_deprecated_1);
+            this.pnl_deprecated_1.Location = new System.Drawing.Point(3, 0);
+            this.pnl_deprecated_1.Name = "pnl_deprecated_1";
+            this.pnl_deprecated_1.Size = new System.Drawing.Size(1096, 21);
+            this.pnl_deprecated_1.TabIndex = 1;
+            // 
+            // lbl_deprecated_1
+            // 
+            this.lbl_deprecated_1.AutoSize = true;
+            this.lbl_deprecated_1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbl_deprecated_1.Location = new System.Drawing.Point(0, 0);
+            this.lbl_deprecated_1.Name = "lbl_deprecated_1";
+            this.lbl_deprecated_1.Size = new System.Drawing.Size(599, 13);
+            this.lbl_deprecated_1.TabIndex = 0;
+            this.lbl_deprecated_1.Text = "This feature is deprecated and will be removed in one of the next releases! Make " +
+    "sure to save your data if you want to keep it!";
+            // 
             // Main
             // 
             this.AcceptButton = this.buttonStartSearch;
@@ -7512,6 +7536,8 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox33)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox32)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox30)).EndInit();
+            this.pnl_deprecated_1.ResumeLayout(false);
+            this.pnl_deprecated_1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -7780,7 +7806,7 @@ namespace TraXile
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage15;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel30;
-        private System.Windows.Forms.Panel panel22;
+        private System.Windows.Forms.Panel pnl_deprecated;
         private System.Windows.Forms.TabPage tabPage16;
         private System.Windows.Forms.Panel panel23;
         private System.Windows.Forms.Label label53;
@@ -8065,6 +8091,8 @@ namespace TraXile
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label157;
         private System.Windows.Forms.ComboBox comboBox10;
+        private System.Windows.Forms.Panel pnl_deprecated_1;
+        private System.Windows.Forms.Label lbl_deprecated_1;
     }
 }
 

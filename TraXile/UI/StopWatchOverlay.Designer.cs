@@ -43,9 +43,9 @@ namespace TraXile
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -234,17 +234,16 @@ namespace TraXile
             this.tableLayoutPanel3.Size = new System.Drawing.Size(90, 58);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
-            // label5
+            // label7
             // 
-            this.label5.AutoSize = true;
-            this.label5.BackColor = System.Drawing.Color.OrangeRed;
-            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(3, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(84, 19);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "tag_1";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label7.AutoSize = true;
+            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label7.Location = new System.Drawing.Point(3, 38);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(84, 20);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "tag_3";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label6
             // 
@@ -258,16 +257,17 @@ namespace TraXile
             this.label6.Text = "tag_2";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label7
+            // label5
             // 
-            this.label7.AutoSize = true;
-            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.Location = new System.Drawing.Point(3, 38);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(84, 20);
-            this.label7.TabIndex = 2;
-            this.label7.Text = "tag_3";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.OrangeRed;
+            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label5.Location = new System.Drawing.Point(3, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(84, 19);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "tag_1";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // StopWatchOverlay
             // 

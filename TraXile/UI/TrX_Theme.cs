@@ -83,8 +83,11 @@ namespace TraXile
 
             foreach (Control cnt in GetAll(control, typeof(Panel)))
             {
-                cnt.BackColor = _mainBackgroundColor;
-                cnt.ForeColor = _mainFontColor;
+                if(!cnt.Name.Contains("pnl_"))
+                {
+                    cnt.BackColor = _mainBackgroundColor;
+                    cnt.ForeColor = _mainFontColor;
+                }
             }
 
             foreach (Control cnt in GetAll(control, typeof(TableLayoutPanel)))
