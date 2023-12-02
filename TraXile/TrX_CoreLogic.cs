@@ -1128,7 +1128,7 @@ namespace TraXile
             while (!_exit)
             {
                 Thread.Sleep(1000);
-                if (_clientTxtPath != null)
+                if (!String.IsNullOrEmpty(_clientTxtPath))
                 {
                     ParseLogFile();
                 }

@@ -1,12 +1,5 @@
-<div id="top"></div>
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+<a name="readme-top"></a>
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -14,173 +7,85 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-<!-- PROJECT LOGO -->
-<br />
 <div align="center">
   <a href="https://github.com/github_username/repo_name">
     <img src="https://dev.traxile.com/wp-content/uploads/2021/10/traxile-logo.png" alt="Logo">
   </a>
-
-<h3 align="center">TraXile</h3>
-
-  <p align="center">
-    A tool that collects statistics about your gaming in Path of Exile. The main purpose is to help you optimizing your
-    gaming strategies by offering data like average durations, encounters and so on.
-    <br />
-    <br />
-    Â·
-    <a href="https://github.com/detmow/TraXile/issues">Report Bug</a>
-    Â·
-    <a href="https://github.com/dermow/TraXile/issues">Request Feature</a>
-  </p>
 </div>
 
+# Table of Contents
+<!--ts-->
+   * [About](#About)
+   * [Features](#Features)
+   * [Getting Started](#Getting-Started)
+        * [Video](#Video)
+        * [Installation](#Installation)
+        * [First Steps](#First-Steps)
+        * [Update](#Update)
+   * [FAQ](#FAQ)
+<!--te-->
 
+# About
+TraXile is a tool that records activities and statistics for your Path of Exile gaming and allows you to 
+investigate, evaluate and visualize the collected data. That works for new activities while you have TraXile running, but also for 
+activities in the past based on your logfile.
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+# Features
+## Activity Tracking (Live and backwards)
+Track time and other stats for your ingame activities (maps, heist contracts, sanctum...). Works for live tracking (TraXile open while you are playing)
+and backwards for all data in your Client.txt logfile.
 
+## Statistic collection
+Collect statistics around the Game.
 
+## Data visualization
+Visualize collected statistics in charts and tables.
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+# Getting Started
+## Video
+You can check out my introduction video to get started:
 
- <a href="https://github.com/github_username/repo_name">
-    <img src="https://traxile.com/wp-content/uploads/2021/10/screen_3.png" alt="Logo">
-  </a>
+https://www.youtube.com/watch?v=jZ8eiCNOiM4
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+## Installation
+Download the latest release and execute the MSI-Installer file.
 
-<!-- CORE FEATURES -->
-### Core features
-* Live time tracking of your ingame Activities like Map, Contracts, Invitations ans so on
-* Tracking of encounters and metadata in your activities (Harvest, expedition ...)
-* Calculation of historical data (Event history, long term statistics)
-* Data visualization (Charts)
+## First steps
+After the first start, you have to select the path to your Client.txt logfile. The most common default paths listed below:
 
-<!-- WORKS -->
-### How it works
-Basicly all data is parsed from the logfile of the PoE Client. TraXile scans it for new events and calculates all data based on that
+| Client  | Path | Example |
+|---|---|---|
+| Windows (Steam)  | %SteamLibrary%\steamapps\commmon\Path of Exile\Logs\Client.txt  | C:\Steam\steamapps\common\Path of Exile\logs\Client.txt |
+| Windows (Standalone)  | %InstallDirectory%\Logs\Client.txt  | C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt |
+| Mac OS (with Crossover or similar)  | /Users/YOUR_USERNAME/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt  | /Users/mow/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt |
 
+After you selected the logfile, TraXile will start importing all data thats inside it - and writes that data in its own database. After the initial import, the start of TraXile will
+be much faster.
 
-### Built With
+## Update
+You will be automatically notified when a new version is available. Just follow the instructions to update.
+If this is not working for any reason, you can always download the latest relase here and install it manually.
 
-* [C#](https://docs.microsoft.com/de-de/dotnet/csharp/)
-* [Visual Studio 2022](https://visualstudio.microsoft.com/de/vs/)
+# FAQ
+### Why can´t the data be filtered by character name?
+Unfornately, the name of your in character is not written to the Client logfile.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+### Are only activities tracked if I have TraXile running while playing?
+No, TraXile reads all data that is in your Client.txt logfile, so even If TraXile is not running, your maps and stuff like that will still appear in history. But you have a bunch of
+options while TraXile is running - for exampel you can manually pause the stopwatch.
 
+### Why is Windows warning me during the installation?
+As I am developing TraXile completely in my sparetime, I am not paying for a Code Signing certificate, which is needed to be a trusted developer for Windows.
 
+### Is this app sending any data to the Internet?
+Only internet connections are the check for a new version and the download of some metadata (league start and end-dates for example)
 
-<!-- GETTING STARTED -->
-## Getting Started
+### I ran two maps of the same area - and TraXile counted them as one map?
+This could happen if you are running the same map multiple time in a row, and randomly two maps in a row gets the same server instance. In that case TraXile has no chance to 
+seperate this maps automatically. There is an ingame chat command "trax::split" you could use to solve this (if it is very important for you).
 
-If this is your first installation of TraXile, just download the [latest release on GitHub](https://github.com/dermow/TraXile/releases) and install it. If you are alredy installed TraXile, you will get updates automatically.
-
-### First Steps
-
-After first start you will be asked for the location of your Client.txt. 
-
-* If you are using the Steam client, the file is located at
-  ```
-  <Path to your steam library>\steamapps\common\Path of Exile\logs\Client.txt
-  ```
-  which is per default:
-  ```
-  C:\Program Files\Steam\steamapps\common\Path of Exile\logs\Client.txt
-  ```
-  
-* For the standalone client it is per default
-  ```
-  C:\Program Files\Grinding Gear Games\Path of Exile\logs
-  ```
-
-
-After you selected the path TraXile will parse your data and import all activities. It is normal if this takes a while the first time. After first initialization,
-the process should be much faster.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Add Uber bosses (3.18)
-
-
-See the [open issues](https://github.com/dermow/TraXile/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact
-
-Me - [https://twitter.com/der_mow](https://twitter.com/der_mow) - blog.mow@gmail.com
-
-Project Link: [https://github.com/dermow/TraXile](https://github.com/dermow/TraXile)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* [Esturnat](https://de.pathofexile.com/account/view-profile/Esturnat2) - Excellent testing and User experience Feedback
-* [Mr__Khan](https://www.twitch.tv/mr__khan?lang=de) - Showing my tool on stream, great feedback and lab running tests
-* [Michi]() - Who makes my UI looking not that uggly :P
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
+### Why isn´t that a web based appliation?
+Because TraXile permanently reads you Client.txt logfile - thats much easier with a desktop application.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

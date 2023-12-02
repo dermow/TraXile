@@ -1939,7 +1939,7 @@ namespace TraXile
         {
             int labsToShow = 5;
 
-            panel22.Controls.Clear();
+            pnl_deprecated.Controls.Clear();
 
             if(_logic.LabHistory.Count > 0)
             {
@@ -1952,7 +1952,7 @@ namespace TraXile
                 {
                     UI.UserControlLabRun lr = new UI.UserControlLabRun(labrun, this);
                     lr.Location = new Point(0, y);
-                    panel22.Controls.Add(lr);
+                    pnl_deprecated.Controls.Add(lr);
                     y += lr.Height + 20;
                 }
             }
