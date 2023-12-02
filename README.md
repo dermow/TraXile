@@ -18,7 +18,7 @@
 # Table of Contents
 <!--ts-->
    * [About the project](#About)
-   * [Usage](#usage)
+   * [FAQ](#FAQ)
       * [STDIN](#stdin)
       * [Local files](#local-files)
       * [Remote files](#remote-files)
@@ -34,7 +34,7 @@
      * [Public](#public)
 <!--te-->
 
-# About the project
+# About
 TraXile is a tool that records activities and statistics for your Path of Exile gaming and allows you to 
 investigate, evaluate and visualize the collected data.
 
