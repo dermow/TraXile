@@ -17,21 +17,11 @@
 
 # Table of Contents
 <!--ts-->
-   * [About the project](#About)
-   * [FAQ](#FAQ)
-      * [STDIN](#stdin)
-      * [Local files](#local-files)
-      * [Remote files](#remote-files)
-      * [Multiple files](#multiple-files)
-      * [Combo](#combo)
-      * [Auto insert and update TOC](#auto-insert-and-update-toc)
-      * [GitHub token](#github-token)
-      * [TOC generation with Github Actions](#toc-generation-with-github-actions)
-   * [Tests](#tests)
-   * [Dependency](#dependency)
-   * [Docker](#docker)
-     * [Local](#local)
-     * [Public](#public)
+   * [About](#About)
+   * [Features](#Features)
+   * [Installation](#Installation)
+   * [First Steps](#First_Steps)
+    
 <!--te-->
 
 # About
@@ -49,11 +39,10 @@ Collect statistics around the Game.
 ## Data visualization
 Visualize collected statistics in charts and tables.
 
-# Getting started
-## Installation
+# Installation
 Download the latest release and execute the MSI-Installer file.
 
-## First steps
+# First steps
 After the first start, you have to select the path to your Client.txt logfile. The most common default paths listed below:
 
 | Client  | Path | Example |
