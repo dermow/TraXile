@@ -42,6 +42,7 @@ Visualize collected statistics in charts and tables.
 # Getting Started
 ## Video
 You can check out my introduction video to get started:
+
 https://www.youtube.com/watch?v=jZ8eiCNOiM4
 
 ## Installation
