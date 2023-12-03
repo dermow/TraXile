@@ -178,6 +178,9 @@ namespace TraXile
 
         // Show stopwatch overlay by default?
         private bool _stopwatchOverlayShowDefault;
+
+        // Simple Stopwatch Overlay
+        private OverlaySimpleStopwatch _stopWatchSimple;
         
         // Default mappings
         private TrX_DefaultMappings _defaultMappings;
@@ -1089,6 +1092,7 @@ namespace TraXile
           
             _leagues = new List<TrX_LeagueInfo>();
             _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
+            _stopWatchSimple = new OverlaySimpleStopwatch(this);
             
             _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
 
@@ -2687,6 +2691,8 @@ namespace TraXile
                            _logic.OverlayPrevActivity != null ? _logic.OverlayPrevActivity.StopWatchValue : "00:00:00",
                            _logic.CurrentActivity != null ? GetImageIndex(_logic.CurrentActivity) : 0,
                            _logic.OverlayPrevActivity != null ? GetImageIndex(_logic.OverlayPrevActivity) : 0);
+
+            _stopWatchSimple.SetText(labelStopWatch.Text);
 
             bool tag1Status = false, 
                  tag2Status = false, 
@@ -4473,6 +4479,22 @@ namespace TraXile
             _stopwatchOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatch.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatch.y", "0"))));
         }
 
+        private void ActivateSimpleStopWatchOverlay()
+        {
+            try
+            {
+                _stopWatchSimple.Show();
+            }
+            catch (ObjectDisposedException)
+            {
+                _stopWatchSimple = new OverlaySimpleStopwatch(this);
+            }
+
+            _stopWatchSimple.TopMost = true;
+            //_stopWatch_stopWatchSimpletchOverlay.Opacity = _stopwatchOverlayOpacity / 100.0;
+            _stopWatchSimple.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatchSimple.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatchSimple.y", "0"))));
+        }
+
         public void SaveCurrentLabRun()
         {
             if(_currentLabrunControl != null)
@@ -5538,6 +5560,20 @@ namespace TraXile
 
         private void comboBox10_SelectedIndexChanged(object sender, EventArgs e)
         {
+        }
+
+        private void stopwatchsimpleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_stopWatchSimple.Visible)
+            {
+                _stopWatchSimple.Hide();
+            }
+            else
+            {
+                ActivateSimpleStopWatchOverlay();
+            }
+
+            stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

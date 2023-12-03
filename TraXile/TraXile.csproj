@@ -196,6 +196,18 @@
     <Compile Include="UI\DataGridViewNF.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\BaseOverlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\BaseOverlay.Designer.cs">
+      <DependentUpon>BaseOverlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\OverlaySimpleStopwatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\OverlaySimpleStopwatch.Designer.cs">
+      <DependentUpon>OverlaySimpleStopwatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\StopWatchOverlay.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -304,6 +316,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="UI\BaseOverlay.resx">
+      <DependentUpon>BaseOverlay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\OverlaySimpleStopwatch.resx">
+      <DependentUpon>OverlaySimpleStopwatch.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\SearchHelp.resx">
       <DependentUpon>SearchHelp.cs</DependentUpon>
     </EmbeddedResource>
@@ -335,6 +353,8 @@
   <ItemGroup>
     <Content Include="favicon-32x32.ico" />
     <Content Include="favicon-96x96.ico" />
+    <None Include="Resources\TraXileOverlay.png" />
+    <Content Include="TraXileOverlay.png" />
     <Content Include="version.xml" />
     <None Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
