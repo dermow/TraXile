@@ -202,17 +202,17 @@
     <Compile Include="UI\BaseOverlay.Designer.cs">
       <DependentUpon>BaseOverlay.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\OverlayTags.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\OverlayTags.Designer.cs">
+      <DependentUpon>OverlayTags.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\OverlaySimpleStopwatch.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\OverlaySimpleStopwatch.Designer.cs">
       <DependentUpon>OverlaySimpleStopwatch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\StopWatchOverlay.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\StopWatchOverlay.Designer.cs">
-      <DependentUpon>StopWatchOverlay.cs</DependentUpon>
     </Compile>
     <Compile Include="TrX_DataBackend.cs" />
     <Compile Include="TrX_DefaultMappings.cs" />
@@ -319,14 +319,14 @@
     <EmbeddedResource Include="UI\BaseOverlay.resx">
       <DependentUpon>BaseOverlay.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\OverlayTags.resx">
+      <DependentUpon>OverlayTags.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\OverlaySimpleStopwatch.resx">
       <DependentUpon>OverlaySimpleStopwatch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SearchHelp.resx">
       <DependentUpon>SearchHelp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\StopWatchOverlay.resx">
-      <DependentUpon>StopWatchOverlay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SummaryWindow.resx">
       <DependentUpon>SummaryWindow.cs</DependentUpon>
@@ -354,6 +354,7 @@
     <Content Include="favicon-32x32.ico" />
     <Content Include="favicon-96x96.ico" />
     <None Include="Resources\TraXileOverlay.png" />
+    <None Include="Resources\d73a9d7f881b3ee6d3e11c5c13382e37.jpg" />
     <Content Include="TraXileOverlay.png" />
     <Content Include="version.xml" />
     <None Include="log4net.config">

@@ -12,9 +12,9 @@ namespace TraXile.UI
 {
     public partial class OverlaySimpleStopwatch : BaseOverlay
     {
-        public OverlaySimpleStopwatch(Main main) : base(main, "stopwatchSimple")
+        public OverlaySimpleStopwatch()
         {
-            customSize = new Size(115, 28);
+            _customSize = new Size(115, 28);
             this.Load += OverlaySimpleStopwatch_Load;
             this.BackColor = Color.Black;
             this.ForeColor = Color.PeachPuff;

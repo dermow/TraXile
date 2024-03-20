@@ -63,6 +63,16 @@ namespace TraXile.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap d73a9d7f881b3ee6d3e11c5c13382e37 {
+            get {
+                object obj = ResourceManager.GetObject("d73a9d7f881b3ee6d3e11c5c13382e37", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap TraXileOverlay {
             get {
                 object obj = ResourceManager.GetObject("TraXileOverlay", resourceCulture);

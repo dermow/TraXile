@@ -14,26 +14,38 @@ namespace TraXile.UI
 {
     public partial class BaseOverlay : Form
     {
-        bool flagMouseDown = false;
-        bool isMovable = false;
-        string id;
-        Point initalPoint;
+        bool _flagMouseDown = false;
+        bool _isMovable = false;
+        string _id;
+
+        public string ID
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
+        Point _initalPoint;
 
         // Workaround for Bug with BorderStyle.None:
         // https://stackoverflow.com/questions/4163655/form-height-problem-when-formborderstyle-is-none
-        internal Size customSize = new Size(200, 27);
-        internal Main mainWindow;
-        internal Color defaultBackColor;
-        internal Color defaultForeColor;
-
-        public BaseOverlay(Main main, string overlay_id)
+        internal Size _customSize = new Size(200, 27);
+        internal Main _mainWindow;
+       
+        public Main MainWindow
         {
-            mainWindow = main;
-            id = overlay_id;
-            defaultBackColor = Color.Black;
-            defaultForeColor = Color.PeachPuff;
-            this.ForeColor = defaultForeColor;
-            this.BackColor = defaultBackColor;
+            get { return _mainWindow; }
+            set { _mainWindow = value; }
+        }
+
+        internal Color _defaultBackColor;
+        internal Color _defaultForeColor;
+
+        public BaseOverlay()
+        {
+            _defaultBackColor = Color.Black;
+            _defaultForeColor = Color.PeachPuff;
+            this.ForeColor = _defaultForeColor;
+            this.BackColor = _defaultBackColor;
             this.StartPosition = FormStartPosition.Manual;
             this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
@@ -45,12 +57,12 @@ namespace TraXile.UI
             this.Load += BaseOverlay_Load1;
             
             InitializeComponent();
-            initalPoint = new Point();
+            _initalPoint = new Point();
         }
 
         internal void BaseOverlay_Load1(object sender, EventArgs e)
         {
-            this.ClientSize = customSize;
+            this.ClientSize = _customSize;
         }
 
         internal void BaseOverlay_MouseClick(object sender, MouseEventArgs e)
@@ -65,8 +77,8 @@ namespace TraXile.UI
         {
             if(e.Button == MouseButtons.Left)
             {
-                flagMouseDown = true;
-                initalPoint = e.Location;
+                _flagMouseDown = true;
+                _initalPoint = e.Location;
             }
         }
 
@@ -74,29 +86,29 @@ namespace TraXile.UI
         {
             if (e.Button == MouseButtons.Left)
             {
-                flagMouseDown = false;
+                _flagMouseDown = false;
             }
         }
 
         internal void OverlayStopwatchSimple_MouseMove(object sender, MouseEventArgs e)
         {
-            if(flagMouseDown && isMovable)
+            if(_flagMouseDown && _isMovable)
             {
-                this.Location = new Point(e.X + this.Left - initalPoint.X,
-                      e.Y + this.Top - initalPoint.Y);
+                this.Location = new Point(e.X + this.Left - _initalPoint.X,
+                      e.Y + this.Top - _initalPoint.Y);
             }
         }
 
         private void moveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            isMovable = !isMovable;
-            BackColor = isMovable ? Color.LightBlue : defaultBackColor;
-            contextMenuStrip1.Items[0].Text = isMovable ? "Fix Position" : "Move";
+            _isMovable = !_isMovable;
+            BackColor = _isMovable ? Color.LightBlue : _defaultBackColor;
+            contextMenuStrip1.Items[0].Text = _isMovable ? "Fix Position" : "Move";
 
-            if(!isMovable)
+            if(!_isMovable)
             {
-                mainWindow.AddUpdateAppSettings($"overlay.{id}.x", this.Location.X.ToString());
-                mainWindow.AddUpdateAppSettings($"overlay.{id}.y", this.Location.Y.ToString());
+                _mainWindow.AddUpdateAppSettings($"overlay.{_id}.x", this.Location.X.ToString());
+                _mainWindow.AddUpdateAppSettings($"overlay.{_id}.y", this.Location.Y.ToString());
             }
         }
 

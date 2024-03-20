@@ -147,7 +147,7 @@ namespace TraXile
         private LoadScreen _loadScreenWindow;
 
         // Window: Overlay
-        private StopWatchOverlay _stopwatchOverlay;
+        private OverlayTags _tagsOverlay;
 
         // List of available backups
         private BindingList<string> _backups;
@@ -174,13 +174,14 @@ namespace TraXile
         private bool _showHideoutInPie;
 
         // Visibility of the stopwatch overlay windows
-        private int _stopwatchOverlayOpacity;
+        private int _overlayOpacity;
 
         // Show stopwatch overlay by default?
         private bool _stopwatchOverlayShowDefault;
+        private bool _tagOverlayShowDefault;
 
         // Simple Stopwatch Overlay
-        private OverlaySimpleStopwatch _stopWatchSimple;
+        private OverlaySimpleStopwatch _stopwatchOverlay;
         
         // Default mappings
         private TrX_DefaultMappings _defaultMappings;
@@ -241,6 +242,7 @@ namespace TraXile
         // Setting: Mimimize to tray
         private bool _minimizeToTray;
         private bool _uiFlagLeagueDashboard;
+        private bool _uiFlagTagOverlay_TagsChanged;
 
         /// <summary>
         /// Main Window Constructor
@@ -1091,9 +1093,9 @@ namespace TraXile
             _lvmActlog = new TrX_ListViewManager(listViewActLog);
           
             _leagues = new List<TrX_LeagueInfo>();
-            _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
-            _stopWatchSimple = new OverlaySimpleStopwatch(this);
-            
+            _stopwatchOverlay = new OverlaySimpleStopwatch() { MainWindow = this, ID = "stopwatch" };
+            _tagsOverlay = new OverlayTags() { MainWindow = this, ID = "tags" };
+
             _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
 
             if (String.IsNullOrEmpty(_logic.ClientTxtPath))
@@ -1183,8 +1185,10 @@ namespace TraXile
             {
                 Control cnt = this.Controls.Find(kvp.Key, true)[0];
 
-                ToolTip toolTip = new ToolTip();
-                toolTip.AutoPopDelay = 30000;
+                ToolTip toolTip = new ToolTip
+                {
+                    AutoPopDelay = 30000
+                };
                 toolTip.SetToolTip(cnt, kvp.Value);
             }
 
@@ -1216,9 +1220,9 @@ namespace TraXile
                 comboBoxStopWatchTag3.Items.Add(tag.ID);
             }
 
-            comboBoxStopWatchTag1.SelectedItem = _overlayTag1 != null ? _overlayTag1 : "None";
-            comboBoxStopWatchTag2.SelectedItem = _overlayTag2 != null ? _overlayTag2 : "None";
-            comboBoxStopWatchTag3.SelectedItem = _overlayTag3 != null ? _overlayTag3 : "None";
+            comboBoxStopWatchTag1.SelectedItem = _overlayTag1 ?? "None";
+            comboBoxStopWatchTag2.SelectedItem = _overlayTag2 ?? "None";
+            comboBoxStopWatchTag3.SelectedItem = _overlayTag3 ?? "None";
 
             foreach (string s in _defaultMappings.AllAreas)
             {
@@ -2425,8 +2429,8 @@ namespace TraXile
 
             if (_logic.EventQueueInitialized)
             {
-                stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
-                stopwatchToolStripMenuItem1.Checked = _stopwatchOverlay.Visible;
+                stopwatchsimpleToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
+                tagOverlayToolStripMenuItem.Checked = _tagsOverlay.Visible;
                 _loadScreenWindow.Close();
                 MethodInvoker mi = delegate
                 {
@@ -2453,9 +2457,14 @@ namespace TraXile
                     {
                         if (_stopwatchOverlayShowDefault)
                         {
-                            ActivateStopWatchOverlay();
-
+                            ActivateSimpleStopWatchOverlay();
                         }
+
+                        if (_tagOverlayShowDefault)
+                        {
+                            ActivateTagOverlay();
+                        }
+
                         _autoStartsDone = true;
                     }
 
@@ -2685,43 +2694,34 @@ namespace TraXile
                 };
                 Invoke(mi);
             }
+          
+            UpdateOverlays();
+        }
 
-            // Update stopwatchOverlay
-            _stopwatchOverlay.UpdateStopWatch(labelStopWatch.Text,
-                           _logic.OverlayPrevActivity != null ? _logic.OverlayPrevActivity.StopWatchValue : "00:00:00",
-                           _logic.CurrentActivity != null ? GetImageIndex(_logic.CurrentActivity) : 0,
-                           _logic.OverlayPrevActivity != null ? GetImageIndex(_logic.OverlayPrevActivity) : 0);
+        private void UpdateOverlays()
+        {
+            UpdateStopwatchOverlay();
+            UpdateTagsOverlay();
+        }
 
-            _stopWatchSimple.SetText(labelStopWatch.Text);
+        private void UpdateStopwatchOverlay()
+        {
+            _stopwatchOverlay.SetText(labelStopWatch.Text);
+        }
 
-            bool tag1Status = false, 
-                 tag2Status = false, 
-                 tag3Status = false;
-
-
-            if(_logic.CurrentActivity != null)
+        private void UpdateTagsOverlay()
+        {
+            if(_uiFlagTagOverlay_TagsChanged)
             {
-                if(_overlayTag1 != null)
-                {
-                    tag1Status = _logic.CurrentActivity.HasTag(_overlayTag1);
-                }
-                if (_overlayTag2 != null)
-                {
-                    tag2Status = _logic.CurrentActivity.HasTag(_overlayTag2);
-                }
-                if (_overlayTag3 != null)
-                {
-                    tag3Status = _logic.CurrentActivity.HasTag(_overlayTag3);
-                }
+                _tagsOverlay.Tag1 = GetTagByDisplayName(_overlayTag1);
+                _tagsOverlay.Tag2 = GetTagByDisplayName(_overlayTag2);
+                _tagsOverlay.Tag3 = GetTagByDisplayName(_overlayTag3);
+
+                _uiFlagTagOverlay_TagsChanged = false;
             }
 
-            _stopwatchOverlay.UpdateTagStatus(
-                _logic.GetTagByID(_overlayTag1),
-                _logic.GetTagByID(_overlayTag2), 
-                _logic.GetTagByID(_overlayTag3), 
-                tag1Status, 
-                tag2Status, 
-                tag3Status);
+            _tagsOverlay.CurrentActivity = _logic.CurrentActivity;
+            _tagsOverlay.UpdateOverlay();
         }
 
         /// <summary>
@@ -2734,22 +2734,25 @@ namespace TraXile
             _minimizeToTray = Convert.ToBoolean(ReadSetting("MinimizeToTray"));
             _labDashboardHideUnknown = Convert.ToBoolean(ReadSetting("dashboard_lab_hide_unknown", "false"));
             _showHideoutInPie = Convert.ToBoolean(ReadSetting("pie_chart_show_hideout", "true"));
-            _stopwatchOverlayOpacity = Convert.ToInt32(ReadSetting("overlay.stopwatch.opacity", "100"));
-            _stopwatchOverlayShowDefault = Convert.ToBoolean(ReadSetting("overlay.stopwatch.default", "false"));
+            _overlayOpacity = Convert.ToInt32(ReadSetting("overlay.general.opacity", "100"));
+            _stopwatchOverlayShowDefault = Convert.ToBoolean(ReadSetting("overlay.stopwatch.showDefault", "false"));
+            _tagOverlayShowDefault = Convert.ToBoolean(ReadSetting("overlay.tags.showDefault", "false"));
             comboBoxTheme.SelectedItem = ReadSetting("theme", "Dark") == "Dark" ? "Dark" : "Light";
             listViewActLog.GridLines = _showGridInActLog;
-            trackBar1.Value = _stopwatchOverlayOpacity;
+            trackBar1.Value = _overlayOpacity;
             checkBox2.Checked = _stopwatchOverlayShowDefault;
+            checkBox3.Checked = _tagOverlayShowDefault;
             checkBoxMinimizeToTray.Checked = _minimizeToTray;
-            label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
+            label38.Text = _overlayOpacity.ToString() + "%";
             textBox9.Text = ReadSetting("lab.profittracking.filter.text", "");
             radioButton1.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "all";
             radioButton2.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "open";
             radioButton3.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "sold";
             textBox6.Text = ReadSetting("labbie.path", "");
-            _overlayTag1 = ReadSetting("overlay.stopwatch.tag1", "blight");
-            _overlayTag2 = ReadSetting("overlay.stopwatch.tag2", "expedition");
-            _overlayTag3 = ReadSetting("overlay.stopwatch.tag3", null);
+            _overlayTag1 = ReadSetting("overlay.tags.tag1", "blight");
+            _overlayTag2 = ReadSetting("overlay.tags.tag2", "expedition");
+            _overlayTag3 = ReadSetting("overlay.tags.tag3", null);
+            _uiFlagTagOverlay_TagsChanged = true;
             _minimumTimeCap = Convert.ToInt32(ReadSetting("TimeCapMinimum", "10"));
             textBox11.Text = _minimumTimeCap.ToString();
         }
@@ -3933,7 +3936,6 @@ namespace TraXile
         public void WriteActivitiesToCSV(string sPath)
         {
             StreamWriter wrt = new StreamWriter(sPath);
-            TrX_TrackedActivity tm;
 
             //Write headline
             string sLine = TrX_TrackedActivity.GetCSVHeadline();
@@ -4463,7 +4465,8 @@ namespace TraXile
             _mySettings.WriteToXml();
         }
 
-        private void ActivateStopWatchOverlay()
+
+        private void ActivateSimpleStopWatchOverlay()
         {
             try
             {
@@ -4471,28 +4474,28 @@ namespace TraXile
             }
             catch (ObjectDisposedException)
             {
-                _stopwatchOverlay = new StopWatchOverlay(this, imageList2);
+                _stopwatchOverlay = new OverlaySimpleStopwatch() { MainWindow = this, ID = "stopwatch"};
             }
 
             _stopwatchOverlay.TopMost = true;
-            _stopwatchOverlay.Opacity = _stopwatchOverlayOpacity / 100.0;
+            _stopwatchOverlay.Opacity = _overlayOpacity / 100.0;
             _stopwatchOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatch.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatch.y", "0"))));
         }
 
-        private void ActivateSimpleStopWatchOverlay()
+        private void ActivateTagOverlay()
         {
             try
             {
-                _stopWatchSimple.Show();
+                _tagsOverlay.Show();
             }
             catch (ObjectDisposedException)
             {
-                _stopWatchSimple = new OverlaySimpleStopwatch(this);
+                _tagsOverlay = new OverlayTags() { MainWindow = this, ID = "tags" };
             }
 
-            _stopWatchSimple.TopMost = true;
-            //_stopWatch_stopWatchSimpletchOverlay.Opacity = _stopwatchOverlayOpacity / 100.0;
-            _stopWatchSimple.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatchSimple.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatchSimple.y", "0"))));
+            _tagsOverlay.TopMost = true;
+            _tagsOverlay.Opacity = _overlayOpacity / 100.0;
+            _tagsOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.tags.x", "0")), (Convert.ToInt32(ReadSetting("overlay.tags.y", "0"))));
         }
 
         public void SaveCurrentLabRun()
@@ -5118,24 +5121,21 @@ namespace TraXile
       
         private void stopwatchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_stopwatchOverlay.Visible)
-            {
-                _stopwatchOverlay.Hide();
-            }
-            else
-            {
-                ActivateStopWatchOverlay();
-            }
-
-            stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
+            OverlayTags tags = new OverlayTags();
+            tags.MainWindow = this;
+            tags.Height = 31;
+            tags.Show();
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            _stopwatchOverlay.Opacity = trackBar1.Value > 0 ? (trackBar1.Value / 100.0) : 0;
-            AddUpdateAppSettings("overlay.stopwatch.opacity", trackBar1.Value.ToString());
-            _stopwatchOverlayOpacity = trackBar1.Value;
-            label38.Text = _stopwatchOverlayOpacity.ToString() + "%";
+            if(_stopwatchOverlay != null)
+            {
+                _stopwatchOverlay.Opacity = trackBar1.Value > 0 ? (trackBar1.Value / 100.0) : 0;
+                _tagsOverlay.Opacity = trackBar1.Value > 0 ? (trackBar1.Value / 100.0) : 0;
+            }
+            _overlayOpacity = trackBar1.Value;
+            label38.Text = _overlayOpacity.ToString() + "%";
         }
 
         private void checkBox2_CheckedChanged_1(object sender, EventArgs e)
@@ -5152,10 +5152,10 @@ namespace TraXile
             }
             else
             {
-                ActivateStopWatchOverlay();
+                ActivateSimpleStopWatchOverlay();
             }
 
-            stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
+            tagOverlayToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
         }
 
         private void pictureBoxStop_Click(object sender, EventArgs e)
@@ -5562,18 +5562,35 @@ namespace TraXile
         {
         }
 
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            SaveOverlaySettings();
+        }
+
+        private void SaveOverlaySettings()
+        {
+            AddUpdateAppSettings("overlay.general.opacity", trackBar1.Value.ToString());
+            AddUpdateAppSettings("overlay.stopwatch.showDefault", checkBox2.Checked.ToString());
+            AddUpdateAppSettings("overlay.tags.showDefault", checkBox3.Checked.ToString());
+            AddUpdateAppSettings("overlay.tags.tag1", comboBoxStopWatchTag1.SelectedItem.ToString());
+            AddUpdateAppSettings("overlay.tags.tag2", comboBoxStopWatchTag2.SelectedItem.ToString());
+            AddUpdateAppSettings("overlay.tags.tag3", comboBoxStopWatchTag3.SelectedItem.ToString());
+
+            _overlayTag1 = comboBoxStopWatchTag1.SelectedItem.ToString();
+            _overlayTag2 = comboBoxStopWatchTag2.SelectedItem.ToString();
+            _overlayTag3 = comboBoxStopWatchTag3.SelectedItem.ToString();
+
+            _uiFlagTagOverlay_TagsChanged = true;
+        }
+
         private void stopwatchsimpleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_stopWatchSimple.Visible)
-            {
-                _stopWatchSimple.Hide();
-            }
-            else
-            {
-                ActivateSimpleStopWatchOverlay();
-            }
+            ActivateSimpleStopWatchOverlay();
+        }
 
-            stopwatchToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
+        private void tagOverlayToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ActivateTagOverlay();
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
