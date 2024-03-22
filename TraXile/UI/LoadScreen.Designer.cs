@@ -66,7 +66,7 @@ namespace TraXile
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(63, 20);
             this.label3.TabIndex = 3;
-            this.label3.Text = "50,00%";
+            this.label3.Text = "00,00%";
             // 
             // LoadScreen
             // 
