@@ -53,7 +53,8 @@ namespace TraXile
         SANCTUM,
         TRIALMASTER_FIGHT,
         TANES_LABORATORY,
-        ANCESTOR_TRIAL
+        ANCESTOR_TRIAL,
+        INSCRIBED_ULTIMATUM
     }
 
     /// <summary>
@@ -1586,7 +1587,8 @@ namespace TraXile
                     lbl.MouseLeave += tagLabel_MouseLeave;
                     lbl.MouseClick += Lbl_MouseClick1;
                     lbl.Location = new Point(iX, iY);
-
+                    lbl.AutoSize = true;
+                    lbl.MinimumSize = new Size(100, 18);
                     groupBox3.Controls.Add(lbl);
                     _tagLabelsConfig.Add(tag.ID, lbl);
                 }
@@ -1682,6 +1684,8 @@ namespace TraXile
                     lbl.MouseHover += tagLabel_MouseOver;
                     lbl.MouseLeave += tagLabel_MouseLeave;
                     lbl.MouseClick += Lbl_MouseClick;
+                    lbl.AutoSize = true;
+                    lbl.MinimumSize = new Size(100, 18);
 
                     groupBoxTrackingTags.Controls.Add(lbl);
                     _tagLabels.Add(tag.ID, lbl);
@@ -1766,6 +1770,8 @@ namespace TraXile
                 lbl.BackColor = tag.BackColor;
                 lbl.ForeColor = tag.ForeColor;
                 lbl.Location = new Point(iX, iY);
+                lbl.AutoSize = true;
+                lbl.MinimumSize = new Size(100, 18);
                 targetControl.Controls.Add(lbl);
 
                 iX += lbl.Width + 5;
@@ -2288,6 +2294,10 @@ namespace TraXile
             else if (activity.Type == ACTIVITY_TYPES.ANCESTOR_TRIAL)
             {
                 imageIndex = 55;
+            }
+            else if (activity.Type == ACTIVITY_TYPES.INSCRIBED_ULTIMATUM)
+            {
+                imageIndex = 56;
             }
             return imageIndex;
         }
@@ -2961,7 +2971,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.OTHER, 0 },
                 { ACTIVITY_TYPES.TRIALMASTER_FIGHT, 0 },
                 { ACTIVITY_TYPES.TANES_LABORATORY, 0 },
-                { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0}
+                { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0},
+                { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0}
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2998,7 +3009,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.OTHER, 0 },
                 { ACTIVITY_TYPES.TRIALMASTER_FIGHT, 0 },
                 { ACTIVITY_TYPES.TANES_LABORATORY, 0 },
-                { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0}
+                { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0},
+                { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0}
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -3034,7 +3046,9 @@ namespace TraXile
                 { ACTIVITY_TYPES.SANCTUM, Color.Purple },
                 { ACTIVITY_TYPES.TRIALMASTER_FIGHT, Color.Red },
                 { ACTIVITY_TYPES.TANES_LABORATORY, Color.LimeGreen },
-                { ACTIVITY_TYPES.ANCESTOR_TRIAL, Color.Turquoise} // TODO
+                { ACTIVITY_TYPES.ANCESTOR_TRIAL, Color.Turquoise},
+                { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, Color.MediumVioletRed},
+
             };
             double hideOutTime = 0;
             double totalCount = 0;

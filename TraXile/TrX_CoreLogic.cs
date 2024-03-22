@@ -619,6 +619,11 @@ namespace TraXile
                 new TrX_ActivityTag("harvest") { BackColor = Color.Blue, ForeColor = Color.White },
                 new TrX_ActivityTag("blueprint") { BackColor = Color.IndianRed, ForeColor = Color.AliceBlue },
                 new TrX_ActivityTag("sanctum") { BackColor = Color.Purple, ForeColor = Color.White },
+                new TrX_ActivityTag("ultimatum") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
+                new TrX_ActivityTag("ultimatum-win") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
+                new TrX_ActivityTag("ultimatum-loss") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
+                new TrX_ActivityTag("ultimatum-loss") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
+                new TrX_ActivityTag("ultimatum-took-reward") { BackColor = Color.MediumVioletRed, ForeColor = Color.White }
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -1475,7 +1480,8 @@ namespace TraXile
             bTargetAreaIsKalandra = _defaultMappings.LakeOfKalandraAreas.Contains(sTargetArea),
             bTargetAreaIsSanctum = _defaultMappings.SanctumAreas.Contains(sTargetArea),
             bTargetAreaIsTrialmaster = _defaultMappings.TrialMasterAreas.Contains(sTargetArea),
-            bTargetAreaIsToTa = _defaultMappings.TotAAreas.Contains(sTargetArea);
+            bTargetAreaIsToTa = _defaultMappings.TotAAreas.Contains(sTargetArea),
+            bTargetAreaIsUltimatum = _defaultMappings.UltimatumAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1735,6 +1741,10 @@ namespace TraXile
             else if (bTargetAreaIsToTa)
             {
                 actType = ACTIVITY_TYPES.ANCESTOR_TRIAL;
+            }
+            else if (bTargetAreaIsUltimatum)
+            {
+                actType = ACTIVITY_TYPES.INSCRIBED_ULTIMATUM;
             }
 
             // Special handling for logbook cemetery + vaal temple
@@ -2116,6 +2126,7 @@ namespace TraXile
                     || _defaultMappings.InfiniteHungerAreas.Contains(sSourceArea)
                     || _defaultMappings.TimelessLegionAreas.Contains(sSourceArea)
                     || _defaultMappings.TrialMasterAreas.Contains(sSourceArea)
+                    || _defaultMappings.UltimatumAreas.Contains(sSourceArea)
                     || _defaultMappings.LakeOfKalandraAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
@@ -2209,6 +2220,7 @@ namespace TraXile
                 bTargetAreaIsInfinitetHunger ||
                 bTargetAreaIsLegion ||
                 bTargetAreaIsTrialmaster ||
+                bTargetAreaIsUltimatum ||
                 bTargetAreaIsKalandra;
 
             // Check if opened activity needs to be opened on Mapdevice
@@ -2232,6 +2244,7 @@ namespace TraXile
                 bTargetAreaIsEaterOfWorlds ||
                 bTargetAreaIsLegion ||
                 bTargetAreaIsTrialmaster ||
+                bTargetAreaIsUltimatum ||
                 bTargetAreaIsKalandra;
 
             if (isMapDeviceActivity)
@@ -2609,8 +2622,12 @@ namespace TraXile
                     case EVENT_TYPES.TRIALMASTER_VICTORY:
                         IncrementStat("TrialMasterSuccess", ev.EventTime, 1);
                         IncrementStat("TrialMasterVictory", ev.EventTime, 1);
-                        if (_currentActivity != null)
+                        if (_currentActivity != null
+                            && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN || _currentActivity.Type == ACTIVITY_TYPES.INSCRIBED_ULTIMATUM))
                         {
+                            _currentActivity.AddTag("ultimatum");
+                            _currentActivity.AddTag("ultimatum-win");
+
                             _currentActivity.TrialMasterSuccess = true;
                             _currentActivity.TrialMasterFullFinished = true;
                         }
@@ -2618,10 +2635,25 @@ namespace TraXile
                     case EVENT_TYPES.TRIALMASTER_TOOK_REWARD:
                         IncrementStat("TrialMasterTookReward", ev.EventTime, 1);
                         IncrementStat("TrialMasterSuccess", ev.EventTime, 1);
-                        if (_currentActivity != null)
+                        if (_currentActivity != null
+                            && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN || _currentActivity.Type == ACTIVITY_TYPES.INSCRIBED_ULTIMATUM))
                         {
                             _currentActivity.TrialMasterSuccess = true;
                             _currentActivity.TrialMasterFullFinished = false;
+
+                            _currentActivity.AddTag("ultimatum");
+                            _currentActivity.AddTag("ultimatum-took-reward");
+                        }
+                        break;
+                    case EVENT_TYPES.TRIALMASTER_PLAYER_LOSS:
+                        if (_currentActivity != null
+                           && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN || _currentActivity.Type == ACTIVITY_TYPES.INSCRIBED_ULTIMATUM))
+                        {
+                            _currentActivity.TrialMasterSuccess = false;
+                            _currentActivity.TrialMasterFullFinished = false;
+
+                            _currentActivity.AddTag("ultimatum");
+                            _currentActivity.AddTag("ultimatum-loss");
                         }
                         break;
                     case EVENT_TYPES.MAVEN_KILLED:
@@ -2655,7 +2687,8 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.TRIALMASTER_ROUND_STARTED:
-                        if (_currentActivity != null)
+                        if (_currentActivity != null
+                            && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN || _currentActivity.Type == ACTIVITY_TYPES.INSCRIBED_ULTIMATUM))
                         {
                             _currentActivity.TrialMasterCount += 1;
                         }
@@ -3065,6 +3098,13 @@ namespace TraXile
                         break;
                     case EVENT_TYPES.ANCESTOR_TOURNAMENT_WON:
                         IncrementStat("AncestorTournamentsWon", ev.EventTime);
+                        break;
+                    case EVENT_TYPES.TRIALMASTER_ENCOUNTERED:
+                        if(_currentActivity != null 
+                            && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN))
+                        {
+                            _currentActivity.AddTag("ultimatum");
+                        }
                         break;
                 }
 
