@@ -68,12 +68,17 @@ namespace TraXile.UI
             label1.MouseClick += Label1_MouseClick;
             label1.MouseMove += Label1_MouseMove;
             label1.MouseDown += Label1_MouseDown;
+            label1.MouseUp += Label1_MouseUp;
+
             label2.MouseClick += Label1_MouseClick;
             label2.MouseMove += Label1_MouseMove;
             label2.MouseDown += Label1_MouseDown;
+            label2.MouseUp += Label1_MouseUp;
+
             label3.MouseClick += Label1_MouseClick;
             label3.MouseMove += Label1_MouseMove;
             label3.MouseDown += Label1_MouseDown;
+            label3.MouseUp += Label1_MouseUp;
         }
 
         private void SetLabelInactive(Label lbl)

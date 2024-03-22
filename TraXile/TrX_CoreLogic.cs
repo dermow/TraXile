@@ -2690,6 +2690,7 @@ namespace TraXile
                         if (_currentActivity != null
                             && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN || _currentActivity.Type == ACTIVITY_TYPES.INSCRIBED_ULTIMATUM))
                         {
+                            _currentActivity.AddTag("ultimatum");
                             _currentActivity.TrialMasterCount += 1;
                         }
                         break;
