@@ -35,6 +35,9 @@ activities in the past based on your logfile.
 Track time and other stats for your ingame activities (maps, heist contracts, sanctum...). Works for live tracking (TraXile open while you are playing)
 and backwards for all data in your Client.txt logfile.
 
+## Ingame Overlay
+Simple overlays (Stopwatch)
+
 ## Statistic collection
 Collect statistics around the Game.
 
@@ -86,6 +89,19 @@ seperate this maps automatically. There is an ingame chat command "trax::split" 
 
 ### Why isn´t that a web based appliation?
 Because TraXile permanently reads you Client.txt logfile - thats much easier with a desktop application.
+
+### Can I install TraXile on my Mac?
+TraXile is designed for Windows computers. But you can use Crossover to install it on mac anyway. Here is a short How-To (thanks to reddit user [Unifer1](https://www.reddit.com/user/Unifer1/))
+
+    * Install the newest version of Crossover
+    * Click "Install a new bottle"
+    * Click "Install an unlisted application"
+    * Create a new Windows 10 64-bit bottle named Traxile
+    * Select the "Setup.msi" installer file
+    * Click Install
+    * Once the install is done, open Traxile.
+    * On first open, you'll need to find the Client.txt logfile; on macOS it's located at: /Users/[yourusername]/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt
+    * Should work automatically every time you start up from now on!
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

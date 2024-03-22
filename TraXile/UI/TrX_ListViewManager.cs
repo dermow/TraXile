@@ -91,9 +91,8 @@ namespace TraXile
                     }
                 }
             }
-            catch(Exception ex)
+            catch
             {
-                
             }
            
             FilterByNameList(names);

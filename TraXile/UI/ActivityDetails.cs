@@ -34,6 +34,7 @@ namespace TraXile
             Text = ta.Type + $" Details: {ta.Area}";
             label9.Text = ta.Type == ACTIVITY_TYPES.BREACHSTONE ? main.Logic.GetBreachStoneName(ta.Area, ta.AreaLevel) : ta.Type.ToString();
             label13.Text = ta.Area.ToString();
+            labelUltiRounds.Text = ta.TrialMasterCount.ToString();
 
             if (!main.IS_IN_DEBUG_MODE)
             {
@@ -104,6 +105,8 @@ namespace TraXile
                 lbl.ForeColor = tag.ForeColor;
                 lbl.Location = new Point(iX, iY);
                 lbl.MouseClick += Lbl_MouseClick;
+                lbl.AutoSize = true;
+                lbl.MinimumSize = new Size(100, 18);
 
                 iX += lbl.Width + 5;
                 iCurrCols++;

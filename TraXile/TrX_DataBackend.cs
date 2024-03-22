@@ -277,7 +277,7 @@ namespace TraXile
                 }
                 return null;
             }
-            catch (Exception e)
+            catch
             {
                 return null; 
             }

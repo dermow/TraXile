@@ -55,10 +55,12 @@ namespace TraXile
             this.label7 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.button3 = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
+            this.labelUltiRounds = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -92,9 +94,9 @@ namespace TraXile
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 6;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 185F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 186F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 201F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 173F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 66F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(449, 530);
@@ -114,6 +116,8 @@ namespace TraXile
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.labelUltiRounds);
+            this.panel2.Controls.Add(this.label14);
             this.panel2.Controls.Add(this.label10);
             this.panel2.Controls.Add(this.label11);
             this.panel2.Controls.Add(this.labelDeaths);
@@ -130,7 +134,7 @@ namespace TraXile
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 103);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(443, 179);
+            this.panel2.Size = new System.Drawing.Size(443, 195);
             this.panel2.TabIndex = 0;
             // 
             // label10
@@ -138,7 +142,7 @@ namespace TraXile
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(111, 87);
+            this.label10.Location = new System.Drawing.Point(174, 87);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(21, 13);
             this.label10.TabIndex = 12;
@@ -160,7 +164,7 @@ namespace TraXile
             this.labelDeaths.AutoSize = true;
             this.labelDeaths.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDeaths.ForeColor = System.Drawing.Color.White;
-            this.labelDeaths.Location = new System.Drawing.Point(111, 147);
+            this.labelDeaths.Location = new System.Drawing.Point(174, 147);
             this.labelDeaths.Name = "labelDeaths";
             this.labelDeaths.Size = new System.Drawing.Size(14, 13);
             this.labelDeaths.TabIndex = 10;
@@ -182,7 +186,7 @@ namespace TraXile
             this.labelStopWatch.AutoSize = true;
             this.labelStopWatch.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelStopWatch.ForeColor = System.Drawing.Color.White;
-            this.labelStopWatch.Location = new System.Drawing.Point(111, 127);
+            this.labelStopWatch.Location = new System.Drawing.Point(174, 127);
             this.labelStopWatch.Name = "labelStopWatch";
             this.labelStopWatch.Size = new System.Drawing.Size(63, 13);
             this.labelStopWatch.TabIndex = 8;
@@ -204,7 +208,7 @@ namespace TraXile
             this.labelArea.AutoSize = true;
             this.labelArea.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelArea.ForeColor = System.Drawing.Color.White;
-            this.labelArea.Location = new System.Drawing.Point(111, 107);
+            this.labelArea.Location = new System.Drawing.Point(174, 107);
             this.labelArea.Name = "labelArea";
             this.labelArea.Size = new System.Drawing.Size(42, 13);
             this.labelArea.TabIndex = 6;
@@ -226,7 +230,7 @@ namespace TraXile
             this.labelType.AutoSize = true;
             this.labelType.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelType.ForeColor = System.Drawing.Color.White;
-            this.labelType.Location = new System.Drawing.Point(111, 67);
+            this.labelType.Location = new System.Drawing.Point(174, 67);
             this.labelType.Name = "labelType";
             this.labelType.Size = new System.Drawing.Size(28, 13);
             this.labelType.TabIndex = 4;
@@ -248,7 +252,7 @@ namespace TraXile
             this.labelTime.AutoSize = true;
             this.labelTime.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTime.ForeColor = System.Drawing.Color.White;
-            this.labelTime.Location = new System.Drawing.Point(111, 47);
+            this.labelTime.Location = new System.Drawing.Point(174, 47);
             this.labelTime.Name = "labelTime";
             this.labelTime.Size = new System.Drawing.Size(63, 13);
             this.labelTime.TabIndex = 2;
@@ -279,9 +283,9 @@ namespace TraXile
             // panelTags
             // 
             this.panelTags.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelTags.Location = new System.Drawing.Point(3, 328);
+            this.panelTags.Location = new System.Drawing.Point(3, 341);
             this.panelTags.Name = "panelTags";
-            this.panelTags.Size = new System.Drawing.Size(443, 180);
+            this.panelTags.Size = new System.Drawing.Size(443, 167);
             this.panelTags.TabIndex = 1;
             // 
             // panel3
@@ -292,14 +296,14 @@ namespace TraXile
             this.panel3.Controls.Add(this.comboBox1);
             this.panel3.Controls.Add(this.label7);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(3, 288);
+            this.panel3.Location = new System.Drawing.Point(3, 304);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(443, 34);
+            this.panel3.Size = new System.Drawing.Size(443, 31);
             this.panel3.TabIndex = 2;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(208, -1);
+            this.button2.Location = new System.Drawing.Point(210, 7);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(27, 24);
             this.button2.TabIndex = 16;
@@ -318,7 +322,7 @@ namespace TraXile
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(175, -1);
+            this.button1.Location = new System.Drawing.Point(177, 7);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(27, 24);
             this.button1.TabIndex = 14;
@@ -331,7 +335,7 @@ namespace TraXile
             this.comboBox1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.comboBox1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(66, 0);
+            this.comboBox1.Location = new System.Drawing.Point(68, 8);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(103, 21);
             this.comboBox1.TabIndex = 13;
@@ -341,7 +345,7 @@ namespace TraXile
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Noto Mono", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.Red;
-            this.label7.Location = new System.Drawing.Point(3, -3);
+            this.label7.Location = new System.Drawing.Point(5, 5);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(65, 23);
             this.label7.TabIndex = 12;
@@ -371,6 +375,16 @@ namespace TraXile
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(437, 88);
             this.panel4.TabIndex = 0;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(358, 4);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 3;
+            this.button3.Text = "Debug";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // label13
             // 
@@ -402,15 +416,27 @@ namespace TraXile
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // button3
+            // label14
             // 
-            this.button3.Location = new System.Drawing.Point(358, 4);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Debug";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.Location = new System.Drawing.Point(14, 165);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(126, 13);
+            this.label14.TabIndex = 13;
+            this.label14.Text = "Ultimatum rounds:";
+            // 
+            // labelUltiRounds
+            // 
+            this.labelUltiRounds.AutoSize = true;
+            this.labelUltiRounds.Font = new System.Drawing.Font("Noto Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelUltiRounds.ForeColor = System.Drawing.Color.White;
+            this.labelUltiRounds.Location = new System.Drawing.Point(174, 165);
+            this.labelUltiRounds.Name = "labelUltiRounds";
+            this.labelUltiRounds.Size = new System.Drawing.Size(14, 13);
+            this.labelUltiRounds.TabIndex = 14;
+            this.labelUltiRounds.Text = "0";
             // 
             // ActivityDetails
             // 
@@ -469,5 +495,7 @@ namespace TraXile
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label labelUltiRounds;
+        private System.Windows.Forms.Label label14;
     }
 }
