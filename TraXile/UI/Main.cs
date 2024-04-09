@@ -2044,9 +2044,13 @@ namespace TraXile
                 {
                     imageIndex = 1;
                 }
-                else if (activity.MapTier >= 11)
+                else if (activity.MapTier >= 11 && activity.MapTier <= 16)
                 {
                     imageIndex = 2;
+                }
+                else if (activity.MapTier >= 17)
+                {
+                    imageIndex = 57;
                 }
             }
             else if (activity.Type == ACTIVITY_TYPES.TEMPLE)

@@ -413,6 +413,11 @@ namespace TraXile
                 "Untainted Paradise",
                 "Vaults of Atziri",
                 "Whakawairua Tuahu",
+                "Abomination",
+                "Citadel",
+                "Fortress",
+                "Sanctuary",
+                "Ziggurat"
             };
 
             _heistAreas = new List<string>

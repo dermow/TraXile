@@ -34,6 +34,7 @@ namespace TraXile
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -88,7 +89,6 @@ namespace TraXile
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea16 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend16 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series16 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.tabCtl1 = new System.Windows.Forms.TabControl();
             this.tabPageTracking = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -96,13 +96,19 @@ namespace TraXile
             this.panel2 = new System.Windows.Forms.Panel();
             this.tableLayoutPanelStopWatchArea1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.pictureBoxStopWatch = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.labelStopWatch = new System.Windows.Forms.Label();
             this.tableLayoutPanel27 = new System.Windows.Forms.TableLayoutPanel();
             this.panel20 = new System.Windows.Forms.Panel();
+            this.pictureBoxStop = new System.Windows.Forms.PictureBox();
+            this.pictureBoxPause = new System.Windows.Forms.PictureBox();
+            this.pictureBoxPlay = new System.Windows.Forms.PictureBox();
             this.panel21 = new System.Windows.Forms.Panel();
+            this.pictureBoxSkull = new System.Windows.Forms.PictureBox();
             this.labelTrackingDied = new System.Windows.Forms.Label();
             this.tableLayoutPanel28 = new System.Windows.Forms.TableLayoutPanel();
+            this.pictureBox10 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel29 = new System.Windows.Forms.TableLayoutPanel();
             this.labelTrackingArea = new System.Windows.Forms.Label();
             this.labelTrackingType = new System.Windows.Forms.Label();
@@ -229,6 +235,7 @@ namespace TraXile
             this.panelBossElder = new System.Windows.Forms.Panel();
             this.labelElderTried = new System.Windows.Forms.Label();
             this.label92 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label10 = new System.Windows.Forms.Label();
             this.labelElderKillCount = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -242,9 +249,11 @@ namespace TraXile
             this.labelShaperStatus = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panelBossesMaven = new System.Windows.Forms.Panel();
             this.labelMavenTried = new System.Windows.Forms.Label();
             this.label35 = new System.Windows.Forms.Label();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.label43 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
             this.labelMavenStatus = new System.Windows.Forms.Label();
@@ -258,6 +267,7 @@ namespace TraXile
             this.label42 = new System.Windows.Forms.Label();
             this.labelTrialMasterStatus = new System.Windows.Forms.Label();
             this.label44 = new System.Windows.Forms.Label();
+            this.pictureBox9 = new System.Windows.Forms.PictureBox();
             this.panel10 = new System.Windows.Forms.Panel();
             this.labelCataTried = new System.Windows.Forms.Label();
             this.label83 = new System.Windows.Forms.Label();
@@ -268,6 +278,7 @@ namespace TraXile
             this.label79 = new System.Windows.Forms.Label();
             this.labelCataStatus = new System.Windows.Forms.Label();
             this.label81 = new System.Windows.Forms.Label();
+            this.pictureBox21 = new System.Windows.Forms.PictureBox();
             this.panel11 = new System.Windows.Forms.Panel();
             this.labelSirusTries = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -276,6 +287,7 @@ namespace TraXile
             this.labelSirusStatus = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.tabPage19 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel38 = new System.Windows.Forms.TableLayoutPanel();
             this.panel31 = new System.Windows.Forms.Panel();
@@ -285,6 +297,7 @@ namespace TraXile
             this.label122 = new System.Windows.Forms.Label();
             this.labelBlackstarStatus = new System.Windows.Forms.Label();
             this.label124 = new System.Windows.Forms.Label();
+            this.pictureBox26 = new System.Windows.Forms.PictureBox();
             this.label128 = new System.Windows.Forms.Label();
             this.panel32 = new System.Windows.Forms.Panel();
             this.labelExarchTried = new System.Windows.Forms.Label();
@@ -293,6 +306,7 @@ namespace TraXile
             this.label118 = new System.Windows.Forms.Label();
             this.labelExarchStatus = new System.Windows.Forms.Label();
             this.label120 = new System.Windows.Forms.Label();
+            this.pictureBox27 = new System.Windows.Forms.PictureBox();
             this.label114 = new System.Windows.Forms.Label();
             this.panel33 = new System.Windows.Forms.Panel();
             this.panel34 = new System.Windows.Forms.Panel();
@@ -302,6 +316,7 @@ namespace TraXile
             this.label146 = new System.Windows.Forms.Label();
             this.labelHungerStatus = new System.Windows.Forms.Label();
             this.label148 = new System.Windows.Forms.Label();
+            this.pictureBox29 = new System.Windows.Forms.PictureBox();
             this.label149 = new System.Windows.Forms.Label();
             this.panel35 = new System.Windows.Forms.Panel();
             this.labelEaterTried = new System.Windows.Forms.Label();
@@ -310,6 +325,7 @@ namespace TraXile
             this.label123 = new System.Windows.Forms.Label();
             this.labelEaterStatus = new System.Windows.Forms.Label();
             this.label126 = new System.Windows.Forms.Label();
+            this.pictureBox24 = new System.Windows.Forms.PictureBox();
             this.label127 = new System.Windows.Forms.Label();
             this.label150 = new System.Windows.Forms.Label();
             this.label151 = new System.Windows.Forms.Label();
@@ -324,8 +340,10 @@ namespace TraXile
             this.labelHunterStatus = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.label45 = new System.Windows.Forms.Label();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.panel13 = new System.Windows.Forms.Panel();
             this.labelBaranTries = new System.Windows.Forms.Label();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.label19 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.labelBaranKillCount = new System.Windows.Forms.Label();
@@ -340,6 +358,7 @@ namespace TraXile
             this.labelDroxStatus = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.label47 = new System.Windows.Forms.Label();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.panel15 = new System.Windows.Forms.Panel();
             this.labelVeritaniaTries = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
@@ -347,6 +366,7 @@ namespace TraXile
             this.label20 = new System.Windows.Forms.Label();
             this.labelVeritaniaStatus = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label48 = new System.Windows.Forms.Label();
             this.panel16 = new System.Windows.Forms.Panel();
             this.label106 = new System.Windows.Forms.Label();
@@ -385,8 +405,10 @@ namespace TraXile
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Cap = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timeCaps = new System.Windows.Forms.PictureBox();
             this.buttonSaveCaps = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.pictureBox23 = new System.Windows.Forms.PictureBox();
             this.buttonDeleteBackup = new System.Windows.Forms.Button();
             this.buttonRestoreBackup = new System.Windows.Forms.Button();
             this.listBoxRestoreBackup = new System.Windows.Forms.ListBox();
@@ -453,6 +475,8 @@ namespace TraXile
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pictureBox28 = new System.Windows.Forms.PictureBox();
+            this.pictureBox25 = new System.Windows.Forms.PictureBox();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
             this.label131 = new System.Windows.Forms.Label();
             this.label130 = new System.Windows.Forms.Label();
@@ -602,37 +626,13 @@ namespace TraXile
             this.button17 = new System.Windows.Forms.Button();
             this.listBox3 = new System.Windows.Forms.ListBox();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.pictureBox33 = new System.Windows.Forms.PictureBox();
+            this.pictureBox32 = new System.Windows.Forms.PictureBox();
             this.lbl_background_update = new System.Windows.Forms.Label();
+            this.pictureBox30 = new System.Windows.Forms.PictureBox();
             this.linkLabel5 = new System.Windows.Forms.LinkLabel();
             this.lbl_filter = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.pictureBoxStopWatch = new System.Windows.Forms.PictureBox();
-            this.pictureBoxStop = new System.Windows.Forms.PictureBox();
-            this.pictureBoxPause = new System.Windows.Forms.PictureBox();
-            this.pictureBoxPlay = new System.Windows.Forms.PictureBox();
-            this.pictureBoxSkull = new System.Windows.Forms.PictureBox();
-            this.pictureBox10 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox8 = new System.Windows.Forms.PictureBox();
-            this.pictureBox9 = new System.Windows.Forms.PictureBox();
-            this.pictureBox21 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox26 = new System.Windows.Forms.PictureBox();
-            this.pictureBox27 = new System.Windows.Forms.PictureBox();
-            this.pictureBox29 = new System.Windows.Forms.PictureBox();
-            this.pictureBox24 = new System.Windows.Forms.PictureBox();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.timeCaps = new System.Windows.Forms.PictureBox();
-            this.pictureBox23 = new System.Windows.Forms.PictureBox();
-            this.pictureBox28 = new System.Windows.Forms.PictureBox();
-            this.pictureBox25 = new System.Windows.Forms.PictureBox();
-            this.pictureBox33 = new System.Windows.Forms.PictureBox();
-            this.pictureBox32 = new System.Windows.Forms.PictureBox();
-            this.pictureBox30 = new System.Windows.Forms.PictureBox();
             this.pictureBox16 = new System.Windows.Forms.PictureBox();
             this.pictureBox12 = new System.Windows.Forms.PictureBox();
             this.pictureBox14 = new System.Windows.Forms.PictureBox();
@@ -652,11 +652,17 @@ namespace TraXile
             this.panel2.SuspendLayout();
             this.tableLayoutPanelStopWatchArea1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel27.SuspendLayout();
             this.panel20.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStop)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).BeginInit();
             this.panel21.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).BeginInit();
             this.tableLayoutPanel28.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
             this.tableLayoutPanel29.SuspendLayout();
             this.panelTags.SuspendLayout();
             this.panel7.SuspendLayout();
@@ -707,23 +713,37 @@ namespace TraXile
             this.tabPage18.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
             this.panelBossElder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelBossesShaper.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panelBossesMaven.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             this.panelBossesTrialmaster.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             this.panel10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox21)).BeginInit();
             this.panel11.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.tabPage19.SuspendLayout();
             this.tableLayoutPanel38.SuspendLayout();
             this.panel31.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox26)).BeginInit();
             this.panel32.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox27)).BeginInit();
             this.panel34.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox29)).BeginInit();
             this.panel35.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).BeginInit();
             this.tabPage20.SuspendLayout();
             this.tableLayoutPanel25.SuspendLayout();
             this.panel12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             this.panel13.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             this.panel14.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.panel15.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.panel16.SuspendLayout();
             this.tabPage21.SuspendLayout();
             this.tableLayoutPanel39.SuspendLayout();
@@ -742,7 +762,9 @@ namespace TraXile
             this.tabPage6.SuspendLayout();
             this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timeCaps)).BeginInit();
             this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox23)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -759,6 +781,8 @@ namespace TraXile
             this.groupBox18.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).BeginInit();
             this.groupBox17.SuspendLayout();
             this.tabPage14.SuspendLayout();
             this.pnl_deprecated_1.SuspendLayout();
@@ -790,30 +814,6 @@ namespace TraXile
             this.tableLayoutPanelMain.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStop)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox21)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox26)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox27)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox29)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.timeCaps)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox23)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox33)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox32)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox30)).BeginInit();
@@ -935,6 +935,17 @@ namespace TraXile
             this.tableLayoutPanel1.Size = new System.Drawing.Size(372, 139);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
+            // pictureBoxStopWatch
+            // 
+            this.pictureBoxStopWatch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxStopWatch.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxStopWatch.Image")));
+            this.pictureBoxStopWatch.Location = new System.Drawing.Point(3, 3);
+            this.pictureBoxStopWatch.Name = "pictureBoxStopWatch";
+            this.pictureBoxStopWatch.Size = new System.Drawing.Size(94, 133);
+            this.pictureBoxStopWatch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxStopWatch.TabIndex = 0;
+            this.pictureBoxStopWatch.TabStop = false;
+            // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 1;
@@ -988,6 +999,39 @@ namespace TraXile
             this.panel20.Size = new System.Drawing.Size(122, 41);
             this.panel20.TabIndex = 0;
             // 
+            // pictureBoxStop
+            // 
+            this.pictureBoxStop.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxStop.Image")));
+            this.pictureBoxStop.Location = new System.Drawing.Point(85, 3);
+            this.pictureBoxStop.Name = "pictureBoxStop";
+            this.pictureBoxStop.Size = new System.Drawing.Size(35, 35);
+            this.pictureBoxStop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxStop.TabIndex = 4;
+            this.pictureBoxStop.TabStop = false;
+            this.pictureBoxStop.Click += new System.EventHandler(this.pictureBoxStop_Click);
+            // 
+            // pictureBoxPause
+            // 
+            this.pictureBoxPause.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPause.Image")));
+            this.pictureBoxPause.Location = new System.Drawing.Point(44, 3);
+            this.pictureBoxPause.Name = "pictureBoxPause";
+            this.pictureBoxPause.Size = new System.Drawing.Size(35, 35);
+            this.pictureBoxPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxPause.TabIndex = 3;
+            this.pictureBoxPause.TabStop = false;
+            this.pictureBoxPause.Click += new System.EventHandler(this.pictureBox18_Click);
+            // 
+            // pictureBoxPlay
+            // 
+            this.pictureBoxPlay.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPlay.Image")));
+            this.pictureBoxPlay.Location = new System.Drawing.Point(3, 3);
+            this.pictureBoxPlay.Name = "pictureBoxPlay";
+            this.pictureBoxPlay.Size = new System.Drawing.Size(35, 35);
+            this.pictureBoxPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxPlay.TabIndex = 2;
+            this.pictureBoxPlay.TabStop = false;
+            this.pictureBoxPlay.Click += new System.EventHandler(this.pictureBox17_Click);
+            // 
             // panel21
             // 
             this.panel21.Controls.Add(this.pictureBoxSkull);
@@ -996,6 +1040,16 @@ namespace TraXile
             this.panel21.Name = "panel21";
             this.panel21.Size = new System.Drawing.Size(89, 41);
             this.panel21.TabIndex = 1;
+            // 
+            // pictureBoxSkull
+            // 
+            this.pictureBoxSkull.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxSkull.Image")));
+            this.pictureBoxSkull.Location = new System.Drawing.Point(3, 5);
+            this.pictureBoxSkull.Name = "pictureBoxSkull";
+            this.pictureBoxSkull.Size = new System.Drawing.Size(44, 28);
+            this.pictureBoxSkull.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxSkull.TabIndex = 7;
+            this.pictureBoxSkull.TabStop = false;
             // 
             // labelTrackingDied
             // 
@@ -1022,6 +1076,16 @@ namespace TraXile
             this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel28.Size = new System.Drawing.Size(372, 43);
             this.tableLayoutPanel28.TabIndex = 1;
+            // 
+            // pictureBox10
+            // 
+            this.pictureBox10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox10.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox10.Name = "pictureBox10";
+            this.pictureBox10.Size = new System.Drawing.Size(40, 37);
+            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox10.TabIndex = 9;
+            this.pictureBox10.TabStop = false;
             // 
             // tableLayoutPanel29
             // 
@@ -1319,6 +1383,7 @@ namespace TraXile
             this.imageList1.Images.SetKeyName(54, "Metamorph_Brain_inventory_icon.png");
             this.imageList1.Images.SetKeyName(55, "NavaliCoin.png");
             this.imageList1.Images.SetKeyName(56, "Inscribed_Ultimatum_inventory_icon.png");
+            this.imageList1.Images.SetKeyName(57, "Sanctuary_Map_(Necropolis)_inventory_icon.png");
             // 
             // panel3
             // 
@@ -1822,7 +1887,7 @@ namespace TraXile
             this.tableLayoutPanel11.RowCount = 2;
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.19469F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.80531F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(525, 325);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(531, 325);
             this.tableLayoutPanel11.TabIndex = 0;
             // 
             // chartMapTierCount
@@ -1840,7 +1905,7 @@ namespace TraXile
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             this.chartMapTierCount.Series.Add(series3);
-            this.chartMapTierCount.Size = new System.Drawing.Size(519, 299);
+            this.chartMapTierCount.Size = new System.Drawing.Size(525, 299);
             this.chartMapTierCount.TabIndex = 1;
             this.chartMapTierCount.Text = "chart2";
             title1.Name = "Map Tiers";
@@ -1854,7 +1919,7 @@ namespace TraXile
             this.label9.ForeColor = System.Drawing.Color.White;
             this.label9.Location = new System.Drawing.Point(3, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(519, 20);
+            this.label9.Size = new System.Drawing.Size(525, 20);
             this.label9.TabIndex = 2;
             this.label9.Text = "Map Tiers";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1866,12 +1931,12 @@ namespace TraXile
             this.tableLayoutPanel12.Controls.Add(this.chartMapTierAvgTime, 0, 1);
             this.tableLayoutPanel12.Controls.Add(this.label18, 0, 0);
             this.tableLayoutPanel12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel12.Location = new System.Drawing.Point(536, 39);
+            this.tableLayoutPanel12.Location = new System.Drawing.Point(542, 39);
             this.tableLayoutPanel12.Name = "tableLayoutPanel12";
             this.tableLayoutPanel12.RowCount = 2;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.19469F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.80531F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(526, 325);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(531, 325);
             this.tableLayoutPanel12.TabIndex = 3;
             // 
             // chartMapTierAvgTime
@@ -1889,7 +1954,7 @@ namespace TraXile
             series4.Legend = "Legend1";
             series4.Name = "Series1";
             this.chartMapTierAvgTime.Series.Add(series4);
-            this.chartMapTierAvgTime.Size = new System.Drawing.Size(520, 299);
+            this.chartMapTierAvgTime.Size = new System.Drawing.Size(525, 299);
             this.chartMapTierAvgTime.TabIndex = 1;
             this.chartMapTierAvgTime.Text = "chart3";
             title2.Name = "Map Tiers";
@@ -1903,7 +1968,7 @@ namespace TraXile
             this.label18.ForeColor = System.Drawing.Color.White;
             this.label18.Location = new System.Drawing.Point(3, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(520, 20);
+            this.label18.Size = new System.Drawing.Size(525, 20);
             this.label18.TabIndex = 2;
             this.label18.Text = "Average time per map/tier (minutes)";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1920,7 +1985,7 @@ namespace TraXile
             this.tableLayoutPanel13.RowCount = 2;
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.602151F));
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.39785F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(525, 294);
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(531, 294);
             this.tableLayoutPanel13.TabIndex = 4;
             // 
             // listViewMapsByArea
@@ -1935,7 +2000,7 @@ namespace TraXile
             this.listViewMapsByArea.HideSelection = false;
             this.listViewMapsByArea.Location = new System.Drawing.Point(3, 28);
             this.listViewMapsByArea.Name = "listViewMapsByArea";
-            this.listViewMapsByArea.Size = new System.Drawing.Size(519, 263);
+            this.listViewMapsByArea.Size = new System.Drawing.Size(525, 263);
             this.listViewMapsByArea.TabIndex = 0;
             this.listViewMapsByArea.UseCompatibleStateImageBehavior = false;
             this.listViewMapsByArea.View = System.Windows.Forms.View.Details;
@@ -1958,7 +2023,7 @@ namespace TraXile
             this.label29.ForeColor = System.Drawing.Color.White;
             this.label29.Location = new System.Drawing.Point(3, 0);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(519, 25);
+            this.label29.Size = new System.Drawing.Size(525, 25);
             this.label29.TabIndex = 1;
             this.label29.Text = "Maps by Area";
             this.label29.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1970,12 +2035,12 @@ namespace TraXile
             this.tableLayoutPanel14.Controls.Add(this.listViewTaggingOverview, 0, 1);
             this.tableLayoutPanel14.Controls.Add(this.label33, 0, 0);
             this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel14.Location = new System.Drawing.Point(536, 382);
+            this.tableLayoutPanel14.Location = new System.Drawing.Point(542, 382);
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
             this.tableLayoutPanel14.RowCount = 2;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 8.602151F));
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 91.39785F));
-            this.tableLayoutPanel14.Size = new System.Drawing.Size(526, 294);
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(531, 294);
             this.tableLayoutPanel14.TabIndex = 5;
             // 
             // listViewTaggingOverview
@@ -1990,7 +2055,7 @@ namespace TraXile
             this.listViewTaggingOverview.HideSelection = false;
             this.listViewTaggingOverview.Location = new System.Drawing.Point(3, 28);
             this.listViewTaggingOverview.Name = "listViewTaggingOverview";
-            this.listViewTaggingOverview.Size = new System.Drawing.Size(520, 263);
+            this.listViewTaggingOverview.Size = new System.Drawing.Size(525, 263);
             this.listViewTaggingOverview.TabIndex = 0;
             this.listViewTaggingOverview.UseCompatibleStateImageBehavior = false;
             this.listViewTaggingOverview.View = System.Windows.Forms.View.Details;
@@ -2013,7 +2078,7 @@ namespace TraXile
             this.label33.ForeColor = System.Drawing.Color.White;
             this.label33.Location = new System.Drawing.Point(3, 0);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(520, 25);
+            this.label33.Size = new System.Drawing.Size(525, 25);
             this.label33.TabIndex = 1;
             this.label33.Text = "Tagging Overview";
             this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2027,7 +2092,7 @@ namespace TraXile
             this.panel38.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel38.Location = new System.Drawing.Point(4, 4);
             this.panel38.Name = "panel38";
-            this.panel38.Size = new System.Drawing.Size(525, 28);
+            this.panel38.Size = new System.Drawing.Size(531, 28);
             this.panel38.TabIndex = 6;
             // 
             // comboBox6
@@ -2671,6 +2736,16 @@ namespace TraXile
             this.label92.TabIndex = 87;
             this.label92.Text = "Tried:";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(3, 41);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 7;
+            this.pictureBox1.TabStop = false;
+            // 
             // label10
             // 
             this.label10.AutoSize = true;
@@ -2820,6 +2895,16 @@ namespace TraXile
             this.label15.TabIndex = 14;
             this.label15.Text = "Done:";
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(8, 41);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(283, 220);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 13;
+            this.pictureBox2.TabStop = false;
+            // 
             // panelBossesMaven
             // 
             this.panelBossesMaven.Controls.Add(this.labelMavenTried);
@@ -2858,6 +2943,16 @@ namespace TraXile
             this.label35.Size = new System.Drawing.Size(138, 28);
             this.label35.TabIndex = 84;
             this.label35.Text = "The Maven";
+            // 
+            // pictureBox8
+            // 
+            this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
+            this.pictureBox8.Location = new System.Drawing.Point(2, 41);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox8.TabIndex = 79;
+            this.pictureBox8.TabStop = false;
             // 
             // label43
             // 
@@ -3007,6 +3102,16 @@ namespace TraXile
             this.label44.TabIndex = 78;
             this.label44.Text = "Done:";
             // 
+            // pictureBox9
+            // 
+            this.pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
+            this.pictureBox9.Location = new System.Drawing.Point(0, 32);
+            this.pictureBox9.Name = "pictureBox9";
+            this.pictureBox9.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox9.TabIndex = 77;
+            this.pictureBox9.TabStop = false;
+            // 
             // panel10
             // 
             this.panel10.Controls.Add(this.labelCataTried);
@@ -3124,6 +3229,16 @@ namespace TraXile
             this.label81.TabIndex = 82;
             this.label81.Text = "Done:";
             // 
+            // pictureBox21
+            // 
+            this.pictureBox21.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox21.Image")));
+            this.pictureBox21.Location = new System.Drawing.Point(8, 32);
+            this.pictureBox21.Name = "pictureBox21";
+            this.pictureBox21.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox21.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox21.TabIndex = 81;
+            this.pictureBox21.TabStop = false;
+            // 
             // panel11
             // 
             this.panel11.Controls.Add(this.labelSirusTries);
@@ -3216,6 +3331,16 @@ namespace TraXile
             this.label7.Size = new System.Drawing.Size(68, 29);
             this.label7.TabIndex = 19;
             this.label7.Text = "Sirus";
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
+            this.pictureBox4.Location = new System.Drawing.Point(0, 32);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 14;
+            this.pictureBox4.TabStop = false;
             // 
             // tabPage19
             // 
@@ -3336,6 +3461,16 @@ namespace TraXile
             this.label124.TabIndex = 85;
             this.label124.Text = "Done:";
             // 
+            // pictureBox26
+            // 
+            this.pictureBox26.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox26.Image")));
+            this.pictureBox26.Location = new System.Drawing.Point(2, 38);
+            this.pictureBox26.Name = "pictureBox26";
+            this.pictureBox26.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox26.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox26.TabIndex = 84;
+            this.pictureBox26.TabStop = false;
+            // 
             // label128
             // 
             this.label128.AutoSize = true;
@@ -3428,6 +3563,16 @@ namespace TraXile
             this.label120.Size = new System.Drawing.Size(42, 13);
             this.label120.TabIndex = 92;
             this.label120.Text = "Done:";
+            // 
+            // pictureBox27
+            // 
+            this.pictureBox27.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox27.Image")));
+            this.pictureBox27.Location = new System.Drawing.Point(5, 38);
+            this.pictureBox27.Name = "pictureBox27";
+            this.pictureBox27.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox27.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox27.TabIndex = 91;
+            this.pictureBox27.TabStop = false;
             // 
             // label114
             // 
@@ -3531,6 +3676,16 @@ namespace TraXile
             this.label148.TabIndex = 53;
             this.label148.Text = "Done:";
             // 
+            // pictureBox29
+            // 
+            this.pictureBox29.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox29.Image")));
+            this.pictureBox29.Location = new System.Drawing.Point(5, 40);
+            this.pictureBox29.Name = "pictureBox29";
+            this.pictureBox29.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox29.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox29.TabIndex = 52;
+            this.pictureBox29.TabStop = false;
+            // 
             // label149
             // 
             this.label149.AutoSize = true;
@@ -3625,6 +3780,16 @@ namespace TraXile
             this.label126.Size = new System.Drawing.Size(42, 13);
             this.label126.TabIndex = 91;
             this.label126.Text = "Done:";
+            // 
+            // pictureBox24
+            // 
+            this.pictureBox24.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox24.Image")));
+            this.pictureBox24.Location = new System.Drawing.Point(3, 40);
+            this.pictureBox24.Name = "pictureBox24";
+            this.pictureBox24.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox24.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox24.TabIndex = 90;
+            this.pictureBox24.TabStop = false;
             // 
             // label127
             // 
@@ -3797,6 +3962,16 @@ namespace TraXile
             this.label45.TabIndex = 51;
             this.label45.Text = "Al-Hezmin";
             // 
+            // pictureBox7
+            // 
+            this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
+            this.pictureBox7.Location = new System.Drawing.Point(2, 42);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox7.TabIndex = 46;
+            this.pictureBox7.TabStop = false;
+            // 
             // panel13
             // 
             this.panel13.Controls.Add(this.labelBaranTries);
@@ -3823,6 +3998,16 @@ namespace TraXile
             this.labelBaranTries.Size = new System.Drawing.Size(21, 13);
             this.labelBaranTries.TabIndex = 43;
             this.labelBaranTries.Text = "8x";
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
+            this.pictureBox5.Location = new System.Drawing.Point(5, 42);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox5.TabIndex = 30;
+            this.pictureBox5.TabStop = false;
             // 
             // label19
             // 
@@ -3984,6 +4169,16 @@ namespace TraXile
             this.label47.TabIndex = 44;
             this.label47.Text = "Drox";
             // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
+            this.pictureBox6.Location = new System.Drawing.Point(3, 42);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox6.TabIndex = 38;
+            this.pictureBox6.TabStop = false;
+            // 
             // panel15
             // 
             this.panel15.Controls.Add(this.labelVeritaniaTries);
@@ -4065,6 +4260,16 @@ namespace TraXile
             this.label22.Size = new System.Drawing.Size(42, 13);
             this.label22.TabIndex = 53;
             this.label22.Text = "Done:";
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(5, 40);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(289, 220);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 52;
+            this.pictureBox3.TabStop = false;
             // 
             // label48
             // 
@@ -4608,6 +4813,16 @@ namespace TraXile
             this.Cap.HeaderText = "Cap (Seconds)";
             this.Cap.Name = "Cap";
             // 
+            // timeCaps
+            // 
+            this.timeCaps.Image = ((System.Drawing.Image)(resources.GetObject("timeCaps.Image")));
+            this.timeCaps.Location = new System.Drawing.Point(325, 53);
+            this.timeCaps.Name = "timeCaps";
+            this.timeCaps.Size = new System.Drawing.Size(24, 24);
+            this.timeCaps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.timeCaps.TabIndex = 15;
+            this.timeCaps.TabStop = false;
+            // 
             // buttonSaveCaps
             // 
             this.buttonSaveCaps.BackColor = System.Drawing.Color.White;
@@ -4634,6 +4849,16 @@ namespace TraXile
             this.groupBox6.TabIndex = 7;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Restore Backup";
+            // 
+            // pictureBox23
+            // 
+            this.pictureBox23.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox23.Image")));
+            this.pictureBox23.Location = new System.Drawing.Point(405, 10);
+            this.pictureBox23.Name = "pictureBox23";
+            this.pictureBox23.Size = new System.Drawing.Size(24, 24);
+            this.pictureBox23.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox23.TabIndex = 16;
+            this.pictureBox23.TabStop = false;
             // 
             // buttonDeleteBackup
             // 
@@ -5380,6 +5605,26 @@ namespace TraXile
             this.tabPage2.Size = new System.Drawing.Size(1095, 437);
             this.tabPage2.TabIndex = 3;
             this.tabPage2.Text = "Labbie";
+            // 
+            // pictureBox28
+            // 
+            this.pictureBox28.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox28.Image")));
+            this.pictureBox28.Location = new System.Drawing.Point(252, 39);
+            this.pictureBox28.Name = "pictureBox28";
+            this.pictureBox28.Size = new System.Drawing.Size(206, 122);
+            this.pictureBox28.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox28.TabIndex = 6;
+            this.pictureBox28.TabStop = false;
+            // 
+            // pictureBox25
+            // 
+            this.pictureBox25.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox25.Image")));
+            this.pictureBox25.Location = new System.Drawing.Point(16, 39);
+            this.pictureBox25.Name = "pictureBox25";
+            this.pictureBox25.Size = new System.Drawing.Size(206, 122);
+            this.pictureBox25.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox25.TabIndex = 5;
+            this.pictureBox25.TabStop = false;
             // 
             // groupBox17
             // 
@@ -6673,6 +6918,7 @@ namespace TraXile
             this.imageList2.Images.SetKeyName(54, "Metamorph_Brain_inventory_icon.png");
             this.imageList2.Images.SetKeyName(55, "NavaliCoin.png");
             this.imageList2.Images.SetKeyName(56, "Inscribed_Ultimatum_inventory_icon.png");
+            this.imageList2.Images.SetKeyName(57, "Sanctuary_Map_(Necropolis)_inventory_icon.png");
             // 
             // toolTip1
             // 
@@ -6932,6 +7178,26 @@ namespace TraXile
             this.panel8.Size = new System.Drawing.Size(1117, 21);
             this.panel8.TabIndex = 3;
             // 
+            // pictureBox33
+            // 
+            this.pictureBox33.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox33.Image")));
+            this.pictureBox33.Location = new System.Drawing.Point(228, 1);
+            this.pictureBox33.Name = "pictureBox33";
+            this.pictureBox33.Size = new System.Drawing.Size(21, 20);
+            this.pictureBox33.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox33.TabIndex = 17;
+            this.pictureBox33.TabStop = false;
+            // 
+            // pictureBox32
+            // 
+            this.pictureBox32.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox32.Image")));
+            this.pictureBox32.Location = new System.Drawing.Point(101, 1);
+            this.pictureBox32.Name = "pictureBox32";
+            this.pictureBox32.Size = new System.Drawing.Size(21, 20);
+            this.pictureBox32.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox32.TabIndex = 16;
+            this.pictureBox32.TabStop = false;
+            // 
             // lbl_background_update
             // 
             this.lbl_background_update.AutoSize = true;
@@ -6941,6 +7207,16 @@ namespace TraXile
             this.lbl_background_update.Size = new System.Drawing.Size(197, 13);
             this.lbl_background_update.TabIndex = 15;
             this.lbl_background_update.Text = "still updating some data in background...";
+            // 
+            // pictureBox30
+            // 
+            this.pictureBox30.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox30.Image")));
+            this.pictureBox30.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox30.Name = "pictureBox30";
+            this.pictureBox30.Size = new System.Drawing.Size(21, 20);
+            this.pictureBox30.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox30.TabIndex = 12;
+            this.pictureBox30.TabStop = false;
             // 
             // linkLabel5
             // 
@@ -6972,280 +7248,6 @@ namespace TraXile
             this.progressBar1.Size = new System.Drawing.Size(123, 20);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 14;
-            // 
-            // pictureBoxStopWatch
-            // 
-            this.pictureBoxStopWatch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxStopWatch.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxStopWatch.Image")));
-            this.pictureBoxStopWatch.Location = new System.Drawing.Point(3, 3);
-            this.pictureBoxStopWatch.Name = "pictureBoxStopWatch";
-            this.pictureBoxStopWatch.Size = new System.Drawing.Size(94, 133);
-            this.pictureBoxStopWatch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxStopWatch.TabIndex = 0;
-            this.pictureBoxStopWatch.TabStop = false;
-            // 
-            // pictureBoxStop
-            // 
-            this.pictureBoxStop.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxStop.Image")));
-            this.pictureBoxStop.Location = new System.Drawing.Point(85, 3);
-            this.pictureBoxStop.Name = "pictureBoxStop";
-            this.pictureBoxStop.Size = new System.Drawing.Size(35, 35);
-            this.pictureBoxStop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxStop.TabIndex = 4;
-            this.pictureBoxStop.TabStop = false;
-            this.pictureBoxStop.Click += new System.EventHandler(this.pictureBoxStop_Click);
-            // 
-            // pictureBoxPause
-            // 
-            this.pictureBoxPause.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPause.Image")));
-            this.pictureBoxPause.Location = new System.Drawing.Point(44, 3);
-            this.pictureBoxPause.Name = "pictureBoxPause";
-            this.pictureBoxPause.Size = new System.Drawing.Size(35, 35);
-            this.pictureBoxPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxPause.TabIndex = 3;
-            this.pictureBoxPause.TabStop = false;
-            this.pictureBoxPause.Click += new System.EventHandler(this.pictureBox18_Click);
-            // 
-            // pictureBoxPlay
-            // 
-            this.pictureBoxPlay.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPlay.Image")));
-            this.pictureBoxPlay.Location = new System.Drawing.Point(3, 3);
-            this.pictureBoxPlay.Name = "pictureBoxPlay";
-            this.pictureBoxPlay.Size = new System.Drawing.Size(35, 35);
-            this.pictureBoxPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxPlay.TabIndex = 2;
-            this.pictureBoxPlay.TabStop = false;
-            this.pictureBoxPlay.Click += new System.EventHandler(this.pictureBox17_Click);
-            // 
-            // pictureBoxSkull
-            // 
-            this.pictureBoxSkull.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxSkull.Image")));
-            this.pictureBoxSkull.Location = new System.Drawing.Point(3, 5);
-            this.pictureBoxSkull.Name = "pictureBoxSkull";
-            this.pictureBoxSkull.Size = new System.Drawing.Size(44, 28);
-            this.pictureBoxSkull.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxSkull.TabIndex = 7;
-            this.pictureBoxSkull.TabStop = false;
-            // 
-            // pictureBox10
-            // 
-            this.pictureBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox10.Location = new System.Drawing.Point(3, 3);
-            this.pictureBox10.Name = "pictureBox10";
-            this.pictureBox10.Size = new System.Drawing.Size(40, 37);
-            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox10.TabIndex = 9;
-            this.pictureBox10.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(3, 41);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 7;
-            this.pictureBox1.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(8, 41);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(283, 220);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 13;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox8
-            // 
-            this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
-            this.pictureBox8.Location = new System.Drawing.Point(2, 41);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox8.TabIndex = 79;
-            this.pictureBox8.TabStop = false;
-            // 
-            // pictureBox9
-            // 
-            this.pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
-            this.pictureBox9.Location = new System.Drawing.Point(0, 32);
-            this.pictureBox9.Name = "pictureBox9";
-            this.pictureBox9.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox9.TabIndex = 77;
-            this.pictureBox9.TabStop = false;
-            // 
-            // pictureBox21
-            // 
-            this.pictureBox21.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox21.Image")));
-            this.pictureBox21.Location = new System.Drawing.Point(8, 32);
-            this.pictureBox21.Name = "pictureBox21";
-            this.pictureBox21.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox21.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox21.TabIndex = 81;
-            this.pictureBox21.TabStop = false;
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(0, 32);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 14;
-            this.pictureBox4.TabStop = false;
-            // 
-            // pictureBox26
-            // 
-            this.pictureBox26.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox26.Image")));
-            this.pictureBox26.Location = new System.Drawing.Point(2, 38);
-            this.pictureBox26.Name = "pictureBox26";
-            this.pictureBox26.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox26.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox26.TabIndex = 84;
-            this.pictureBox26.TabStop = false;
-            // 
-            // pictureBox27
-            // 
-            this.pictureBox27.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox27.Image")));
-            this.pictureBox27.Location = new System.Drawing.Point(5, 38);
-            this.pictureBox27.Name = "pictureBox27";
-            this.pictureBox27.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox27.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox27.TabIndex = 91;
-            this.pictureBox27.TabStop = false;
-            // 
-            // pictureBox29
-            // 
-            this.pictureBox29.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox29.Image")));
-            this.pictureBox29.Location = new System.Drawing.Point(5, 40);
-            this.pictureBox29.Name = "pictureBox29";
-            this.pictureBox29.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox29.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox29.TabIndex = 52;
-            this.pictureBox29.TabStop = false;
-            // 
-            // pictureBox24
-            // 
-            this.pictureBox24.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox24.Image")));
-            this.pictureBox24.Location = new System.Drawing.Point(3, 40);
-            this.pictureBox24.Name = "pictureBox24";
-            this.pictureBox24.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox24.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox24.TabIndex = 90;
-            this.pictureBox24.TabStop = false;
-            // 
-            // pictureBox7
-            // 
-            this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
-            this.pictureBox7.Location = new System.Drawing.Point(2, 42);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox7.TabIndex = 46;
-            this.pictureBox7.TabStop = false;
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(5, 42);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 30;
-            this.pictureBox5.TabStop = false;
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-            this.pictureBox6.Location = new System.Drawing.Point(3, 42);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox6.TabIndex = 38;
-            this.pictureBox6.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(5, 40);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(289, 220);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 52;
-            this.pictureBox3.TabStop = false;
-            // 
-            // timeCaps
-            // 
-            this.timeCaps.Image = ((System.Drawing.Image)(resources.GetObject("timeCaps.Image")));
-            this.timeCaps.Location = new System.Drawing.Point(325, 53);
-            this.timeCaps.Name = "timeCaps";
-            this.timeCaps.Size = new System.Drawing.Size(24, 24);
-            this.timeCaps.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.timeCaps.TabIndex = 15;
-            this.timeCaps.TabStop = false;
-            // 
-            // pictureBox23
-            // 
-            this.pictureBox23.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox23.Image")));
-            this.pictureBox23.Location = new System.Drawing.Point(405, 10);
-            this.pictureBox23.Name = "pictureBox23";
-            this.pictureBox23.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox23.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox23.TabIndex = 16;
-            this.pictureBox23.TabStop = false;
-            // 
-            // pictureBox28
-            // 
-            this.pictureBox28.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox28.Image")));
-            this.pictureBox28.Location = new System.Drawing.Point(252, 39);
-            this.pictureBox28.Name = "pictureBox28";
-            this.pictureBox28.Size = new System.Drawing.Size(206, 122);
-            this.pictureBox28.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox28.TabIndex = 6;
-            this.pictureBox28.TabStop = false;
-            // 
-            // pictureBox25
-            // 
-            this.pictureBox25.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox25.Image")));
-            this.pictureBox25.Location = new System.Drawing.Point(16, 39);
-            this.pictureBox25.Name = "pictureBox25";
-            this.pictureBox25.Size = new System.Drawing.Size(206, 122);
-            this.pictureBox25.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox25.TabIndex = 5;
-            this.pictureBox25.TabStop = false;
-            // 
-            // pictureBox33
-            // 
-            this.pictureBox33.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox33.Image")));
-            this.pictureBox33.Location = new System.Drawing.Point(228, 1);
-            this.pictureBox33.Name = "pictureBox33";
-            this.pictureBox33.Size = new System.Drawing.Size(21, 20);
-            this.pictureBox33.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox33.TabIndex = 17;
-            this.pictureBox33.TabStop = false;
-            // 
-            // pictureBox32
-            // 
-            this.pictureBox32.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox32.Image")));
-            this.pictureBox32.Location = new System.Drawing.Point(101, 1);
-            this.pictureBox32.Name = "pictureBox32";
-            this.pictureBox32.Size = new System.Drawing.Size(21, 20);
-            this.pictureBox32.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox32.TabIndex = 16;
-            this.pictureBox32.TabStop = false;
-            // 
-            // pictureBox30
-            // 
-            this.pictureBox30.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox30.Image")));
-            this.pictureBox30.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox30.Name = "pictureBox30";
-            this.pictureBox30.Size = new System.Drawing.Size(21, 20);
-            this.pictureBox30.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox30.TabIndex = 12;
-            this.pictureBox30.TabStop = false;
             // 
             // pictureBox16
             // 
@@ -7368,13 +7370,19 @@ namespace TraXile
             this.panel2.ResumeLayout(false);
             this.tableLayoutPanelStopWatchArea1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.tableLayoutPanel27.ResumeLayout(false);
             this.panel20.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStop)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).EndInit();
             this.panel21.ResumeLayout(false);
             this.panel21.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).EndInit();
             this.tableLayoutPanel28.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
             this.tableLayoutPanel29.ResumeLayout(false);
             this.tableLayoutPanel29.PerformLayout();
             this.panelTags.ResumeLayout(false);
@@ -7449,36 +7457,50 @@ namespace TraXile
             this.tableLayoutPanel9.ResumeLayout(false);
             this.panelBossElder.ResumeLayout(false);
             this.panelBossElder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelBossesShaper.ResumeLayout(false);
             this.panelBossesShaper.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panelBossesMaven.ResumeLayout(false);
             this.panelBossesMaven.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             this.panelBossesTrialmaster.ResumeLayout(false);
             this.panelBossesTrialmaster.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
             this.panel10.ResumeLayout(false);
             this.panel10.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox21)).EndInit();
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.tabPage19.ResumeLayout(false);
             this.tableLayoutPanel38.ResumeLayout(false);
             this.panel31.ResumeLayout(false);
             this.panel31.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox26)).EndInit();
             this.panel32.ResumeLayout(false);
             this.panel32.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox27)).EndInit();
             this.panel34.ResumeLayout(false);
             this.panel34.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox29)).EndInit();
             this.panel35.ResumeLayout(false);
             this.panel35.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).EndInit();
             this.tabPage20.ResumeLayout(false);
             this.tableLayoutPanel25.ResumeLayout(false);
             this.panel12.ResumeLayout(false);
             this.panel12.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             this.panel13.ResumeLayout(false);
             this.panel13.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             this.panel14.ResumeLayout(false);
             this.panel14.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.panel15.ResumeLayout(false);
             this.panel15.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.panel16.ResumeLayout(false);
             this.panel16.PerformLayout();
             this.tabPage21.ResumeLayout(false);
@@ -7501,7 +7523,9 @@ namespace TraXile
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.timeCaps)).EndInit();
             this.groupBox6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox23)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
@@ -7527,6 +7551,8 @@ namespace TraXile
             this.groupBox8.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).EndInit();
             this.groupBox17.ResumeLayout(false);
             this.groupBox17.PerformLayout();
             this.tabPage14.ResumeLayout(false);
@@ -7570,30 +7596,6 @@ namespace TraXile
             this.groupBox11.PerformLayout();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStop)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox21)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox26)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox27)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox29)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.timeCaps)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox23)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox28)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox33)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox32)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox30)).EndInit();
