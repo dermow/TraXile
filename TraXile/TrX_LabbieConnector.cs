@@ -238,8 +238,6 @@ namespace TraXile
                 enchant = new TrX_LabEnchant() { ID = reader.GetInt32(0), Text = reader.GetString(1) };
                 _knownEnchants.Add(enchant);
             }
-
-            string s = "";
         }
 
         /// <summary>

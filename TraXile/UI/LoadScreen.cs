@@ -25,7 +25,12 @@ namespace TraXile
 
         public Label progressLabel2
         {
-            get { return this.label2; }
+            get { return this.label3; }
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 

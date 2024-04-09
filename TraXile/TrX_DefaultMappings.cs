@@ -150,6 +150,10 @@ namespace TraXile
         private List<string> _taneAreas;
         public List<string> TaneAreas => _taneAreas;
 
+        // Utlimatum
+        private List<string> _ultimatumAreas;
+        public List<string> UltimatumAreas => _ultimatumAreas;
+
         // All
         public List<string> AllAreas
         {
@@ -182,6 +186,7 @@ namespace TraXile
                 lst.AddRange(LabTrialAreas);
                 lst.AddRange(SanctumAreas);
                 lst.AddRange(TotAAreas);
+                lst.AddRange(UltimatumAreas);
                 lst.Sort();
                 return lst;
             }
@@ -195,6 +200,11 @@ namespace TraXile
             _wikiLinks = new Dictionary<string, string>
             {
                 {  "Elder", "https://pathofexile.fandom.com/wiki/The_Elder" },
+            };
+
+            _ultimatumAreas = new List<string>()
+            {
+                "The Utzaal Arena"
             };
 
             _taneAreas = new List<string>()
@@ -403,6 +413,11 @@ namespace TraXile
                 "Untainted Paradise",
                 "Vaults of Atziri",
                 "Whakawairua Tuahu",
+                "Abomination",
+                "Citadel",
+                "Fortress",
+                "Sanctuary",
+                "Ziggurat"
             };
 
             _heistAreas = new List<string>
@@ -827,7 +842,8 @@ namespace TraXile
                 ACTIVITY_TYPES.BLACK_STAR_FIGHT,
                 ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT,
                 ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT,
-                ACTIVITY_TYPES.TIMELESS_LEGION
+                ACTIVITY_TYPES.TIMELESS_LEGION,
+                ACTIVITY_TYPES.INSCRIBED_ULTIMATUM
             };
 
             // Map areas with enabled death counter
@@ -860,6 +876,7 @@ namespace TraXile
             _deathCountEnabledAreas.AddRange(TimelessLegionAreas);
             _deathCountEnabledAreas.AddRange(SanctumAreas);
             _deathCountEnabledAreas.AddRange(TrialMasterAreas);
+            _deathCountEnabledAreas.AddRange(UltimatumAreas);
         }
     }
 }
