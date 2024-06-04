@@ -347,6 +347,7 @@
     <None Include="Resources\TraXileOverlay.png" />
     <None Include="Resources\d73a9d7f881b3ee6d3e11c5c13382e37.jpg" />
     <None Include="Resources\trax.jpg" />
+    <None Include="Resources\Changelog.md" />
     <Content Include="TraXileOverlay.png" />
     <Content Include="version.xml" />
     <None Include="log4net.config">
