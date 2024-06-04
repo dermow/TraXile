@@ -278,12 +278,6 @@
     <Compile Include="TrX_SettingsManager.cs" />
     <Compile Include="UI\TrX_Theme.cs" />
     <Compile Include="UI\TrX_ThemeDefinitions.cs" />
-    <Compile Include="UI\UserControlLabRun.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\UserControlLabRun.Designer.cs">
-      <DependentUpon>UserControlLabRun.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="UI\AboutW.resx">
       <DependentUpon>AboutW.cs</DependentUpon>
     </EmbeddedResource>
@@ -330,9 +324,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SummaryWindow.resx">
       <DependentUpon>SummaryWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\UserControlLabRun.resx">
-      <DependentUpon>UserControlLabRun.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
