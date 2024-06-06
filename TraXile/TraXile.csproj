@@ -278,12 +278,6 @@
     <Compile Include="TrX_SettingsManager.cs" />
     <Compile Include="UI\TrX_Theme.cs" />
     <Compile Include="UI\TrX_ThemeDefinitions.cs" />
-    <Compile Include="UI\UserControlLabRun.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\UserControlLabRun.Designer.cs">
-      <DependentUpon>UserControlLabRun.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="UI\AboutW.resx">
       <DependentUpon>AboutW.cs</DependentUpon>
     </EmbeddedResource>
@@ -331,9 +325,6 @@
     <EmbeddedResource Include="UI\SummaryWindow.resx">
       <DependentUpon>SummaryWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\UserControlLabRun.resx">
-      <DependentUpon>UserControlLabRun.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -356,6 +347,7 @@
     <None Include="Resources\TraXileOverlay.png" />
     <None Include="Resources\d73a9d7f881b3ee6d3e11c5c13382e37.jpg" />
     <None Include="Resources\trax.jpg" />
+    <None Include="Resources\Changelog.md" />
     <Content Include="TraXileOverlay.png" />
     <Content Include="version.xml" />
     <None Include="log4net.config">

@@ -751,21 +751,9 @@ namespace TraXile
             _myStats.NumericStats = new Dictionary<string, int>
             {
                 { "AreaChanges", 0 },
-                { "BaranStarted", 0 },
-                { "BaranKilled", 0 },
-                { "BlackStarTried", 0 },
-                { "BlackStarKilled", 0 },
                 { "CampaignFinished", 0 },
-                { "CatarinaTried", 0 },
-                { "CatarinaKilled", 0 },
                 { "TotalKilledCount", 0 },
-                { "DroxStarted", 0 },
-                { "DroxKilled", 0 },
-                { "EaterOfWorldsTried", 0 },
-                { "EaterOfWorldsKilled", 0 },
                 { "EinharCaptures", 0 },
-                { "ElderTried", 0 },
-                { "ElderKilled", 0 },
                 { "ExpeditionEncounters", 0 },
                 { "ExpeditionEncounters_Rog", 0 },
                 { "ExpeditionEncounters_Tujen", 0 },
@@ -773,36 +761,20 @@ namespace TraXile
                 { "ExpeditionEncounters_Dannig", 0 },
                 { "HideoutTimeSec", 0 },
                 { "HighestLevel", 0 },
-                { "HunterKilled", 0 },
-                { "HunterStarted", 0 },
-                { "InfiniteHungerTried", 0 },
-                { "InfiniteHungerKilled", 0 },
                 { "LabsFinished", 0 },
                 { "LabsStarted", 0 },
                 { "LevelUps", 0 },
-                { "MavenStarted", 0 },
-                { "MavenKilled", 0 },
                 { "TotalMapsDone", 0 },
                 { "TotalHeistsDone", 0 },
                 { "SanctumKilledLycia1", 0 },
                 { "SanctumKilledLycia2", 0 },
-                { "SearingExarchTried", 0 },
-                { "SearingExarchKilled", 0 },
-                { "ShaperTried", 0 },
-                { "ShaperKilled", 0 },
                 { "SimulacrumCleared", 0 },
                 { "SimulacrumStarted", 0 },
-                { "SirusStarted", 0 },
-                { "SirusKilled", 0 },
                 { "Suicides", 0 },
                 { "TemplesDone", 0 },
-                { "TrialMasterStarted", 0 },
-                { "TrialMasterKilled", 0 },
                 { "TrialMasterTookReward", 0 },
                 { "TrialMasterVictory", 0 },
                 { "TrialMasterSuccess", 0 },
-                { "VeritaniaKilled", 0 },
-                { "VeritaniaStarted", 0 },
                 { "AncestorMatchesWon", 0 },
                 { "AncestorMatchesLost", 0 },
                 { "AncestorTournamentsWon", 0 },
@@ -813,32 +785,12 @@ namespace TraXile
             {
                 { "TotalMapsDone", "Total maps done" },
                 { "TotalHeistsDone", "Total heists done" },
-                { "ElderKilled", "Elder killed" },
-                { "ShaperKilled", "Shaper killed" },
-                { "SirusStarted", "Sirus tried" },
-                { "SirusKilled", "Sirus killed" },
-                { "HunterKilled", "Hunter killed (not reliable*)" },
-                { "HunterStarted", "Hunter tried" },
-                { "VeritaniaKilled", "Veritania killed (not reliable*)" },
-                { "VeritaniaStarted", "Veritania tried" },
-                { "BaranStarted", "Baran tried" },
-                { "BaranKilled", "Baran killed (not reliable*)" },
-                { "DroxStarted", "Drox tried" },
-                { "DroxKilled", "Drox killed (not reliable*)" },
                 { "HighestLevel", "Highest level reached" },
-                { "TrialMasterStarted", "Trialmaster-Fight tried" },
-                { "TrialMasterKilled", "Trialmaster killed" },
-                { "MavenStarted", "Maven tried" },
-                { "MavenKilled", "Maven killed" },
                 { "TotalKilledCount", "Death count" },
                 { "EinharCaptures", "Einhar beasts captured" },
                 { "TrialMasterTookReward", "Ultimatum: took rewards" },
                 { "TrialMasterVictory", "Ultimatum: cleared all rounds" },
                 { "TrialMasterSuccess", "Ultimatum: did not fail" },
-                { "ShaperTried", "Shaper tried" },
-                { "ElderTried", "Elder tried" },
-                { "CatarinaTried", "Catarina tried" },
-                { "CatarinaKilled", "Catarina killed" },
                 { "LevelUps", "Level Ups" },
                 { "SimulacrumStarted", "Simulacrum started" },
                 { "SimulacrumCleared", "Simulacrum 100% done" },
@@ -853,14 +805,6 @@ namespace TraXile
                 { "HideoutTimeSec", "Hideout time" },
                 { "CampaignFinished", "Campaign finished" },
                 { "Suicides", "Suicides" },
-                { "SearingExarchTried", "Searing Exarch tried" },
-                { "SearingExarchKilled", "Searing Exarch killed" },
-                { "BlackStarTried", "Black Star tried" },
-                { "BlackStarKilled", "Black Star killed" },
-                { "EaterOfWorldsTried", "Eater of Worlds tried" },
-                { "EaterOfWorldsKilled", "Eater of Worlds killed" },
-                { "InfiniteHungerTried", "Infinite Hunger tried" },
-                { "InfiniteHungerKilled", "Infinite Hunger killed" },
                 { "SanctumKilledLycia1", "Sanctum: Lycia 1 killed" },
                 { "SanctumKilledLycia2", "Sanctum: Lycia 2 killed" },
                 { "AncestorMatchesWon", "Ancestor: Matches won" },
@@ -2579,45 +2523,8 @@ namespace TraXile
                         IncrementStat("Suicides", ev.EventTime, 1);
                         HandlePlayerDiedEvent(ev);
                         break;
-                    case EVENT_TYPES.ELDER_KILLED:
-                        IncrementStat("ElderKilled", ev.EventTime, 1);
-                        _lastElderInstance = ""; //TODO: could be a problem if protaled back to already finished elder fight. But fixes multi fights on same instance...
-                        break;
-                    case EVENT_TYPES.SHAPER_KILLED:
-                        // shaper has 3x the same kill dialogue
-                        _shaperKillsInFight++;
-                        if (_shaperKillsInFight == 3)
-                        {
-                            IncrementStat("ShaperKilled", ev.EventTime, 1);
-                            _shaperKillsInFight = 0;
-                        }
-                        break;
-                    case EVENT_TYPES.SIRUS_FIGHT_STARTED:
-                        IncrementStat("SirusStarted", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.SIRUS_KILLED:
-                        IncrementStat("SirusKilled", ev.EventTime, 1);
-                        break;
                     case EVENT_TYPES.INSTANCE_CONNECTED:
                         _currentInstanceEndpoint = GetEndpointFromInstanceEvent(ev);
-                        break;
-                    case EVENT_TYPES.VERITANIA_FIGHT_STARTED:
-                        IncrementStat("VeritaniaStarted", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.BARAN_FIGHT_STARTED:
-                        IncrementStat("BaranStarted", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.DROX_FIGHT_STARTED:
-                        IncrementStat("DroxStarted", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.HUNTER_FIGHT_STARTED:
-                        IncrementStat("HunterStarted", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.MAVEN_FIGHT_STARTED:
-                        IncrementStat("MavenStarted", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.TRIALMASTER_STARTED:
-                        IncrementStat("TrialMasterStarted", ev.EventTime, 1);
                         break;
                     case EVENT_TYPES.TRIALMASTER_VICTORY:
                         IncrementStat("TrialMasterSuccess", ev.EventTime, 1);
@@ -2656,36 +2563,6 @@ namespace TraXile
                             _currentActivity.AddTag("ultimatum-loss");
                         }
                         break;
-                    case EVENT_TYPES.MAVEN_KILLED:
-                        IncrementStat("MavenKilled", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.TRIALMASTER_KILLED:
-                        IncrementStat("TrialMasterKilled", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.VERITANIA_KILLED:
-                        if (_lastEventTypeConq != EVENT_TYPES.VERITANIA_KILLED)
-                        {
-                            IncrementStat("VeritaniaKilled", ev.EventTime, 1);
-                        }
-                        break;
-                    case EVENT_TYPES.DROX_KILLED:
-                        if (_lastEventTypeConq != EVENT_TYPES.DROX_KILLED)
-                        {
-                            IncrementStat("DroxKilled", ev.EventTime, 1);
-                        }
-                        break;
-                    case EVENT_TYPES.BARAN_KILLED:
-                        if (_lastEventTypeConq != EVENT_TYPES.BARAN_KILLED)
-                        {
-                            IncrementStat("BaranKilled", ev.EventTime, 1);
-                        }
-                        break;
-                    case EVENT_TYPES.HUNTER_KILLED:
-                        if (_lastEventTypeConq != EVENT_TYPES.HUNTER_KILLED)
-                        {
-                            IncrementStat("HunterKilled", ev.EventTime, 1);
-                        }
-                        break;
                     case EVENT_TYPES.TRIALMASTER_ROUND_STARTED:
                         if (_currentActivity != null
                             && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN || _currentActivity.Type == ACTIVITY_TYPES.INSCRIBED_ULTIMATUM))
@@ -2696,18 +2573,6 @@ namespace TraXile
                         break;
                     case EVENT_TYPES.EINHAR_BEAST_CAPTURE:
                         IncrementStat("EinharCaptures", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.SHAPER_FIGHT_STARTED:
-                        //IncrementStat("ShaperTried", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.PARTYMEMBER_ENTERED_AREA:
-                        AddKnownPlayerIfNotExists(ev.LogLine.Split(' ')[8]);
-                        break;
-                    case EVENT_TYPES.CATARINA_FIGHT_STARTED:
-                        IncrementStat("CatarinaTried", ev.EventTime, 1);
-                        break;
-                    case EVENT_TYPES.CATARINA_KILLED:
-                        IncrementStat("CatarinaKilled", ev.EventTime, 1);
                         break;
                     case EVENT_TYPES.DELIRIUM_ENCOUNTER:
 
@@ -3052,30 +2917,6 @@ namespace TraXile
                             _currentActivity.AddTag("twice-blessed");
                         }
                         break;
-                    case EVENT_TYPES.EXARCH_TRIED:
-                        IncrementStat("SearingExarchTried", ev.EventTime);
-                        break;
-                    case EVENT_TYPES.EXARCH_KILLED:
-                        IncrementStat("SearingExarchKilled", ev.EventTime);
-                        break;
-                    case EVENT_TYPES.BLACK_STAR_TRIED:
-                        IncrementStat("BlackStarTried", ev.EventTime);
-                        break;
-                    case EVENT_TYPES.BLACK_STAR_KILLED:
-                        IncrementStat("BlackStarKilled", ev.EventTime);
-                        break;
-                    case EVENT_TYPES.INFINITE_HUNGER_TRIED:
-                        IncrementStat("InfiniteHungerTried", ev.EventTime);
-                        break;
-                    case EVENT_TYPES.INFINITE_HUNGER_KILLED:
-                        IncrementStat("InfiniteHungerKilled", ev.EventTime);
-                        break;
-                    case EVENT_TYPES.EATER_OF_WORLDS_TRIED:
-                        IncrementStat("EaterOfWorldsTried", ev.EventTime);
-                        break;
-                    case EVENT_TYPES.EATER_OF_WORLDS_KILLED:
-                        IncrementStat("EaterOfWorldsKilled", ev.EventTime);
-                        break;
                     case EVENT_TYPES.HARVEST:
                         if(_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP)
                         {
@@ -3107,25 +2948,6 @@ namespace TraXile
                             _currentActivity.AddTag("ultimatum");
                         }
                         break;
-                }
-
-                // Sometimes conqueror fire their death speech twice...
-                EVENT_TYPES[] checkConqTypes =
-                    {
-                    EVENT_TYPES.VERITANIA_FIGHT_STARTED,
-                    EVENT_TYPES.VERITANIA_KILLED,
-                    EVENT_TYPES.HUNTER_KILLED ,
-                    EVENT_TYPES.HUNTER_FIGHT_STARTED,
-                    EVENT_TYPES.HUNTER_KILLED,
-                    EVENT_TYPES.BARAN_FIGHT_STARTED,
-                    EVENT_TYPES.BARAN_KILLED,
-                    EVENT_TYPES.DROX_FIGHT_STARTED,
-                    EVENT_TYPES.DROX_KILLED,
-                };
-
-                if (checkConqTypes.Contains<EVENT_TYPES>(ev.EventType))
-                {
-                    _lastEventTypeConq = ev.EventType;
                 }
 
                 if(_eventQueueInitizalized)

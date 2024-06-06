@@ -197,12 +197,6 @@ namespace TraXile
         // Property: Timecaps to be accessible
         public Dictionary<ACTIVITY_TYPES, int> TimeCaps => _timeCaps;
 
-        // Current labrun user control
-        private UI.UserControlLabRun _currentLabrunControl;
-
-        // Enchant info ID
-        private int _selectedEnchantID = 0;
-
         // Profit tracker
         private TrX_ProfitTracking _profitTracking;
 
@@ -1070,7 +1064,6 @@ namespace TraXile
             _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
             _logic.OnActivityFinished += Logic_OnActivityFinished;
             _logic.OnTagsUpdated += Logic_OnTagsUpdated;
-            _logic.LabEnchantsReceived += _logic_LabEnchantsReceived;
             _logic.OnActivityStarted += _logic_OnActivityStarted;
             _logic.LabbieConnector.LabbieLogPath = ReadSetting("labbie.path", null);
             _logic.Start();
@@ -1083,13 +1076,6 @@ namespace TraXile
             _profitTracking = new TrX_ProfitTracking(TrX_Static.LABDATA_XML_FULLPATH);
             _profitBinding = new BindingSource();
             _profitBinding.DataSource = _profitTracking.Data;
-            
-            dataGridView2.DataSource = _profitBinding.DataSource;
-            dataGridView2.ForeColor = Color.Black;
-            dataGridView2.Columns[5].ReadOnly = true;
-
-            UpdateProfitSummary();
-            SetProfitFilter();
                 
             _lvmActlog = new TrX_ListViewManager(listViewActLog);
           
@@ -1162,14 +1148,7 @@ namespace TraXile
             _loadScreenWindow.Show(this);
 
             InitLeagueInfo();
-            ResetLabRuns();
             LoadLayout();
-
-            // Add all enchants
-            foreach(TrX_LabEnchant en in _logic.LabbieConnector.KnownEnchants)
-            {
-                comboBox2.Items.Add(en.Text);
-            }
 
             // Request initial Dashboard update
             _uiFlagLabDashboard = true;
@@ -1238,15 +1217,6 @@ namespace TraXile
             // Start UI Thread
             timer1.Enabled = true;
             timer1.Start();
-
-            // Add dummy Labrun for testing
-            // ==============================
-            bool addDummyLab = false;
-            bool addDummyEnchants = true;
-            if(addDummyLab)
-            {
-                AddDummyLabForTesting(addDummyEnchants, 3);
-            }
         }
 
         private void _workerAllStatsChart_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -1313,96 +1283,11 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Method for testing and debugging only
-        /// </summary>
-        /// <param name="addDummyEnchants"></param>
-        private void AddDummyLabForTesting(bool addDummyEnchants = false, int enchant_count = 3)
-        {
-            TrX_TrackedLabrun lr = new TrX_TrackedLabrun();
-            lr.Area = "Uber-Lab";
-            lr.Started = DateTime.Now;
-            lr.TimeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
-            lr.Type = ACTIVITY_TYPES.LABYRINTH;
-            lr.StartStopWatch();
-            if (addDummyEnchants)
-            {
-                for(int i = 0; i < enchant_count; i++)
-                {
-                    lr.Enchants.Add(new TrX_LabEnchant() { ID = 2, Text = "Dummy Enchant 1" });
-                }
-            }
-            UI.UserControlLabRun uclr = new UI.UserControlLabRun(lr, this, true);
-            uclr.Dock = DockStyle.Fill;
-            foreach (string s in comboBox2.Items)
-            {
-                uclr.EnchantCombo.Items.Add(s);
-            }
-            panel23.Controls.Add(uclr);
-            _currentLabrunControl = uclr;
-            _logic.CurrentLab = lr;
-            _logic.CurrentActivity = lr;
-
-           
-        }
-
-        /// <summary>
         /// Event Handler
         /// </summary>
         /// <param name="e"></param>
         private void _logic_OnActivityStarted(TrX_CoreLogicActivityEventArgs e)
         {
-            if(_logic.EventQueueInitialized)
-            {
-                // Start new lab
-                if (e.Activity.Type == ACTIVITY_TYPES.LABYRINTH)
-                {
-                    MethodInvoker mi = delegate
-                    {
-                        UI.UserControlLabRun ulr = new UI.UserControlLabRun((TrX_TrackedLabrun)e.Activity, this, true);
-                        ulr.Dock = DockStyle.Fill;
-                        foreach (string s in comboBox2.Items)
-                        {
-                            ulr.EnchantCombo.Items.Add(s);
-                        }
-                        _myTheme.Apply(ulr);
-
-                        if (_currentLabrunControl != null)
-                        {
-                            panel23.Controls.Remove(_currentLabrunControl);
-                            _currentLabrunControl = null;
-                        }
-
-                        _currentLabrunControl = ulr;
-                        panel23.Controls.Add(ulr);
-                    };
-                    BeginInvoke(mi);
-                }
-            }
-           
-        }
-
-        /// <summary>
-        /// Event Handler
-        /// </summary>
-        /// <param name="e"></param>
-        private void _logic_LabEnchantsReceived(TrX_LabbieEventArgs e)
-        {
-            if(_currentLabrunControl != null)
-            {
-                MethodInvoker mi = delegate
-                {
-                    foreach (TrX_LabEnchant enchant in e.Enchants)
-                    {
-                        _currentLabrunControl.AddEnchant(enchant);
-                        if(!comboBox2.Items.Contains(enchant.Text))
-                        {
-                            comboBox2.Items.Add(enchant.Text);
-                        }
-                    }
-                };
-                BeginInvoke(mi);
-            }
-            
         }
 
         /// <summary>
@@ -1948,31 +1833,7 @@ namespace TraXile
             streamWriter.WriteLine(TrX_Static.VERSION);
             streamWriter.Close();
         }
-
-        private void ResetLabRuns()
-        {
-            int labsToShow = 5;
-
-            pnl_deprecated.Controls.Clear();
-
-            if(_logic.LabHistory.Count > 0)
-            {
-                if (_logic.LabHistory.Count < labsToShow)
-                {
-                    labsToShow = _logic.LabHistory.Count;
-                }
-                int y = 0;
-                foreach (TrX_TrackedLabrun labrun in _logic.LabHistory.GetRange(0, labsToShow))
-                {
-                    UI.UserControlLabRun lr = new UI.UserControlLabRun(labrun, this);
-                    lr.Location = new Point(0, y);
-                    pnl_deprecated.Controls.Add(lr);
-                    y += lr.Height + 20;
-                }
-            }
-           
-        }
-
+      
         /// <summary>
         /// Reset and reload the Activity-History ListView
         /// </summary>
@@ -2617,12 +2478,6 @@ namespace TraXile
 
                     DateTime dtRenderStart = DateTime.Now;
 
-                    // Lab farming tab
-                    if(_logic.CurrentLab != null && _currentLabrunControl != null)
-                    {
-                        _currentLabrunControl.UpdateInfo();
-                    }
-
                     // League Stats
                     if(_uiFlagLeagueDashboard)
                     {
@@ -2656,13 +2511,6 @@ namespace TraXile
                     {
                         RenderAllStatsDashboard();
                         _uiFlagAllStatsDashboard = false;
-                    }
-
-                    //Bossing
-                    if (_uiFlagBossDashboard)
-                    {
-                        RenderBossingDashboard();
-                        _uiFlagBossDashboard = false;
                     }
 
                     // Global Dashbaord
@@ -2758,11 +2606,6 @@ namespace TraXile
             checkBox3.Checked = _tagOverlayShowDefault;
             checkBoxMinimizeToTray.Checked = _minimizeToTray;
             label38.Text = _overlayOpacity.ToString() + "%";
-            textBox9.Text = ReadSetting("lab.profittracking.filter.text", "");
-            radioButton1.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "all";
-            radioButton2.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "open";
-            radioButton3.Checked = ReadSetting("lab.profittracking.filter.state", "all") == "sold";
-            textBox6.Text = ReadSetting("labbie.path", "");
             _overlayTag1 = ReadSetting("overlay.tags.tag1", "blight");
             _overlayTag2 = ReadSetting("overlay.tags.tag2", "expedition");
             _overlayTag3 = ReadSetting("overlay.tags.tag3", null);
@@ -3306,164 +3149,6 @@ namespace TraXile
                     chartHeistAvgTime.Series[0].Points.AddXY(kvp.Key, Math.Round(kvp.Value / 60, 1));
                     chartHeistByLevel.Series[0].Points.AddXY(kvp.Key, levelCounts[kvp.Key]);
                 }
-            };
-            BeginInvoke(mi);
-        }
-
-        /// <summary>
-        /// Update bossing dashboard
-        /// </summary>
-        private void RenderBossingDashboard()
-        {
-            DateTime dt1 = new DateTime(_statsDate1.Year, _statsDate1.Month, _statsDate1.Day, 0, 0, 0, _dateTimeFormatInfo.Calendar);
-            DateTime dt2 = new DateTime(_statsDate2.Year, _statsDate2.Month, _statsDate2.Day, 23, 59, 59, _dateTimeFormatInfo.Calendar);
-            long ts1 = ((DateTimeOffset)dt1).ToUnixTimeSeconds();
-            long ts2 = ((DateTimeOffset)dt2).ToUnixTimeSeconds();
-
-            double baranTried = 0,
-                baranKilled = 0,
-                droxTried = 0,
-                droxKilled = 0,
-                veriTried = 0,
-                veriKilled = 0,
-                hunterTried = 0,
-                hunterKilled = 0,
-                elderTried = 0,
-                elderKilled = 0,
-                shaperTried = 0,
-                shaperKilled = 0,
-                cataTried = 0,
-                cataKilled = 0,
-                sirusTried = 0,
-                sirusKilled = 0,
-                mavenTried = 0,
-                mavenKilled = 0,
-                tmTried = 0,
-                tmKilled = 0,
-                exarchTried = 0,
-                exarchKilled = 0,
-                blackStarTried = 0,
-                blackStarKilled = 0,
-                eaterTried = 0,
-                eaterKilled = 0,
-                hungerTried = 0,
-                hungerKilled = 0;
-
-            baranTried = _logic.Stats.GetIncrementValue("BaranStarted", ts1, ts2);
-            baranKilled = _logic.Stats.GetIncrementValue("BaranKilled", ts1, ts2);
-            veriTried = _logic.Stats.GetIncrementValue("VeritaniaStarted", ts1, ts2);
-            veriKilled = _logic.Stats.GetIncrementValue("VeritaniaKilled", ts1, ts2);
-            droxTried = _logic.Stats.GetIncrementValue("DroxStarted", ts1, ts2);
-            droxKilled = _logic.Stats.GetIncrementValue("DroxKilled", ts1, ts2);
-            hunterTried = _logic.Stats.GetIncrementValue("HunterStarted", ts1, ts2);
-            hunterKilled = _logic.Stats.GetIncrementValue("HunterKilled", ts1, ts2);
-            elderTried = _logic.Stats.GetIncrementValue("ElderTried", ts1, ts2);
-            elderKilled = _logic.Stats.GetIncrementValue("ElderKilled", ts1, ts2);
-            shaperTried = _logic.Stats.GetIncrementValue("ShaperTried", ts1, ts2);
-            shaperKilled = _logic.Stats.GetIncrementValue("ShaperKilled", ts1, ts2);
-            cataTried = _logic.Stats.GetIncrementValue("CatarinaTried", ts1, ts2);
-            cataKilled = _logic.Stats.GetIncrementValue("CatarinaKilled", ts1, ts2);
-            sirusTried = _logic.Stats.GetIncrementValue("SirusStarted", ts1, ts2);
-            sirusKilled = _logic.Stats.GetIncrementValue("SirusKilled", ts1, ts2);
-            mavenTried = _logic.Stats.GetIncrementValue("MavenStarted", ts1, ts2);
-            mavenKilled = _logic.Stats.GetIncrementValue("MavenKilled", ts1, ts2);
-            tmTried = _logic.Stats.GetIncrementValue("TrialMasterStarted", ts1, ts2);
-            tmKilled = _logic.Stats.GetIncrementValue("TrialMasterKilled", ts1, ts2);
-            exarchTried = _logic.Stats.GetIncrementValue("SearingExarchTried", ts1, ts2);
-            exarchKilled = _logic.Stats.GetIncrementValue("SearingExarchKilled", ts1, ts2);
-            blackStarTried = _logic.Stats.GetIncrementValue("BlackStarTried", ts1, ts2);
-            blackStarKilled = _logic.Stats.GetIncrementValue("BlackStarKilled", ts1, ts2);
-            hungerTried = _logic.Stats.GetIncrementValue("InfiniteHungerTried", ts1, ts2);
-            hungerKilled = _logic.Stats.GetIncrementValue("InfiniteHungerKilled", ts1, ts2);
-            eaterTried = _logic.Stats.GetIncrementValue("EaterOfWorldsTried", ts1, ts2);
-            eaterKilled = _logic.Stats.GetIncrementValue("EaterOfWorldsKilled", ts1, ts2);
-
-
-            MethodInvoker mi = delegate
-            {
-                // Baran
-                labelBaranStatus.Text = baranKilled > 0 ? "Yes" : "No";
-                labelBaranStatus.ForeColor = baranKilled > 0 ? Color.Green : Color.Red;
-                labelBaranTries.Text = baranTried.ToString();
-                labelBaranKillCount.Text = baranKilled.ToString();
-
-                // Veritania
-                labelVeritaniaStatus.Text = veriKilled > 0 ? "Yes" : "No";
-                labelVeritaniaStatus.ForeColor = veriKilled > 0 ? Color.Green : Color.Red;
-                labelVeritaniaTries.Text = veriTried.ToString();
-                labelVeritaniaKillCount.Text = veriKilled.ToString();
-
-                // Drox
-                labelDroxStatus.Text = droxKilled > 0 ? "Yes" : "No";
-                labelDroxStatus.ForeColor = droxKilled > 0 ? Color.Green : Color.Red;
-                labelDroxTries.Text = droxTried.ToString();
-                labelDroxKillCount.Text = droxKilled.ToString();
-
-                // Hunter
-                labelHunterStatus.Text = hunterKilled > 0 ? "Yes" : "No";
-                labelHunterStatus.ForeColor = hunterKilled > 0 ? Color.Green : Color.Red;
-                labelHunterTries.Text = hunterTried.ToString();
-                labelHunterKillCount.Text = hunterKilled.ToString();
-
-                // Elder
-                labelElderStatus.Text = elderKilled > 0 ? "Yes" : "No";
-                labelElderStatus.ForeColor = elderKilled > 0 ? Color.Green : Color.Red;
-                labelElderTried.Text = elderTried.ToString();
-                labelElderKillCount.Text = elderKilled.ToString();
-
-                // Shaper
-                labelShaperStatus.Text = shaperKilled > 0 ? "Yes" : "No";
-                labelShaperStatus.ForeColor = shaperKilled > 0 ? Color.Green : Color.Red;
-                labelShaperTried.Text = shaperTried.ToString();
-                labelShaperKillCount.Text = shaperKilled.ToString();
-
-                // Sirus
-                labelSirusStatus.Text = sirusKilled > 0 ? "Yes" : "No";
-                labelSirusStatus.ForeColor = sirusKilled > 0 ? Color.Green : Color.Red;
-                labelSirusTries.Text = sirusTried.ToString();
-                labelSirusKillCount.Text = sirusKilled.ToString();
-
-                // Maven
-                labelMavenStatus.Text = mavenKilled > 0 ? "Yes" : "No";
-                labelMavenStatus.ForeColor = mavenKilled > 0 ? Color.Green : Color.Red;
-                labelMavenTried.Text = mavenTried.ToString();
-                labelMavenKilled.Text = mavenKilled.ToString();
-
-                // Catarina
-                labelCataStatus.Text = cataKilled > 0 ? "Yes" : "No";
-                labelCataStatus.ForeColor = cataKilled > 0 ? Color.Green : Color.Red;
-                labelCataTried.Text = cataTried.ToString();
-                labelCataKilled.Text = cataKilled.ToString();
-
-                // TrialMaster
-                labelTrialMasterStatus.Text = tmKilled > 0 ? "Yes" : "No";
-                labelTrialMasterStatus.ForeColor = tmKilled > 0 ? Color.Green : Color.Red;
-                labelTrialMasterTried.Text = tmTried.ToString();
-                labelTrialMasterKilled.Text = tmKilled.ToString();
-
-                // Exarch
-                labelExarchStatus.Text = exarchKilled > 0 ? "Yes" : "No";
-                labelExarchStatus.ForeColor = exarchKilled > 0 ? Color.Green : Color.Red;
-                labelExarchTried.Text = exarchTried.ToString();
-                labelExarchKilled.Text = exarchKilled.ToString();
-
-                // Black Star
-                labelBlackstarStatus.Text = blackStarKilled > 0 ? "Yes" : "No";
-                labelBlackstarStatus.ForeColor = blackStarKilled > 0 ? Color.Green : Color.Red;
-                labelBlackStarTried.Text = blackStarTried.ToString();
-                labelBlackStarKilled.Text = blackStarKilled.ToString();
-
-                // Infinite Hunger
-                labelHungerStatus.Text = hungerKilled > 0 ? "Yes" : "No";
-                labelHungerStatus.ForeColor = hungerKilled > 0 ? Color.Green : Color.Red;
-                labelHungerTried.Text = hungerTried.ToString();
-                labelHungerKilled.Text = hungerKilled.ToString();
-
-                // Eater of Worlds
-                labelEaterStatus.Text = eaterKilled > 0 ? "Yes" : "No";
-                labelEaterStatus.ForeColor = eaterKilled > 0 ? Color.Green : Color.Red;
-                labelEaterTried.Text = eaterTried.ToString();
-                labelEaterKilled.Text = eaterKilled.ToString();
             };
             BeginInvoke(mi);
         }
@@ -4515,106 +4200,7 @@ namespace TraXile
             _tagsOverlay.Opacity = _overlayOpacity / 100.0;
             _tagsOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.tags.x", "0")), (Convert.ToInt32(ReadSetting("overlay.tags.y", "0"))));
         }
-
-        public void SaveCurrentLabRun()
-        {
-            if(_currentLabrunControl != null)
-            {
-                List<TrX_EnchantNote> notes = _currentLabrunControl.GetEnchantNotes();
-
-                foreach (int i in _currentLabrunControl.GetSelectedEnchants())
-                {
-                    TrX_LabEnchant en = _logic.LabbieConnector.GetEnchantByID(i);
-
-                    if(en != null)
-                    {
-                        List<TrX_EnchantNote> notes2 = _currentLabrunControl.GetEnchantNotes(en.ID);
-                        _logic.CurrentLab.EnchantsTaken.Add(en);
-
-                        DataRow row = _profitTracking.Data.NewRow();
-                        row["Time"] = DateTime.Now;
-                        row["Enchant"] = en.Text;
-                        row["Base"] = "";
-                        row["Base Cost (Exalts)"] = 0;
-                        row["Sold for (Exalts)"] = 0;
-                        row["Profit (Exalts)"] = 0;
-                        row["State"] = "open";
-                        row["Note"] = notes2.Count > 0 ? notes2[0].Note : "";
-                        _profitTracking.Data.Rows.InsertAt(row, 0);
-                    }
-                }
-                _logic.SaveCurrentLabRun();
-                _logic.SaveEnchantNoteList(notes);
-
-                if (_logic.CurrentLab != null && _logic.CurrentActivity != null && _logic.CurrentLab == _logic.CurrentActivity)
-                {
-                    _logic.FinishActivity(_logic.CurrentLab, null, ACTIVITY_TYPES.BREACHSTONE, DateTime.Now);
-                }
-
-                MethodInvoker mi = delegate
-                {
-                    panel23.Controls.Remove(_currentLabrunControl);
-                };
-                BeginInvoke(mi);
-            }
-        }
-
-        public void SelectEnchant(int id, bool jump = false)
-        {
-            TrX_LabEnchant enchant = _logic.LabbieConnector.GetEnchantByID(id);
-            comboBox2.SelectedItem = enchant.Text;
-
-            if(jump)
-            {
-                tabControl1.SelectedIndex = 1;
-            }
-        }
-
-        public void SetEnchantInfoPage(TrX_EnchantInfo enchantInfo, TrX_LabEnchant enchant)
-        {
-            label72.Text = enchant.Text;
-            label94.Text = enchantInfo.Found.ToString();
-            label95.Text = enchantInfo.Taken.ToString();
-            label96.Text = enchantInfo.LastFound.Year > 2000 ? enchantInfo.LastFound.ToString() : "-";
-
-            listBox1.Items.Clear();
-            foreach (TrX_EnchantNote note in enchantInfo.EnchantNotes)
-            {
-                listBox1.Items.Add($"{DateTimeOffset.FromUnixTimeSeconds(note.LabTimeStamp).DateTime}: {note.Note}{Environment.NewLine}");
-            }
-
-            listBox2.Items.Clear();
-            foreach(string s in enchantInfo.History)
-            {
-                listBox2.Items.Add(s);
-            }
-        }
-
-        private void UpdateProfitSummary()
-        {
-            label110.Text = Math.Round(_profitTracking.BaseCosts, 1).ToString() + " ex.";
-            label111.Text = Math.Round(_profitTracking.Income, 1).ToString() + "ex.";
-            lbl_profit.Text = Math.Round(_profitTracking.Profit, 1).ToString() + "ex.";
-            lbl_profit.ForeColor = _profitTracking.Profit >= 0 ? Color.LimeGreen : Color.Red;
-            label108.Text = _profitTracking.BaseCount.ToString();
-            label109.Text = _profitTracking.BasesSold.ToString();
-        }
-
-        private void SaveLabProfitTab()
-        {
-            try
-            {
-                _profitTracking.Calculate();
-                _profitTracking.Save();
-                UpdateProfitSummary();
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Invalid input: {ex.Message}");
-            }
-        }
-
+       
         private void DeleteActivities()
         {
             List<long> timestampsToDelete = new List<long>();
@@ -5197,150 +4783,6 @@ namespace TraXile
         private void RequestActivityListReset()
         {
             _uiFlagActivityListReset = true;
-        }
-
-        private void button7_Click_1(object sender, EventArgs e)
-        {
-            SaveCurrentLabRun();
-            ResetLabRuns();
-            SaveLabProfitTab();
-        }
-       
-
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            TrX_LabEnchant en;
-            TrX_EnchantInfo info;
-            
-            en = _logic.LabbieConnector.GetEnchantObjectForText(comboBox2.SelectedItem.ToString());
-
-            if(en != null)
-            {
-                info = _logic.GetEnchantInfo(en.ID);
-                _selectedEnchantID = en.ID;
-                SetEnchantInfoPage(info, en);
-            }
-        }
-
-        private void button8_Click_1(object sender, EventArgs e)
-        {
-            TrX_EnchantNote note;
-            DateTime dt;
-            dt = DateTime.Now;
-            note = new TrX_EnchantNote(_selectedEnchantID, textBox7.Text, (int)((DateTimeOffset)dt).ToUnixTimeSeconds());
-            _logic.SaveEnchantNoteList(new List<TrX_EnchantNote>() { note });
-            listBox1.Items.Add(string.Format("{0}: {1}", dt, note.Note));
-            textBox7.Clear();
-        }
-
-        private void button4_Click_2(object sender, EventArgs e)
-        {
-            FolderBrowserDialog sfd = new FolderBrowserDialog();
-            sfd.ShowDialog();
-
-            if(sfd.SelectedPath != null)
-            {
-                textBox6.Text = sfd.SelectedPath;
-                _mySettings.AddOrUpdateSetting("labbie.path", sfd.SelectedPath);
-                _mySettings.WriteToXml();
-                if(_logic.LabbieConnector != null)
-                {
-                    _logic.LabbieConnector.LabbieLogPath = sfd.SelectedPath;
-                    if(!_logic.LabbieConnector.IsStarted)
-                    {
-                        _logic.LabbieConnector.Start();
-                    }
-                }
-            }
-        }
-
-        private void dataGridView2_KeyUp(object sender, KeyEventArgs e)
-        {
-            if(e.KeyCode == Keys.Enter)
-            {
-                SaveLabProfitTab();
-            }
-        }
-
-        private void dataGridView2_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
-        {
-            e.Row.Cells["Time"].Value = DateTime.Now;
-            e.Row.Cells["Base Cost (Exalts)"].Value = 0;
-            e.Row.Cells["Sold for (Exalts)"].Value = 0;
-            e.Row.Cells["Profit (Exalts)"].Value = 0;
-            e.Row.Cells["State"].Value = "open";
-        }
-
-        private void button9_Click_3(object sender, EventArgs e)
-        {
-            SaveLabProfitTab();
-        }
-
-        private void SetProfitFilter()
-        {
-            string textFilter = "Enchant LIKE '%'";
-            string stateFilter = "State LIKE '%'";
-
-            if (!String.IsNullOrEmpty(textBox9.Text))
-            {
-                textFilter = $"Enchant LIKE '%{textBox9.Text}%' OR Note LIKE '%{textBox9.Text}%' OR Base LIKE '%{textBox9.Text}%'";
-            }
-
-            // All
-            if (radioButton1.Checked)
-            {
-                stateFilter = "State LIKE '%'";
-                _mySettings.AddOrUpdateSetting("lab.profittracking.filter.state", "all");
-            }
-
-            // Open
-            if (radioButton2.Checked)
-            {
-                stateFilter = "State LIKE '%open%'";
-                _mySettings.AddOrUpdateSetting("lab.profittracking.filter.state", "open");
-            }
-
-            // Sold
-            if (radioButton3.Checked)
-            {
-                stateFilter = "State LIKE '%sold%'";
-                _mySettings.AddOrUpdateSetting("lab.profittracking.filter.state", "sold");
-            }
-
-            string filter = $"({textFilter}) AND ({stateFilter})";
-            _profitTracking.Data.DefaultView.RowFilter = filter;
-
-            // Settings
-            _mySettings.AddOrUpdateSetting("lab.profittracking.filter.text", textBox9.Text);
-            _mySettings.WriteToXml();
-        }
-
-        private void button15_Click_1(object sender, EventArgs e)
-        {
-            SetProfitFilter();
-        }
-
-        private void button16_Click_1(object sender, EventArgs e)
-        {
-            textBox9.Text = "";
-            radioButton1.Checked = true;
-            SetProfitFilter();
-        }
-
-        private void linkLabel2_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            tabCtl1.SelectedTab = tabPage3;
-            tabControl2.SelectedTab = tabPage2;
-        }
-
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(linkLabel3.Text);
-        }
-
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(linkLabel4.Text);
         }
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
