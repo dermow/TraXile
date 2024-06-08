@@ -26,9 +26,9 @@
 <!--te-->
 
 # About
-TraXile is a tool that records activities and statistics for your Path of Exile gaming and allows you to 
-investigate, evaluate and visualize the collected data. That works for new activities while you have TraXile running, but also for 
-activities in the past based on your logfile.
+Traxile is a tracking and statistics tool for Path of Exile. It reads your client log file and provides you with real-time and long-term statistics for your in-game activities. Download Traxile from GitHub, install it, and select your log file. The tool gives you detailed information about your maps, boss fights, and other activities. Additionally, Traxile offers a "Stop Watch Overlay," allowing you to see your map time directly in-game.
+
+Traxile can be a potential alternative to "Mapwatch," a similar tool that was recently discontinued. Many thanks to the developer of Mapwatch, whose work inspired me to create this tool.
 
 # Features
 ## Activity Tracking (Live and backwards)
@@ -70,7 +70,7 @@ You will be automatically notified when a new version is available. Just follow 
 If this is not working for any reason, you can always download the latest relase here and install it manually.
 
 # FAQ
-### Why can´t the data be filtered by character name?
+### Why canÂ´t the data be filtered by character name?
 Unfornately, the name of your in character is not written to the Client logfile.
 
 ### Are only activities tracked if I have TraXile running while playing?
@@ -87,7 +87,7 @@ Only internet connections are the check for a new version and the download of so
 This could happen if you are running the same map multiple time in a row, and randomly two maps in a row gets the same server instance. In that case TraXile has no chance to 
 seperate this maps automatically. There is an ingame chat command "trax::split" you could use to solve this (if it is very important for you).
 
-### Why isn´t that a web based appliation?
+### Why isnÂ´t that a web based appliation?
 Because TraXile permanently reads you Client.txt logfile - thats much easier with a desktop application.
 
 ### Can I install TraXile on my Mac?
