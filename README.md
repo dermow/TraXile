@@ -28,7 +28,10 @@
 # About
 Traxile is a tracking and statistics tool for Path of Exile. It reads your client log file and provides you with real-time and long-term statistics for your in-game activities. Download Traxile from GitHub, install it, and select your log file. The tool gives you detailed information about your maps, boss fights, and other activities. Additionally, Traxile offers a "Stop Watch Overlay," allowing you to see your map time directly in-game.
 
-Traxile can be a potential alternative to "Mapwatch," a similar tool that was recently discontinued. Many thanks to the developer of Mapwatch, whose work inspired me to create this tool.
+Traxile can be a potential alternative to "Mapwatch", a similar tool that was recently discontinued. Many thanks to the developer of Mapwatch, whose work inspired me to create this tool.
+
+You can check out my introduction video to get started:
+https://www.youtube.com/watch?v=jZ8eiCNOiM4
 
 # Features
 ## Activity Tracking (Live and backwards)
@@ -44,11 +47,7 @@ Collect statistics around the Game.
 ## Data visualization
 Visualize collected statistics in charts and tables.
 
-# Getting Started
-## Video
-You can check out my introduction video to get started:
 
-https://www.youtube.com/watch?v=jZ8eiCNOiM4
 
 ## Installation
 Download the latest release and execute the MSI-Installer file.
