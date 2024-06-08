@@ -38,10 +38,10 @@ https://www.youtube.com/watch?v=jZ8eiCNOiM4
 Track time and other stats for your ingame activities (maps, heist contracts, sanctum...). Works for live tracking (TraXile open while you are playing)
 and backwards for all data in your Client.txt logfile.
 
-<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Overlay.png?raw=true" />
+
 
 ## Ingame Overlay
-Simple overlays (Stopwatch)
+<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Overlay.png?raw=true" />
 
 ## Statistic collection
 Collect statistics around the Game.
