@@ -9,6 +9,7 @@
 
 <div align="center">
   <a href="https://github.com/dermow/TraXile">
+    <img src="https://github.com/dermow/TraXile/blob/master/TraXile/Resources/trax.jpg?raw=true" />
   </a>
 </div>
 
