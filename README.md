@@ -47,6 +47,8 @@ and backwards for all data in your Client.txt logfile.
 Collect and show statistics around the Game.
 <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Stats.png?raw=true" />
 
+## Analyze your activities
+<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Summary.png?raw=true" />
 
 ## Installation
 Download the latest release and execute the MSI-Installer file.
