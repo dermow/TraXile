@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Json.Net;
+using Newtonsoft.Json;
 
 namespace TraXile
 {
@@ -141,6 +143,13 @@ namespace TraXile
             set { _finished = value; }
         }
 
+        private int _trialCount;
+        public int TrialCount
+        {
+            get { return _trialCount; }
+            set { _trialCount = value; }
+        }
+
         // Is Zana-Map?
         private bool _isZana;
         public bool IsZana
@@ -171,6 +180,14 @@ namespace TraXile
         {
             get { return _areaLevel; }
             set { _areaLevel = value; }
+        }
+
+        // Area Seed
+        private long _areaSeed;
+        public long AreaSeed
+        {
+            get { return _areaSeed; }
+            set { _areaSeed = value; }
         }
 
         // Number of portals used
@@ -237,7 +254,7 @@ namespace TraXile
         // Unique ID of this activity
         public string UniqueID
         {
-            get { return string.Format("{0}_{1}", _activityTimeStamp, _areaName); }
+            get { return string.Format("{0}_{1}", _activityTimeStamp, _areaName.Replace(" ", "_")); }
         }
 
         // Is the activity manually paused?
@@ -575,6 +592,28 @@ namespace TraXile
 
             return results;
         }
+
+        public TrX_BackendSync_ActivityDocument GetSerializableObject()
+        {
+            TrX_BackendSync_ActivityDocument serializable = new TrX_BackendSync_ActivityDocument();
+            serializable.AreaName = _areaName;
+            serializable.AreaLevel = _areaLevel;
+            serializable.DurationSec = _totalSeconds;
+            serializable.Tags = _tagIDs;
+            serializable.ActivityType = _activityType.ToString();
+            serializable.Identifier = UniqueID;
+            serializable.DeathCounter = _deathCounter;
+            serializable.StartTime = _startTime;
+
+            return serializable;
+        }
+
+        public string ToJSON()
+        {
+            TrX_BackendSync_ActivityDocument serializable = GetSerializableObject();
+            return JsonConvert.SerializeObject(serializable);
+        }
+
 
       
     }

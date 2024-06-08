@@ -56,9 +56,6 @@ namespace TraXile
         // Event: called when tags are changed
         public event Trx_GenericEventHandler OnTagsUpdated;
 
-        // Event: Lab enchants received
-        public event Trx_LabbieEventHandler LabEnchantsReceived;
-
         // Event: Activity started
         public event TrX_ActivityEventHandler OnActivityStarted;
 
@@ -80,11 +77,11 @@ namespace TraXile
         // Last known endoint of simulacrum
         private string _lastSimuEndpoint;
 
-        // Shaper kills in current fight: helper counter
-        private int _shaperKillsInFight;
-
         // Level of the next area
         private int _nextAreaLevel;
+
+        // seed of next area
+        private long _nextAreaSeed;
 
         // Hash code of the last known logfile line
         private int _lastHash = 0;
@@ -109,9 +106,6 @@ namespace TraXile
         
         // EventQ
         private ConcurrentQueue<TrX_TrackingEvent> _eventQueue;
-        
-        // Last event type regarding conquerors
-        private EVENT_TYPES _lastEventTypeConq;
 
         // Thread for logfile parsing
         private Thread _logParseThread;
@@ -124,12 +118,6 @@ namespace TraXile
 
         // Time of app init end
         private DateTime _initEndTime;
-
-        // Last instance of Shaper fight
-        private string _lastShaperInstance;
-
-        // Last instance of Elder fight
-        private string _lastElderInstance;
 
         // DateTime of the current Hideout tracking block
         private DateTime _hoStart;
@@ -204,19 +192,13 @@ namespace TraXile
 
         // Property: Current Area Level
         private int _currentAreaLevel;
+        private long _currentAreaSeed;
+
         public int CurrentAreaLevel => _currentAreaLevel;
 
         // Property: Previous activity in overlay
         private TrX_TrackedActivity _prevActivityOverlay;
         public TrX_TrackedActivity OverlayPrevActivity => _prevActivityOverlay;
-
-        // Property: Previous activity in overlay
-        private TrX_TrackedLabrun _currentLabRun;
-        public TrX_TrackedLabrun CurrentLab
-        {
-            get { return _currentLabRun; }
-            set { _currentLabRun = value; }
-        }
 
         // Property: DB Manager
         private TrX_DataBackend _dataBackend;
@@ -229,14 +211,6 @@ namespace TraXile
         // Property: Long stat names
         private Dictionary<string, string> _statNamesLong;
         public Dictionary<string, string> StatNamesLong => _statNamesLong;
-
-        // Labbie Connector
-        private TrX_LabbieConnector _labbieConnector;
-        public TrX_LabbieConnector LabbieConnector => _labbieConnector;
-
-        // Lab History
-        private List<TrX_TrackedLabrun> _labHistory;
-        public List<TrX_TrackedLabrun> LabHistory => _labHistory;
 
         // Property: Path to Client.txt
         public string ClientTxtPath
@@ -288,10 +262,6 @@ namespace TraXile
             _initStartTime = DateTime.Now;
             _dataBackend = new TrX_DataBackend(TrX_Static.DB_PATH, ref _log);
             _myStats = new TrX_StatsManager(_dataBackend);
-            _lastEventTypeConq = EVENT_TYPES.APP_STARTED;
-            _labbieConnector = new TrX_LabbieConnector(_dataBackend, ref _log);
-            _labbieConnector.EnchantsReceived += _labbieConnector_EnchantsReceived;
-            _labHistory = new List<TrX_TrackedLabrun>();
 
 
             InitDefaultTags();
@@ -360,155 +330,12 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Event handler: Received labbie enchants
-        /// </summary>
-        /// <param name="e"></param>
-        private void _labbieConnector_EnchantsReceived(TrX_LabbieEventArgs e)
-        {
-            // Log enchants
-            foreach(TrX_LabEnchant en in e.Enchants)
-            {
-                _log.Info($"Received enchante from Labbie: {en.ID}:  {en.Text}");
-                en.EnchantInfo = GetEnchantInfo(en.ID);
-            }
-
-            if(_currentLabRun != null)
-            {
-                _currentLabRun.Enchants.AddRange(e.Enchants);
-                PauseCurrentActivityOrSide();
-                LabEnchantsReceived(e);
-            }
-        }
-
-        /// <summary>
-        /// Save a list of enchant notes
-        /// </summary>
-        /// <param name="list"></param>
-        public void SaveEnchantNoteList(List<TrX_EnchantNote> list)
-        {
-            foreach(TrX_EnchantNote note in list)
-            {
-                string query;
-                query = $"INSERT INTO tx_enchant_notes (lab_timestamp, enchant_id, enchant_note) VALUES ({note.LabTimeStamp}, {note.EnchantID}, '{note.Note}')";
-
-                try
-                {
-                    _dataBackend.DoNonQuery(query);
-                }
-                catch(Exception ex)
-                {
-                    _log.Error($"Could not save enchant notes: {ex.Message}");
-                    _log.Debug(ex);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get several informations about an enchant
-        /// </summary>
-        /// <param name="enchantID"></param>
-        public TrX_EnchantInfo GetEnchantInfo(int enchantID)
-        {
-            List<string> history;
-            TrX_EnchantInfo info;
-            SqliteDataReader reader;
-            info = new TrX_EnchantInfo(enchantID);
-            history = new List<string>();
-
-            try
-            {
-                // Get notes
-                reader = _dataBackend.GetSQLReader($"SELECT * FROM tx_enchant_notes WHERE enchant_id = {enchantID}");
-                TrX_EnchantNote note;
-                while (reader.Read())
-                {
-                    note = new TrX_EnchantNote(enchantID, reader.GetString(2), reader.GetInt32(0));
-                    info.EnchantNotes.Add(note);
-                }
-
-                // Get found count
-                string res = _dataBackend.GetSingleValue($"SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {enchantID} AND action = 'found'");
-                if (res != null)
-                {
-                    info.Found = Convert.ToInt32(res);
-                }
-                else
-                {
-                    info.Found = 0;
-                }
-
-                // Get taken count
-                res = _dataBackend.GetSingleValue($"SELECT COUNT(*) FROM tx_enchant_history WHERE enchant_id = {enchantID} AND action = 'taken'");
-                if (res != null)
-                {
-                    info.Taken = Convert.ToInt32(res);
-                }
-                else
-                {
-                    info.Taken = 0;
-                }
-
-                // Get taken count
-                res = _dataBackend.GetSingleValue($"SELECT MAX(lab_timestamp) FROM tx_enchant_history WHERE enchant_id = {enchantID}");
-                if (res != null)
-                {
-                    info.LastFound = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt32(res)).DateTime;
-                }
-                else
-                {
-                    info.LastFound = new DateTime();
-                }
-
-                // Get history
-                reader = _dataBackend.GetSQLReader($"SELECT * FROM tx_enchant_history WHERE enchant_id = {enchantID}");
-                while (reader.Read())
-                {
-                    info.History.Add(string.Format("{0}: {1}", DateTimeOffset.FromUnixTimeSeconds(reader.GetInt32(0)).DateTime, reader.GetString(2)));
-                }
-            }
-            catch(Exception ex)
-            {
-                _log.Error($"Error getting enchant info object for enchant {enchantID}: {ex.Message}");
-                _log.Debug(ex.ToString());
-            }
-
-            return info;
-        }
-
-        /// <summary>
-        /// Save the current labrun
-        /// </summary>
-        public void SaveCurrentLabRun()
-        {
-            if(_currentLabRun != null)
-            {
-                foreach(TrX_LabEnchant e in _currentLabRun.Enchants)
-                {
-                    _dataBackend.DoNonQuery("INSERT INTO tx_enchant_history (lab_timestamp, enchant_id, action) " +
-                        $"VALUES ({_currentLabRun.TimeStamp}, {e.ID}, 'found')");
-                }
-                foreach (TrX_LabEnchant e in _currentLabRun.EnchantsTaken)
-                {
-                    _dataBackend.DoNonQuery("INSERT INTO tx_enchant_history (lab_timestamp, enchant_id, action) " +
-                         $"VALUES ({_currentLabRun.TimeStamp}, {e.ID}, 'taken')");
-                }
-
-                _labHistory.Insert(0, _currentLabRun);
-            }
-        }
-
-        /// <summary>
         /// Start logfile parsing and event handling
         /// </summary>
         public void Start()
         {
             _logParseThread.Start();
             _eventThread.Start();
-
-            if(_labbieConnector.LabbieLogPath != null)
-            {
-                _labbieConnector.Start();
-            }
 
             _log.Info("Core logic started.");
         }
@@ -979,7 +806,7 @@ namespace TraXile
 
                 if(aType == ACTIVITY_TYPES.LABYRINTH)
                 {
-                    map = new TrX_TrackedLabrun
+                    map = new TrX_TrackedActivity
                     {
                         Started = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(sqlReader.GetInt32(0)).ToLocalTime(),
                         TimeStamp = sqlReader.GetInt32(0),
@@ -991,24 +818,6 @@ namespace TraXile
                         TrialMasterCount = sqlReader.GetInt32(5),
                         PausedTime = sqlReader.GetDouble(10)
                     };
-
-                    // Get Enchants
-                    SqliteDataReader subReader;
-                    string query = $"SELECT * FROM tx_enchant_history WHERE lab_timestamp = {map.TimeStamp}";
-                    subReader = _dataBackend.GetSQLReader(query);
-
-                    while(subReader.Read())
-                    {
-                        TrX_LabEnchant en = _labbieConnector.GetEnchantByID(subReader.GetInt32(1));
-                        if(subReader.GetString(2) == "taken")
-                        {
-                            ((TrX_TrackedLabrun)map).EnchantsTaken.Add(en);
-                        }
-                        else
-                        {
-                            ((TrX_TrackedLabrun)map).Enchants.Add(en);
-                        }
-                    }
                 }
                 else
                 {
@@ -1056,11 +865,6 @@ namespace TraXile
                     if(map.TotalSeconds > _timeCapMin)
                     {
                         _eventHistory.Add(map);
-
-                        if (map.Type == ACTIVITY_TYPES.LABYRINTH)
-                        {
-                            _labHistory.Add((TrX_TrackedLabrun)map);
-                        }
                     }
                     _parsedActivities.Add(map.UniqueID);
                 }
@@ -1469,28 +1273,6 @@ namespace TraXile
                 sTargetArea = "The Forbidden Sanctum";
             }
 
-            // Shaper
-            if (bTargetAreaIsShaper && _currentInstanceEndpoint != _lastShaperInstance)
-            {
-                //if(_nextAreaLevel == 85)
-                //{
-                //    IncrementStat("UberShaperTried", ev.EventTime, 1);
-                //}
-                //else
-                //{
-                //    IncrementStat("ShaperTried", ev.EventTime, 1);
-                //}
-                IncrementStat("ShaperTried", ev.EventTime, 1);
-                _lastShaperInstance = _currentInstanceEndpoint;
-            }
-
-            // Elder
-            if (bTargetAreaIsElder && _currentInstanceEndpoint != _lastElderInstance)
-            {
-                IncrementStat("ElderTried", ev.EventTime, 1);
-                _lastElderInstance = _currentInstanceEndpoint;
-            }
-
             // Track the very first activity
             if ((!sTargetArea.Contains("Hideout")) && (!_defaultMappings.CampAreas.Contains(sTargetArea)))
             {
@@ -1546,6 +1328,7 @@ namespace TraXile
                         Area = sTargetArea,
                         Type = ACTIVITY_TYPES.SIMULACRUM,
                         AreaLevel = _nextAreaLevel,
+                        AreaSeed = _nextAreaSeed,
                         Started = ev.EventTime,
                         TimeStamp = lTS,
                         InstanceEndpoint = _currentInstanceEndpoint
@@ -1554,6 +1337,7 @@ namespace TraXile
                     _prevActivityOverlay = GetLastActivityByType(ACTIVITY_TYPES.SIMULACRUM);
 
                     _nextAreaLevel = 0;
+                    _nextAreaSeed = 0;
                 }
             }
 
@@ -1731,10 +1515,11 @@ namespace TraXile
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                 }
 
-                _currentActivity = new TrX_TrackedLabrun
+                _currentActivity = new TrX_TrackedActivity
                 {
                     Area = sLabName,
                     AreaLevel = _nextAreaLevel,
+                    AreaSeed = _nextAreaSeed,
                     Type = actType,
                     Started = ev.EventTime,
                     TimeStamp = lTS,
@@ -1743,7 +1528,6 @@ namespace TraXile
                 _currentActivity.StartStopWatch();
 
                 _prevActivityOverlay = GetLastActivityByType(actType);
-                _currentLabRun = (TrX_TrackedLabrun)_currentActivity;
                 IncrementStat("LabsStarted", ev.EventTime, 1);
                 OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
             }
@@ -1751,7 +1535,7 @@ namespace TraXile
             //Aspirants Trial entered
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LABYRINTH && sTargetArea == "Aspirants Trial")
             {
-                ((TrX_TrackedLabrun)_currentActivity).TrialCount++;
+                (_currentActivity).TrialCount++;
             }
 
             //Lab cancelled?
@@ -1772,6 +1556,7 @@ namespace TraXile
                     {
                         Area = sTargetArea,
                         AreaLevel = _nextAreaLevel,
+                        AreaSeed = _nextAreaSeed,
                         Type = actType,
                         Started = ev.EventTime,
                         TimeStamp = lTS,
@@ -1815,6 +1600,7 @@ namespace TraXile
                     {
                         Area = sTargetArea,
                         AreaLevel = _nextAreaLevel,
+                        AreaSeed = _nextAreaSeed,
                         Type = actType,
                         Started = ev.EventTime,
                         TimeStamp = lTS,
@@ -1858,6 +1644,7 @@ namespace TraXile
                     {
                         Area = sTargetArea,
                         AreaLevel = _nextAreaLevel,
+                        AreaSeed = _nextAreaSeed,
                         Type = actType,
                         Started = ev.EventTime,
                         TimeStamp = lTS,
@@ -1902,6 +1689,7 @@ namespace TraXile
                     {
                         Area = sTargetArea,
                         AreaLevel = _nextAreaLevel,
+                        AreaSeed = _nextAreaSeed,
                         Type = actType,
                         Started = ev.EventTime,
                         TimeStamp = lTS,
@@ -1945,6 +1733,7 @@ namespace TraXile
                     {
                         Area = sTargetArea,
                         AreaLevel = _nextAreaLevel,
+                        AreaSeed =_nextAreaSeed,
                         Type = actType,
                         Started = ev.EventTime,
                         TimeStamp = lTS,
@@ -2009,7 +1798,7 @@ namespace TraXile
                 {
                     FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                 }
-
+                
                 _currentActivity = new TrX_TrackedActivity
                 {
                     Area = _defaultMappings.TaneAreas[0],
@@ -2078,7 +1867,7 @@ namespace TraXile
                 {
                     if (_currentActivity != null)
                     {
-                        if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
+                        if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint || _currentAreaSeed != _currentActivity.AreaSeed)
                         {
                             _currentActivity.LastEnded = ev.EventTime;
                             FinishActivity(_currentActivity, sTargetArea, ACTIVITY_TYPES.CAMPAIGN, ev.EventTime);
@@ -2091,6 +1880,7 @@ namespace TraXile
                             Area = sTargetArea,
                             Type = ACTIVITY_TYPES.CAMPAIGN,
                             AreaLevel = _nextAreaLevel,
+                            AreaSeed = _nextAreaSeed,
                             TimeStamp = lTS,
                             Started = ev.EventTime,
                             InstanceEndpoint = _currentInstanceEndpoint
@@ -2125,7 +1915,7 @@ namespace TraXile
                 {
                     if (_defaultMappings.CampAreas.Contains(sSourceArea) || sSourceArea.Contains("Hideout"))
                     {
-                        if (sTargetArea == _currentActivity.Area && _currentInstanceEndpoint == _currentActivity.InstanceEndpoint)
+                        if (sTargetArea == _currentActivity.Area && _currentInstanceEndpoint == _currentActivity.InstanceEndpoint && _currentActivity.AreaSeed == _currentAreaSeed)
                         {
                             _currentActivity.EndPauseTime(ev.EventTime);
                         }
@@ -2191,19 +1981,6 @@ namespace TraXile
                 bTargetAreaIsUltimatum ||
                 bTargetAreaIsKalandra;
 
-            if (isMapDeviceActivity)
-            {
-                if (!bTargetAreaIsShaper)
-                {
-                    _shaperKillsInFight = 0;
-                }
-
-                if (!bTargetAreaIsElder)
-                {
-                    _lastElderInstance = "";
-                }
-            }
-
             if (enteringDefaultTrackableActivity)
             {
                 if (_currentActivity == null)
@@ -2213,11 +1990,13 @@ namespace TraXile
                         Area = sTargetArea,
                         Type = actType,
                         AreaLevel = _nextAreaLevel,
+                        AreaSeed = _nextAreaSeed,
                         Started = ev.EventTime,
                         TimeStamp = lTS,
                         InstanceEndpoint = _currentInstanceEndpoint,
                     };
                     _nextAreaLevel = 0;
+                    _nextAreaSeed = 0;
                     _prevActivityOverlay = GetLastActivityByType(actType);
                     OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
                 }
@@ -2245,11 +2024,13 @@ namespace TraXile
                                 Type = ACTIVITY_TYPES.MAP,
                                 Area = sTargetArea,
                                 AreaLevel = _nextAreaLevel,
+                                AreaSeed = _nextAreaSeed,
                                 Started = ev.EventTime,
                                 TimeStamp = lTS,
                             };
                             _currentActivity.SideArea_ZanaMap.AddTag("zana-map");
                             _nextAreaLevel = 0;
+                            _nextAreaSeed = 0;
                         }
                         if (!_currentActivity.SideArea_ZanaMap.ManuallyPaused)
                             _currentActivity.SideArea_ZanaMap.StartStopWatch();
@@ -2276,7 +2057,7 @@ namespace TraXile
                     // Do not track Lab-Trials
                     if ((!sSourceArea.Contains("Trial of")) && (_currentActivity.Type != ACTIVITY_TYPES.LABYRINTH) && (_currentActivity.Type != ACTIVITY_TYPES.DELVE) && (_currentActivity.Type != ACTIVITY_TYPES.TANES_LABORATORY))
                     {
-                        if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint)
+                        if (sTargetArea != _currentActivity.Area || _currentInstanceEndpoint != _currentActivity.InstanceEndpoint || _currentAreaSeed != _currentActivity.AreaSeed)
                         {
                             FinishActivity(_currentActivity, sTargetArea, actType, ev.EventTime);
                         }
@@ -2574,6 +2355,9 @@ namespace TraXile
                     case EVENT_TYPES.EINHAR_BEAST_CAPTURE:
                         IncrementStat("EinharCaptures", ev.EventTime, 1);
                         break;
+                    case EVENT_TYPES.PARTYMEMBER_ENTERED_AREA:
+                        AddKnownPlayerIfNotExists(ev.LogLine.Split(' ')[8]);
+                        break;
                     case EVENT_TYPES.DELIRIUM_ENCOUNTER:
 
                         if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
@@ -2698,8 +2482,13 @@ namespace TraXile
                     case EVENT_TYPES.NEXT_AREA_LEVEL_RECEIVED:
                         string sLvl = ev.LogLine.Split(new string[] { "Generating level " }, StringSplitOptions.None)[1]
                             .Split(' ')[0];
+                        string sSeed = ev.LogLine.Split(new string[] { " with seed " }, StringSplitOptions.None)[1];
+                        
                         _nextAreaLevel = Convert.ToInt32(sLvl);
+                        _nextAreaSeed = Convert.ToInt64(sSeed);
+
                         _currentAreaLevel = _nextAreaLevel;
+                        _currentAreaSeed = _nextAreaSeed;
                         // Logbook check for cemetery & vaal temple
                         if (ev.LogLine.Contains("Expedition"))
                         {
@@ -3057,7 +2846,7 @@ namespace TraXile
                     }
 
                     // Labs must be successfull or death counter 1
-                    if ((activity.Success != true && activity.DeathCounter == 0) && ((TrX_TrackedLabrun)activity).TrialCount < 3)
+                    if ((activity.Success != true && activity.DeathCounter == 0) && (activity).TrialCount < 3)
                     {
                         _log.Warn($"Filtered out lab run [time={activity.Started}, area: {activity.Area}]. Reason Success=False AND DeathCounter = 0. Maybe disconnect or game crash while lab.");
                         _currentActivity = null;
@@ -3334,12 +3123,14 @@ namespace TraXile
                     Area = sNextMap,
                     Type = sNextMapType,
                     AreaLevel = _nextAreaLevel,
+                    AreaSeed = _nextAreaSeed,
                     InstanceEndpoint = _currentInstanceEndpoint,
                     Started = dtNextMapStarted,
                     TimeStamp = ((DateTimeOffset)dtNextMapStarted).ToUnixTimeSeconds()
                 };
 
                 _nextAreaLevel = 0;
+                _nextAreaSeed = 0;
                 _currentActivity.StartStopWatch();
                 OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
 

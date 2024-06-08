@@ -173,14 +173,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TrX_BackendSync_ActivityDocument.cs" />
+    <Compile Include="TrX_BackendSync_Client.cs" />
     <Compile Include="TrX_CoreLogic.cs" />
-    <Compile Include="TrX_EnchantInfo.cs" />
-    <Compile Include="TrX_EnchantNote.cs" />
     <Compile Include="TrX_Helpers.cs" />
-    <Compile Include="TrX_LabbieConnector.cs" />
-    <Compile Include="TrX_LabEnchant.cs" />
     <Compile Include="TrX_ProfitTracking.cs" />
-    <Compile Include="TrX_TrackedLabrun.cs" />
     <Compile Include="UI\AboutW.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1065,7 +1065,6 @@ namespace TraXile
             _logic.OnActivityFinished += Logic_OnActivityFinished;
             _logic.OnTagsUpdated += Logic_OnTagsUpdated;
             _logic.OnActivityStarted += _logic_OnActivityStarted;
-            _logic.LabbieConnector.LabbieLogPath = ReadSetting("labbie.path", null);
             _logic.Start();
 
             // Data Sources
@@ -5045,6 +5044,7 @@ namespace TraXile
 
         private void stopwatchsimpleToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ActivateSimpleStopWatchOverlay();
             ActivateSimpleStopWatchOverlay();
         }
 
