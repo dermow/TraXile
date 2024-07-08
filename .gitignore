@@ -13,6 +13,7 @@ notes/
 *.user
 *.userosscache
 *.sln.docstates
+TrX_Secrets.cs
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

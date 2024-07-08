@@ -353,6 +353,21 @@ namespace TraXile
             set { _lastTimeEntered = value; }
         }
 
+        private bool _queuedForAPI;
+        public bool QueuedForAPISync
+        {
+            get { return _queuedForAPI; }
+            set { _queuedForAPI = value; }
+        }
+
+        // Has been synced to API?
+        private bool _syncedToAPI;
+        public bool SyncedToAPI
+        {
+            get { return _syncedToAPI; }
+            set { _syncedToAPI = value; }
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -593,7 +608,7 @@ namespace TraXile
             return results;
         }
 
-        public TrX_BackendSync_ActivityDocument GetSerializableObject()
+        public TrX_BackendSync_ActivityDocument GetSerializableObject(string client_id = "")
         {
             TrX_BackendSync_ActivityDocument serializable = new TrX_BackendSync_ActivityDocument();
             serializable.AreaName = _areaName;
@@ -604,14 +619,15 @@ namespace TraXile
             serializable.Identifier = UniqueID;
             serializable.DeathCounter = _deathCounter;
             serializable.StartTime = _startTime;
+            serializable.ClientIdentifier = client_id;
 
             return serializable;
         }
 
-        public string ToJSON()
+        public string ToJSON(string client_id = "", Formatting fmt = Formatting.None)
         {
-            TrX_BackendSync_ActivityDocument serializable = GetSerializableObject();
-            return JsonConvert.SerializeObject(serializable);
+            TrX_BackendSync_ActivityDocument serializable = GetSerializableObject(client_id);
+            return JsonConvert.SerializeObject(serializable, fmt);
         }
 
 

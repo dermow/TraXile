@@ -1,0 +1,126 @@
+﻿---
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Traxile Enhanced API Server
+  description: |-
+    This is the description for the Traxile Enhanced API Server
+  termsOfService: http://test.test123/terms/
+  contact:
+    email: dermow@posteo.de
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: https://api.test.test123/api/v1
+tags:
+  - name: activity
+    description: all for activity
+paths:
+  /activity:
+    get:
+      tags:
+        - activity
+      summary: get all activitys
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: activity response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - activity
+      summary: add an activity
+      security:
+        - ApiKeyAuth: []
+      operationId: addActivity
+      requestBody:
+        description: Activity to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Activity'
+      responses:
+        '200':
+          description: activity response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  schemas:
+    Activity:
+      type: object
+      required:
+        - ActivityType
+        - AreaLevel
+        - DeathCounter
+        - AreaName
+        - DurationSec
+        - Tags
+        - Identifier
+        - StartTime
+      properties:
+        ActivityType:
+          type: string
+          example: MAP
+        AreaLevel:
+          type: integer
+          format: int64
+          example: 82
+        DeathCounter:
+          type: integer
+          format: int64
+          example: 1
+        AreaName:
+          type: string
+          example: Arena
+        DurationSec:
+          type: integer
+          format: int64
+          example: 399
+        Tags:
+          type: array
+          items:
+            type: string
+        Identifier:
+          type: string
+          example: 1711977989_Arena
+        StartTime:
+          type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message

@@ -75,7 +75,7 @@ namespace TraXile
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.BackgroundImage = global::TraXile.Properties.Resources.trax;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(738, 422);
+            this.ClientSize = new System.Drawing.Size(771, 459);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.label1);

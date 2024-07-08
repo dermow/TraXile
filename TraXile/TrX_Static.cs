@@ -78,6 +78,10 @@ namespace TraXile
         // Metadata file
         public static string METADATA_XML_FULLPATH = $@"{METADATA_PATH}\{METADATA_XML_FILE}";
 
+        // API ULR
+        //public static string TRAXILE_ENHANCED_API_BASE_URL = "http://91.107.236.68:8084/api/v1/activity";
+        public static string TRAXILE_ENHANCED_API_BASE_URL = "https://te-dev-api.mowtomation.com/api/v1/activity";
+
         // Time this assembly was build
         public static long BUILDTIME
         {

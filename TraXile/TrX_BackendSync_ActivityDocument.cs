@@ -15,6 +15,7 @@ namespace TraXile
         public int DurationSec { get; set; }
         public List<string> Tags { get; set; }
         public string Identifier { get; set; } 
+        public string ClientIdentifier { get; set; }
         public DateTime StartTime { get; set; }
     }
 }

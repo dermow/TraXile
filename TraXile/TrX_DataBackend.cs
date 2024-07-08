@@ -196,6 +196,18 @@ namespace TraXile
             catch
             {
             }
+
+            // Update 1.4.0
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "alter table tx_activity_log add column te_synced int default 0";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 1.4.0 -> " + cmd.CommandText);
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>
