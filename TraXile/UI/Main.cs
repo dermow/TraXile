@@ -54,7 +54,8 @@ namespace TraXile
         TRIALMASTER_FIGHT,
         TANES_LABORATORY,
         ANCESTOR_TRIAL,
-        INSCRIBED_ULTIMATUM
+        INSCRIBED_ULTIMATUM,
+        KINGSMARCH
     }
 
     /// <summary>
@@ -2163,6 +2164,10 @@ namespace TraXile
             {
                 imageIndex = 56;
             }
+            else if (activity.Type == ACTIVITY_TYPES.KINGSMARCH)
+            {
+                imageIndex = 58;
+            }
             return imageIndex;
         }
 
@@ -2818,7 +2823,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.TRIALMASTER_FIGHT, 0 },
                 { ACTIVITY_TYPES.TANES_LABORATORY, 0 },
                 { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0},
-                { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0}
+                { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0},
+                { ACTIVITY_TYPES.KINGSMARCH, 0}
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2856,7 +2862,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.TRIALMASTER_FIGHT, 0 },
                 { ACTIVITY_TYPES.TANES_LABORATORY, 0 },
                 { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0},
-                { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0}
+                { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0},
+                { ACTIVITY_TYPES.KINGSMARCH, 0}
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2894,6 +2901,7 @@ namespace TraXile
                 { ACTIVITY_TYPES.TANES_LABORATORY, Color.LimeGreen },
                 { ACTIVITY_TYPES.ANCESTOR_TRIAL, Color.Turquoise},
                 { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, Color.MediumVioletRed},
+                { ACTIVITY_TYPES.KINGSMARCH, Color.SaddleBrown }
 
             };
             double hideOutTime = 0;

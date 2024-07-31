@@ -1229,7 +1229,8 @@ namespace TraXile
             bTargetAreaIsSanctum = _defaultMappings.SanctumAreas.Contains(sTargetArea),
             bTargetAreaIsTrialmaster = _defaultMappings.TrialMasterAreas.Contains(sTargetArea),
             bTargetAreaIsToTa = _defaultMappings.TotAAreas.Contains(sTargetArea),
-            bTargetAreaIsUltimatum = _defaultMappings.UltimatumAreas.Contains(sTargetArea);
+            bTargetAreaIsUltimatum = _defaultMappings.UltimatumAreas.Contains(sTargetArea),
+            bTargetAreaIsKingsmarch = _defaultMappings.KingsmarchAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1473,6 +1474,10 @@ namespace TraXile
             else if (bTargetAreaIsUltimatum)
             {
                 actType = ACTIVITY_TYPES.INSCRIBED_ULTIMATUM;
+            }
+            else if (bTargetAreaIsKingsmarch)
+            {
+                actType = ACTIVITY_TYPES.KINGSMARCH;
             }
 
             // Special handling for logbook cemetery + vaal temple
@@ -1935,6 +1940,7 @@ namespace TraXile
                 (bTargetAreaIsSanctum && isOutSideSanctumLeague) ||
                 bTargetAreaMine ||
                 bTargetAreaIsToTa ||
+                bTargetAreaIsKingsmarch ||
                 bTargetAreaIsTane ||
                 bTargetAreaTemple ||
                 bTargetAreaIsMI ||

@@ -142,6 +142,10 @@ namespace TraXile
         private List<string> _totaAreas;
         public List<string> TotAAreas => _totaAreas;
 
+        // Settlers
+        private List<string> _settlersAreas;
+        public List<string> KingsmarchAreas => _settlersAreas;
+
         // TrialMaster
         private List<string> _trialMasterAreas;
         public List<string> TrialMasterAreas => _trialMasterAreas;
@@ -187,6 +191,7 @@ namespace TraXile
                 lst.AddRange(SanctumAreas);
                 lst.AddRange(TotAAreas);
                 lst.AddRange(UltimatumAreas);
+                lst.AddRange(KingsmarchAreas);
                 lst.Sort();
                 return lst;
             }
@@ -682,6 +687,11 @@ namespace TraXile
             _totaAreas = new List<string>
             {
                 "The Halls of the Dead"
+            };
+
+            _settlersAreas = new List<string>
+            {
+                "Kingsmarch"
             };
 
             _vaalSideAreas = new List<string>
