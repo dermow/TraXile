@@ -38,16 +38,17 @@ https://www.youtube.com/watch?v=jZ8eiCNOiM4
 Track time and other stats for your ingame activities (maps, heist contracts, sanctum...). Works for live tracking (TraXile open while you are playing)
 and backwards for all data in your Client.txt logfile.
 
+<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_TimeTracking.png?raw=true" />
+
 ## Ingame Overlay
-Simple overlays (Stopwatch)
+<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Overlay.png?raw=true" />
 
 ## Statistic collection
-Collect statistics around the Game.
+Collect and show statistics around the Game.
+<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Stats.png?raw=true" />
 
-## Data visualization
-Visualize collected statistics in charts and tables.
-
-
+## Analyze your activities
+<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Summary.png?raw=true" />
 
 ## Installation
 Download the latest release and execute the MSI-Installer file.
