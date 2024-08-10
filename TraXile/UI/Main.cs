@@ -267,8 +267,9 @@ namespace TraXile
 
             // Invisible till initialization complete
             Visible = false;
+            
             // Fallback default theme for updater
-            //_myTheme = new TrX_ThemeDark();
+            _myTheme = new TrX_ThemeDark();
 
             InitializeComponent();
             Init();
@@ -1069,7 +1070,7 @@ namespace TraXile
 
             SaveVersion();
             DownloadMetaData();
-            //CheckForUpdate(false, false);
+            CheckForUpdate(false, false);
             CleanupMSIFiles();
 
             pictureBoxUpdateAvailable.Visible = _updateAvailable;
