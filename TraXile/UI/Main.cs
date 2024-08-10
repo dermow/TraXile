@@ -240,6 +240,8 @@ namespace TraXile
         private bool _minimizeToTray;
         private bool _uiFlagLeagueDashboard;
         private bool _uiFlagTagOverlay_TagsChanged;
+        private bool _updateAvailable;
+        private string _newVersion;
 
         /// <summary>
         /// Main Window Constructor
@@ -709,7 +711,7 @@ namespace TraXile
         /// Check if a new version is available on GitHub and ask for update.
         /// </summary>
         /// <param name="b_notify_ok"></param>
-        private void CheckForUpdate(bool b_notify_ok = false)
+        private void CheckForUpdate(bool b_notify_ok = false, bool check_only = false)
         {
             try
             {
@@ -764,23 +766,30 @@ namespace TraXile
                 if (bUpdate)
                 {
                     _log.Info("UpdateCheck -> New version available");
-                    StringBuilder sbMessage = new StringBuilder();
-                    sbMessage.AppendLine($"There is a new version for TraXile available ({TrX_Static.VERSION} => {sVersion})");
-                    sbMessage.AppendLine();
-                    sbMessage.AppendLine($"Changelog: {sVersion}");
-                    sbMessage.AppendLine("===========");
-                    sbMessage.AppendLine(sbChanges.ToString());
-                    sbMessage.AppendLine();
-                    sbMessage.AppendLine("Do you want to update now?");
 
-                    if (MessageBox.Show(sbMessage.ToString(), "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    _updateAvailable = true;
+                    _newVersion = sVersion;
+
+                    if(!check_only)
                     {
-                        ProcessStartInfo psi = new ProcessStartInfo
+                        StringBuilder sbMessage = new StringBuilder();
+                        sbMessage.AppendLine($"There is a new version for TraXile available ({TrX_Static.VERSION} => {sVersion})");
+                        sbMessage.AppendLine();
+                        sbMessage.AppendLine($"Changelog: {sVersion}");
+                        sbMessage.AppendLine("===========");
+                        sbMessage.AppendLine(sbChanges.ToString());
+                        sbMessage.AppendLine();
+                        sbMessage.AppendLine("Do you want to update now?");
+
+                        if (MessageBox.Show(sbMessage.ToString(), "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-                            Arguments = sVersion,
-                            FileName = $@"{Application.StartupPath}\TraXile.Updater.exe"
-                        };
-                        Process.Start(psi).WaitForExit();
+                            ProcessStartInfo psi = new ProcessStartInfo
+                            {
+                                Arguments = sVersion,
+                                FileName = $@"{Application.StartupPath}\TraXile.Updater.exe"
+                            };
+                            Process.Start(psi).WaitForExit();
+                        }
                     }
                 }
                 else
@@ -1059,8 +1068,12 @@ namespace TraXile
 
             SaveVersion();
             DownloadMetaData();
-            CheckForUpdate();
+            CheckForUpdate(false, false);
             CleanupMSIFiles();
+
+            pictureBoxUpdateAvailable.Visible = _updateAvailable;
+            linkLabelUpdateAvailable.Visible = _updateAvailable;
+
             _UpdateCheckDone = true;
             
             _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
@@ -2299,6 +2312,10 @@ namespace TraXile
             {
                 SetUIReady();
             }
+
+            pictureBoxUpdateAvailable.Visible = _updateAvailable;
+            linkLabelUpdateAvailable.Visible = _updateAvailable;
+            linkLabelUpdateAvailable.Text = $"TraXile {_newVersion} available. Update now!";
 
             btt_summary.Text = $"summary ({listViewActLog.SelectedIndices.Count})";
             TimeSpan tsAreaTime = (DateTime.Now - _inAreaSince);
@@ -5124,6 +5141,21 @@ namespace TraXile
         {
             ExportActvityList exportChildWindow = new ExportActvityList(this, "json");
             OpenChildWindow(exportChildWindow);
+        }
+
+        private void timerUpdateCheck_Tick(object sender, EventArgs e)
+        {
+            CheckForUpdate(false, true);
+        }
+
+        private void linkLabelUpdateAvailable_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            CheckForUpdate(true, false);
+        }
+
+        private void pictureBoxUpdateAvailable_Click(object sender, EventArgs e)
+        {
+            CheckForUpdate(true, false);
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
