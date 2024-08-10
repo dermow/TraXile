@@ -15,7 +15,7 @@
     <ROW Property="ProductCode" Value="1031:{23283155-10F9-4FE7-9AA0-24AD61B0EBFB} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="TraXile"/>
-    <ROW Property="ProductVersion" Value="1.4.0" Options="32"/>
+    <ROW Property="ProductVersion" Value="1.4.1" Options="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{F5AA4BCB-A0F7-46BD-856B-76F1CD876B94}"/>
