@@ -267,7 +267,8 @@ namespace TraXile
 
             // Invisible till initialization complete
             Visible = false;
-            
+            // Fallback default theme for updater
+            //_myTheme = new TrX_ThemeDark();
 
             InitializeComponent();
             Init();
@@ -733,10 +734,12 @@ namespace TraXile
                 sVersion = xml.SelectSingleNode("/version/latest").InnerText;
 
                 StringBuilder sbChanges = new StringBuilder();
+                List<string> changes = new List<string>();
 
                 foreach (XmlNode xn in xml.SelectNodes($"/version/changelog/chg[@version='{sVersion}']"))
                 {
                     sbChanges.AppendLine(" - " + xn.InnerText);
+                    changes.Add(xn.InnerText);
                 }
 
                 _log.Info($"My version: {TrX_Static.VERSION}, Remote version: {sVersion}");
@@ -772,16 +775,13 @@ namespace TraXile
 
                     if(!check_only)
                     {
-                        StringBuilder sbMessage = new StringBuilder();
-                        sbMessage.AppendLine($"There is a new version for TraXile available ({TrX_Static.VERSION} => {sVersion})");
-                        sbMessage.AppendLine();
-                        sbMessage.AppendLine($"Changelog: {sVersion}");
-                        sbMessage.AppendLine("===========");
-                        sbMessage.AppendLine(sbChanges.ToString());
-                        sbMessage.AppendLine();
-                        sbMessage.AppendLine("Do you want to update now?");
+                        UpdateDialog dialog = new UpdateDialog(true, TrX_Static.VERSION, sVersion, changes);
+                        _myTheme.Apply(dialog);
 
-                        if (MessageBox.Show(sbMessage.ToString(), "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        dialog.SetState();
+                        DialogResult res = dialog.ShowDialog();
+
+                        if (res == DialogResult.OK)
                         {
                             ProcessStartInfo psi = new ProcessStartInfo
                             {
@@ -796,12 +796,13 @@ namespace TraXile
                 {
                     _log.Info("UpdateCheck -> Already up to date :)");
                     if (b_notify_ok)
-                        MessageBox.Show(
-                            "================="
-                            + Environment.NewLine + "Your version: " + TrX_Static.VERSION
-                            + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine
-                            + "================="  + Environment.NewLine + Environment.NewLine
-                            + "Your version is already up to date :)");
+                    {
+                        UpdateDialog dialog = new UpdateDialog(false, TrX_Static.VERSION, sVersion, changes);
+                        _myTheme.Apply(dialog);
+
+                        dialog.SetState();
+                        dialog.ShowDialog();
+                    }
                 }
             }
             catch (Exception ex)
@@ -1068,7 +1069,7 @@ namespace TraXile
 
             SaveVersion();
             DownloadMetaData();
-            CheckForUpdate(false, false);
+            //CheckForUpdate(false, false);
             CleanupMSIFiles();
 
             pictureBoxUpdateAvailable.Visible = _updateAvailable;
