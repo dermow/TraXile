@@ -77,8 +77,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>favicon-96x96.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TEST|AnyCPU'">
     <OutputPath>bin\TEST\</OutputPath>
@@ -276,6 +275,12 @@
     <Compile Include="TrX_SettingsManager.cs" />
     <Compile Include="UI\TrX_Theme.cs" />
     <Compile Include="UI\TrX_ThemeDefinitions.cs" />
+    <Compile Include="UI\UpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UpdateDialog.Designer.cs">
+      <DependentUpon>UpdateDialog.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="UI\AboutW.resx">
       <DependentUpon>AboutW.cs</DependentUpon>
     </EmbeddedResource>
@@ -322,6 +327,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\SummaryWindow.resx">
       <DependentUpon>SummaryWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UpdateDialog.resx">
+      <DependentUpon>UpdateDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -70,6 +70,9 @@ You will be automatically notified when a new version is available. Just follow 
 If this is not working for any reason, you can always download the latest relase here and install it manually.
 
 # FAQ
+### TraXile is not tracking any of my activities, even if I seleted the correct path to Client.txt file
+Make sure your local area chat is enabled, TraXile depends on the log lines to work.
+
 ### Why can´t the data be filtered by character name?
 Unfornately, the name of your in character is not written to the Client logfile.
 

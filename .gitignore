@@ -6,6 +6,9 @@
 # custom
 *.dll
 notes/
+Traxile_Setup-SetupFiles
+TraXile_Setup-cache
+
 
 # User-specific files
 *.rsuser

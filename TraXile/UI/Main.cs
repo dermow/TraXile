@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -239,6 +240,8 @@ namespace TraXile
         private bool _minimizeToTray;
         private bool _uiFlagLeagueDashboard;
         private bool _uiFlagTagOverlay_TagsChanged;
+        private bool _updateAvailable;
+        private string _newVersion;
 
         /// <summary>
         /// Main Window Constructor
@@ -264,7 +267,8 @@ namespace TraXile
 
             // Invisible till initialization complete
             Visible = false;
-            
+            // Fallback default theme for updater
+            //_myTheme = new TrX_ThemeDark();
 
             InitializeComponent();
             Init();
@@ -708,7 +712,7 @@ namespace TraXile
         /// Check if a new version is available on GitHub and ask for update.
         /// </summary>
         /// <param name="b_notify_ok"></param>
-        private void CheckForUpdate(bool b_notify_ok = false)
+        private void CheckForUpdate(bool b_notify_ok = false, bool check_only = false)
         {
             try
             {
@@ -730,10 +734,12 @@ namespace TraXile
                 sVersion = xml.SelectSingleNode("/version/latest").InnerText;
 
                 StringBuilder sbChanges = new StringBuilder();
+                List<string> changes = new List<string>();
 
                 foreach (XmlNode xn in xml.SelectNodes($"/version/changelog/chg[@version='{sVersion}']"))
                 {
                     sbChanges.AppendLine(" - " + xn.InnerText);
+                    changes.Add(xn.InnerText);
                 }
 
                 _log.Info($"My version: {TrX_Static.VERSION}, Remote version: {sVersion}");
@@ -763,35 +769,40 @@ namespace TraXile
                 if (bUpdate)
                 {
                     _log.Info("UpdateCheck -> New version available");
-                    StringBuilder sbMessage = new StringBuilder();
-                    sbMessage.AppendLine($"There is a new version for TraXile available ({TrX_Static.VERSION} => {sVersion})");
-                    sbMessage.AppendLine();
-                    sbMessage.AppendLine($"Changelog: {sVersion}");
-                    sbMessage.AppendLine("===========");
-                    sbMessage.AppendLine(sbChanges.ToString());
-                    sbMessage.AppendLine();
-                    sbMessage.AppendLine("Do you want to update now?");
 
-                    if (MessageBox.Show(sbMessage.ToString(), "Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    _updateAvailable = true;
+                    _newVersion = sVersion;
+
+                    if(!check_only)
                     {
-                        ProcessStartInfo psi = new ProcessStartInfo
+                        UpdateDialog dialog = new UpdateDialog(true, TrX_Static.VERSION, sVersion, changes);
+                        _myTheme.Apply(dialog);
+
+                        dialog.SetState();
+                        DialogResult res = dialog.ShowDialog();
+
+                        if (res == DialogResult.OK)
                         {
-                            Arguments = sVersion,
-                            FileName = $@"{Application.StartupPath}\TraXile.Updater.exe"
-                        };
-                        Process.Start(psi).WaitForExit();
+                            ProcessStartInfo psi = new ProcessStartInfo
+                            {
+                                Arguments = sVersion,
+                                FileName = $@"{Application.StartupPath}\TraXile.Updater.exe"
+                            };
+                            Process.Start(psi).WaitForExit();
+                        }
                     }
                 }
                 else
                 {
                     _log.Info("UpdateCheck -> Already up to date :)");
                     if (b_notify_ok)
-                        MessageBox.Show(
-                            "================="
-                            + Environment.NewLine + "Your version: " + TrX_Static.VERSION
-                            + Environment.NewLine + "Latest version: " + sVersion + Environment.NewLine
-                            + "================="  + Environment.NewLine + Environment.NewLine
-                            + "Your version is already up to date :)");
+                    {
+                        UpdateDialog dialog = new UpdateDialog(false, TrX_Static.VERSION, sVersion, changes);
+                        _myTheme.Apply(dialog);
+
+                        dialog.SetState();
+                        dialog.ShowDialog();
+                    }
                 }
             }
             catch (Exception ex)
@@ -1058,8 +1069,12 @@ namespace TraXile
 
             SaveVersion();
             DownloadMetaData();
-            CheckForUpdate();
+            //CheckForUpdate(false, false);
             CleanupMSIFiles();
+
+            pictureBoxUpdateAvailable.Visible = _updateAvailable;
+            linkLabelUpdateAvailable.Visible = _updateAvailable;
+
             _UpdateCheckDone = true;
             
             _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
@@ -2298,6 +2313,10 @@ namespace TraXile
             {
                 SetUIReady();
             }
+
+            pictureBoxUpdateAvailable.Visible = _updateAvailable;
+            linkLabelUpdateAvailable.Visible = _updateAvailable;
+            linkLabelUpdateAvailable.Text = $"TraXile {_newVersion} available. Update now!";
 
             btt_summary.Text = $"summary ({listViewActLog.SelectedIndices.Count})";
             TimeSpan tsAreaTime = (DateTime.Now - _inAreaSince);
@@ -3639,11 +3658,43 @@ namespace TraXile
             form.Show();
         }
 
+        private List<TrX_TrackedActivity> GetSelectedActivities()
+        {
+            List<TrX_TrackedActivity> results = new List<TrX_TrackedActivity>();
+            foreach (ListViewItem lvi in listViewActLog.SelectedItems)
+            {
+                results.Add(GetActivityFromListItemName(lvi.Name));
+            }
+
+            return results;
+        }
+
+        private List<TrX_TrackedActivity> GetExportActivitySouce(string sourceType)
+        {
+            List<TrX_TrackedActivity> results = new List<TrX_TrackedActivity>();
+            switch (sourceType)
+            {
+                case "All entries":
+                    results = _logic.ActivityHistory;
+                    break;
+
+                case "Filtered entries":
+                    results = _statsDataSource;
+                    break;
+
+                case "Selected entries":
+                    results = GetSelectedActivities();
+                    break;
+            }
+            return results;
+        }
+
+
         /// <summary>
         /// Export Activity log to CSV
         /// </summary>
         /// <param name="sPath"></param>
-        public void WriteActivitiesToCSV(string sPath)
+        public void WriteActivitiesToCSV(string sPath, string sourceType)
         {
             StreamWriter wrt = new StreamWriter(sPath);
 
@@ -3651,10 +3702,35 @@ namespace TraXile
             string sLine = TrX_TrackedActivity.GetCSVHeadline();
             wrt.WriteLine(sLine);
 
-            for (int i = 0; i < _statsDataSource.Count; i++)
+            List<TrX_TrackedActivity> src = GetExportActivitySouce(sourceType);
+
+            for (int i = 0; i < src.Count; i++)
             {
-                wrt.WriteLine(_statsDataSource[i].ToCSVLine());
+                wrt.WriteLine(src[i].ToCSVLine());
             }
+            wrt.Close();
+        }
+
+        /// <summary>
+        /// Export Activity log to CSV
+        /// </summary>
+        /// <param name="sPath"></param>
+        public void WriteActivitiesToJSON(string sPath, string sourceType)
+        {
+            StreamWriter wrt = new StreamWriter(sPath);
+
+            List<TrX_BackendSync_ActivityDocument> serializables;
+            serializables = new List<TrX_BackendSync_ActivityDocument>();
+
+            List<TrX_TrackedActivity> src = GetExportActivitySouce(sourceType);
+
+            foreach (TrX_TrackedActivity act in src)
+            {
+                serializables.Add(act.GetSerializableObject());
+            }
+
+            wrt.WriteLine(JsonConvert.SerializeObject(serializables, Newtonsoft.Json.Formatting.Indented));
+
             wrt.Close();
         }
 
@@ -4280,11 +4356,6 @@ namespace TraXile
         private void button3_Click(object sender, EventArgs e)
         {
             DeleteActivities();
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            OpenChildWindow(new ExportActvityList(this));
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -5059,6 +5130,33 @@ namespace TraXile
         private void tagOverlayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ActivateTagOverlay();
+        }
+
+        private void cSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportActvityList exportChildWindow = new ExportActvityList(this, "csv");
+            OpenChildWindow(exportChildWindow);
+        }
+
+        private void jSONToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportActvityList exportChildWindow = new ExportActvityList(this, "json");
+            OpenChildWindow(exportChildWindow);
+        }
+
+        private void timerUpdateCheck_Tick(object sender, EventArgs e)
+        {
+            CheckForUpdate(false, true);
+        }
+
+        private void linkLabelUpdateAvailable_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            CheckForUpdate(true, false);
+        }
+
+        private void pictureBoxUpdateAvailable_Click(object sender, EventArgs e)
+        {
+            CheckForUpdate(true, false);
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
