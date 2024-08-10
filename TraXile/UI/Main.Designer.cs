@@ -139,7 +139,6 @@ namespace TraXile
             this.buttonStartSearch = new System.Windows.Forms.Button();
             this.btt_DeleteActivity = new System.Windows.Forms.Button();
             this.linkLabelClearSearch = new System.Windows.Forms.LinkLabel();
-            this.btt_ExportActivities = new System.Windows.Forms.Button();
             this.linkLabelSearchSyntax = new System.Windows.Forms.LinkLabel();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.comboBoxShowMaxItems = new System.Windows.Forms.ComboBox();
@@ -340,10 +339,10 @@ namespace TraXile
             this.label68 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportActivitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.jSONToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.overlayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopwatchsimpleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tagOverlayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1111,7 +1110,6 @@ namespace TraXile
             this.groupBox10.Controls.Add(this.buttonStartSearch);
             this.groupBox10.Controls.Add(this.btt_DeleteActivity);
             this.groupBox10.Controls.Add(this.linkLabelClearSearch);
-            this.groupBox10.Controls.Add(this.btt_ExportActivities);
             this.groupBox10.Controls.Add(this.linkLabelSearchSyntax);
             this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox10.ForeColor = System.Drawing.Color.Red;
@@ -1159,7 +1157,7 @@ namespace TraXile
             this.btt_DeleteActivity.FlatAppearance.BorderSize = 0;
             this.btt_DeleteActivity.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btt_DeleteActivity.ForeColor = System.Drawing.Color.Black;
-            this.btt_DeleteActivity.Location = new System.Drawing.Point(210, 52);
+            this.btt_DeleteActivity.Location = new System.Drawing.Point(129, 52);
             this.btt_DeleteActivity.Name = "btt_DeleteActivity";
             this.btt_DeleteActivity.Size = new System.Drawing.Size(75, 21);
             this.btt_DeleteActivity.TabIndex = 0;
@@ -1180,19 +1178,6 @@ namespace TraXile
             this.linkLabelClearSearch.TabStop = true;
             this.linkLabelClearSearch.Text = "Clear";
             this.linkLabelClearSearch.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
-            // 
-            // btt_ExportActivities
-            // 
-            this.btt_ExportActivities.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.btt_ExportActivities.FlatAppearance.BorderSize = 0;
-            this.btt_ExportActivities.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btt_ExportActivities.ForeColor = System.Drawing.Color.Black;
-            this.btt_ExportActivities.Location = new System.Drawing.Point(129, 52);
-            this.btt_ExportActivities.Name = "btt_ExportActivities";
-            this.btt_ExportActivities.Size = new System.Drawing.Size(75, 21);
-            this.btt_ExportActivities.TabIndex = 1;
-            this.btt_ExportActivities.Text = "export";
-            this.btt_ExportActivities.UseVisualStyleBackColor = false;
             // 
             // linkLabelSearchSyntax
             // 
@@ -3726,35 +3711,35 @@ namespace TraXile
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click_1);
-            // 
             // exportActivitiesToolStripMenuItem
             // 
             this.exportActivitiesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cSVToolStripMenuItem,
             this.jSONToolStripMenuItem});
             this.exportActivitiesToolStripMenuItem.Name = "exportActivitiesToolStripMenuItem";
-            this.exportActivitiesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportActivitiesToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.exportActivitiesToolStripMenuItem.Text = "Export Activities";
             // 
             // cSVToolStripMenuItem
             // 
             this.cSVToolStripMenuItem.Name = "cSVToolStripMenuItem";
-            this.cSVToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cSVToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
             this.cSVToolStripMenuItem.Text = "CSV";
             this.cSVToolStripMenuItem.Click += new System.EventHandler(this.cSVToolStripMenuItem_Click);
             // 
             // jSONToolStripMenuItem
             // 
             this.jSONToolStripMenuItem.Name = "jSONToolStripMenuItem";
-            this.jSONToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.jSONToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
             this.jSONToolStripMenuItem.Text = "JSON";
             this.jSONToolStripMenuItem.Click += new System.EventHandler(this.jSONToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click_1);
             // 
             // overlayToolStripMenuItem
             // 
@@ -4704,7 +4689,6 @@ namespace TraXile
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button btt_DeleteActivity;
-        private System.Windows.Forms.Button btt_ExportActivities;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage6;
