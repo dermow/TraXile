@@ -236,8 +236,6 @@ namespace TraXile
             Init();
         }
 
-        
-
         /// <summary>
         /// Do main initialization
         /// ONLY CALL ONCE! S
@@ -262,7 +260,6 @@ namespace TraXile
             _initStartTime = DateTime.Now;
             _dataBackend = new TrX_DataBackend(TrX_Static.DB_PATH, ref _log);
             _myStats = new TrX_StatsManager(_dataBackend);
-
 
             InitDefaultTags();
             InitNumStats();
@@ -327,6 +324,17 @@ namespace TraXile
             };
 
             _log.Info("Core logic initialized.");
+        }
+
+        public bool CheckForValidClientLogFile(string path)
+        {
+            if(!File.Exists(path))
+            {
+                _log.Error($"Configured Client.txt not found: {path}");
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -880,8 +888,9 @@ namespace TraXile
         {
             while (!_exit)
             {
+                // Wait for Valid log file to start parsing
                 Thread.Sleep(1000);
-                if (!String.IsNullOrEmpty(_clientTxtPath))
+                if (CheckForValidClientLogFile(_clientTxtPath))
                 {
                     ParseLogFile();
                 }

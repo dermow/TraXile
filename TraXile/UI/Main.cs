@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -1101,7 +1102,7 @@ namespace TraXile
 
             _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
 
-            if (String.IsNullOrEmpty(_logic.ClientTxtPath))
+            if (String.IsNullOrEmpty(_logic.ClientTxtPath) || !_logic.CheckForValidClientLogFile(_logic.ClientTxtPath))
             {
                 FileSelectScreen fs = new FileSelectScreen(this)
                 {
@@ -1234,6 +1235,8 @@ namespace TraXile
             timer1.Enabled = true;
             timer1.Start();
         }
+
+     
 
         private void _workerAllStatsChart_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
