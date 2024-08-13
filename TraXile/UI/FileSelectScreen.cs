@@ -22,7 +22,12 @@ namespace TraXile
             _autoDiscovered = new List<string>();
             _detector = new Trx_PoeLogFileDetector();
 
-            _autoDiscovered = _detector.AutoDiscoverPoeLogs();
+            try
+            {
+                _autoDiscovered = _detector.AutoDiscoverPoeLogs();
+            }
+            catch { }
+            
 
             if(_autoDiscovered.Count == 0)
             {

@@ -243,6 +243,8 @@ namespace TraXile
         private bool _uiFlagTagOverlay_TagsChanged;
         private bool _updateAvailable;
         private string _newVersion;
+        private int _failedUIUpdates;
+        private bool _criticalUIError;
 
         /// <summary>
         /// Main Window Constructor
@@ -3870,7 +3872,30 @@ namespace TraXile
                 }
                 else
                 {
-                    UpdateUI();
+                    try
+                    {
+                        UpdateUI();
+                        _failedUIUpdates = 0;
+                    }
+                    catch(Exception ex)
+                    {
+                        _failedUIUpdates++;
+
+                        if(_failedUIUpdates >= 20)
+                        {
+                           if(!_criticalUIError)
+                           {
+                                _criticalUIError = true;
+                                MessageBox.Show("There was a critical Error updating the UI. TraXile will restart now. If this keeps happening, please contact me at: dermow@posteo.de.");
+                           }
+                        }
+                        else
+                        {
+                            _log.Warn($"Cannot update UI: {ex.Message}, this should be uncritical.");
+                            _log.Debug(ex.ToString());
+                        }
+                    }
+                    
                     Opacity = 100;
                 }
 
