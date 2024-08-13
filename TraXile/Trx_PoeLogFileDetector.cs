@@ -122,7 +122,8 @@ namespace TraXile
             string poeStandalonePath = GetPoeStandaloneInstallPath();
             if (!String.IsNullOrEmpty(poeStandalonePath))
             {
-                searchList.Add($@"{poeStandalonePath}\logs\Client.txt");
+                string pathToAdd = $@"{poeStandalonePath}\logs\Client.txt";
+                searchList.Add(pathToAdd.Replace(@"\\", @"\"));
             }
 
             // Do search
