@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace TraXile
@@ -33,6 +36,7 @@ namespace TraXile
             return iCount;
         }
 
+     
         /// <summary>
         /// Get the last line of the given file
         /// </summary>
@@ -41,6 +45,11 @@ namespace TraXile
         public static string GetLastLineOfFile(string path)
         {
             return File.ReadLines(path).Last();
+        }
+
+        public static string GetRegistryValue(string key, string value, string defaultVal = "")
+        {
+            return (string)Registry.GetValue(key, value, defaultVal);
         }
     }
 }

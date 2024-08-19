@@ -110,6 +110,9 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Sprache, Version=1.10.0.35, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sprache.1.10.0.35\lib\net40\Sprache.dll</HintPath>
+    </Reference>
     <Reference Include="SQLitePCLRaw.batteries_v2, Version=2.0.4.976, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.bundle_e_sqlite3.2.0.4\lib\net461\SQLitePCLRaw.batteries_v2.dll</HintPath>
     </Reference>
@@ -176,6 +179,7 @@
     <Compile Include="TrX_BackendSync_Client.cs" />
     <Compile Include="TrX_CoreLogic.cs" />
     <Compile Include="TrX_Helpers.cs" />
+    <Compile Include="Trx_PoeLogFileDetector.cs" />
     <Compile Include="TrX_ProfitTracking.cs" />
     <Compile Include="UI\AboutW.cs">
       <SubType>Form</SubType>

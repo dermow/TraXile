@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -242,6 +243,8 @@ namespace TraXile
         private bool _uiFlagTagOverlay_TagsChanged;
         private bool _updateAvailable;
         private string _newVersion;
+        private int _failedUIUpdates;
+        private bool _criticalUIError;
 
         /// <summary>
         /// Main Window Constructor
@@ -1101,7 +1104,7 @@ namespace TraXile
 
             _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
 
-            if (String.IsNullOrEmpty(_logic.ClientTxtPath))
+            if (String.IsNullOrEmpty(_logic.ClientTxtPath) || !_logic.CheckForValidClientLogFile(_logic.ClientTxtPath))
             {
                 FileSelectScreen fs = new FileSelectScreen(this)
                 {
@@ -1234,6 +1237,8 @@ namespace TraXile
             timer1.Enabled = true;
             timer1.Start();
         }
+
+     
 
         private void _workerAllStatsChart_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -3867,7 +3872,30 @@ namespace TraXile
                 }
                 else
                 {
-                    UpdateUI();
+                    try
+                    {
+                        UpdateUI();
+                        _failedUIUpdates = 0;
+                    }
+                    catch(Exception ex)
+                    {
+                        _failedUIUpdates++;
+
+                        if(_failedUIUpdates >= 20)
+                        {
+                           if(!_criticalUIError)
+                           {
+                                _criticalUIError = true;
+                                MessageBox.Show("There was a critical Error updating the UI. TraXile will restart now. If this keeps happening, please contact me at: dermow@posteo.de.");
+                           }
+                        }
+                        else
+                        {
+                            _log.Warn($"Cannot update UI: {ex.Message}, this should be uncritical.");
+                            _log.Debug(ex.ToString());
+                        }
+                    }
+                    
                     Opacity = 100;
                 }
 
