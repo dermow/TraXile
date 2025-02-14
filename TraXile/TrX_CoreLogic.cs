@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
+using Traxile.Enanced;
 
 namespace TraXile
 {
@@ -47,6 +48,10 @@ namespace TraXile
 
     public class TrX_CoreLogic
     {
+        //Api Client
+        private TEApiClient _teApiClient;
+        public TEApiClient TEApiClient => _teApiClient;
+
         // Event: initialization of history is finished
         public event Trx_GenericEventHandler OnHistoryInitialized;
 
@@ -212,6 +217,16 @@ namespace TraXile
         private Dictionary<string, string> _statNamesLong;
         public Dictionary<string, string> StatNamesLong => _statNamesLong;
 
+        // Time to check all activities if synced
+        private int _apiSyncInterval = 30000;
+
+        // Max acitvities to enqueue at once
+        private int _maxApiSyncBulkSize = 100;
+
+        // API Sync Thread
+        private Thread _teApiSyncThread;
+
+
         // Property: Path to Client.txt
         public string ClientTxtPath
         {
@@ -235,6 +250,7 @@ namespace TraXile
             _timeCapMin = minTimeCap;
             Init();
         }
+
 
         /// <summary>
         /// Do main initialization
@@ -260,6 +276,9 @@ namespace TraXile
             _initStartTime = DateTime.Now;
             _dataBackend = new TrX_DataBackend(TrX_Static.DB_PATH, ref _log);
             _myStats = new TrX_StatsManager(_dataBackend);
+
+            _teApiClient = new TEApiClient(TrX_Static.TRAXILE_ENHANCED_API_BASE_URL, TrX_Secrets.API_KEY, this);
+            _teApiClient.OnActivitySuccess += TEApiActivityPosted;
 
             InitDefaultTags();
             InitNumStats();
@@ -323,7 +342,85 @@ namespace TraXile
                 IsBackground = true
             };
 
+            // Thread for background api snyc
+            _teApiSyncThread = new Thread(new ThreadStart(TEApiSyncrhonization))
+            {
+                Name = "ApiSyncThread",
+                IsBackground = true
+            };
+
+            //TMP
+            StartAPIClient();
+
             _log.Info("Core logic initialized.");
+        }
+
+        /// <summary>
+        /// Start TE API Client
+        /// </summary>
+        public void StartAPIClient()
+        {
+            _teApiClient.Start();
+        }
+
+        /// <summary>
+        /// Stop TE API Client
+        /// </summary>
+        public void StopAPIClient()
+        {
+            _teApiClient.Stop();
+        }
+
+        /// <summary>
+        /// Sync Activities with TE API
+        /// </summary>
+        private void TEApiSyncrhonization()
+        {
+            while (true)
+            {
+                Thread.Sleep(_apiSyncInterval);
+
+                if (!_teApiClient.IsStarted)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    int bulkSize = 0;
+                    int enqueued = 0;
+                    for (int i = 0; i < _eventHistory.Count; i++)
+                    {
+                        TrX_TrackedActivity act = _eventHistory[i];
+                        if (!act.SyncedToAPI && !act.QueuedForAPISync)
+                        {
+                            // _log.Debug($"Enqueue for background sync: {act.UniqueID}");
+                            if (_teApiClient.EnqueueActivity(act))
+                            {
+                                bulkSize++;
+                                enqueued++;
+                            }
+                            else
+                            {
+                                // stop if problems with enqueuing
+                                break;
+                            }
+                        }
+
+                        // exit loop if max bulk size reached
+                        if (bulkSize >= _maxApiSyncBulkSize)
+                        {
+                            bulkSize = 0;
+                            break;
+                        }
+                    }
+                    _log.Debug($"Enqueued {enqueued} items for TEApi sync");
+                }
+                catch (Exception ex)
+                {
+                    _log.Warn($"Error syncing to API: {ex.Message}");
+                }
+            }
         }
 
         public bool CheckForValidClientLogFile(string path)
@@ -338,12 +435,23 @@ namespace TraXile
         }
 
         /// <summary>
+        /// Event handler for sucessful posted Activity
+        /// </summary>
+        /// <param name="e"></param>
+        private void TEApiActivityPosted(TrX_CoreLogicActivityEventArgs e)
+        {
+            e.Activity.SyncedToAPI = true;
+            Database.DoNonQuery($"UPDATE tx_activity_log SET te_synced = 1 WHERE timestamp = {e.Activity.TimeStamp} AND act_type = '{e.Activity.Type.ToString().ToLower()}'");
+        }
+
+        /// <summary>
         /// Start logfile parsing and event handling
         /// </summary>
         public void Start()
         {
             _logParseThread.Start();
             _eventThread.Start();
+            _teApiSyncThread.Start();
 
             _log.Info("Core logic started.");
         }
@@ -824,7 +932,8 @@ namespace TraXile
                         Area = sqlReader.GetString(2),
                         DeathCounter = sqlReader.GetInt32(4),
                         TrialMasterCount = sqlReader.GetInt32(5),
-                        PausedTime = sqlReader.GetDouble(10)
+                        PausedTime = sqlReader.GetDouble(10),
+                        SyncedToAPI = sqlReader.GetBoolean(11)
                     };
                 }
                 else
@@ -839,7 +948,8 @@ namespace TraXile
                         Area = sqlReader.GetString(2),
                         DeathCounter = sqlReader.GetInt32(4),
                         TrialMasterCount = sqlReader.GetInt32(5),
-                        PausedTime = sqlReader.GetDouble(10)
+                        PausedTime = sqlReader.GetDouble(10),
+                        SyncedToAPI = sqlReader.GetBoolean(11)
                     };
                 }
                

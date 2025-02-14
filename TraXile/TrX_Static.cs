@@ -78,6 +78,9 @@ namespace TraXile
         // Metadata file
         public static string METADATA_XML_FULLPATH = $@"{METADATA_PATH}\{METADATA_XML_FILE}";
 
+        // API ULR
+        public static string TRAXILE_ENHANCED_API_BASE_URL = "https://traxile-api.robins.run/api/v1/activity";
+
         // Time this assembly was build
         public static long BUILDTIME
         {

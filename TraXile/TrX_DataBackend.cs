@@ -108,6 +108,8 @@ namespace TraXile
                 "enchant_id integer, " +
                 "enchant_note text)";
             cmd.ExecuteNonQuery();
+
+
             
             Patch();
         }
@@ -192,6 +194,18 @@ namespace TraXile
                 cmd.ExecuteNonQuery();
                 _log.Info("PatchDatabase 0.7.5 -> " + cmd.CommandText);
                 DoNonQuery("INSERT INTO tx_kvstore (key, value) VALUES ('last_hash', '0')", false);
+            }
+            catch
+            {
+            }
+
+            // Update 1.4.0
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "alter table tx_activity_log add column te_synced int default 0";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 1.4.0 -> " + cmd.CommandText);
             }
             catch
             {
