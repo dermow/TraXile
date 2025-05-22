@@ -10,7 +10,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using System.Windows.Forms;
-using TraXile.Enhanced;
+using Traxile.Enanced;
 
 namespace TraXile
 {
@@ -217,16 +217,6 @@ namespace TraXile
         private Dictionary<string, string> _statNamesLong;
         public Dictionary<string, string> StatNamesLong => _statNamesLong;
 
-        // Property: Path to Client.txt
-        public string ClientTxtPath
-        {
-            get { return _clientTxtPath; }
-            set { _clientTxtPath = value; }
-        }
-
-        // Property Minimum activity cap
-        private int _timeCapMin = 0;
-
         // Time to check all activities if synced
         private int _apiSyncInterval = 30000;
 
@@ -236,6 +226,16 @@ namespace TraXile
         // API Sync Thread
         private Thread _teApiSyncThread;
 
+
+        // Property: Path to Client.txt
+        public string ClientTxtPath
+        {
+            get { return _clientTxtPath; }
+            set { _clientTxtPath = value; }
+        }
+
+        // Property Minimum activity cap
+        private int _timeCapMin = 0;
         public int MinimumCap
         {
             get { return _timeCapMin; }
@@ -250,6 +250,7 @@ namespace TraXile
             _timeCapMin = minTimeCap;
             Init();
         }
+
 
         /// <summary>
         /// Do main initialization
@@ -275,6 +276,7 @@ namespace TraXile
             _initStartTime = DateTime.Now;
             _dataBackend = new TrX_DataBackend(TrX_Static.DB_PATH, ref _log);
             _myStats = new TrX_StatsManager(_dataBackend);
+
             _teApiClient = new TEApiClient(TrX_Static.TRAXILE_ENHANCED_API_BASE_URL, TrX_Secrets.API_KEY, this);
             _teApiClient.OnActivitySuccess += TEApiActivityPosted;
 
@@ -347,6 +349,9 @@ namespace TraXile
                 IsBackground = true
             };
 
+            //TMP
+            StartAPIClient();
+
             _log.Info("Core logic initialized.");
         }
 
@@ -371,11 +376,11 @@ namespace TraXile
         /// </summary>
         private void TEApiSyncrhonization()
         {
-            while(true)
+            while (true)
             {
                 Thread.Sleep(_apiSyncInterval);
 
-                if(!_teApiClient.IsStarted)
+                if (!_teApiClient.IsStarted)
                 {
                     continue;
                 }
@@ -384,13 +389,13 @@ namespace TraXile
                 {
                     int bulkSize = 0;
                     int enqueued = 0;
-                    for(int i = 0; i < _eventHistory.Count; i++)
+                    for (int i = 0; i < _eventHistory.Count; i++)
                     {
                         TrX_TrackedActivity act = _eventHistory[i];
-                        if(!act.SyncedToAPI && !act.QueuedForAPISync)
+                        if (!act.SyncedToAPI && !act.QueuedForAPISync)
                         {
-                           // _log.Debug($"Enqueue for background sync: {act.UniqueID}");
-                            if(_teApiClient.EnqueueActivity(act))
+                            // _log.Debug($"Enqueue for background sync: {act.UniqueID}");
+                            if (_teApiClient.EnqueueActivity(act))
                             {
                                 bulkSize++;
                                 enqueued++;
@@ -403,7 +408,7 @@ namespace TraXile
                         }
 
                         // exit loop if max bulk size reached
-                        if(bulkSize >= _maxApiSyncBulkSize)
+                        if (bulkSize >= _maxApiSyncBulkSize)
                         {
                             bulkSize = 0;
                             break;
@@ -411,11 +416,22 @@ namespace TraXile
                     }
                     _log.Debug($"Enqueued {enqueued} items for TEApi sync");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     _log.Warn($"Error syncing to API: {ex.Message}");
                 }
             }
+        }
+
+        public bool CheckForValidClientLogFile(string path)
+        {
+            if(!File.Exists(path))
+            {
+                _log.Error($"Configured Client.txt not found: {path}");
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -649,6 +665,26 @@ namespace TraXile
             }
         }
 
+        /// <summary>
+        /// Mouse over handler for label
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Lbl_MouseHover(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Reload the Poe Logfile
+        /// </summary>
+        public void ReloadLogFile()
+        {
+            ResetStats();
+            _eventQueueInitizalized = false;
+            _lastHash = 0;
+            Application.Restart();
+        }
 
         /// <summary>
         /// Initialize the stats
@@ -897,7 +933,7 @@ namespace TraXile
                         DeathCounter = sqlReader.GetInt32(4),
                         TrialMasterCount = sqlReader.GetInt32(5),
                         PausedTime = sqlReader.GetDouble(10),
-                        SyncedToAPI = sqlReader.GetInt32(11) > 0
+                        SyncedToAPI = sqlReader.GetBoolean(11)
                     };
                 }
                 else
@@ -913,7 +949,7 @@ namespace TraXile
                         DeathCounter = sqlReader.GetInt32(4),
                         TrialMasterCount = sqlReader.GetInt32(5),
                         PausedTime = sqlReader.GetDouble(10),
-                        SyncedToAPI = sqlReader.GetInt32(11) > 0
+                        SyncedToAPI = sqlReader.GetBoolean(11)
                     };
                 }
                
@@ -962,8 +998,9 @@ namespace TraXile
         {
             while (!_exit)
             {
+                // Wait for Valid log file to start parsing
                 Thread.Sleep(1000);
-                if (!String.IsNullOrEmpty(_clientTxtPath))
+                if (CheckForValidClientLogFile(_clientTxtPath))
                 {
                     ParseLogFile();
                 }
@@ -1311,7 +1348,8 @@ namespace TraXile
             bTargetAreaIsSanctum = _defaultMappings.SanctumAreas.Contains(sTargetArea),
             bTargetAreaIsTrialmaster = _defaultMappings.TrialMasterAreas.Contains(sTargetArea),
             bTargetAreaIsToTa = _defaultMappings.TotAAreas.Contains(sTargetArea),
-            bTargetAreaIsUltimatum = _defaultMappings.UltimatumAreas.Contains(sTargetArea);
+            bTargetAreaIsUltimatum = _defaultMappings.UltimatumAreas.Contains(sTargetArea),
+            bTargetAreaIsKingsmarch = _defaultMappings.KingsmarchAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1555,6 +1593,10 @@ namespace TraXile
             else if (bTargetAreaIsUltimatum)
             {
                 actType = ACTIVITY_TYPES.INSCRIBED_ULTIMATUM;
+            }
+            else if (bTargetAreaIsKingsmarch)
+            {
+                actType = ACTIVITY_TYPES.KINGSMARCH;
             }
 
             // Special handling for logbook cemetery + vaal temple
@@ -2017,6 +2059,7 @@ namespace TraXile
                 (bTargetAreaIsSanctum && isOutSideSanctumLeague) ||
                 bTargetAreaMine ||
                 bTargetAreaIsToTa ||
+                bTargetAreaIsKingsmarch ||
                 bTargetAreaIsTane ||
                 bTargetAreaTemple ||
                 bTargetAreaIsMI ||
@@ -3169,7 +3212,6 @@ namespace TraXile
                     // Trigger event
                     if(greaterThenMinCap)
                     {
-                        _teApiClient.EnqueueActivity(activity);
                         OnActivityFinished(new TrX_CoreLogicActivityEventArgs(this, activity));
                     }
                 }

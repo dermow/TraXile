@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -36,15 +39,10 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Get the last line of the given file
+        /// Compute hash from raw data
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="rawData"></param>
         /// <returns></returns>
-        public static string GetLastLineOfFile(string path)
-        {
-            return File.ReadLines(path).Last();
-        }
-
         public static string ComputeSha256Hash(string rawData)
         {
             // Create a SHA256
@@ -61,6 +59,22 @@ namespace TraXile
                 }
                 return builder.ToString();
             }
+        }
+
+
+        /// <summary>
+        /// Get the last line of the given file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string GetLastLineOfFile(string path)
+        {
+            return File.ReadLines(path).Last();
+        }
+
+        public static string GetRegistryValue(string key, string value, string defaultVal = "")
+        {
+            return (string)Registry.GetValue(key, value, defaultVal);
         }
     }
 }
