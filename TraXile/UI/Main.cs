@@ -18,6 +18,9 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
 using TraXile.UI;
+using MaterialSkin;
+using MaterialSkin.Controls;
+
 
 namespace TraXile
 {
@@ -63,7 +66,7 @@ namespace TraXile
     /// <summary>
     /// Main UI
     /// </summary>
-    public partial class Main : Form
+    public partial class Main : MaterialForm
     {
         // Core logic
         private TrX_CoreLogic _logic;
@@ -246,6 +249,16 @@ namespace TraXile
         private int _failedUIUpdates;
         private bool _criticalUIError;
 
+
+        MaterialSkinManager msm = MaterialSkinManager.Instance;
+
+        public void DoManualThemeAdjustments()
+        {
+            chartGlobalDashboard.ChartAreas[0].BackColor = msm.BackgroundColor;
+            chartGlobalDashboard.BackColor = msm.BackgroundColor;
+            checkBox1.BackColor = msm.BackgroundColor;
+        }
+
         /// <summary>
         /// Main Window Constructor
         /// </summary>
@@ -274,20 +287,32 @@ namespace TraXile
             // Fallback default theme for updater
             _myTheme = new TrX_ThemeDark();
 
+            msm.Theme = MaterialSkinManager.Themes.DARK;
+
+            msm.ColorScheme = new ColorScheme(
+            Primary.BlueGrey800,    // Primary
+            Primary.BlueGrey900,    // Dark Primary
+            Primary.BlueGrey500,    // Light Primary
+            Accent.Red100,    // Accent
+            TextShade.WHITE         // Textfarbe
+            );
+
             InitializeComponent();
             Init();
+
+            DoManualThemeAdjustments();
 
             // Set Theme
             if (ReadSetting("theme", TrX_Static.DEFAULT_THEME_NAME) == "Light")
             {
-                _myTheme = new TrX_ThemeLight();
-                _myTheme.Apply(this);
+                msm.Theme = MaterialSkinManager.Themes.LIGHT;
             }
             else
             {
-                _myTheme = new TrX_ThemeDark();
-                _myTheme.Apply(this);
+                msm.Theme = MaterialSkinManager.Themes.DARK;
             }
+
+            
 
         }
 
@@ -501,15 +526,15 @@ namespace TraXile
 
         private void ResetFilter(bool set = false)
         {
-            comboBox1.SelectedItem = "All";
-            comboBox7.SelectedItem = "All";
-            comboBox8.SelectedItem = "All";
-            comboBox4.SelectedItem = "OR";
-            comboBox9.SelectedItem = "=";
+            comboBox_Filter_TimeRange.SelectedItem = "All";
+            comboBox_Filter_Type.SelectedItem = "All";
+            comboBox_Filter_Area.SelectedItem = "All";
+            comboBox_Filter_Matching.SelectedItem = "OR";
+            comboBox_Filter_Area_level_Operator.SelectedItem = "=";
             textBox12.Text = "00:00:00";
             textBox13.Text = "23:59:59";
-            textBox10.Text = "";
-            listBox3.Items.Clear();
+            textBox_Filter_AreaLevel.Text = "";
+            listBox_Filter_Tags.Items.Clear();
 
             if(set)
             {
@@ -523,22 +548,22 @@ namespace TraXile
         /// <param name="render">update dashboards?</param>
         private void SetFilter(bool render = false)
         {
-            if (comboBox1.SelectedItem == null || _statsDataSource == null)
+            if (comboBox_Filter_TimeRange.SelectedItem == null || _statsDataSource == null)
                 return;
 
-            if(comboBox7.SelectedItem == null)
+            if(comboBox_Filter_Type.SelectedItem == null)
             {
-                comboBox7.SelectedItem = "All";
+                comboBox_Filter_Type.SelectedItem = "All";
             }
 
-            if (comboBox8.SelectedItem == null)
+            if (comboBox_Filter_Area.SelectedItem == null)
             {
-                comboBox8.SelectedItem = "All";
+                comboBox_Filter_Area.SelectedItem = "All";
             }
 
             _statsDataSource.Clear();
 
-            if (comboBox1.SelectedItem.ToString() == "All")
+            if (comboBox_Filter_TimeRange.SelectedItem.ToString() == "All")
             {
                 _statsDataSource.AddRange(_logic.ActivityHistory);
                 _statsDate1 = DateTimeOffset.FromUnixTimeSeconds(_oldestTimeStamp).DateTime;
@@ -546,9 +571,9 @@ namespace TraXile
                 dateTimePicker1.Value = _statsDate1;
                 dateTimePicker2.Value = _statsDate2;
             }
-            else if (comboBox1.SelectedItem.ToString().Contains("League:"))
+            else if (comboBox_Filter_TimeRange.SelectedItem.ToString().Contains("League:"))
             {
-                string sLeague = comboBox1.SelectedItem.ToString().Split(new string[] { "League: " }, StringSplitOptions.None)[1]
+                string sLeague = comboBox_Filter_TimeRange.SelectedItem.ToString().Split(new string[] { "League: " }, StringSplitOptions.None)[1]
                     .Split(new string[] { " (" }, StringSplitOptions.None)[0];
                 TrX_LeagueInfo li = GetLeagueByName(sLeague);
 
@@ -564,7 +589,7 @@ namespace TraXile
                 DateTime date1 = DateTime.Now;
                 DateTime date2 = DateTime.Now;
 
-                switch (comboBox1.SelectedItem.ToString())
+                switch (comboBox_Filter_TimeRange.SelectedItem.ToString())
                 {
                     case "Custom":
                         string s = $"{dateTimePicker1.Value.Date} {textBox12.Text.ToString()}";
@@ -615,7 +640,7 @@ namespace TraXile
                 _statsDate1 = date1;
                 _statsDate2 = date2;
 
-                if (comboBox1.SelectedItem.ToString() != "Custom")
+                if (comboBox_Filter_TimeRange.SelectedItem.ToString() != "Custom")
                 {
                     dateTimePicker1.Value = date1;
                     dateTimePicker2.Value = date2;
@@ -623,42 +648,42 @@ namespace TraXile
             }
 
             // Apply Type filter
-            if(comboBox7.SelectedItem.ToString() != "All")
+            if(comboBox_Filter_Type.SelectedItem.ToString() != "All")
             {
-                _statsDataSource = FilterActivitiesByType((ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), comboBox7.SelectedItem.ToString()), _statsDataSource);
+                _statsDataSource = FilterActivitiesByType((ACTIVITY_TYPES)Enum.Parse(typeof(ACTIVITY_TYPES), comboBox_Filter_Type.SelectedItem.ToString()), _statsDataSource);
             }
 
             // Apply Area filter
-            if (comboBox8.SelectedItem.ToString() != "All")
+            if (comboBox_Filter_Area.SelectedItem.ToString() != "All")
             {
-                _statsDataSource = FilterActivitiesByArea(comboBox8.SelectedItem.ToString(), _statsDataSource);
+                _statsDataSource = FilterActivitiesByArea(comboBox_Filter_Area.SelectedItem.ToString(), _statsDataSource);
             }
 
             // Apply Area filter
-            if (!string.IsNullOrEmpty(textBox10.Text))
+            if (!string.IsNullOrEmpty(textBox_Filter_AreaLevel.Text))
             {
                 try
                 {
-                    int lvl = Convert.ToInt32(textBox10.Text);
-                    _statsDataSource = FilterActivitiesByAreaLevel(lvl, comboBox9.SelectedItem.ToString(), _statsDataSource);
+                    int lvl = Convert.ToInt32(textBox_Filter_AreaLevel.Text);
+                    _statsDataSource = FilterActivitiesByAreaLevel(lvl, comboBox_Filter_Area_level_Operator.SelectedItem.ToString(), _statsDataSource);
                 }
                 catch(Exception ex)
                 {
-                    textBox10.Text = String.Empty;
+                    textBox_Filter_AreaLevel.Text = String.Empty;
                     MessageBox.Show(ex.Message);
                 }
             }
 
             // Apply tag filter
-            if (listBox3.Items.Count > 0)
+            if (listBox_Filter_Tags.Items.Count > 0)
             {
                 List<string> src = new List<string>();
-                foreach (string s in listBox3.Items)
+                foreach (MaterialListBoxItem s in listBox_Filter_Tags.Items)
                 {
-                    src.Add(s);
+                    src.Add(s.ToString());
                 }
 
-                _statsDataSource = FilterActivitiesByTags(src, comboBox4.SelectedItem.ToString(), _statsDataSource);
+                _statsDataSource = FilterActivitiesByTags(src, comboBox_Filter_Matching.SelectedItem.ToString(), _statsDataSource);
             }
 
             if (render)
@@ -1116,7 +1141,7 @@ namespace TraXile
             }
 
             comboBoxShowMaxItems.SelectedItem = ReadSetting("actlog.maxitems", "500");
-            comboBox1.SelectedIndex = 0;
+            comboBox_Filter_TimeRange.SelectedIndex = 0;
             listViewActLog.Columns[0].Width = 120;
             listViewActLog.Columns[1].Width = 50;
             listViewActLog.Columns[2].Width = 110;
@@ -1199,13 +1224,13 @@ namespace TraXile
             }
             foreach (string type in Enum.GetNames(typeof(ACTIVITY_TYPES)))
             {
-                comboBox7.Items.Add(type);
+                comboBox_Filter_Type.Items.Add(type);
             }
             comboBox3.SelectedItem = "All";
-            comboBox4.SelectedItem = "OR";
+            comboBox_Filter_Matching.SelectedItem = "OR";
             comboBox6.SelectedItem = "All";
-            comboBox7.SelectedItem = "All";
-            comboBox8.SelectedItem = "All";
+            comboBox_Filter_Type.SelectedItem = "All";
+            comboBox_Filter_Area.SelectedItem = "All";
 
             comboBoxStopWatchTag1.Items.Add("None");
             comboBoxStopWatchTag2.Items.Add("None");
@@ -1213,7 +1238,7 @@ namespace TraXile
 
             foreach (TrX_ActivityTag tag in _logic.Tags)
             {
-                comboBox5.Items.Add(tag.DisplayName);
+                comboBox_Filter_Tags.Items.Add(tag.DisplayName);
                 comboBoxStopWatchTag1.Items.Add(tag.ID);
                 comboBoxStopWatchTag2.Items.Add(tag.ID);
                 comboBoxStopWatchTag3.Items.Add(tag.ID);
@@ -1225,7 +1250,7 @@ namespace TraXile
 
             foreach (string s in _defaultMappings.AllAreas)
             {
-                comboBox8.Items.Add(s);
+                comboBox_Filter_Area.Items.Add(s);
             }
 
             lbl_filter.Visible = false;
@@ -1389,11 +1414,11 @@ namespace TraXile
             {
                 if (currentLeague != null && li.Name == currentLeague.Name)
                 {
-                    comboBox1.Items.Add($"Current League: {li.Name} ({li.Version})");
+                    comboBox_Filter_TimeRange.Items.Add($"Current League: {li.Name} ({li.Version})");
                 }
                 else
                 {
-                    comboBox1.Items.Add($"League: {li.Name} ({li.Version})");
+                    comboBox_Filter_TimeRange.Items.Add($"League: {li.Name} ({li.Version})");
                 }
                 
             }
@@ -2324,7 +2349,7 @@ namespace TraXile
             linkLabelUpdateAvailable.Visible = _updateAvailable;
             linkLabelUpdateAvailable.Text = $"TraXile {_newVersion} available. Update now!";
 
-            btt_summary.Text = $"summary ({listViewActLog.SelectedIndices.Count})";
+            materialLabelSummary.Text = $"summary ({listViewActLog.SelectedIndices.Count})";
             TimeSpan tsAreaTime = (DateTime.Now - _inAreaSince);
             checkBoxShowGridInAct.Checked = _showGridInActLog;
             checkBoxShowGridInStats.Checked = _showGridInStats;
@@ -2383,21 +2408,21 @@ namespace TraXile
                         _listViewInitielaized = true;
                     }
 
-                    label80.Text = $"{_logic.CurrentArea} (lvl. {_logic.CurrentAreaLevel})";
+                    labelAreaCurrent.Text = $"{_logic.CurrentArea} (lvl. {_logic.CurrentAreaLevel})";
 
                     if (_logic.CurrentArea.Contains("Hideout") && !(_logic.CurrentArea.Contains("Syndicate")))
                     {
-                        label102.Text = "In Hideout";
+                        labelActivityCurrent.Text = "In Hideout";
                     }
                     else
                     {
                         if (_logic.CurrentActivity != null)
                         {
-                            label102.Text = _logic.CurrentActivity.Type.ToString();
+                            labelActivityCurrent.Text = _logic.CurrentActivity.Type.ToString();
                         }
                         else
                         {
-                            label102.Text = "Nothing";
+                            labelActivityCurrent.Text = "Nothing";
                         }
                     }
 
@@ -3040,7 +3065,7 @@ namespace TraXile
                 listView1.Items.Add(lvi);
             }
 
-            label46.Text = String.Format($"Total play time: {Math.Round(totalCount / 60 / 60, 2)} hours");
+            label6.Text = String.Format($"Total play time: {Math.Round(totalCount / 60 / 60, 2)} hours");
         }
 
         /// <summary>
@@ -3844,7 +3869,7 @@ namespace TraXile
                 + $"('{tag.ID}', '{tag.DisplayName}', '{tag.BackColor.ToArgb()}', '{tag.ForeColor.ToArgb()}', 'custom', {(tag.ShowInListView ? "1" : "0")})");
 
             listViewActLog.Columns.Add(tag.DisplayName);
-            comboBox5.Items.Add(tag.DisplayName);
+            comboBox_Filter_Tags.Items.Add(tag.DisplayName);
             ResetMapHistory();
             RequestHistoryUpdate();
             RenderTagsForConfig(true);
@@ -4135,11 +4160,11 @@ namespace TraXile
         {
             if (theme == "Dark")
             {
-                _myTheme = new TrX_ThemeDark();
+                msm.Theme = MaterialSkinManager.Themes.DARK;
             }
             else
             {
-                _myTheme = new TrX_ThemeLight();
+                msm.Theme = MaterialSkinManager.Themes.LIGHT;
             }
 
             _myTheme.Apply(this);
@@ -4768,23 +4793,23 @@ namespace TraXile
         {
             if (_logic.EventQueueInitialized)
             {
-                if (comboBox1.SelectedItem.ToString() == "Custom")
+                if (comboBox_Filter_TimeRange.SelectedItem.ToString() == "Custom")
                 {
                     dateTimePicker1.Enabled = true;
                     dateTimePicker2.Enabled = true;
                     textBox12.Enabled = true;
                     textBox13.Enabled = true;
                 }
-                else if (comboBox1.SelectedItem.ToString().Contains("League:"))
+                else if (comboBox_Filter_TimeRange.SelectedItem.ToString().Contains("League:"))
                 {
-                    string sLeague = comboBox1.SelectedItem.ToString().Split(new string[] { "League: " }, StringSplitOptions.None)[1]
+                    string sLeague = comboBox_Filter_TimeRange.SelectedItem.ToString().Split(new string[] { "League: " }, StringSplitOptions.None)[1]
                         .Split(new string[] { " (" }, StringSplitOptions.None)[0];
                     TrX_LeagueInfo li = GetLeagueByName(sLeague);
 
                     DateTime dt1 = li.Start;
                     DateTime dt2 = li.End;
 
-                    if (comboBox1.SelectedItem.ToString() != "Custom")
+                    if (comboBox_Filter_TimeRange.SelectedItem.ToString() != "Custom")
                     {
                         dateTimePicker1.Value = dt1;
                         dateTimePicker2.Value = dt2;
@@ -4902,35 +4927,48 @@ namespace TraXile
         {
             if(filterBarShown)
             {
-                tableLayoutPanelMain.RowStyles[1].Height = 0;
+                tableLayoutPanel_L0.RowStyles[1].Height = 0;
                 linkLabel5.Text = "show filters";
                 filterBarShown = false;
             }
             else
             {
-                tableLayoutPanelMain.RowStyles[1].Height = 130;
+                tableLayoutPanel_L0.RowStyles[1].Height = 160;
                 linkLabel5.Text = "hide filters";
                 filterBarShown = true;
             }
         }
 
+        bool ExistsInMaterialListBox(MaterialListBox listBox, string searchText)
+        {
+           foreach(MaterialListBoxItem item in listBox.Items)
+            {
+                if (item.Text.Equals(searchText, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void button17_Click_2(object sender, EventArgs e)
         {
-            if(comboBox5.SelectedItem != null)
+            if(comboBox_Filter_Tags.SelectedItem != null)
             {
-                if (!listBox3.Items.Contains(comboBox5.SelectedItem.ToString()))
+                if (!ExistsInMaterialListBox(listBox_Filter_Tags, comboBox_Filter_Tags.SelectedText))
                 {
-                    listBox3.Items.Add(comboBox5.SelectedItem);
+                    MaterialListBoxItem item = new MaterialListBoxItem(comboBox_Filter_Tags.SelectedItem.ToString());
+                    listBox_Filter_Tags.Items.Add(item);
                 }
-                comboBox5.Text = "";
+                comboBox_Filter_Tags.Text = "";
             }
         }
 
         private void button18_Click_1(object sender, EventArgs e)
         {
-            if(listBox3.SelectedItem != null)
+            if(listBox_Filter_Tags.SelectedItem != null)
             {
-                listBox3.Items.Remove(listBox3.SelectedItem);
+                listBox_Filter_Tags.Items.Remove(listBox_Filter_Tags.SelectedItem);
             }
         }
 
@@ -5063,7 +5101,7 @@ namespace TraXile
 
         private void listViewActLog_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            btt_summary.Text = $"summary ({listViewActLog.SelectedIndices.Count})";
+            materialLabelSummary.Text = $"summary ({listViewActLog.SelectedIndices.Count})";
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -5186,6 +5224,67 @@ namespace TraXile
         private void pictureBoxUpdateAvailable_Click(object sender, EventArgs e)
         {
             CheckForUpdate(true, false);
+        }
+
+        private void newUIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void materialLabel1_Click(object sender, EventArgs e)
+        {
+            BuildAndShowSummary();
+        }
+
+        private void materialLabel2_Click(object sender, EventArgs e)
+        {
+            DeleteActivities();
+        }
+
+        private void materialButton1_Click(object sender, EventArgs e)
+        {
+            textBox8.Text = "";
+            _uiFlagActivityList = true;
+        }
+
+        private void tableLayoutPanelMain_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void materialTabSelector2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox_Filter_Area_level_Operator_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox30_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void materialCard7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void materialLabelSummary_Click(object sender, EventArgs e)
+        {
+            BuildAndShowSummary();
+        }
+
+        private void materialTabControl2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chartGlobalDashboard_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
