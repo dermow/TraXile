@@ -254,9 +254,53 @@ namespace TraXile
 
         public void DoManualThemeAdjustments()
         {
-            chartGlobalDashboard.ChartAreas[0].BackColor = msm.BackgroundColor;
-            chartGlobalDashboard.BackColor = msm.BackgroundColor;
-            checkBox1.BackColor = msm.BackgroundColor;
+            List<Chart> themedCharts = new List<Chart>();
+            themedCharts.Add(chartLeagueActTime);
+            themedCharts.Add(chartLeagueMapsDone);
+            themedCharts.Add(chartLeagueMapT16);
+            themedCharts.Add(chartLeagueTotalActivities);
+            themedCharts.Add(chartLeagueAvgMap);
+            themedCharts.Add(chartLeagueAvgMapT16);
+            themedCharts.Add(chartLeagueDeath);
+            themedCharts.Add(chartLeagueCampaign);
+            themedCharts.Add(chartHeistAvgTime);
+            themedCharts.Add(chartHeistByLevel);
+            themedCharts.Add(chartLabsAvgTime);
+            themedCharts.Add(chartLabsDone);
+            themedCharts.Add(chartMapTierAvgTime);
+            themedCharts.Add(chartMapTierCount);
+            themedCharts.Add(chart1);
+            themedCharts.Add(chartGlobalDashboard);
+
+            foreach (Chart chart in themedCharts)
+            {
+                chart.ChartAreas[0].BackColor = msm.BackgroundColor;
+                chart.BackColor = msm.BackgroundColor;
+                chart.Legends[0].BackColor = msm.BackgroundColor;
+                chart.BackGradientStyle = GradientStyle.None;
+                chart.Series[0].Color = msm.ColorScheme.PrimaryColor;
+            }
+
+
+            checkBox1.BackColor = msm.BackdropColor;
+            tableLayoutPanel7.BackColor = msm.BackdropColor;
+
+            materialTabSelector2.BackColor = msm.BackgroundColor;
+
+            foreach(TabPage tp in materialTabControl2.TabPages)
+            {
+                tp.BackColor = msm.BackdropColor;
+            }
+
+            foreach (TabPage tp in materialTabControl1.TabPages)
+            {
+                tp.BackColor = msm.BackdropColor;
+            }
+
+            foreach (TabPage tp in materialTabControl3.TabPages)
+            {
+                tp.BackColor = msm.BackdropColor;
+            }
         }
 
         /// <summary>
@@ -290,27 +334,28 @@ namespace TraXile
             msm.Theme = MaterialSkinManager.Themes.DARK;
 
             msm.ColorScheme = new ColorScheme(
-            Primary.BlueGrey800,    // Primary
-            Primary.BlueGrey900,    // Dark Primary
-            Primary.BlueGrey500,    // Light Primary
-            Accent.Red100,    // Accent
+            Primary.Red600,    // Primary
+            Primary.Red700,    // Dark Primary
+            Primary.Red100,    // Light Primary
+            Accent.Yellow700,    // Accent
             TextShade.WHITE         // Textfarbe
             );
+
 
             InitializeComponent();
             Init();
 
             DoManualThemeAdjustments();
 
-            // Set Theme
-            if (ReadSetting("theme", TrX_Static.DEFAULT_THEME_NAME) == "Light")
-            {
-                msm.Theme = MaterialSkinManager.Themes.LIGHT;
-            }
-            else
-            {
-                msm.Theme = MaterialSkinManager.Themes.DARK;
-            }
+            //// Set Theme
+            //if (ReadSetting("theme", TrX_Static.DEFAULT_THEME_NAME) == "Light")
+            //{
+            //    msm.Theme = MaterialSkinManager.Themes.LIGHT;
+            //}
+            //else
+            //{
+            //    msm.Theme = MaterialSkinManager.Themes.DARK;
+            //}
 
             
 
@@ -881,38 +926,22 @@ namespace TraXile
             leagueInfoCharts.Add(chartLeagueCampaign);
 
             chart1.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
-            chart1.ChartAreas[0].AxisX.LineColor = Color.Red;
-            chart1.ChartAreas[0].AxisY.LineColor = Color.Red;
-            chart1.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-            chart1.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
             chart1.ChartAreas[0].AxisX.Interval = 1;
             chart1.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Days;
             chart1.ChartAreas[0].AxisX.IntervalOffset = 1;
             chart1.Series[0].XValueType = ChartValueType.DateTime;
-            chart1.Series[0].LabelForeColor = Color.White;
-            chart1.Series[0].LabelBackColor = Color.Black;
-            chart1.Series[0].LabelBorderColor = Color.Black;
-            chart1.Series[0].Color = Color.White;
             chart1.Legends[0].Enabled = false;
             chart1.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
             chart1.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
             chart1.ChartAreas[0].AxisY.MajorGrid.LineWidth = 0;
 
-            foreach(Chart chart in leagueInfoCharts)
+            foreach (Chart chart in leagueInfoCharts)
             {
                 chart.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
-                chart.ChartAreas[0].AxisX.LineColor = Color.Red;
-                chart.ChartAreas[0].AxisY.LineColor = Color.Red;
-                chart.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.Red;
-                chart.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.Red;
                 chart.ChartAreas[0].AxisX.Interval = 1;
                 chart.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Auto;
                 chart.ChartAreas[0].AxisX.IntervalOffset = 1;
                 chart.Series[0].XValueType = ChartValueType.Auto;
-                chart.Series[0].LabelForeColor = Color.White;
-                chart.Series[0].LabelBackColor = Color.Black;
-                chart.Series[0].LabelBorderColor = Color.Black;
-                chart.Series[0].Color = Color.White;
                 chart.Legends[0].Enabled = false;
                 chart.Series[0].SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
                 chart.ChartAreas[0].AxisX.MajorGrid.LineWidth = 0;
@@ -1205,16 +1234,16 @@ namespace TraXile
             _uiFlagLeagueDashboard = true;
 
             // Set Tooltips. Mapping in UI/Trx_HelpDefinitions.cs
-            foreach(KeyValuePair<string,string> kvp in TrX_HelpDefinitions.ToolTips)
-            {
-                Control cnt = this.Controls.Find(kvp.Key, true)[0];
+            //foreach(KeyValuePair<string,string> kvp in TrX_HelpDefinitions.ToolTips)
+            //{
+            //    Control cnt = this.Controls.Find(kvp.Key, true)[0];
 
-                ToolTip toolTip = new ToolTip
-                {
-                    AutoPopDelay = 30000
-                };
-                toolTip.SetToolTip(cnt, kvp.Value);
-            }
+            //    ToolTip toolTip = new ToolTip
+            //    {
+            //        AutoPopDelay = 30000
+            //    };
+            //    toolTip.SetToolTip(cnt, kvp.Value);
+            //}
 
             // Map filter
             comboBox3.Items.Add("All");
@@ -2451,7 +2480,7 @@ namespace TraXile
                         {
                             labelStopWatch.Text = _logic.CurrentActivity.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.GetBreachStoneName(_logic.CurrentActivity.Area, _logic.CurrentActivity.AreaLevel);
-                            labelTrackingDied.Text = _logic.CurrentActivity.DeathCounter.ToString();
+                            materialLabell_DeathCounter.Text = _logic.CurrentActivity.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.Type));
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity)];
                         }
@@ -2459,7 +2488,7 @@ namespace TraXile
                         {
                             labelStopWatch.Text = _logic.CurrentActivity.SideArea_ZanaMap.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_ZanaMap.Area + " (" + sTier + ", Zana)";
-                            labelTrackingDied.Text = _logic.CurrentActivity.SideArea_ZanaMap.DeathCounter.ToString();
+                            materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_ZanaMap.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.Type));
                             pictureBoxStop.Hide();
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_ZanaMap)];
@@ -2468,7 +2497,7 @@ namespace TraXile
                         {
                             labelStopWatch.Text = _logic.CurrentActivity.SideArea_VaalArea.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_VaalArea.Area;
-                            labelTrackingDied.Text = _logic.CurrentActivity.SideArea_VaalArea.DeathCounter.ToString();
+                            materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_VaalArea.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_VaalArea.Type));
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_VaalArea)];
                             pictureBoxStop.Hide();
@@ -2477,7 +2506,7 @@ namespace TraXile
                         {
                             labelStopWatch.Text = _logic.CurrentActivity.SideArea_AbyssArea.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_AbyssArea.Area;
-                            labelTrackingDied.Text = _logic.CurrentActivity.SideArea_AbyssArea.DeathCounter.ToString();
+                            materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_AbyssArea.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_AbyssArea.Type));
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_AbyssArea)];
                             pictureBoxStop.Hide();
@@ -2486,7 +2515,7 @@ namespace TraXile
                         {
                             labelStopWatch.Text = _logic.CurrentActivity.SideArea_LabTrial.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_LabTrial.Area;
-                            labelTrackingDied.Text = _logic.CurrentActivity.SideArea_LabTrial.DeathCounter.ToString();
+                            materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_LabTrial.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_LabTrial.Type));
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_LabTrial)];
                             pictureBoxStop.Hide();
@@ -2495,7 +2524,7 @@ namespace TraXile
                         {
                             labelStopWatch.Text = _logic.CurrentActivity.SideArea_Sanctum.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_Sanctum.Area;
-                            labelTrackingDied.Text = _logic.CurrentActivity.SideArea_Sanctum.DeathCounter.ToString();
+                            materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_Sanctum.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_Sanctum.Type));
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_Sanctum)];
                             pictureBoxStop.Hide();
@@ -2505,14 +2534,14 @@ namespace TraXile
                             labelStopWatch.Text = _logic.CurrentActivity.StopWatchValue.ToString();
                             labelTrackingArea.Text = _logic.CurrentActivity.Area + " (" + sTier + ")"; ;
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.Type));
-                            labelTrackingDied.Text = _logic.CurrentActivity.DeathCounter.ToString();
+                            materialLabell_DeathCounter.Text = _logic.CurrentActivity.DeathCounter.ToString();
                             pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity)];
                             pictureBoxStop.Show();
                         }
                     }
                     else
                     {
-                        labelTrackingDied.Text = "0";
+                        materialLabell_DeathCounter.Text = "0";
                         labelTrackingArea.Text = "not tracking";
                         labelStopWatch.Text = "00:00:00";
                         labelTrackingType.Text = "-";
@@ -2656,7 +2685,7 @@ namespace TraXile
             comboBoxTheme.SelectedItem = ReadSetting("theme", "Dark") == "Dark" ? "Dark" : "Light";
             listViewActLog.GridLines = _showGridInActLog;
             trackBar1.Value = _overlayOpacity;
-            checkBox2.Checked = _stopwatchOverlayShowDefault;
+            checkBox5.Checked = _stopwatchOverlayShowDefault;
             checkBox3.Checked = _tagOverlayShowDefault;
             checkBoxMinimizeToTray.Checked = _minimizeToTray;
             label38.Text = _overlayOpacity.ToString() + "%";
@@ -4158,17 +4187,18 @@ namespace TraXile
         /// <param name="theme"></param>
         private void ChangeTheme(string theme)
         {
-            if (theme == "Dark")
-            {
-                msm.Theme = MaterialSkinManager.Themes.DARK;
-            }
-            else
-            {
-                msm.Theme = MaterialSkinManager.Themes.LIGHT;
-            }
+            //if (theme == "Dark")
+            //{
+            //    msm.Theme = MaterialSkinManager.Themes.DARK;
+            //}
+            //else
+            //{
+            //    msm.Theme = MaterialSkinManager.Themes.LIGHT;
+            //}
 
-            _myTheme.Apply(this);
-            AddUpdateAppSettings("theme", theme);
+            //DoManualThemeAdjustments();
+
+            //AddUpdateAppSettings("theme", theme);
         }
 
         /// <summary>
@@ -4778,13 +4808,12 @@ namespace TraXile
         private void button4_Click_1(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("WARNING: this action will reload the entire Client.txt, keeping your manual data like custom tags and pauses.");
+            sb.AppendLine("WARNING: this action will reload the entire Client.txt, which results in losing metadata like tags and pause times.");
             sb.AppendLine("Continue? TraXile will be restarted.");
 
             DialogResult dr = MessageBox.Show(sb.ToString(), "Warning", MessageBoxButtons.YesNo); ;
             if (dr == DialogResult.Yes)
             {
-                File.Create(TrX_Static.APPDATA_PATH + @"\IS_SAFE_RELOAD");
                 ReloadLogFile();
             }
         }
@@ -4876,8 +4905,8 @@ namespace TraXile
 
         private void checkBox2_CheckedChanged_1(object sender, EventArgs e)
         {
-            AddUpdateAppSettings("overlay.stopwatch.default", checkBox2.Checked.ToString());
-            _stopwatchOverlayShowDefault = checkBox2.Checked;
+            AddUpdateAppSettings("overlay.stopwatch.default", checkBox5.Checked.ToString());
+            _stopwatchOverlayShowDefault = checkBox5.Checked;
         }
 
         private void stopwatchToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -5175,7 +5204,7 @@ namespace TraXile
         private void SaveOverlaySettings()
         {
             AddUpdateAppSettings("overlay.general.opacity", trackBar1.Value.ToString());
-            AddUpdateAppSettings("overlay.stopwatch.showDefault", checkBox2.Checked.ToString());
+            AddUpdateAppSettings("overlay.stopwatch.showDefault", checkBox5.Checked.ToString());
             AddUpdateAppSettings("overlay.tags.showDefault", checkBox3.Checked.ToString());
             AddUpdateAppSettings("overlay.tags.tag1", comboBoxStopWatchTag1.SelectedItem.ToString());
             AddUpdateAppSettings("overlay.tags.tag2", comboBoxStopWatchTag2.SelectedItem.ToString());
@@ -5285,6 +5314,38 @@ namespace TraXile
         private void chartGlobalDashboard_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void materialCard6_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void materialButton2_Click(object sender, EventArgs e)
+        {
+            textBox1.Clear();
+            _allStatsSearchActive = false;
+            listViewNF1.VirtualListSize = _dataSourceAllStats.Count;
+        }
+
+        private void materialCard19_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ChangeTheme(comboBoxTheme.SelectedText);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            SaveOverlaySettings();
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

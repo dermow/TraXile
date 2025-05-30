@@ -1,8 +1,10 @@
 ﻿using System.Windows.Forms;
+using MaterialSkin;
+using MaterialSkin.Controls;
 
 namespace TraXile
 {
-    class ListViewNF : System.Windows.Forms.ListView
+    class ListViewNF : MaterialListView
     {
         public ListViewNF()
         {
