@@ -41,13 +41,12 @@ and backwards for all data in your Client.txt logfile.
 <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_TimeTracking.png?raw=true" />
 
 
-
 ## Statistic
 Collect and show statistics around the Game.
 <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/MappingChart.png?raw=true" />
 
 ## Analyze your activities
-<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Summary.png?raw=true" />
+<img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/SummaryWindow?raw=true" />
 
 ## Ingame Overlay
 <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Overlay.png?raw=true" />
