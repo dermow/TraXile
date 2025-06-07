@@ -81,10 +81,10 @@ namespace TraXile.UI
             lbl.ForeColor = Color.LightGray;
         }
 
-        private void SetLabelToTag(Label lbl, TrX_ActivityTag tag)
+        private void SetLableActive(Label lbl, TrX_ActivityTag tag)
         {
-            lbl.ForeColor = tag.ForeColor;
-            lbl.BackColor = tag.BackColor;
+            lbl.ForeColor = _mainWindow.msm.ColorScheme.TextColor;
+            lbl.BackColor = _mainWindow.msm.ColorScheme.AccentColor;
             lbl.Text = tag.DisplayName;
         }
 
@@ -103,7 +103,7 @@ namespace TraXile.UI
 
                 if (_currentActivity != null && _currentActivity.HasTag(_tag1.ID))
                 {
-                    SetLabelToTag(label1, _tag1);
+                    SetLableActive(label1, _tag1);
                 }
                 else
                 {
@@ -122,7 +122,7 @@ namespace TraXile.UI
 
                 if (_currentActivity != null && _currentActivity.HasTag(_tag2.ID))
                 {
-                    SetLabelToTag(label2, _tag2);
+                    SetLableActive(label2, _tag2);
                 }
                 else
                 {
@@ -141,7 +141,7 @@ namespace TraXile.UI
 
                 if (_currentActivity != null && _currentActivity.HasTag(_tag3.ID))
                 {
-                    SetLabelToTag(label3, _tag3);
+                    SetLableActive(label3, _tag3);
                 }
                 else
                 {

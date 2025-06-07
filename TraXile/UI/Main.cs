@@ -247,7 +247,7 @@ namespace TraXile
         private bool _criticalUIError;
 
 
-        MaterialSkinManager msm = MaterialSkinManager.Instance;
+        public MaterialSkinManager msm = MaterialSkinManager.Instance;
         private bool _splitterBackFromMinimizedWinddow;
 
         public void DoManualThemeAdjustments(Form form)
