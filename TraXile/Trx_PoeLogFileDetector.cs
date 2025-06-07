@@ -1,14 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.IO;
-using log4net;
+using System.Text;
 using System.Text.RegularExpressions;
+using log4net;
 
 namespace TraXile
 {
@@ -29,8 +24,8 @@ namespace TraXile
         {
             string installPath = null;
             installPath = TrX_Helpers.GetRegistryValue(_steamRegistryPath32bit, "InstallPath", null);
-            
-            if(String.IsNullOrEmpty(installPath))
+
+            if (String.IsNullOrEmpty(installPath))
             {
                 installPath = TrX_Helpers.GetRegistryValue(_steamRegistryPath64bit, "InstallPath", null);
             }
@@ -58,9 +53,9 @@ namespace TraXile
             {
                 string[] data = File.ReadAllLines($@"{steamPath}\config\libraryfolders.vdf", Encoding.UTF8);
 
-                foreach(string s in data)
+                foreach (string s in data)
                 {
-                    if(s.Contains("path"))
+                    if (s.Contains("path"))
                     {
                         string tmp1 = Regex.Replace(s, @"[\r\n\t ]+", " ");
                         tmp1 = tmp1.Replace(@"\\", @"\");
@@ -71,10 +66,10 @@ namespace TraXile
                         pathes.Add($@"{tmp1}\steamapps\common");
                     }
                 }
-                  
-              
+
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.Warn($"Error discovering steam libraries: {ex.Message}");
                 _log.Debug(ex.ToString());
@@ -112,9 +107,9 @@ namespace TraXile
             foreach (string lib in steamLibs)
             {
                 string logPath = $@"{lib}\Path of Exile\logs\Client.txt";
-                if(!searchList.Contains(logPath))
+                if (!searchList.Contains(logPath))
                 {
-                    searchList.Add(logPath); 
+                    searchList.Add(logPath);
                 }
             }
 
@@ -127,9 +122,9 @@ namespace TraXile
             }
 
             // Do search
-            foreach(string search in searchList)
+            foreach (string search in searchList)
             {
-                if(File.Exists(search))
+                if (File.Exists(search))
                 {
                     results.Add(search);
                 }

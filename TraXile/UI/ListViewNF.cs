@@ -1,5 +1,4 @@
 ﻿using System.Windows.Forms;
-using MaterialSkin;
 using MaterialSkin.Controls;
 
 namespace TraXile

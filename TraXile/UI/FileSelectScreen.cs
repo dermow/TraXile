@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 using MaterialSkin.Controls;
 
@@ -28,9 +27,9 @@ namespace TraXile
                 _autoDiscovered = _detector.AutoDiscoverPoeLogs();
             }
             catch { }
-            
 
-            if(_autoDiscovered.Count == 0)
+
+            if (_autoDiscovered.Count == 0)
             {
                 button1.Select();
                 button2.Visible = false;
@@ -94,7 +93,7 @@ namespace TraXile
                     labelDiscoverStatus.Text = "ERROR: The logfile you selected does not exist or is no valid Client.txt file";
                     labelDiscoverStatus.ForeColor = Color.Red;
                 }
-                
+
 
             }
         }
@@ -104,7 +103,7 @@ namespace TraXile
             string path = "";
             foreach (MaterialRadioButton rb in TrX_Helpers.GetAll(panelAutoSelect, typeof(MaterialRadioButton)))
             {
-                if(rb.Checked)
+                if (rb.Checked)
                 {
                     path = rb.Text;
                 }

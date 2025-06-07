@@ -49,7 +49,7 @@ namespace TraXile
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(942, 88);
+            this.pictureBox1.Size = new System.Drawing.Size(958, 88);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -88,7 +88,7 @@ namespace TraXile
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 94F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(948, 608);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(964, 647);
             this.tableLayoutPanel4.TabIndex = 2;
             // 
             // panelAutoSelect
@@ -105,7 +105,7 @@ namespace TraXile
             this.panelAutoSelect.MouseState = MaterialSkin.MouseState.HOVER;
             this.panelAutoSelect.Name = "panelAutoSelect";
             this.panelAutoSelect.Padding = new System.Windows.Forms.Padding(14);
-            this.panelAutoSelect.Size = new System.Drawing.Size(920, 466);
+            this.panelAutoSelect.Size = new System.Drawing.Size(936, 505);
             this.panelAutoSelect.TabIndex = 1;
             // 
             // button2
@@ -148,7 +148,7 @@ namespace TraXile
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(954, 635);
+            this.ClientSize = new System.Drawing.Size(970, 674);
             this.Controls.Add(this.tableLayoutPanel4);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.ActionBar_None;

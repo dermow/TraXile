@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+using MaterialSkin;
+using MaterialSkin.Controls;
 
 namespace TraXile
 {
-    public partial class ExportActvityList : Form
+    public partial class ExportActvityList : MaterialForm
     {
         private readonly Main _mainWindow;
 

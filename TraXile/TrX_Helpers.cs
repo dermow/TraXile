@@ -1,9 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace TraXile
 {
@@ -71,7 +71,7 @@ namespace TraXile
             return iCount;
         }
 
-     
+
         /// <summary>
         /// Get the last line of the given file
         /// </summary>

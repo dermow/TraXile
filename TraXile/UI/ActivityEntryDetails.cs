@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace TraXile.UI
 {
@@ -26,7 +18,7 @@ namespace TraXile.UI
             InitializeComponent();
 
             _msm = msm;
-           
+
 
             materialComboBox1.ForeColor = Color.Black;
 
@@ -50,7 +42,7 @@ namespace TraXile.UI
             materialLabel7.Text = act.Type.ToString();
             materialLabel8.Text = act.Area;
             materialLabel9.Text = act.AreaLevel.ToString();
-            if(act.Type == ACTIVITY_TYPES.MAP)
+            if (act.Type == ACTIVITY_TYPES.MAP)
                 materialLabel9.Text += $" (T{act.MapTier})";
 
             materialLabel10.Text = act.Started.ToString();
