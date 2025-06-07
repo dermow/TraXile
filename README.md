@@ -49,7 +49,7 @@ Collect and show statistics around the Game.
 <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/SummaryWindow.png?raw=true" />
 
 ## Ingame Overlay
-<img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/Overlays?raw=true" />
+<img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/Overlays.png?raw=true" />
 
 ## Installation
 Download the latest release and execute the MSI-Installer file.
