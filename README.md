@@ -40,8 +40,7 @@ and backwards for all data in your Client.txt logfile.
 
 <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_TimeTracking.png?raw=true" />
 
-## Ingame Overlay
-<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Overlay.png?raw=true" />
+
 
 ## Statistic
 Collect and show statistics around the Game.
@@ -49,6 +48,9 @@ Collect and show statistics around the Game.
 
 ## Analyze your activities
 <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Summary.png?raw=true" />
+
+## Ingame Overlay
+<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Overlay.png?raw=true" />
 
 ## Installation
 Download the latest release and execute the MSI-Installer file.
