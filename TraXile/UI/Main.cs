@@ -1108,7 +1108,6 @@ namespace TraXile
             _loadScreenWindow.Show(this);
 
             InitLeagueInfo();
-            //LoadLayout();
 
             // Request initial Dashboard update
             _uiFlagLabDashboard = true;
@@ -1371,8 +1370,8 @@ namespace TraXile
                 }
             }
 
-            int iWidth = Convert.ToInt32(ReadSetting("layout.window.width"));
-            int iHeight = Convert.ToInt32(ReadSetting("layout.window.height"));
+            int iWidth = Convert.ToInt32(ReadSetting("layout.window.width", "1470"));
+            int iHeight = Convert.ToInt32(ReadSetting("layout.window.height", "980"));
 
             if (iWidth > 50 && iHeight > 50)
             {
@@ -5188,6 +5187,11 @@ namespace TraXile
         private void materialLabel49_Click(object sender, EventArgs e)
         {
             OpenActivityDetails();
+        }
+
+        private void linkLabelUpdateAvailable_Click(object sender, EventArgs e)
+        {
+            CheckForUpdate(false, false);
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
