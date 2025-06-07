@@ -1588,13 +1588,13 @@ namespace TraXile
 
             int iOffsetX = 10;
             int ioffsetY = 45;
-            int iLabelWidth = 120;
+            int iLabelWidth = 150;
             int iMaxCols = 5;
 
             int iX = iOffsetX;
             int iY = ioffsetY;
 
-            int iCols = targetControl.Width / iLabelWidth;
+            int iCols = (targetControl.Width -40) / iLabelWidth;
             if (iCols > iMaxCols) iCols = iMaxCols;
             int iCurrCols = 0;
 
@@ -1627,6 +1627,7 @@ namespace TraXile
                 lbl.Location = new Point(iX, iY);
                 lbl.MinimumSize = new Size(100, 18);
                 lbl.Font = materialButton1.Font;
+                lbl.Font = new Font(materialButton1.Font.FontFamily, 8, FontStyle.Regular);
                 targetControl.Controls.Add(lbl);
 
                 iX += lbl.Width + 5;
