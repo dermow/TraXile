@@ -196,6 +196,18 @@ namespace TraXile
             catch
             {
             }
+
+            // Update 2.0.0
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "update tx_tags set tag_display = 'ultimatum-reward' where tag_display = 'ultimatum-took-reward'";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 2.0.0 -> " + cmd.CommandText);
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>

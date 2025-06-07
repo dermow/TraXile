@@ -32,6 +32,9 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
     <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
+    <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
+    <ROW Directory="SHORTCUTDIR" Directory_Parent="TARGETDIR" DefaultDir="SHORTC~1|SHORTCUTDIR" IsPseudoRoot="1"/>
+    <ROW Directory="StartMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="STARTM~1|StartMenuFolder" IsPseudoRoot="1"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
     <ROW Directory="app.publish_Dir" Directory_Parent="APPDIR" DefaultDir="APP~1.PUB|app.publish"/>
     <ROW Directory="native_1_Dir" Directory_Parent="winx64_Dir" DefaultDir="native"/>
@@ -54,6 +57,7 @@
     <ROW Component="Microsoft.Data.Sqlite.xml" ComponentId="{C92A8BF9-7787-4723-B7C0-3ACE232B98D7}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.Data.Sqlite.xml" Type="0"/>
     <ROW Component="Newtonsoft.Json.dll" ComponentId="{BEB33390-3D98-49FC-9BA1-D0267C4AA1EE}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
     <ROW Component="ProductInformation" ComponentId="{5AB4E3D5-11EF-410A-B715-D7FF2EC0F407}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
+    <ROW Component="SHORTCUTDIR" ComponentId="{832CFE42-4BBF-4CDB-B405-BBA1F59E52F6}" Directory_="SHORTCUTDIR" Attributes="0"/>
     <ROW Component="SQLitePCLRaw.batteries_v2.dll" ComponentId="{9ACC0D22-B01C-46A4-B989-70E63E7973D7}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.batteries_v2.dll"/>
     <ROW Component="SQLitePCLRaw.core.dll" ComponentId="{AEF986EB-0D0F-43F8-8ED2-351F0C47A40C}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.core.dll"/>
     <ROW Component="SQLitePCLRaw.nativelibrary.dll" ComponentId="{03405532-C9F8-493D-A3BF-C00554C1C691}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.nativelibrary.dll"/>
@@ -184,6 +188,7 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCreateFolderComponent">
     <ROW Directory_="APPDIR" Component_="APPDIR" ManualDelete="true"/>
+    <ROW Directory_="SHORTCUTDIR" Component_="SHORTCUTDIR" ManualDelete="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
     <ROW Action="AI_DOWNGRADE" Type="19" Target="4010"/>
@@ -233,6 +238,7 @@
     <ROW Feature_="MainFeature" Component_="System.ValueTuple.dll"/>
     <ROW Feature_="MainFeature" Component_="TraXile.Updater.exe"/>
     <ROW Feature_="MainFeature" Component_="System.Reactive.dll"/>
+    <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="favicon96x96.exe" SourcePath="TraXile\favicon-96x96.ico" Index="0"/>
@@ -265,6 +271,11 @@
     <ROW Registry="ProductName" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="\"/>
     <ROW Registry="Software" Root="-1" Key="Software" Name="\"/>
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+  </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
+    <ROW Shortcut="TraXile" Directory_="SHORTCUTDIR" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="TraXile_1" Directory_="StartMenuFolder" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="TraXile_2" Directory_="DesktopFolder" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>

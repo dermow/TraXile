@@ -263,7 +263,7 @@ namespace TraXile
             InitDefaultTags();
             InitNumStats();
             ReadKnownPlayers();
-            LoadCustomTags();
+            LoadTags();
             SaveVersion();
 
             _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_STARTED) { EventTime = DateTime.Now, LogLine = "Application started." });
@@ -481,10 +481,10 @@ namespace TraXile
         /// <summary>
         /// Load user created tags
         /// </summary>
-        private void LoadCustomTags()
+        private void LoadTags()
         {
             SqliteDataReader sqlReader;
-            sqlReader = _dataBackend.GetSQLReader("SELECT * FROM tx_tags ORDER BY tag_id DESC");
+            sqlReader = _dataBackend.GetSQLReader("SELECT * FROM tx_tags ORDER BY tag_display ASC");
 
             while (sqlReader.Read())
             {

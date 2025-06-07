@@ -407,6 +407,11 @@ namespace TraXile
             );
 
             InitializeComponent();
+
+            Rectangle workingArea = Screen.GetWorkingArea(this);
+            this.MaximizedBounds = new Rectangle(workingArea.X + 2, workingArea.Y + 5, workingArea.Width, workingArea.Height - 5);
+
+
             tableLayoutPanel_L0.RowStyles[1].Height = 16;
             linkLabel5.Text = "show filters";
             filterBarShown = false;
@@ -1345,7 +1350,7 @@ namespace TraXile
                     AddUpdateAppSettings($"layout.listview.cols.{ch.Name}.width", ch.Width.ToString());
                 }
             }
-            if (Width > 50 && Height > 50)
+            if (Width > 50 && Height > 50 && WindowState != FormWindowState.Maximized && WindowState != FormWindowState.Minimized)
             {
                 AddUpdateAppSettings("layout.window.width", Width.ToString());
                 AddUpdateAppSettings("layout.window.height", Height.ToString());
@@ -1496,6 +1501,10 @@ namespace TraXile
         /// <param name="b_reinit"></param>
         private void RenderTagsForTracking(bool b_reinit = false)
         {
+            List<string> hideTags = new List<string>();
+            hideTags.Add("zana");
+            hideTags.Add("zana-map");
+
             if (b_reinit)
             {
                 groupBoxTrackingTags.Controls.Clear();
@@ -1520,6 +1529,12 @@ namespace TraXile
             for (int i = 0; i < _logic.Tags.Count; i++)
             {
                 TrX_ActivityTag tag = _logic.Tags[i];
+                
+                if(hideTags.Contains(tag.ID))
+                {
+                    continue;
+                }
+                
                 Label lbl = new Label
                 {
                     Width = iLabelWidth,
@@ -5002,8 +5017,16 @@ namespace TraXile
             this.ShowInTaskbar = true;
         }
 
+        private void SetMaximizedBounds()
+        {
+            Rectangle workingArea = Screen.GetWorkingArea(this);
+            this.MaximizedBounds = new Rectangle(workingArea.X + 2, workingArea.Y + 5, workingArea.Width, workingArea.Height - 5);
+        }
+
         private void Main_Resize(object sender, EventArgs e)
         {
+            SetMaximizedBounds();
+
             if (this.WindowState == FormWindowState.Minimized)
             {
                 if (_minimizeToTray)
@@ -5201,6 +5224,12 @@ namespace TraXile
         private void linkLabelUpdateAvailable_Click(object sender, EventArgs e)
         {
             CheckForUpdate(false, false);
+        }
+
+        private void Main_Move(object sender, EventArgs e)
+        {
+            Rectangle workingArea = Screen.GetWorkingArea(this);
+            this.MaximizedBounds = new Rectangle(workingArea.X + 2, workingArea.Y + 5, workingArea.Width, workingArea.Height - 5);
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
