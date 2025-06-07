@@ -254,6 +254,10 @@ namespace TraXile
         {
             MaterialLabel labelRef = new MaterialLabel();
 
+            label3.BackColor = msm.ColorScheme.PrimaryColor;
+            label3.ForeColor = msm.ColorScheme.TextColor;
+            label3.Font = new Font(labelRef.Font.FontFamily, 9, FontStyle.Regular);
+
             foreach (LinkLabel cnt in TrX_Helpers.GetAll(form, typeof(LinkLabel)))
             {
                 cnt.Font = labelRef.Font;
@@ -978,6 +982,8 @@ namespace TraXile
             _overlayTag1 = null;
             _overlayTag2 = null;
             _overlayTag3 = null;
+
+            label3.Text = "TraXile " + TrX_Static.VERSION;
 
             ReadSettings();
 
@@ -5006,6 +5012,7 @@ namespace TraXile
                     this.ShowInTaskbar = false;
                 }
             }
+            label3.Location = new Point((this.Width - label3.Width) / 2, label3.Location.Y);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -5153,6 +5160,7 @@ namespace TraXile
         private void Main_Shown(object sender, EventArgs e)
         {
             LoadLayout();
+            label3.Location = new Point((this.Width - label3.Width) / 2, label3.Location.Y);
         }
 
         private void pictureBox10_Click(object sender, EventArgs e)
