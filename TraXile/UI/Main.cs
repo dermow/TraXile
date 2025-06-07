@@ -251,36 +251,72 @@ namespace TraXile
 
 
         MaterialSkinManager msm = MaterialSkinManager.Instance;
+        private bool _splitterBackFromMinimizedWinddow;
 
-        public void DoManualThemeAdjustments()
+        public void DoManualThemeAdjustments(Form form)
         {
-            List<Chart> themedCharts = new List<Chart>();
-            themedCharts.Add(chartLeagueActTime);
-            themedCharts.Add(chartLeagueMapsDone);
-            themedCharts.Add(chartLeagueMapT16);
-            themedCharts.Add(chartLeagueTotalActivities);
-            themedCharts.Add(chartLeagueAvgMap);
-            themedCharts.Add(chartLeagueAvgMapT16);
-            themedCharts.Add(chartLeagueDeath);
-            themedCharts.Add(chartLeagueCampaign);
-            themedCharts.Add(chartHeistAvgTime);
-            themedCharts.Add(chartHeistByLevel);
-            themedCharts.Add(chartLabsAvgTime);
-            themedCharts.Add(chartLabsDone);
-            themedCharts.Add(chartMapTierAvgTime);
-            themedCharts.Add(chartMapTierCount);
-            themedCharts.Add(chart1);
-            themedCharts.Add(chartGlobalDashboard);
+            MaterialLabel labelRef = new MaterialLabel();
 
-            foreach (Chart chart in themedCharts)
+            foreach(LinkLabel cnt in TrX_Helpers.GetAll(form, typeof(LinkLabel)))
             {
-                chart.ChartAreas[0].BackColor = msm.BackgroundColor;
-                chart.BackColor = msm.BackgroundColor;
-                chart.Legends[0].BackColor = msm.BackgroundColor;
-                chart.BackGradientStyle = GradientStyle.None;
-                chart.Series[0].Color = msm.ColorScheme.PrimaryColor;
+                cnt.Font = labelRef.Font;
+                cnt.LinkColor = msm.ColorScheme.TextColor;
             }
 
+            foreach (TableLayoutPanel cnt in TrX_Helpers.GetAll(form, typeof(TableLayoutPanel)))
+            {
+                cnt.BackColor = msm.BackdropColor;
+            }
+
+            foreach (MenuStrip cnt in TrX_Helpers.GetAll(form, typeof(MenuStrip)))
+            {
+                cnt.BackColor = msm.BackgroundColor;
+            }
+
+            foreach (ContextMenuStrip cnt in TrX_Helpers.GetAll(form, typeof(ContextMenuStrip)))
+            {
+                cnt.BackColor = msm.BackgroundColor;
+            }
+
+            foreach (MaterialCard cnt in TrX_Helpers.GetAll(form, typeof(MaterialCard)))
+            {
+                cnt.BackColor = msm.BackgroundColor;
+            }
+
+            // Always use the full list view size for last column
+            foreach (MaterialListView cnt in TrX_Helpers.GetAll(form, typeof(MaterialListView)))
+            {
+                TrX_Helpers.AutoResizeLastColumn((MaterialListView)cnt);
+            }
+
+            foreach (Chart cnt in TrX_Helpers.GetAll(form, typeof(Chart)))
+            {
+                cnt.BackColor = msm.BackgroundColor;
+                cnt.BackGradientStyle = GradientStyle.None;
+
+                foreach(Legend l in cnt.Legends)
+                {
+                    l.BackColor = msm.BackgroundColor;
+                    l.ForeColor = msm.ColorScheme.TextColor;
+                }
+
+                foreach (ChartArea chartArea in cnt.ChartAreas)
+                {
+                    chartArea.BackColor = msm.BackgroundColor;
+                    chartArea.AxisX.LabelStyle.ForeColor = msm.ColorScheme.TextColor;
+                    chartArea.AxisY.LabelStyle.ForeColor = msm.ColorScheme.TextColor;
+                    chartArea.AxisX.MajorGrid.LineColor = msm.ColorScheme.TextColor;
+                    chartArea.AxisY.MajorGrid.LineColor = msm.ColorScheme.TextColor;
+                    chartArea.AxisY.LineColor = Color.Black;
+                    chartArea.AxisX.LineColor = Color.Black;
+                    chartArea.BackColor = msm.BackgroundColor;
+                }
+
+                if (cnt.Name != "chartGlobalDashboard")
+                {
+                    cnt.Series[0].Color = msm.ColorScheme.PrimaryColor;
+                }
+            }
 
             checkBox1.BackColor = msm.BackdropColor;
             tableLayoutPanel7.BackColor = msm.BackdropColor;
@@ -312,6 +348,7 @@ namespace TraXile
 
             // Initialize Settings
             _mySettings = new TrX_SettingsManager(TrX_Static.CONFIG_PATH);
+            _mySettings.LoadFromXml();
 
             // Create Appdata if not existing
             if (!Directory.Exists(TrX_Static.APPDATA_PATH))
@@ -331,33 +368,35 @@ namespace TraXile
             // Fallback default theme for updater
             _myTheme = new TrX_ThemeDark();
 
-            msm.Theme = MaterialSkinManager.Themes.DARK;
+            string theme = _mySettings.ReadSetting("theme", TrX_Static.DEFAULT_THEME_NAME);
+
+            if (theme == "Light")
+            {
+               msm.Theme = MaterialSkinManager.Themes.LIGHT;
+            }
+            else
+            {
+                msm.Theme = MaterialSkinManager.Themes.DARK;
+            }
+
+            msm.AddFormToManage(this);
 
             msm.ColorScheme = new ColorScheme(
-            Primary.Red600,    // Primary
-            Primary.Red700,    // Dark Primary
-            Primary.Red100,    // Light Primary
-            Accent.Yellow700,    // Accent
+            Primary.BlueGrey900,    // Primary
+            Primary.BlueGrey900,    // Dark Primary
+            Primary.Blue50,    // Light Primary
+            Accent.Red200,    // Accent
             TextShade.WHITE         // Textfarbe
             );
 
-
             InitializeComponent();
+            tableLayoutPanel_L0.RowStyles[1].Height = 16;
+            linkLabel5.Text = "show filters";
+            filterBarShown = false;
+
             Init();
 
-            DoManualThemeAdjustments();
-
-            //// Set Theme
-            //if (ReadSetting("theme", TrX_Static.DEFAULT_THEME_NAME) == "Light")
-            //{
-            //    msm.Theme = MaterialSkinManager.Themes.LIGHT;
-            //}
-            //else
-            //{
-            //    msm.Theme = MaterialSkinManager.Themes.DARK;
-            //}
-
-            
+            DoManualThemeAdjustments(this);
 
         }
 
@@ -537,7 +576,6 @@ namespace TraXile
 
             DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, dt1.Hour, dt1.Minute, dt1.Second, _dateTimeFormatInfo.Calendar);
             DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, dt2.Hour, dt2.Minute, dt2.Second, _dateTimeFormatInfo.Calendar);
-
           
 
             foreach (TrX_TrackedActivity act in source)
@@ -849,11 +887,11 @@ namespace TraXile
 
                     if(!check_only)
                     {
-                        UpdateDialog dialog = new UpdateDialog(true, TrX_Static.VERSION, sVersion, changes);
-                        _myTheme.Apply(dialog);
-
-                        dialog.SetState();
-                        DialogResult res = dialog.ShowDialog();
+                        UpdateCheckForm updateCheckForm = new UpdateCheckForm(true, TrX_Static.VERSION, sVersion, changes);
+                        msm.AddFormToManage(updateCheckForm);
+                        DoManualThemeAdjustments(updateCheckForm);
+                        updateCheckForm.SetState();
+                        DialogResult res = updateCheckForm.ShowDialog();
 
                         if (res == DialogResult.OK)
                         {
@@ -871,11 +909,11 @@ namespace TraXile
                     _log.Info("UpdateCheck -> Already up to date :)");
                     if (b_notify_ok)
                     {
-                        UpdateDialog dialog = new UpdateDialog(false, TrX_Static.VERSION, sVersion, changes);
-                        _myTheme.Apply(dialog);
-
-                        dialog.SetState();
-                        dialog.ShowDialog();
+                        UpdateCheckForm updateCheckForm = new UpdateCheckForm(false, TrX_Static.VERSION, sVersion, changes);
+                        msm.AddFormToManage(updateCheckForm);
+                        DoManualThemeAdjustments(updateCheckForm);
+                        updateCheckForm.SetState();
+                        updateCheckForm.ShowDialog();
                     }
                 }
             }
@@ -1085,7 +1123,7 @@ namespace TraXile
             _log.Info("Application started");
 
             Opacity = 0;
-            _mySettings.LoadFromXml();
+            //_mySettings.LoadFromXml();
 
             _overlayTag1 = null;
             _overlayTag2 = null;
@@ -1133,6 +1171,7 @@ namespace TraXile
             pictureBoxUpdateAvailable.Visible = _updateAvailable;
             linkLabelUpdateAvailable.Visible = _updateAvailable;
 
+
             _UpdateCheckDone = true;
             
             _logic.OnHistoryInitialized += Logic_OnHistoryInitialized;
@@ -1165,6 +1204,7 @@ namespace TraXile
                     StartPosition = FormStartPosition.CenterParent,
                     ShowInTaskbar = false
                 };
+                DoManualThemeAdjustments(fs);
                 fs.ShowDialog();
                 _logic.ClientTxtPath = _mySettings.ReadSetting("poe_logfile_path");
             }
@@ -1182,7 +1222,6 @@ namespace TraXile
 
             InitCharts();
 
-            pictureBox10.Image = imageList2.Images[0];
             labelTrackingType.Text = "not tracking";
 
             var ca = chart1.ChartAreas["ChartArea1"].CursorX;
@@ -1221,7 +1260,7 @@ namespace TraXile
             _loadScreenWindow.Show(this);
 
             InitLeagueInfo();
-            LoadLayout();
+            //LoadLayout();
 
             // Request initial Dashboard update
             _uiFlagLabDashboard = true;
@@ -1232,18 +1271,7 @@ namespace TraXile
             _uiFlagActivityListReset = true;
             _uiFlagAllStatsDashboard = true;
             _uiFlagLeagueDashboard = true;
-
-            // Set Tooltips. Mapping in UI/Trx_HelpDefinitions.cs
-            //foreach(KeyValuePair<string,string> kvp in TrX_HelpDefinitions.ToolTips)
-            //{
-            //    Control cnt = this.Controls.Find(kvp.Key, true)[0];
-
-            //    ToolTip toolTip = new ToolTip
-            //    {
-            //        AutoPopDelay = 30000
-            //    };
-            //    toolTip.SetToolTip(cnt, kvp.Value);
-            //}
+          
 
             // Map filter
             comboBox3.Items.Add("All");
@@ -1469,7 +1497,15 @@ namespace TraXile
             {
                 AddUpdateAppSettings("layout.window.width", Width.ToString());
                 AddUpdateAppSettings("layout.window.height", Height.ToString());
+
+                if (splitContainer1.SplitterDistance > 50)
+                {
+                    AddUpdateAppSettings("layout.tracking.splitter_distance", splitContainer1.SplitterDistance.ToString());
+                }
             }
+
+           
+
         }
 
         /// <summary>
@@ -1477,6 +1513,8 @@ namespace TraXile
         /// </summary>
         private void LoadLayout()
         {
+            this.StartPosition = FormStartPosition.CenterScreen;
+
             foreach (ColumnHeader ch in listViewActLog.Columns)
             {
                 int w = Convert.ToInt32(ReadSetting($"layout.listview.cols." + ch.Name + ".width"));
@@ -1493,6 +1531,13 @@ namespace TraXile
             {
                 Width = iWidth;
                 Height = iHeight;
+            }
+
+            int iSplitterDistance = Convert.ToInt32(ReadSetting("layout.tracking.splitter_distance", "600"));
+            
+            if(iSplitterDistance > 50)
+            {
+                splitContainer1.SplitterDistance = iSplitterDistance;
             }
         }
 
@@ -1514,7 +1559,7 @@ namespace TraXile
 
             int iX = iOffsetX;
             int iY = ioffsetY;
-            int iLabelWidth = 100;
+            int iLabelWidth = 115;
             int iMaxCols = 5;
 
             int iCols = (groupBox3.Width - 20) / iLabelWidth;
@@ -1526,12 +1571,13 @@ namespace TraXile
                 TrX_ActivityTag tag = _logic.Tags[i];
                 Label lbl = new Label
                 {
-                    Width = iLabelWidth
+                    Width = iLabelWidth,
+                    Height = 35
                 };
 
                 if (iCurrCols > (iCols - 1))
                 {
-                    iY += 28;
+                    iY += 40;
                     iX = iOffsetX;
                     iCurrCols = 0;
                 }
@@ -1541,13 +1587,14 @@ namespace TraXile
                     lbl.Text = tag.DisplayName;
                     lbl.Name = $"lbl_tag_{tag.ID}";
                     lbl.TextAlign = ContentAlignment.MiddleCenter;
-                    lbl.BackColor = tag.BackColor;
-                    lbl.ForeColor = tag.ForeColor;
+                    lbl.BackColor = msm.ColorScheme.PrimaryColor;
+                    lbl.ForeColor = msm.ColorScheme.TextColor;
+                    lbl.Font = materialButton1.Font;
                     lbl.MouseHover += tagLabel_MouseOver;
                     lbl.MouseLeave += tagLabel_MouseLeave;
                     lbl.MouseClick += Lbl_MouseClick1;
                     lbl.Location = new Point(iX, iY);
-                    lbl.AutoSize = true;
+                    lbl.AutoSize = false;
                     lbl.MinimumSize = new Size(100, 18);
                     groupBox3.Controls.Add(lbl);
                     _tagLabelsConfig.Add(tag.ID, lbl);
@@ -1569,9 +1616,6 @@ namespace TraXile
             textBox4.Text = tag.ID;
             textBox5.Text = tag.DisplayName;
             checkBox4.Checked = tag.ShowInListView;
-            label63.ForeColor = tag.ForeColor;
-            label63.BackColor = tag.BackColor;
-            label63.Text = tag.DisplayName;
         }
 
         /// <summary>
@@ -1608,8 +1652,10 @@ namespace TraXile
 
             int iOffsetX = 10;
             int ioffsetY = 20;
-            int iLabelWidth = 100;
+            int iLabelWidth = 120;
             int iMaxCols = 5;
+
+            iMaxCols = (groupBoxTrackingTags.Width - 40) / iLabelWidth;
 
             int iX = iOffsetX;
             int iY = ioffsetY;
@@ -1623,12 +1669,13 @@ namespace TraXile
                 TrX_ActivityTag tag = _logic.Tags[i];
                 Label lbl = new Label
                 {
-                    Width = iLabelWidth
+                    Width = iLabelWidth,
+                    Height = 35
                 };
 
                 if (iCurrCols > (iCols - 1))
                 {
-                    iY += 28;
+                    iY += 40;
                     iX = iOffsetX;
                     iCurrCols = 0;
                 }
@@ -1644,8 +1691,8 @@ namespace TraXile
                     lbl.MouseHover += tagLabel_MouseOver;
                     lbl.MouseLeave += tagLabel_MouseLeave;
                     lbl.MouseClick += Lbl_MouseClick;
-                    lbl.AutoSize = true;
                     lbl.MinimumSize = new Size(100, 18);
+                    lbl.Font = materialButton1.Font;
 
                     groupBoxTrackingTags.Controls.Add(lbl);
                     _tagLabels.Add(tag.ID, lbl);
@@ -1658,8 +1705,8 @@ namespace TraXile
 
                         if (mapToCheck.Tags.Contains(tag.ID))
                         {
-                            _tagLabels[tag.ID].BackColor = tag.BackColor;
-                            _tagLabels[tag.ID].ForeColor = tag.ForeColor;
+                            _tagLabels[tag.ID].BackColor = msm.ColorScheme.PrimaryColor;
+                            _tagLabels[tag.ID].ForeColor = msm.ColorScheme.TextColor;
                         }
                         else
                         {
@@ -1683,9 +1730,9 @@ namespace TraXile
         /// RenderTags in tracking tab
         /// </summary>
         /// <param name="b_reinit"></param>
-        private void RenderTagsForSummary(UI.SummaryWindow targetSummaryWindow, Dictionary<string,int> dict, int total_count, bool b_reinit = false)
+        private void RenderTagsForSummary(UI.SummaryForm targetSummaryWindow, Dictionary<string,int> dict, int total_count, bool b_reinit = false)
         {
-            Control targetControl = targetSummaryWindow.groupBox2;
+            Control targetControl = targetSummaryWindow.TagCard;
 
             if (b_reinit)
             {
@@ -1693,7 +1740,7 @@ namespace TraXile
             }
 
             int iOffsetX = 10;
-            int ioffsetY = 20;
+            int ioffsetY = 45;
             int iLabelWidth = 120;
             int iMaxCols = 5;
 
@@ -1709,12 +1756,13 @@ namespace TraXile
                 TrX_ActivityTag tag = _logic.GetTagByID(kvp.Key);
                 Label lbl = new Label
                 {
-                    Width = iLabelWidth
+                    Width = iLabelWidth,
+                    Height = 35
                 };
 
                 if (iCurrCols > (iCols - 1))
                 {
-                    iY += 28;
+                    iY += 40;
                     iX = iOffsetX;
                     iCurrCols = 0;
                 }
@@ -1727,11 +1775,11 @@ namespace TraXile
                 lbl.Text = $"{tag.DisplayName}: {kvp.Value} ({percent}%)";
                 lbl.Name = $"lbl_tag_{tag.ID}";
                 lbl.TextAlign = ContentAlignment.MiddleCenter;
-                lbl.BackColor = tag.BackColor;
-                lbl.ForeColor = tag.ForeColor;
+                lbl.BackColor = msm.ColorScheme.PrimaryColor;
+                lbl.ForeColor = msm.ColorScheme.TextColor;
                 lbl.Location = new Point(iX, iY);
-                lbl.AutoSize = true;
                 lbl.MinimumSize = new Size(100, 18);
+                lbl.Font = materialButton1.Font;
                 targetControl.Controls.Add(lbl);
 
                 iX += lbl.Width + 5;
@@ -2439,22 +2487,6 @@ namespace TraXile
 
                     labelAreaCurrent.Text = $"{_logic.CurrentArea} (lvl. {_logic.CurrentAreaLevel})";
 
-                    if (_logic.CurrentArea.Contains("Hideout") && !(_logic.CurrentArea.Contains("Syndicate")))
-                    {
-                        labelActivityCurrent.Text = "In Hideout";
-                    }
-                    else
-                    {
-                        if (_logic.CurrentActivity != null)
-                        {
-                            labelActivityCurrent.Text = _logic.CurrentActivity.Type.ToString();
-                        }
-                        else
-                        {
-                            labelActivityCurrent.Text = "Nothing";
-                        }
-                    }
-
                     if (_logic.CurrentActivity != null)
                     {
                         string sTier = "";
@@ -2482,7 +2514,6 @@ namespace TraXile
                             labelTrackingArea.Text = _logic.GetBreachStoneName(_logic.CurrentActivity.Area, _logic.CurrentActivity.AreaLevel);
                             materialLabell_DeathCounter.Text = _logic.CurrentActivity.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.Type));
-                            pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity)];
                         }
                         else if ((_logic.IsMapZana && _logic.CurrentActivity.SideArea_ZanaMap != null))
                         {
@@ -2491,7 +2522,6 @@ namespace TraXile
                             materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_ZanaMap.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.Type));
                             pictureBoxStop.Hide();
-                            pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_ZanaMap)];
                         }
                         else if ((_logic.IsMapVaalArea && _logic.CurrentActivity.SideArea_VaalArea != null))
                         {
@@ -2499,7 +2529,6 @@ namespace TraXile
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_VaalArea.Area;
                             materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_VaalArea.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_VaalArea.Type));
-                            pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_VaalArea)];
                             pictureBoxStop.Hide();
                         }
                         else if ((_logic.IsMapAbyssArea && _logic.CurrentActivity.SideArea_AbyssArea != null))
@@ -2508,7 +2537,6 @@ namespace TraXile
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_AbyssArea.Area;
                             materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_AbyssArea.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_AbyssArea.Type));
-                            pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_AbyssArea)];
                             pictureBoxStop.Hide();
                         }
                         else if ((_logic.IsMapLabTrial && _logic.CurrentActivity.SideArea_LabTrial != null))
@@ -2517,7 +2545,6 @@ namespace TraXile
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_LabTrial.Area;
                             materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_LabTrial.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_LabTrial.Type));
-                            pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_LabTrial)];
                             pictureBoxStop.Hide();
                         }
                         else if ((_logic.IsMapSanctum && _logic.CurrentActivity.SideArea_Sanctum != null))
@@ -2526,7 +2553,6 @@ namespace TraXile
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_Sanctum.Area;
                             materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_Sanctum.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_Sanctum.Type));
-                            pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity.SideArea_Sanctum)];
                             pictureBoxStop.Hide();
                         }
                         else
@@ -2535,7 +2561,6 @@ namespace TraXile
                             labelTrackingArea.Text = _logic.CurrentActivity.Area + " (" + sTier + ")"; ;
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.Type));
                             materialLabell_DeathCounter.Text = _logic.CurrentActivity.DeathCounter.ToString();
-                            pictureBox10.Image = imageList2.Images[GetImageIndex(_logic.CurrentActivity)];
                             pictureBoxStop.Show();
                         }
                     }
@@ -3701,20 +3726,26 @@ namespace TraXile
         /// <param name="ta"></param>
         private void OpenActivityDetails(TrX_TrackedActivity ta)
         {
-            OpenChildWindow(new ActivityDetails(ta, this));
+            OpenChildWindow(new ActivityEntryDetails(ta, this, msm));
         }
 
         /// <summary>
         /// Open child window and apply theme to i´t
         /// </summary>
         /// <param name="form">Form to open</param>
-        private void OpenChildWindow(Form form)
+        private void OpenChildWindow(Form form, bool handle_by_msm = false)
         {
             form.StartPosition = FormStartPosition.Manual;
             form.ShowInTaskbar = false;
             form.Location = new Point(this.Location.X + 100, this.Location.Y + 100);
             form.Owner = this;
-            _myTheme.Apply(form);
+
+            if (handle_by_msm)
+                msm.AddFormToManage((MaterialForm)form);
+
+            DoManualThemeAdjustments(form);
+            
+
             form.Show();
         }
 
@@ -4031,18 +4062,16 @@ namespace TraXile
         /// <param name="s_forecolor"></param>
         /// <param name="s_backcolor"></param>
         /// <param name="b_show_in_hist"></param>
-        private void UpdateTag(string s_id, string s_display_name, string s_forecolor, string s_backcolor, bool b_show_in_hist)
+        private void UpdateTag(string s_id, string s_display_name, bool b_show_in_hist)
         {
             int iTagIndex = GetTagIndex(s_id);
 
             if (iTagIndex >= 0)
             {
                 _logic.Tags[iTagIndex].DisplayName = s_display_name;
-                _logic.Tags[iTagIndex].ForeColor = Color.FromArgb(Convert.ToInt32(s_forecolor));
-                _logic.Tags[iTagIndex].BackColor = Color.FromArgb(Convert.ToInt32(s_backcolor));
                 _logic.Tags[iTagIndex].ShowInListView = b_show_in_hist;
 
-                _logic.Database.DoNonQuery($"UPDATE tx_tags SET tag_display = '{s_display_name}', tag_forecolor = '{s_forecolor}', tag_bgcolor = '{s_backcolor}', " +
+                _logic.Database.DoNonQuery($"UPDATE tx_tags SET tag_display = '{s_display_name}', " +
                     $"tag_show_in_lv = {(b_show_in_hist ? "1" : "0")} WHERE tag_id = '{s_id}'");
             }
 
@@ -4187,18 +4216,18 @@ namespace TraXile
         /// <param name="theme"></param>
         private void ChangeTheme(string theme)
         {
-            //if (theme == "Dark")
-            //{
-            //    msm.Theme = MaterialSkinManager.Themes.DARK;
-            //}
-            //else
-            //{
-            //    msm.Theme = MaterialSkinManager.Themes.LIGHT;
-            //}
+            if (theme == "Dark")
+            {
+                msm.Theme = MaterialSkinManager.Themes.DARK;
+            }
+            else
+            {
+                msm.Theme = MaterialSkinManager.Themes.LIGHT;
+            }
 
-            //DoManualThemeAdjustments();
+            DoManualThemeAdjustments(this);
 
-            //AddUpdateAppSettings("theme", theme);
+            AddUpdateAppSettings("theme", theme);
         }
 
         /// <summary>
@@ -4411,8 +4440,7 @@ namespace TraXile
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AboutW f1 = new AboutW();
-            f1.Show();
+            OpenChildWindow(new AboutForm());
         }
 
         private void pictureBox14_Click_1(object sender, EventArgs e)
@@ -4435,11 +4463,6 @@ namespace TraXile
         private void pictureBox18_Click(object sender, EventArgs e)
         {
             PauseCurrentActivityOrSide();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            DeleteActivities();
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -4616,35 +4639,15 @@ namespace TraXile
             textBox3.Text = textBox2.Text;
         }
 
-        private void button11_Click(object sender, EventArgs e)
-        {
-            colorDialog1.ShowDialog();
-            label63.BackColor = colorDialog1.Color;
-        }
-
-        private void button12_Click(object sender, EventArgs e)
-        {
-            colorDialog1.ShowDialog();
-            label63.ForeColor = colorDialog1.Color;
-        }
-
         private void button13_Click(object sender, EventArgs e)
         {
-            UpdateTag(textBox4.Text, textBox5.Text, label63.ForeColor.ToArgb().ToString(), label63.BackColor.ToArgb().ToString(), checkBox4.Checked);
+            UpdateTag(textBox4.Text, textBox5.Text, checkBox4.Checked);
         }
 
         private void button14_Click(object sender, EventArgs e)
         {
             textBox4.Text = "";
             textBox5.Text = "";
-            label63.BackColor = Color.White;
-            label63.ForeColor = Color.Black;
-            label63.Text = "MyCustomTag";
-        }
-
-        private void textBox5_TextChanged(object sender, EventArgs e)
-        {
-            label63.Text = textBox5.Text;
         }
 
         private void button19_Click(object sender, EventArgs e)
@@ -4652,9 +4655,6 @@ namespace TraXile
             DeleteTag(textBox4.Text);
             textBox4.Text = "";
             textBox5.Text = "";
-            label63.BackColor = Color.White;
-            label63.ForeColor = Color.Black;
-            label63.Text = "MyCustomTag";
         }
 
         private void button18_Click(object sender, EventArgs e)
@@ -4673,7 +4673,7 @@ namespace TraXile
 
         private void chatCommandsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenChildWindow(new ChatCommandHelp());
+            OpenChildWindow(new ChatCommandHelp(), true);
         }
 
         private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -4690,7 +4690,7 @@ namespace TraXile
 
         private void chatCommandsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            OpenChildWindow(new ChatCommandHelp());
+            OpenChildWindow(new ChatCommandHelp(), true);
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -4711,12 +4711,12 @@ namespace TraXile
 
         private void infoToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            OpenChildWindow(new AboutW());
+            OpenChildWindow(new AboutForm());
         }
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            OpenChildWindow(new AboutW());
+            OpenChildWindow(new AboutForm(), true);
         }
 
         private void button21_Click(object sender, EventArgs e)
@@ -4744,11 +4744,6 @@ namespace TraXile
         private void wikiToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(TrX_Static.WIKI_URL);
-        }
-
-        private void button22_Click(object sender, EventArgs e)
-        {
-            DoSearch();
         }
 
         private void listViewActLog_ColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
@@ -4954,18 +4949,7 @@ namespace TraXile
 
         private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if(filterBarShown)
-            {
-                tableLayoutPanel_L0.RowStyles[1].Height = 0;
-                linkLabel5.Text = "show filters";
-                filterBarShown = false;
-            }
-            else
-            {
-                tableLayoutPanel_L0.RowStyles[1].Height = 160;
-                linkLabel5.Text = "hide filters";
-                filterBarShown = true;
-            }
+            
         }
 
         bool ExistsInMaterialListBox(MaterialListBox listBox, string searchText)
@@ -5012,8 +4996,8 @@ namespace TraXile
         /// </summary>
         private void BuildAndShowSummary()
         {
-            UI.SummaryWindow summary = new UI.SummaryWindow();
-            _myTheme.Apply(summary);
+            UI.SummaryForm summary = new UI.SummaryForm();
+            DoManualThemeAdjustments(summary);
 
             double totalSeconds = 0;
             double avgDuration = 0;
@@ -5107,7 +5091,9 @@ namespace TraXile
                 summary.CountLabel.Text = "You did not select any activities.";
             }
 
-            summary.Show();
+            OpenChildWindow(summary);
+
+            //summary.Show();
         }
 
         private void btt_summary_Click(object sender, EventArgs e)
@@ -5182,23 +5168,9 @@ namespace TraXile
             }
         }
 
-        private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            RenderLeagueDashboard();
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             RenderLeagueDashboard();
-        }
-
-        private void comboBox10_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void button3_Click_1(object sender, EventArgs e)
-        {
-            SaveOverlaySettings();
         }
 
         private void SaveOverlaySettings()
@@ -5219,13 +5191,32 @@ namespace TraXile
 
         private void stopwatchsimpleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ActivateSimpleStopWatchOverlay();
-            ActivateSimpleStopWatchOverlay();
+            if (_stopwatchOverlay.Visible)
+            {
+                _stopwatchOverlay.Hide();
+            }
+            else
+            {
+                ActivateSimpleStopWatchOverlay();
+            }
+
+            stopwatchsimpleToolStripMenuItem.Checked = _stopwatchOverlay.Visible;
+            stopwatchToolStripMenuItem1.Checked = _stopwatchOverlay.Visible;
         }
 
         private void tagOverlayToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ActivateTagOverlay();
+            if (_tagsOverlay.Visible)
+            {
+                _tagsOverlay.Hide();
+            }
+            else
+            {
+                ActivateTagOverlay();
+            }
+
+            tagOverlayToolStripMenuItem.Checked = _tagsOverlay.Visible;
+            tagsToolStripMenuItemTagOverlay.Checked = _tagsOverlay.Visible;
         }
 
         private void cSVToolStripMenuItem_Click(object sender, EventArgs e)
@@ -5255,75 +5246,9 @@ namespace TraXile
             CheckForUpdate(true, false);
         }
 
-        private void newUIToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void materialLabel1_Click(object sender, EventArgs e)
-        {
-            BuildAndShowSummary();
-        }
-
-        private void materialLabel2_Click(object sender, EventArgs e)
-        {
-            DeleteActivities();
-        }
-
-        private void materialButton1_Click(object sender, EventArgs e)
-        {
-            textBox8.Text = "";
-            _uiFlagActivityList = true;
-        }
-
-        private void tableLayoutPanelMain_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void materialTabSelector2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBox_Filter_Area_level_Operator_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox30_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void materialCard7_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void materialLabelSummary_Click(object sender, EventArgs e)
         {
             BuildAndShowSummary();
-        }
-
-        private void materialTabControl2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void chartGlobalDashboard_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void materialCard6_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel7_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void materialButton2_Click(object sender, EventArgs e)
@@ -5333,19 +5258,106 @@ namespace TraXile
             listViewNF1.VirtualListSize = _dataSourceAllStats.Count;
         }
 
-        private void materialCard19_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
-            ChangeTheme(comboBoxTheme.SelectedText);
+            ChangeTheme(comboBoxTheme.SelectedItem.ToString());
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             SaveOverlaySettings();
+        }
+
+        private void materialLabel2_Click(object sender, EventArgs e)
+        {
+            DeleteActivities();
+        }
+
+        private void buttonStartSearch_Click(object sender, EventArgs e)
+        {
+            DoSearch();
+        }
+
+        private void materialButton1_Click(object sender, EventArgs e)
+        {
+            textBox8.Text = "";
+            DoSearch();
+        }
+
+        private void linkLabel5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ToggleFilters()
+        {
+            if (filterBarShown)
+            {
+                tableLayoutPanel_L0.RowStyles[1].Height = 16;
+                linkLabel5.Text = "show filters";
+                filterBarShown = false;
+            }
+            else
+            {
+                tableLayoutPanel_L0.RowStyles[1].Height = 160;
+                linkLabel5.Text = "hide filters";
+                filterBarShown = true;
+            }
+        }
+
+        private void linkLabel5_LinkClicked(object sender, EventArgs e)
+        {
+            ToggleFilters();
+        }
+
+        private void pictureBox30_Click(object sender, EventArgs e)
+        {
+            ToggleFilters();
+        }
+
+        private void tableLayoutPanel9_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void Main_Shown(object sender, EventArgs e)
+        {
+            LoadLayout();
+        }
+
+        private void pictureBox10_Click(object sender, EventArgs e)
+        {
+            ResumeCurrentActivityOrSide();
+        }
+
+        private void pictureBoxPause_Click(object sender, EventArgs e)
+        {
+            PauseCurrentActivityOrSide();
+        }
+
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            if(this.WindowState == FormWindowState.Minimized)
+            {
+                _splitterBackFromMinimizedWinddow = true;
+            }
+
+            if(this.WindowState == FormWindowState.Normal)
+            {
+                if(_splitterBackFromMinimizedWinddow)
+                {
+                    _splitterBackFromMinimizedWinddow = false;
+                }
+                else
+                {
+                    RenderTagsForTracking(true);
+                }
+            }
+        }
+
+        private void tableLayoutPanel7_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

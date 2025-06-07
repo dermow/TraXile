@@ -185,19 +185,19 @@
     <Compile Include="TrX_Helpers.cs" />
     <Compile Include="Trx_PoeLogFileDetector.cs" />
     <Compile Include="TrX_ProfitTracking.cs" />
-    <Compile Include="UI\AboutW.cs">
+    <Compile Include="UI\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\AboutW.Designer.cs">
-      <DependentUpon>AboutW.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ActivityDetails.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\ActivityDetails.Designer.cs">
-      <DependentUpon>ActivityDetails.cs</DependentUpon>
+    <Compile Include="UI\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TrX_Static.cs" />
+    <Compile Include="UI\ActivityEntryDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\ActivityEntryDetails.Designer.cs">
+      <DependentUpon>ActivityEntryDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\DataGridViewNF.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -206,6 +206,12 @@
     </Compile>
     <Compile Include="UI\BaseOverlay.Designer.cs">
       <DependentUpon>BaseOverlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SummaryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\SummaryForm.Designer.cs">
+      <DependentUpon>SummaryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\OverlayTags.cs">
       <SubType>Form</SubType>
@@ -245,14 +251,11 @@
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="TrX_LeagueInfo.cs" />
+    <Compile Include="UI\ReadOnlyMaterialMulitLineTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\SearchableMaterialCombo.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\SummaryWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\SummaryWindow.Designer.cs">
-      <DependentUpon>SummaryWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\TrX_HelpDefinitions.cs" />
     <Compile Include="UI\TrX_ListViewManager.cs" />
@@ -286,17 +289,23 @@
     <Compile Include="TrX_SettingsManager.cs" />
     <Compile Include="UI\TrX_Theme.cs" />
     <Compile Include="UI\TrX_ThemeDefinitions.cs" />
+    <Compile Include="UI\UpdateCheckForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\UpdateCheckForm.Designer.cs">
+      <DependentUpon>UpdateCheckForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\UpdateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\UpdateDialog.Designer.cs">
       <DependentUpon>UpdateDialog.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="UI\AboutW.resx">
-      <DependentUpon>AboutW.cs</DependentUpon>
+    <EmbeddedResource Include="UI\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\ActivityDetails.resx">
-      <DependentUpon>ActivityDetails.cs</DependentUpon>
+    <EmbeddedResource Include="UI\ActivityEntryDetails.resx">
+      <DependentUpon>ActivityEntryDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ChatCommandHelp.resx">
       <DependentUpon>ChatCommandHelp.cs</DependentUpon>
@@ -336,8 +345,11 @@
     <EmbeddedResource Include="UI\SearchHelp.resx">
       <DependentUpon>SearchHelp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\SummaryWindow.resx">
-      <DependentUpon>SummaryWindow.cs</DependentUpon>
+    <EmbeddedResource Include="UI\SummaryForm.resx">
+      <DependentUpon>SummaryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\UpdateCheckForm.resx">
+      <DependentUpon>UpdateCheckForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\UpdateDialog.resx">
       <DependentUpon>UpdateDialog.cs</DependentUpon>

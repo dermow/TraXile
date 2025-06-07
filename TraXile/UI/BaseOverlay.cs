@@ -112,6 +112,11 @@ namespace TraXile.UI
             }
         }
 
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void BaseOverlay_Load(object sender, EventArgs e)
         {
 

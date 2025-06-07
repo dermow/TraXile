@@ -39,62 +39,62 @@ namespace TraXile
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title4 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title5 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title6 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea11 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend11 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea12 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend12 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series12 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea13 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend13 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series13 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea14 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend14 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series14 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea15 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend15 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series15 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea16 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend16 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series16 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea17 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend17 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series17 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea18 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend18 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series18 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea19 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend19 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series19 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title7 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea20 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend20 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series20 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title8 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea21 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend21 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series21 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title9 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea22 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend22 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series22 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title10 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea23 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend23 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series23 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title11 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea24 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend24 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series24 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title12 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea25 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend25 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series25 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea26 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend26 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series26 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea27 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend27 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series27 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea28 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend28 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series28 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea29 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend29 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series29 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea30 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend30 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series30 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea31 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend31 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series31 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea32 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend32 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series32 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            this.comboBox6 = new MaterialSkin.Controls.MaterialComboBox();
+            this.comboBox3 = new MaterialSkin.Controls.MaterialComboBox();
             this.checkBox1 = new MaterialSkin.Controls.MaterialCheckbox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.btt_apply_filter = new MaterialSkin.Controls.MaterialButton();
@@ -111,10 +111,9 @@ namespace TraXile
             this.stopwatchsimpleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tagOverlayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chatCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wikiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
@@ -171,14 +170,14 @@ namespace TraXile
             this.textBox12 = new System.Windows.Forms.TextBox();
             this.comboBox_Filter_Area = new MaterialSkin.Controls.MaterialComboBox();
             this.comboBox_Filter_Type = new MaterialSkin.Controls.MaterialComboBox();
-            this.linkLabelUpdateAvailable = new System.Windows.Forms.LinkLabel();
+            this.linkLabelUpdateAvailable = new MaterialSkin.Controls.MaterialLabel();
             this.pictureBoxUpdateAvailable = new System.Windows.Forms.PictureBox();
             this.pictureBox33 = new System.Windows.Forms.PictureBox();
             this.pictureBox32 = new System.Windows.Forms.PictureBox();
-            this.lbl_background_update = new System.Windows.Forms.Label();
+            this.lbl_background_update = new MaterialSkin.Controls.MaterialLabel();
             this.pictureBox30 = new System.Windows.Forms.PictureBox();
-            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
-            this.lbl_filter = new System.Windows.Forms.Label();
+            this.linkLabel5 = new MaterialSkin.Controls.MaterialLabel();
+            this.lbl_filter = new MaterialSkin.Controls.MaterialLabel();
             this.pictureBox16 = new System.Windows.Forms.PictureBox();
             this.pictureBox12 = new System.Windows.Forms.PictureBox();
             this.pictureBox14 = new System.Windows.Forms.PictureBox();
@@ -188,21 +187,10 @@ namespace TraXile
             this.tableLayoutPanel_L0 = new System.Windows.Forms.TableLayoutPanel();
             this.materialCard3 = new MaterialSkin.Controls.MaterialCard();
             this.progressBar1 = new MaterialSkin.Controls.MaterialProgressBar();
-            this.materialCard4 = new MaterialSkin.Controls.MaterialCard();
-            this.materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
-            this.materialLabel8 = new MaterialSkin.Controls.MaterialLabel();
-            this.comboBox_Filter_Area_level_Operator = new MaterialSkin.Controls.MaterialComboBox();
-            this.textBox_Filter_AreaLevel = new MaterialSkin.Controls.MaterialTextBox();
-            this.materialLabel7 = new MaterialSkin.Controls.MaterialLabel();
-            this.materialLabel6 = new MaterialSkin.Controls.MaterialLabel();
-            this.materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
-            this.materialLabel4 = new MaterialSkin.Controls.MaterialLabel();
-            this.materialLabel3 = new MaterialSkin.Controls.MaterialLabel();
-            this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
             this.materialTabSelector1 = new MaterialSkin.Controls.MaterialTabSelector();
             this.materialTabControl2 = new MaterialSkin.Controls.MaterialTabControl();
-            this.tabPage9 = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.materialCard7 = new MaterialSkin.Controls.MaterialCard();
             this.materialLabell_DeathCounter = new MaterialSkin.Controls.MaterialLabel();
@@ -213,23 +201,17 @@ namespace TraXile
             this.pictureBoxPause = new System.Windows.Forms.PictureBox();
             this.labelTrackingType = new MaterialSkin.Controls.MaterialLabel();
             this.pictureBoxPlay = new System.Windows.Forms.PictureBox();
-            this.pictureBox10 = new System.Windows.Forms.PictureBox();
             this.pictureBoxSkull = new System.Windows.Forms.PictureBox();
             this.groupBoxTrackingTags = new MaterialSkin.Controls.MaterialCard();
             this.materialCard10 = new MaterialSkin.Controls.MaterialCard();
+            this.materialLabel51 = new MaterialSkin.Controls.MaterialLabel();
             this.labelAreaCurrent = new MaterialSkin.Controls.MaterialLabel();
-            this.labelActivityCurrent = new MaterialSkin.Controls.MaterialLabel();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
-            this.materialCard1 = new MaterialSkin.Controls.MaterialCard();
-            this.labelItemCount = new MaterialSkin.Controls.MaterialLabel();
-            this.comboBoxShowMaxItems = new System.Windows.Forms.ComboBox();
             this.groupBox10 = new MaterialSkin.Controls.MaterialCard();
             this.materialDrawer2 = new MaterialSkin.Controls.MaterialDrawer();
-            this.label73 = new System.Windows.Forms.Label();
             this.materialButton1 = new MaterialSkin.Controls.MaterialButton();
             this.textBox8 = new MaterialSkin.Controls.MaterialTextBox();
             this.buttonStartSearch = new MaterialSkin.Controls.MaterialButton();
-            this.linkLabelSearchSyntax = new System.Windows.Forms.LinkLabel();
             this.materialCard5 = new MaterialSkin.Controls.MaterialCard();
             this.listViewActLog = new MaterialSkin.Controls.MaterialListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -238,6 +220,9 @@ namespace TraXile
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.materialCard9 = new MaterialSkin.Controls.MaterialCard();
+            this.materialLabel50 = new MaterialSkin.Controls.MaterialLabel();
+            this.labelItemCount = new MaterialSkin.Controls.MaterialLabel();
+            this.comboBoxShowMaxItems = new MaterialSkin.Controls.MaterialComboBox();
             this.materialLabelSummary = new MaterialSkin.Controls.MaterialLabel();
             this.materialLabel2 = new MaterialSkin.Controls.MaterialLabel();
             this.tabPage10 = new System.Windows.Forms.TabPage();
@@ -256,7 +241,7 @@ namespace TraXile
             this.textBox1 = new MaterialSkin.Controls.MaterialTextBox();
             this.materialLabel11 = new MaterialSkin.Controls.MaterialLabel();
             this.materialCard13 = new MaterialSkin.Controls.MaterialCard();
-            this.listViewNF1 = new TraXile.ListViewNF();
+            this.listViewNF1 = new MaterialSkin.Controls.MaterialListView();
             this.columnHeader23 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader24 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage15 = new System.Windows.Forms.TabPage();
@@ -417,10 +402,6 @@ namespace TraXile
             this.label60 = new MaterialSkin.Controls.MaterialLabel();
             this.button13 = new MaterialSkin.Controls.MaterialButton();
             this.textBox5 = new MaterialSkin.Controls.MaterialTextBox();
-            this.label64 = new MaterialSkin.Controls.MaterialLabel();
-            this.button11 = new MaterialSkin.Controls.MaterialButton();
-            this.label63 = new MaterialSkin.Controls.MaterialLabel();
-            this.button12 = new MaterialSkin.Controls.MaterialButton();
             this.tabPage11 = new System.Windows.Forms.TabPage();
             this.materialCard46 = new MaterialSkin.Controls.MaterialCard();
             this.materialLabel48 = new MaterialSkin.Controls.MaterialLabel();
@@ -440,6 +421,18 @@ namespace TraXile
             this.materialLabel46 = new MaterialSkin.Controls.MaterialLabel();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.materialTabSelector3 = new MaterialSkin.Controls.MaterialTabSelector();
+            this.materialCard4 = new MaterialSkin.Controls.MaterialCard();
+            this.materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialLabel8 = new MaterialSkin.Controls.MaterialLabel();
+            this.comboBox_Filter_Area_level_Operator = new MaterialSkin.Controls.MaterialComboBox();
+            this.textBox_Filter_AreaLevel = new MaterialSkin.Controls.MaterialTextBox();
+            this.materialLabel7 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialLabel6 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialLabel4 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialLabel3 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
+            this.tagsToolStripMenuItemTagOverlay = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.tableLayoutPanelMain.SuspendLayout();
@@ -459,21 +452,21 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
             this.tableLayoutPanel_L0.SuspendLayout();
             this.materialCard3.SuspendLayout();
-            this.materialCard4.SuspendLayout();
             this.materialTabControl2.SuspendLayout();
-            this.tabPage9.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.materialCard7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).BeginInit();
             this.materialCard10.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
-            this.materialCard1.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.materialCard5.SuspendLayout();
             this.materialCard9.SuspendLayout();
@@ -563,12 +556,23 @@ namespace TraXile
             this.materialCard45.SuspendLayout();
             this.materialCard44.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.materialCard4.SuspendLayout();
             this.SuspendLayout();
             // 
             // comboBox6
             // 
+            this.comboBox6.AutoResize = false;
+            this.comboBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.comboBox6.Depth = 0;
+            this.comboBox6.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.comboBox6.DropDownHeight = 118;
             this.comboBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox6.DropDownWidth = 121;
+            this.comboBox6.Font = new System.Drawing.Font("Roboto Medium", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.comboBox6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.comboBox6.FormattingEnabled = true;
+            this.comboBox6.IntegralHeight = false;
+            this.comboBox6.ItemHeight = 29;
             this.comboBox6.Items.AddRange(new object[] {
             "All",
             "T1",
@@ -590,19 +594,37 @@ namespace TraXile
             "T17",
             "T18"});
             this.comboBox6.Location = new System.Drawing.Point(278, 6);
+            this.comboBox6.MaxDropDownItems = 4;
+            this.comboBox6.MouseState = MaterialSkin.MouseState.OUT;
             this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(91, 21);
+            this.comboBox6.Size = new System.Drawing.Size(91, 35);
+            this.comboBox6.StartIndex = 0;
             this.comboBox6.TabIndex = 3;
+            this.comboBox6.UseTallSize = false;
             // 
             // comboBox3
             // 
+            this.comboBox3.AutoResize = false;
+            this.comboBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.comboBox3.Depth = 0;
+            this.comboBox3.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.comboBox3.DropDownHeight = 118;
             this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3.DropDownWidth = 121;
+            this.comboBox3.Font = new System.Drawing.Font("Roboto Medium", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.comboBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.IntegralHeight = false;
+            this.comboBox3.ItemHeight = 29;
             this.comboBox3.Location = new System.Drawing.Point(55, 8);
+            this.comboBox3.MaxDropDownItems = 4;
+            this.comboBox3.MouseState = MaterialSkin.MouseState.OUT;
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(162, 21);
+            this.comboBox3.Size = new System.Drawing.Size(162, 35);
             this.comboBox3.Sorted = true;
+            this.comboBox3.StartIndex = 0;
             this.comboBox3.TabIndex = 1;
+            this.comboBox3.UseTallSize = false;
             this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
             // checkBox1
@@ -822,55 +844,47 @@ namespace TraXile
             // stopwatchsimpleToolStripMenuItem
             // 
             this.stopwatchsimpleToolStripMenuItem.Name = "stopwatchsimpleToolStripMenuItem";
-            this.stopwatchsimpleToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.stopwatchsimpleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.stopwatchsimpleToolStripMenuItem.Text = "Stopwatch (Simple)";
             this.stopwatchsimpleToolStripMenuItem.Click += new System.EventHandler(this.stopwatchsimpleToolStripMenuItem_Click);
             // 
             // tagOverlayToolStripMenuItem
             // 
             this.tagOverlayToolStripMenuItem.Name = "tagOverlayToolStripMenuItem";
-            this.tagOverlayToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.tagOverlayToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.tagOverlayToolStripMenuItem.Text = "Tag-Overlay";
             this.tagOverlayToolStripMenuItem.Click += new System.EventHandler(this.tagOverlayToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.chatCommandsToolStripMenuItem,
-            this.infoToolStripMenuItem1,
             this.checkForUpdateToolStripMenuItem,
-            this.wikiToolStripMenuItem});
+            this.chatCommandsToolStripMenuItem,
+            this.infoToolStripMenuItem1});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
+            // checkForUpdateToolStripMenuItem
+            // 
+            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdateToolStripMenuItem.Text = "Check for Update";
+            this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
+            // 
             // chatCommandsToolStripMenuItem
             // 
             this.chatCommandsToolStripMenuItem.Name = "chatCommandsToolStripMenuItem";
-            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.chatCommandsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.chatCommandsToolStripMenuItem.Text = "Chat Commands";
             this.chatCommandsToolStripMenuItem.Click += new System.EventHandler(this.chatCommandsToolStripMenuItem_Click);
             // 
             // infoToolStripMenuItem1
             // 
             this.infoToolStripMenuItem1.Name = "infoToolStripMenuItem1";
-            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(166, 22);
+            this.infoToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.infoToolStripMenuItem1.Text = "Info";
             this.infoToolStripMenuItem1.Click += new System.EventHandler(this.infoToolStripMenuItem1_Click);
-            // 
-            // checkForUpdateToolStripMenuItem
-            // 
-            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.checkForUpdateToolStripMenuItem.Text = "Check for Update";
-            this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
-            // 
-            // wikiToolStripMenuItem
-            // 
-            this.wikiToolStripMenuItem.Name = "wikiToolStripMenuItem";
-            this.wikiToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.wikiToolStripMenuItem.Text = "Wiki";
-            this.wikiToolStripMenuItem.Click += new System.EventHandler(this.wikiToolStripMenuItem_Click);
             // 
             // timer1
             // 
@@ -1050,13 +1064,13 @@ namespace TraXile
             this.overlaysToolStripMenuItem,
             this.exitToolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(120, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 114);
             this.contextMenuStrip1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.contextMenuStrip1_MouseDoubleClick);
             // 
             // aboutToolStripMenuItem1
             // 
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.aboutToolStripMenuItem1.Text = "About";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
@@ -1065,7 +1079,7 @@ namespace TraXile
             this.helpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.chatCommandsToolStripMenuItem1});
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.helpToolStripMenuItem1.Text = "Help";
             // 
             // chatCommandsToolStripMenuItem1
@@ -1078,22 +1092,23 @@ namespace TraXile
             // overlaysToolStripMenuItem
             // 
             this.overlaysToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.stopwatchToolStripMenuItem1});
+            this.stopwatchToolStripMenuItem1,
+            this.tagsToolStripMenuItemTagOverlay});
             this.overlaysToolStripMenuItem.Name = "overlaysToolStripMenuItem";
-            this.overlaysToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.overlaysToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.overlaysToolStripMenuItem.Text = "Overlays";
             // 
             // stopwatchToolStripMenuItem1
             // 
             this.stopwatchToolStripMenuItem1.Name = "stopwatchToolStripMenuItem1";
-            this.stopwatchToolStripMenuItem1.Size = new System.Drawing.Size(130, 22);
+            this.stopwatchToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.stopwatchToolStripMenuItem1.Text = "Stopwatch";
-            this.stopwatchToolStripMenuItem1.Click += new System.EventHandler(this.stopwatchToolStripMenuItem1_Click);
+            this.stopwatchToolStripMenuItem1.Click += new System.EventHandler(this.stopwatchsimpleToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem1
             // 
             this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(119, 22);
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem1.Text = "Exit";
             this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
@@ -1223,16 +1238,15 @@ namespace TraXile
             this.tableLayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelMain.Controls.Add(this.tableLayoutPanel7, 0, 0);
             this.tableLayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelMain.Location = new System.Drawing.Point(0, 20);
+            this.tableLayoutPanelMain.Location = new System.Drawing.Point(0, 37);
             this.tableLayoutPanelMain.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanelMain.Name = "tableLayoutPanelMain";
             this.tableLayoutPanelMain.RowCount = 1;
             this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1174F));
             this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1174F));
             this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1174F));
-            this.tableLayoutPanelMain.Size = new System.Drawing.Size(2150, 664);
+            this.tableLayoutPanelMain.Size = new System.Drawing.Size(2150, 777);
             this.tableLayoutPanelMain.TabIndex = 2;
-            this.tableLayoutPanelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanelMain_Paint);
             // 
             // tableLayoutPanel7
             // 
@@ -1270,18 +1284,18 @@ namespace TraXile
             // 
             // chartGlobalDashboard
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartGlobalDashboard.ChartAreas.Add(chartArea1);
+            chartArea17.Name = "ChartArea1";
+            this.chartGlobalDashboard.ChartAreas.Add(chartArea17);
             this.chartGlobalDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartGlobalDashboard.Legends.Add(legend1);
+            legend17.Name = "Legend1";
+            this.chartGlobalDashboard.Legends.Add(legend17);
             this.chartGlobalDashboard.Location = new System.Drawing.Point(14, 14);
             this.chartGlobalDashboard.Name = "chartGlobalDashboard";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartGlobalDashboard.Series.Add(series1);
+            series17.ChartArea = "ChartArea1";
+            series17.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series17.Legend = "Legend1";
+            series17.Name = "Series1";
+            this.chartGlobalDashboard.Series.Add(series17);
             this.chartGlobalDashboard.Size = new System.Drawing.Size(2094, 232);
             this.chartGlobalDashboard.TabIndex = 1;
             this.chartGlobalDashboard.Text = "chart8";
@@ -1342,6 +1356,7 @@ namespace TraXile
             this.columnHeader21});
             this.listView1.Depth = 0;
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listView1.FullRowSelect = true;
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(14, 14);
@@ -1509,15 +1524,16 @@ namespace TraXile
             // linkLabelUpdateAvailable
             // 
             this.linkLabelUpdateAvailable.AutoSize = true;
-            this.linkLabelUpdateAvailable.LinkColor = System.Drawing.Color.Gold;
+            this.linkLabelUpdateAvailable.Depth = 0;
+            this.linkLabelUpdateAvailable.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.linkLabelUpdateAvailable.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
             this.linkLabelUpdateAvailable.Location = new System.Drawing.Point(1005, 6);
+            this.linkLabelUpdateAvailable.MouseState = MaterialSkin.MouseState.HOVER;
             this.linkLabelUpdateAvailable.Name = "linkLabelUpdateAvailable";
-            this.linkLabelUpdateAvailable.Size = new System.Drawing.Size(177, 13);
+            this.linkLabelUpdateAvailable.Size = new System.Drawing.Size(193, 14);
             this.linkLabelUpdateAvailable.TabIndex = 19;
             this.linkLabelUpdateAvailable.TabStop = true;
             this.linkLabelUpdateAvailable.Text = "TraXile 1.3.5 available, update now!";
-            this.linkLabelUpdateAvailable.VisitedLinkColor = System.Drawing.Color.Gold;
-            this.linkLabelUpdateAvailable.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelUpdateAvailable_LinkClicked);
             // 
             // pictureBoxUpdateAvailable
             // 
@@ -1553,10 +1569,14 @@ namespace TraXile
             // lbl_background_update
             // 
             this.lbl_background_update.AutoSize = true;
+            this.lbl_background_update.Depth = 0;
+            this.lbl_background_update.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_background_update.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
             this.lbl_background_update.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.lbl_background_update.Location = new System.Drawing.Point(451, 6);
+            this.lbl_background_update.MouseState = MaterialSkin.MouseState.HOVER;
             this.lbl_background_update.Name = "lbl_background_update";
-            this.lbl_background_update.Size = new System.Drawing.Size(197, 13);
+            this.lbl_background_update.Size = new System.Drawing.Size(223, 14);
             this.lbl_background_update.TabIndex = 15;
             this.lbl_background_update.Text = "still updating some data in background...";
             // 
@@ -1574,22 +1594,29 @@ namespace TraXile
             // linkLabel5
             // 
             this.linkLabel5.AutoSize = true;
-            this.linkLabel5.LinkColor = System.Drawing.Color.White;
+            this.linkLabel5.Depth = 0;
+            this.linkLabel5.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.linkLabel5.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
             this.linkLabel5.Location = new System.Drawing.Point(31, 6);
+            this.linkLabel5.MouseState = MaterialSkin.MouseState.HOVER;
             this.linkLabel5.Name = "linkLabel5";
-            this.linkLabel5.Size = new System.Drawing.Size(54, 13);
+            this.linkLabel5.Size = new System.Drawing.Size(57, 14);
             this.linkLabel5.TabIndex = 13;
             this.linkLabel5.TabStop = true;
             this.linkLabel5.Text = "hide filters";
-            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+            this.linkLabel5.Click += new System.EventHandler(this.linkLabel5_LinkClicked);
             // 
             // lbl_filter
             // 
             this.lbl_filter.AutoSize = true;
+            this.lbl_filter.Depth = 0;
+            this.lbl_filter.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_filter.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
             this.lbl_filter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.lbl_filter.Location = new System.Drawing.Point(284, 6);
+            this.lbl_filter.MouseState = MaterialSkin.MouseState.HOVER;
             this.lbl_filter.Name = "lbl_filter";
-            this.lbl_filter.Size = new System.Drawing.Size(100, 13);
+            this.lbl_filter.Size = new System.Drawing.Size(109, 14);
             this.lbl_filter.TabIndex = 4;
             this.lbl_filter.Text = "Your data is filtered!";
             this.lbl_filter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1658,9 +1685,9 @@ namespace TraXile
             this.tableLayoutPanel_L0.ColumnCount = 1;
             this.tableLayoutPanel_L0.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel_L0.Controls.Add(this.materialCard3, 0, 0);
-            this.tableLayoutPanel_L0.Controls.Add(this.materialCard4, 0, 1);
             this.tableLayoutPanel_L0.Controls.Add(this.materialTabSelector1, 0, 2);
             this.tableLayoutPanel_L0.Controls.Add(this.materialTabControl2, 0, 3);
+            this.tableLayoutPanel_L0.Controls.Add(this.materialCard4, 0, 1);
             this.tableLayoutPanel_L0.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel_L0.Location = new System.Drawing.Point(3, 48);
             this.tableLayoutPanel_L0.Margin = new System.Windows.Forms.Padding(0);
@@ -1671,7 +1698,7 @@ namespace TraXile
             this.tableLayoutPanel_L0.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
             this.tableLayoutPanel_L0.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 686F));
             this.tableLayoutPanel_L0.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel_L0.Size = new System.Drawing.Size(2178, 1030);
+            this.tableLayoutPanel_L0.Size = new System.Drawing.Size(2178, 1160);
             this.tableLayoutPanel_L0.TabIndex = 3;
             // 
             // materialCard3
@@ -1706,196 +1733,6 @@ namespace TraXile
             this.progressBar1.Size = new System.Drawing.Size(100, 5);
             this.progressBar1.TabIndex = 20;
             // 
-            // materialCard4
-            // 
-            this.materialCard4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.materialCard4.Controls.Add(this.materialLabel9);
-            this.materialCard4.Controls.Add(this.btt_remove_filter);
-            this.materialCard4.Controls.Add(this.materialLabel8);
-            this.materialCard4.Controls.Add(this.textBox13);
-            this.materialCard4.Controls.Add(this.comboBox_Filter_Area_level_Operator);
-            this.materialCard4.Controls.Add(this.btt_apply_filter);
-            this.materialCard4.Controls.Add(this.textBox12);
-            this.materialCard4.Controls.Add(this.textBox_Filter_AreaLevel);
-            this.materialCard4.Controls.Add(this.button18);
-            this.materialCard4.Controls.Add(this.comboBox_Filter_Matching);
-            this.materialCard4.Controls.Add(this.materialLabel7);
-            this.materialCard4.Controls.Add(this.button17);
-            this.materialCard4.Controls.Add(this.materialLabel6);
-            this.materialCard4.Controls.Add(this.listBox_Filter_Tags);
-            this.materialCard4.Controls.Add(this.materialLabel5);
-            this.materialCard4.Controls.Add(this.comboBox_Filter_Tags);
-            this.materialCard4.Controls.Add(this.materialLabel4);
-            this.materialCard4.Controls.Add(this.materialLabel3);
-            this.materialCard4.Controls.Add(this.materialLabel1);
-            this.materialCard4.Controls.Add(this.comboBox_Filter_TimeRange);
-            this.materialCard4.Controls.Add(this.dateTimePicker1);
-            this.materialCard4.Controls.Add(this.dateTimePicker2);
-            this.materialCard4.Controls.Add(this.comboBox_Filter_Type);
-            this.materialCard4.Controls.Add(this.comboBox_Filter_Area);
-            this.materialCard4.Depth = 0;
-            this.materialCard4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.materialCard4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard4.Location = new System.Drawing.Point(8, 49);
-            this.materialCard4.Margin = new System.Windows.Forms.Padding(8);
-            this.materialCard4.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialCard4.Name = "materialCard4";
-            this.materialCard4.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard4.Size = new System.Drawing.Size(2162, 153);
-            this.materialCard4.TabIndex = 1;
-            // 
-            // materialLabel9
-            // 
-            this.materialLabel9.AutoSize = true;
-            this.materialLabel9.Depth = 0;
-            this.materialLabel9.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel9.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
-            this.materialLabel9.Location = new System.Drawing.Point(696, 117);
-            this.materialLabel9.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel9.Name = "materialLabel9";
-            this.materialLabel9.Size = new System.Drawing.Size(55, 14);
-            this.materialLabel9.TabIndex = 27;
-            this.materialLabel9.Text = "Matching:";
-            // 
-            // materialLabel8
-            // 
-            this.materialLabel8.AutoSize = true;
-            this.materialLabel8.Depth = 0;
-            this.materialLabel8.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel8.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
-            this.materialLabel8.Location = new System.Drawing.Point(664, 10);
-            this.materialLabel8.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel8.Name = "materialLabel8";
-            this.materialLabel8.Size = new System.Drawing.Size(31, 14);
-            this.materialLabel8.TabIndex = 26;
-            this.materialLabel8.Text = "Tags:";
-            // 
-            // comboBox_Filter_Area_level_Operator
-            // 
-            this.comboBox_Filter_Area_level_Operator.AutoResize = false;
-            this.comboBox_Filter_Area_level_Operator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.comboBox_Filter_Area_level_Operator.Depth = 0;
-            this.comboBox_Filter_Area_level_Operator.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            this.comboBox_Filter_Area_level_Operator.DropDownHeight = 118;
-            this.comboBox_Filter_Area_level_Operator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_Filter_Area_level_Operator.DropDownWidth = 121;
-            this.comboBox_Filter_Area_level_Operator.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.comboBox_Filter_Area_level_Operator.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.comboBox_Filter_Area_level_Operator.FormattingEnabled = true;
-            this.comboBox_Filter_Area_level_Operator.IntegralHeight = false;
-            this.comboBox_Filter_Area_level_Operator.ItemHeight = 29;
-            this.comboBox_Filter_Area_level_Operator.Items.AddRange(new object[] {
-            "=",
-            ">",
-            ">=",
-            "<",
-            "<="});
-            this.comboBox_Filter_Area_level_Operator.Location = new System.Drawing.Point(454, 85);
-            this.comboBox_Filter_Area_level_Operator.MaxDropDownItems = 4;
-            this.comboBox_Filter_Area_level_Operator.MouseState = MaterialSkin.MouseState.OUT;
-            this.comboBox_Filter_Area_level_Operator.Name = "comboBox_Filter_Area_level_Operator";
-            this.comboBox_Filter_Area_level_Operator.Size = new System.Drawing.Size(42, 35);
-            this.comboBox_Filter_Area_level_Operator.StartIndex = 0;
-            this.comboBox_Filter_Area_level_Operator.TabIndex = 25;
-            this.comboBox_Filter_Area_level_Operator.UseTallSize = false;
-            this.comboBox_Filter_Area_level_Operator.SelectedIndexChanged += new System.EventHandler(this.comboBox_Filter_Area_level_Operator_SelectedIndexChanged);
-            // 
-            // textBox_Filter_AreaLevel
-            // 
-            this.textBox_Filter_AreaLevel.AnimateReadOnly = false;
-            this.textBox_Filter_AreaLevel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox_Filter_AreaLevel.Depth = 0;
-            this.textBox_Filter_AreaLevel.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.textBox_Filter_AreaLevel.LeadingIcon = null;
-            this.textBox_Filter_AreaLevel.Location = new System.Drawing.Point(502, 85);
-            this.textBox_Filter_AreaLevel.MaxLength = 50;
-            this.textBox_Filter_AreaLevel.MouseState = MaterialSkin.MouseState.OUT;
-            this.textBox_Filter_AreaLevel.Multiline = false;
-            this.textBox_Filter_AreaLevel.Name = "textBox_Filter_AreaLevel";
-            this.textBox_Filter_AreaLevel.Size = new System.Drawing.Size(82, 36);
-            this.textBox_Filter_AreaLevel.TabIndex = 24;
-            this.textBox_Filter_AreaLevel.Text = "";
-            this.textBox_Filter_AreaLevel.TrailingIcon = null;
-            this.textBox_Filter_AreaLevel.UseTallSize = false;
-            // 
-            // materialLabel7
-            // 
-            this.materialLabel7.AutoSize = true;
-            this.materialLabel7.Depth = 0;
-            this.materialLabel7.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel7.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
-            this.materialLabel7.Location = new System.Drawing.Point(401, 95);
-            this.materialLabel7.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel7.Name = "materialLabel7";
-            this.materialLabel7.Size = new System.Drawing.Size(47, 14);
-            this.materialLabel7.TabIndex = 21;
-            this.materialLabel7.Text = "Area Lvl.";
-            // 
-            // materialLabel6
-            // 
-            this.materialLabel6.AutoSize = true;
-            this.materialLabel6.Depth = 0;
-            this.materialLabel6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel6.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
-            this.materialLabel6.Location = new System.Drawing.Point(401, 53);
-            this.materialLabel6.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel6.Name = "materialLabel6";
-            this.materialLabel6.Size = new System.Drawing.Size(29, 14);
-            this.materialLabel6.TabIndex = 20;
-            this.materialLabel6.Text = "Area:";
-            // 
-            // materialLabel5
-            // 
-            this.materialLabel5.AutoSize = true;
-            this.materialLabel5.Depth = 0;
-            this.materialLabel5.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel5.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
-            this.materialLabel5.Location = new System.Drawing.Point(400, 10);
-            this.materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel5.Name = "materialLabel5";
-            this.materialLabel5.Size = new System.Drawing.Size(30, 14);
-            this.materialLabel5.TabIndex = 19;
-            this.materialLabel5.Text = "Type:";
-            // 
-            // materialLabel4
-            // 
-            this.materialLabel4.AutoSize = true;
-            this.materialLabel4.Depth = 0;
-            this.materialLabel4.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel4.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
-            this.materialLabel4.Location = new System.Drawing.Point(7, 90);
-            this.materialLabel4.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel4.Name = "materialLabel4";
-            this.materialLabel4.Size = new System.Drawing.Size(18, 14);
-            this.materialLabel4.TabIndex = 7;
-            this.materialLabel4.Text = "To:";
-            // 
-            // materialLabel3
-            // 
-            this.materialLabel3.AutoSize = true;
-            this.materialLabel3.Depth = 0;
-            this.materialLabel3.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel3.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
-            this.materialLabel3.Location = new System.Drawing.Point(7, 63);
-            this.materialLabel3.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel3.Name = "materialLabel3";
-            this.materialLabel3.Size = new System.Drawing.Size(33, 14);
-            this.materialLabel3.TabIndex = 6;
-            this.materialLabel3.Text = "From:";
-            // 
-            // materialLabel1
-            // 
-            this.materialLabel1.AutoSize = true;
-            this.materialLabel1.Depth = 0;
-            this.materialLabel1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel1.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
-            this.materialLabel1.Location = new System.Drawing.Point(9, 12);
-            this.materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel1.Name = "materialLabel1";
-            this.materialLabel1.Size = new System.Drawing.Size(65, 14);
-            this.materialLabel1.TabIndex = 0;
-            this.materialLabel1.Text = "Time range:";
-            // 
             // materialTabSelector1
             // 
             this.materialTabSelector1.BaseTabControl = this.materialTabControl2;
@@ -1913,7 +1750,7 @@ namespace TraXile
             // 
             // materialTabControl2
             // 
-            this.materialTabControl2.Controls.Add(this.tabPage9);
+            this.materialTabControl2.Controls.Add(this.tabPage3);
             this.materialTabControl2.Controls.Add(this.tabPage10);
             this.materialTabControl2.Controls.Add(this.tabPage18);
             this.materialTabControl2.Depth = 0;
@@ -1924,38 +1761,37 @@ namespace TraXile
             this.materialTabControl2.Multiline = true;
             this.materialTabControl2.Name = "materialTabControl2";
             this.materialTabControl2.SelectedIndex = 0;
-            this.materialTabControl2.Size = new System.Drawing.Size(2178, 776);
+            this.materialTabControl2.Size = new System.Drawing.Size(2178, 906);
             this.materialTabControl2.TabIndex = 0;
-            this.materialTabControl2.SelectedIndexChanged += new System.EventHandler(this.materialTabControl2_SelectedIndexChanged);
             // 
-            // tabPage9
+            // tabPage3
             // 
-            this.tabPage9.BackColor = System.Drawing.Color.Black;
-            this.tabPage9.Controls.Add(this.tableLayoutPanel2);
-            this.tabPage9.Location = new System.Drawing.Point(4, 22);
-            this.tabPage9.Margin = new System.Windows.Forms.Padding(0);
-            this.tabPage9.Name = "tabPage9";
-            this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage9.Size = new System.Drawing.Size(2170, 750);
-            this.tabPage9.TabIndex = 0;
-            this.tabPage9.Text = "Tracking";
+            this.tabPage3.Controls.Add(this.splitContainer1);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(2170, 880);
+            this.tabPage3.TabIndex = 3;
+            this.tabPage3.Text = "Tracking";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel2
+            // splitContainer1
             // 
-            this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 14F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 1244F));
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel5, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel9, 2, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(2164, 744);
-            this.tableLayoutPanel2.TabIndex = 0;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel5);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel9);
+            this.splitContainer1.Size = new System.Drawing.Size(2164, 874);
+            this.splitContainer1.SplitterDistance = 721;
+            this.splitContainer1.TabIndex = 0;
+            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
             // tableLayoutPanel5
             // 
@@ -1968,12 +1804,12 @@ namespace TraXile
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 4;
+            this.tableLayoutPanel5.RowCount = 3;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 245F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 328F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(906, 744);
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 73F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 453F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(721, 874);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
             // materialCard7
@@ -1987,7 +1823,6 @@ namespace TraXile
             this.materialCard7.Controls.Add(this.pictureBoxPause);
             this.materialCard7.Controls.Add(this.labelTrackingType);
             this.materialCard7.Controls.Add(this.pictureBoxPlay);
-            this.materialCard7.Controls.Add(this.pictureBox10);
             this.materialCard7.Controls.Add(this.pictureBoxSkull);
             this.materialCard7.Depth = 0;
             this.materialCard7.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1997,16 +1832,15 @@ namespace TraXile
             this.materialCard7.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard7.Name = "materialCard7";
             this.materialCard7.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard7.Size = new System.Drawing.Size(878, 92);
+            this.materialCard7.Size = new System.Drawing.Size(693, 92);
             this.materialCard7.TabIndex = 0;
-            this.materialCard7.Paint += new System.Windows.Forms.PaintEventHandler(this.materialCard7_Paint);
             // 
             // materialLabell_DeathCounter
             // 
             this.materialLabell_DeathCounter.AutoSize = true;
             this.materialLabell_DeathCounter.Depth = 0;
             this.materialLabell_DeathCounter.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabell_DeathCounter.Location = new System.Drawing.Point(398, 7);
+            this.materialLabell_DeathCounter.Location = new System.Drawing.Point(343, 8);
             this.materialLabell_DeathCounter.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabell_DeathCounter.Name = "materialLabell_DeathCounter";
             this.materialLabell_DeathCounter.Size = new System.Drawing.Size(10, 19);
@@ -2022,32 +1856,33 @@ namespace TraXile
             this.labelStopWatch.Location = new System.Drawing.Point(74, 3);
             this.labelStopWatch.MouseState = MaterialSkin.MouseState.HOVER;
             this.labelStopWatch.Name = "labelStopWatch";
-            this.labelStopWatch.Size = new System.Drawing.Size(173, 29);
+            this.labelStopWatch.Size = new System.Drawing.Size(91, 29);
             this.labelStopWatch.TabIndex = 0;
-            this.labelStopWatch.Text = "materialLabel10";
+            this.labelStopWatch.Text = "00:00:00";
             // 
             // pictureBoxStop
             // 
             this.pictureBoxStop.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxStop.Image")));
-            this.pictureBoxStop.Location = new System.Drawing.Point(321, 5);
+            this.pictureBoxStop.Location = new System.Drawing.Point(266, 6);
             this.pictureBoxStop.Name = "pictureBoxStop";
             this.pictureBoxStop.Size = new System.Drawing.Size(21, 21);
             this.pictureBoxStop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxStop.TabIndex = 4;
             this.pictureBoxStop.TabStop = false;
+            this.pictureBoxStop.Click += new System.EventHandler(this.pictureBoxStop_Click);
             // 
             // labelTrackingArea
             // 
             this.labelTrackingArea.AutoSize = true;
             this.labelTrackingArea.Depth = 0;
-            this.labelTrackingArea.Font = new System.Drawing.Font("Roboto Medium", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.labelTrackingArea.FontType = MaterialSkin.MaterialSkinManager.fontType.Subtitle2;
-            this.labelTrackingArea.Location = new System.Drawing.Point(119, 64);
+            this.labelTrackingArea.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.labelTrackingArea.FontType = MaterialSkin.MaterialSkinManager.fontType.Subtitle1;
+            this.labelTrackingArea.Location = new System.Drawing.Point(75, 37);
             this.labelTrackingArea.MouseState = MaterialSkin.MouseState.HOVER;
             this.labelTrackingArea.Name = "labelTrackingArea";
-            this.labelTrackingArea.Size = new System.Drawing.Size(99, 17);
+            this.labelTrackingArea.Size = new System.Drawing.Size(95, 19);
             this.labelTrackingArea.TabIndex = 12;
-            this.labelTrackingArea.Text = "materialLabel1";
+            this.labelTrackingArea.Text = "Toxic Sewers";
             // 
             // pictureBoxStopWatch
             // 
@@ -2062,49 +1897,42 @@ namespace TraXile
             // pictureBoxPause
             // 
             this.pictureBoxPause.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPause.Image")));
-            this.pictureBoxPause.Location = new System.Drawing.Point(294, 5);
+            this.pictureBoxPause.Location = new System.Drawing.Point(239, 6);
             this.pictureBoxPause.Name = "pictureBoxPause";
             this.pictureBoxPause.Size = new System.Drawing.Size(21, 21);
             this.pictureBoxPause.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxPause.TabIndex = 3;
             this.pictureBoxPause.TabStop = false;
+            this.pictureBoxPause.Click += new System.EventHandler(this.pictureBoxPause_Click);
             // 
             // labelTrackingType
             // 
             this.labelTrackingType.AutoSize = true;
             this.labelTrackingType.Depth = 0;
-            this.labelTrackingType.Font = new System.Drawing.Font("Roboto Medium", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.labelTrackingType.FontType = MaterialSkin.MaterialSkinManager.fontType.H6;
-            this.labelTrackingType.Location = new System.Drawing.Point(118, 41);
+            this.labelTrackingType.Font = new System.Drawing.Font("Roboto Medium", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.labelTrackingType.FontType = MaterialSkin.MaterialSkinManager.fontType.Subtitle2;
+            this.labelTrackingType.Location = new System.Drawing.Point(76, 65);
             this.labelTrackingType.MouseState = MaterialSkin.MouseState.HOVER;
             this.labelTrackingType.Name = "labelTrackingType";
-            this.labelTrackingType.Size = new System.Drawing.Size(135, 24);
+            this.labelTrackingType.Size = new System.Drawing.Size(29, 17);
             this.labelTrackingType.TabIndex = 11;
-            this.labelTrackingType.Text = "materialLabel1";
+            this.labelTrackingType.Text = "Map";
             // 
             // pictureBoxPlay
             // 
             this.pictureBoxPlay.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPlay.Image")));
-            this.pictureBoxPlay.Location = new System.Drawing.Point(263, 5);
+            this.pictureBoxPlay.Location = new System.Drawing.Point(208, 6);
             this.pictureBoxPlay.Name = "pictureBoxPlay";
             this.pictureBoxPlay.Size = new System.Drawing.Size(21, 21);
             this.pictureBoxPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxPlay.TabIndex = 2;
             this.pictureBoxPlay.TabStop = false;
-            // 
-            // pictureBox10
-            // 
-            this.pictureBox10.Location = new System.Drawing.Point(73, 41);
-            this.pictureBox10.Name = "pictureBox10";
-            this.pictureBox10.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox10.TabIndex = 10;
-            this.pictureBox10.TabStop = false;
+            this.pictureBoxPlay.Click += new System.EventHandler(this.pictureBox10_Click);
             // 
             // pictureBoxSkull
             // 
             this.pictureBoxSkull.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxSkull.Image")));
-            this.pictureBoxSkull.Location = new System.Drawing.Point(348, 3);
+            this.pictureBoxSkull.Location = new System.Drawing.Point(293, 4);
             this.pictureBoxSkull.Name = "pictureBoxSkull";
             this.pictureBoxSkull.Size = new System.Drawing.Size(44, 28);
             this.pictureBoxSkull.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -2117,19 +1945,19 @@ namespace TraXile
             this.groupBoxTrackingTags.Depth = 0;
             this.groupBoxTrackingTags.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxTrackingTags.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.groupBoxTrackingTags.Location = new System.Drawing.Point(14, 194);
+            this.groupBoxTrackingTags.Location = new System.Drawing.Point(14, 207);
             this.groupBoxTrackingTags.Margin = new System.Windows.Forms.Padding(14);
             this.groupBoxTrackingTags.MouseState = MaterialSkin.MouseState.HOVER;
             this.groupBoxTrackingTags.Name = "groupBoxTrackingTags";
             this.groupBoxTrackingTags.Padding = new System.Windows.Forms.Padding(14);
-            this.groupBoxTrackingTags.Size = new System.Drawing.Size(878, 217);
+            this.groupBoxTrackingTags.Size = new System.Drawing.Size(693, 653);
             this.groupBoxTrackingTags.TabIndex = 1;
             // 
             // materialCard10
             // 
             this.materialCard10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard10.Controls.Add(this.materialLabel51);
             this.materialCard10.Controls.Add(this.labelAreaCurrent);
-            this.materialCard10.Controls.Add(this.labelActivityCurrent);
             this.materialCard10.Depth = 0;
             this.materialCard10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialCard10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -2138,8 +1966,21 @@ namespace TraXile
             this.materialCard10.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard10.Name = "materialCard10";
             this.materialCard10.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard10.Size = new System.Drawing.Size(878, 32);
+            this.materialCard10.Size = new System.Drawing.Size(693, 45);
             this.materialCard10.TabIndex = 2;
+            // 
+            // materialLabel51
+            // 
+            this.materialLabel51.AutoSize = true;
+            this.materialLabel51.Depth = 0;
+            this.materialLabel51.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel51.ForeColor = System.Drawing.Color.White;
+            this.materialLabel51.Location = new System.Drawing.Point(17, 14);
+            this.materialLabel51.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel51.Name = "materialLabel51";
+            this.materialLabel51.Size = new System.Drawing.Size(92, 19);
+            this.materialLabel51.TabIndex = 10;
+            this.materialLabel51.Text = "Current Area:";
             // 
             // labelAreaCurrent
             // 
@@ -2147,99 +1988,40 @@ namespace TraXile
             this.labelAreaCurrent.Depth = 0;
             this.labelAreaCurrent.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.labelAreaCurrent.ForeColor = System.Drawing.Color.White;
-            this.labelAreaCurrent.Location = new System.Drawing.Point(78, 8);
+            this.labelAreaCurrent.Location = new System.Drawing.Point(135, 14);
             this.labelAreaCurrent.MouseState = MaterialSkin.MouseState.HOVER;
             this.labelAreaCurrent.Name = "labelAreaCurrent";
             this.labelAreaCurrent.Size = new System.Drawing.Size(5, 19);
             this.labelAreaCurrent.TabIndex = 9;
             this.labelAreaCurrent.Text = "-";
             // 
-            // labelActivityCurrent
-            // 
-            this.labelActivityCurrent.AutoSize = true;
-            this.labelActivityCurrent.Depth = 0;
-            this.labelActivityCurrent.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.labelActivityCurrent.ForeColor = System.Drawing.Color.White;
-            this.labelActivityCurrent.Location = new System.Drawing.Point(7, 8);
-            this.labelActivityCurrent.MouseState = MaterialSkin.MouseState.HOVER;
-            this.labelActivityCurrent.Name = "labelActivityCurrent";
-            this.labelActivityCurrent.Size = new System.Drawing.Size(55, 19);
-            this.labelActivityCurrent.TabIndex = 6;
-            this.labelActivityCurrent.Text = "nothing";
-            // 
             // tableLayoutPanel9
             // 
             this.tableLayoutPanel9.ColumnCount = 1;
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel9.Controls.Add(this.materialCard1, 0, 3);
             this.tableLayoutPanel9.Controls.Add(this.groupBox10, 0, 0);
             this.tableLayoutPanel9.Controls.Add(this.materialCard5, 0, 2);
             this.tableLayoutPanel9.Controls.Add(this.materialCard9, 0, 1);
             this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(920, 0);
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel9.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-            this.tableLayoutPanel9.RowCount = 4;
+            this.tableLayoutPanel9.RowCount = 3;
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 73F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 99F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(1244, 744);
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(1439, 874);
             this.tableLayoutPanel9.TabIndex = 1;
-            // 
-            // materialCard1
-            // 
-            this.materialCard1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.materialCard1.Controls.Add(this.labelItemCount);
-            this.materialCard1.Controls.Add(this.comboBoxShowMaxItems);
-            this.materialCard1.Depth = 0;
-            this.materialCard1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.materialCard1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard1.Location = new System.Drawing.Point(14, 659);
-            this.materialCard1.Margin = new System.Windows.Forms.Padding(14);
-            this.materialCard1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialCard1.Name = "materialCard1";
-            this.materialCard1.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard1.Size = new System.Drawing.Size(1216, 71);
-            this.materialCard1.TabIndex = 14;
-            // 
-            // labelItemCount
-            // 
-            this.labelItemCount.AutoSize = true;
-            this.labelItemCount.BackColor = System.Drawing.Color.RosyBrown;
-            this.labelItemCount.Depth = 0;
-            this.labelItemCount.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.labelItemCount.ForeColor = System.Drawing.Color.White;
-            this.labelItemCount.Location = new System.Drawing.Point(13, 14);
-            this.labelItemCount.MouseState = MaterialSkin.MouseState.HOVER;
-            this.labelItemCount.Name = "labelItemCount";
-            this.labelItemCount.Size = new System.Drawing.Size(57, 19);
-            this.labelItemCount.TabIndex = 9;
-            this.labelItemCount.Text = "items: 0";
-            this.labelItemCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // comboBoxShowMaxItems
-            // 
-            this.comboBoxShowMaxItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxShowMaxItems.FormattingEnabled = true;
-            this.comboBoxShowMaxItems.Items.AddRange(new object[] {
-            "500",
-            "1000",
-            "1500"});
-            this.comboBoxShowMaxItems.Location = new System.Drawing.Point(119, 12);
-            this.comboBoxShowMaxItems.Name = "comboBoxShowMaxItems";
-            this.comboBoxShowMaxItems.Size = new System.Drawing.Size(133, 21);
-            this.comboBoxShowMaxItems.TabIndex = 12;
+            this.tableLayoutPanel9.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel9_Paint);
             // 
             // groupBox10
             // 
             this.groupBox10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.groupBox10.Controls.Add(this.materialDrawer2);
-            this.groupBox10.Controls.Add(this.label73);
             this.groupBox10.Controls.Add(this.materialButton1);
             this.groupBox10.Controls.Add(this.textBox8);
             this.groupBox10.Controls.Add(this.buttonStartSearch);
-            this.groupBox10.Controls.Add(this.linkLabelSearchSyntax);
             this.groupBox10.Depth = 0;
             this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -2248,7 +2030,7 @@ namespace TraXile
             this.groupBox10.MouseState = MaterialSkin.MouseState.HOVER;
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Padding = new System.Windows.Forms.Padding(14);
-            this.groupBox10.Size = new System.Drawing.Size(1216, 92);
+            this.groupBox10.Size = new System.Drawing.Size(1411, 92);
             this.groupBox10.TabIndex = 12;
             this.groupBox10.Text = "Search";
             // 
@@ -2271,19 +2053,6 @@ namespace TraXile
             this.materialDrawer2.Text = "materialDrawer2";
             this.materialDrawer2.UseColors = false;
             // 
-            // label73
-            // 
-            this.label73.AutoSize = true;
-            this.label73.BackColor = System.Drawing.Color.Transparent;
-            this.label73.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label73.ForeColor = System.Drawing.Color.White;
-            this.label73.Location = new System.Drawing.Point(315, 57);
-            this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(70, 16);
-            this.label73.TabIndex = 13;
-            this.label73.Text = "max items:";
-            this.label73.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // materialButton1
             // 
             this.materialButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -2293,7 +2062,7 @@ namespace TraXile
             this.materialButton1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.materialButton1.HighEmphasis = true;
             this.materialButton1.Icon = null;
-            this.materialButton1.Location = new System.Drawing.Point(505, 10);
+            this.materialButton1.Location = new System.Drawing.Point(506, 29);
             this.materialButton1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialButton1.Name = "materialButton1";
@@ -2304,6 +2073,7 @@ namespace TraXile
             this.materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             this.materialButton1.UseAccentColor = false;
             this.materialButton1.UseVisualStyleBackColor = true;
+            this.materialButton1.Click += new System.EventHandler(this.materialButton1_Click);
             // 
             // textBox8
             // 
@@ -2312,7 +2082,7 @@ namespace TraXile
             this.textBox8.Depth = 0;
             this.textBox8.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             this.textBox8.LeadingIcon = null;
-            this.textBox8.Location = new System.Drawing.Point(13, 10);
+            this.textBox8.Location = new System.Drawing.Point(14, 29);
             this.textBox8.MaxLength = 50;
             this.textBox8.MouseState = MaterialSkin.MouseState.OUT;
             this.textBox8.Multiline = false;
@@ -2332,7 +2102,7 @@ namespace TraXile
             this.buttonStartSearch.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonStartSearch.HighEmphasis = true;
             this.buttonStartSearch.Icon = null;
-            this.buttonStartSearch.Location = new System.Drawing.Point(419, 10);
+            this.buttonStartSearch.Location = new System.Drawing.Point(420, 29);
             this.buttonStartSearch.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.buttonStartSearch.MouseState = MaterialSkin.MouseState.HOVER;
             this.buttonStartSearch.Name = "buttonStartSearch";
@@ -2343,19 +2113,7 @@ namespace TraXile
             this.buttonStartSearch.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             this.buttonStartSearch.UseAccentColor = false;
             this.buttonStartSearch.UseVisualStyleBackColor = true;
-            // 
-            // linkLabelSearchSyntax
-            // 
-            this.linkLabelSearchSyntax.AutoSize = true;
-            this.linkLabelSearchSyntax.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabelSearchSyntax.ForeColor = System.Drawing.Color.Red;
-            this.linkLabelSearchSyntax.LinkColor = System.Drawing.Color.Red;
-            this.linkLabelSearchSyntax.Location = new System.Drawing.Point(511, 52);
-            this.linkLabelSearchSyntax.Name = "linkLabelSearchSyntax";
-            this.linkLabelSearchSyntax.Size = new System.Drawing.Size(74, 13);
-            this.linkLabelSearchSyntax.TabIndex = 6;
-            this.linkLabelSearchSyntax.TabStop = true;
-            this.linkLabelSearchSyntax.Text = "Search syntax";
+            this.buttonStartSearch.Click += new System.EventHandler(this.buttonStartSearch_Click);
             // 
             // materialCard5
             // 
@@ -2364,12 +2122,12 @@ namespace TraXile
             this.materialCard5.Depth = 0;
             this.materialCard5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialCard5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard5.Location = new System.Drawing.Point(14, 194);
+            this.materialCard5.Location = new System.Drawing.Point(14, 207);
             this.materialCard5.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard5.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard5.Name = "materialCard5";
             this.materialCard5.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard5.Size = new System.Drawing.Size(1216, 437);
+            this.materialCard5.Size = new System.Drawing.Size(1411, 653);
             this.materialCard5.TabIndex = 15;
             // 
             // listViewActLog
@@ -2397,7 +2155,7 @@ namespace TraXile
             this.listViewActLog.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewActLog.Name = "listViewActLog";
             this.listViewActLog.OwnerDraw = true;
-            this.listViewActLog.Size = new System.Drawing.Size(1188, 409);
+            this.listViewActLog.Size = new System.Drawing.Size(1383, 625);
             this.listViewActLog.SmallImageList = this.imageList1;
             this.listViewActLog.TabIndex = 14;
             this.listViewActLog.UseCompatibleStateImageBehavior = false;
@@ -2428,6 +2186,9 @@ namespace TraXile
             // materialCard9
             // 
             this.materialCard9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard9.Controls.Add(this.materialLabel50);
+            this.materialCard9.Controls.Add(this.labelItemCount);
+            this.materialCard9.Controls.Add(this.comboBoxShowMaxItems);
             this.materialCard9.Controls.Add(this.materialLabelSummary);
             this.materialCard9.Controls.Add(this.materialLabel2);
             this.materialCard9.Depth = 0;
@@ -2438,18 +2199,77 @@ namespace TraXile
             this.materialCard9.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard9.Name = "materialCard9";
             this.materialCard9.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard9.Size = new System.Drawing.Size(1216, 32);
+            this.materialCard9.Size = new System.Drawing.Size(1411, 45);
             this.materialCard9.TabIndex = 16;
+            // 
+            // materialLabel50
+            // 
+            this.materialLabel50.AutoSize = true;
+            this.materialLabel50.BackColor = System.Drawing.Color.RosyBrown;
+            this.materialLabel50.Depth = 0;
+            this.materialLabel50.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel50.ForeColor = System.Drawing.Color.White;
+            this.materialLabel50.Location = new System.Drawing.Point(390, 14);
+            this.materialLabel50.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel50.Name = "materialLabel50";
+            this.materialLabel50.Size = new System.Drawing.Size(36, 19);
+            this.materialLabel50.TabIndex = 15;
+            this.materialLabel50.Text = "Max:";
+            this.materialLabel50.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // labelItemCount
+            // 
+            this.labelItemCount.AutoSize = true;
+            this.labelItemCount.BackColor = System.Drawing.Color.RosyBrown;
+            this.labelItemCount.Depth = 0;
+            this.labelItemCount.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.labelItemCount.ForeColor = System.Drawing.Color.White;
+            this.labelItemCount.Location = new System.Drawing.Point(636, 14);
+            this.labelItemCount.MouseState = MaterialSkin.MouseState.HOVER;
+            this.labelItemCount.Name = "labelItemCount";
+            this.labelItemCount.Size = new System.Drawing.Size(57, 19);
+            this.labelItemCount.TabIndex = 9;
+            this.labelItemCount.Text = "items: 0";
+            this.labelItemCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // comboBoxShowMaxItems
+            // 
+            this.comboBoxShowMaxItems.AutoResize = false;
+            this.comboBoxShowMaxItems.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.comboBoxShowMaxItems.Depth = 0;
+            this.comboBoxShowMaxItems.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.comboBoxShowMaxItems.DropDownHeight = 118;
+            this.comboBoxShowMaxItems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxShowMaxItems.DropDownWidth = 121;
+            this.comboBoxShowMaxItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.comboBoxShowMaxItems.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.comboBoxShowMaxItems.FormattingEnabled = true;
+            this.comboBoxShowMaxItems.IntegralHeight = false;
+            this.comboBoxShowMaxItems.ItemHeight = 29;
+            this.comboBoxShowMaxItems.Items.AddRange(new object[] {
+            "500",
+            "1000",
+            "1500"});
+            this.comboBoxShowMaxItems.Location = new System.Drawing.Point(450, 6);
+            this.comboBoxShowMaxItems.MaxDropDownItems = 4;
+            this.comboBoxShowMaxItems.MouseState = MaterialSkin.MouseState.OUT;
+            this.comboBoxShowMaxItems.Name = "comboBoxShowMaxItems";
+            this.comboBoxShowMaxItems.Size = new System.Drawing.Size(133, 35);
+            this.comboBoxShowMaxItems.StartIndex = 0;
+            this.comboBoxShowMaxItems.TabIndex = 12;
+            this.comboBoxShowMaxItems.UseTallSize = false;
+            this.comboBoxShowMaxItems.SelectionChangeCommitted += new System.EventHandler(this.comboBox2_SelectionChangeCommitted);
             // 
             // materialLabelSummary
             // 
             this.materialLabelSummary.AutoSize = true;
             this.materialLabelSummary.Depth = 0;
-            this.materialLabelSummary.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabelSummary.Location = new System.Drawing.Point(17, 8);
+            this.materialLabelSummary.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabelSummary.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabelSummary.Location = new System.Drawing.Point(93, 19);
             this.materialLabelSummary.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabelSummary.Name = "materialLabelSummary";
-            this.materialLabelSummary.Size = new System.Drawing.Size(68, 19);
+            this.materialLabelSummary.Size = new System.Drawing.Size(53, 14);
             this.materialLabelSummary.TabIndex = 12;
             this.materialLabelSummary.Text = "summary";
             this.materialLabelSummary.Click += new System.EventHandler(this.materialLabelSummary_Click);
@@ -2458,13 +2278,15 @@ namespace TraXile
             // 
             this.materialLabel2.AutoSize = true;
             this.materialLabel2.Depth = 0;
-            this.materialLabel2.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel2.Location = new System.Drawing.Point(137, 8);
+            this.materialLabel2.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel2.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabel2.Location = new System.Drawing.Point(19, 19);
             this.materialLabel2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel2.Name = "materialLabel2";
-            this.materialLabel2.Size = new System.Drawing.Size(43, 19);
+            this.materialLabel2.Size = new System.Drawing.Size(33, 14);
             this.materialLabel2.TabIndex = 13;
             this.materialLabel2.Text = "delete";
+            this.materialLabel2.Click += new System.EventHandler(this.materialLabel2_Click);
             // 
             // tabPage10
             // 
@@ -2473,7 +2295,7 @@ namespace TraXile
             this.tabPage10.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage10.Name = "tabPage10";
             this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage10.Size = new System.Drawing.Size(2170, 750);
+            this.tabPage10.Size = new System.Drawing.Size(2170, 880);
             this.tabPage10.TabIndex = 1;
             this.tabPage10.Text = "Statistics";
             this.tabPage10.UseVisualStyleBackColor = true;
@@ -2491,7 +2313,7 @@ namespace TraXile
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(2164, 744);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(2164, 874);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // materialTabControl3
@@ -2510,7 +2332,7 @@ namespace TraXile
             this.materialTabControl3.Multiline = true;
             this.materialTabControl3.Name = "materialTabControl3";
             this.materialTabControl3.SelectedIndex = 0;
-            this.materialTabControl3.Size = new System.Drawing.Size(2164, 716);
+            this.materialTabControl3.Size = new System.Drawing.Size(2164, 846);
             this.materialTabControl3.TabIndex = 0;
             // 
             // tabPage2
@@ -2520,7 +2342,7 @@ namespace TraXile
             this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(2156, 690);
+            this.tabPage2.Size = new System.Drawing.Size(2156, 820);
             this.tabPage2.TabIndex = 0;
             this.tabPage2.Text = "Overview";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -2536,10 +2358,10 @@ namespace TraXile
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(2150, 684);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(2150, 814);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // materialLabel10
@@ -2547,13 +2369,15 @@ namespace TraXile
             this.materialLabel10.AutoSize = true;
             this.materialLabel10.Depth = 0;
             this.materialLabel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.materialLabel10.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel10.Font = new System.Drawing.Font("Roboto", 34F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel10.FontType = MaterialSkin.MaterialSkinManager.fontType.H4;
             this.materialLabel10.Location = new System.Drawing.Point(3, 0);
             this.materialLabel10.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel10.Name = "materialLabel10";
-            this.materialLabel10.Size = new System.Drawing.Size(2144, 20);
+            this.materialLabel10.Size = new System.Drawing.Size(2144, 37);
             this.materialLabel10.TabIndex = 0;
             this.materialLabel10.Text = "Overview";
+            this.materialLabel10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tabPage14
             // 
@@ -2561,7 +2385,7 @@ namespace TraXile
             this.tabPage14.Location = new System.Drawing.Point(4, 22);
             this.tabPage14.Name = "tabPage14";
             this.tabPage14.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage14.Size = new System.Drawing.Size(2156, 690);
+            this.tabPage14.Size = new System.Drawing.Size(2156, 820);
             this.tabPage14.TabIndex = 1;
             this.tabPage14.Text = "General Stats";
             this.tabPage14.UseVisualStyleBackColor = true;
@@ -2583,7 +2407,7 @@ namespace TraXile
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 172F));
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 91F));
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
-            this.tableLayoutPanel24.Size = new System.Drawing.Size(2150, 684);
+            this.tableLayoutPanel24.Size = new System.Drawing.Size(2150, 814);
             this.tableLayoutPanel24.TabIndex = 0;
             // 
             // label100
@@ -2619,19 +2443,19 @@ namespace TraXile
             // chart1
             // 
             this.chart1.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.HorizontalCenter;
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
+            chartArea18.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea18);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            legend18.Name = "Legend1";
+            this.chart1.Legends.Add(legend18);
             this.chart1.Location = new System.Drawing.Point(14, 14);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series2.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chart1.Series.Add(series2);
+            series18.ChartArea = "ChartArea1";
+            series18.Legend = "Legend1";
+            series18.Name = "Series1";
+            series18.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series18.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chart1.Series.Add(series18);
             this.chart1.Size = new System.Drawing.Size(2094, 116);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
@@ -2697,7 +2521,7 @@ namespace TraXile
             this.materialLabel11.AutoSize = true;
             this.materialLabel11.Depth = 0;
             this.materialLabel11.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel11.Location = new System.Drawing.Point(22, 14);
+            this.materialLabel11.Location = new System.Drawing.Point(17, 22);
             this.materialLabel11.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel11.Name = "materialLabel11";
             this.materialLabel11.Size = new System.Drawing.Size(54, 19);
@@ -2716,7 +2540,7 @@ namespace TraXile
             this.materialCard13.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard13.Name = "materialCard13";
             this.materialCard13.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard13.Size = new System.Drawing.Size(2122, 333);
+            this.materialCard13.Size = new System.Drawing.Size(2122, 463);
             this.materialCard13.TabIndex = 6;
             // 
             // listViewNF1
@@ -2729,6 +2553,7 @@ namespace TraXile
             this.columnHeader24});
             this.listViewNF1.Depth = 0;
             this.listViewNF1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewNF1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewNF1.FullRowSelect = true;
             this.listViewNF1.HideSelection = false;
             this.listViewNF1.Location = new System.Drawing.Point(14, 14);
@@ -2737,7 +2562,7 @@ namespace TraXile
             this.listViewNF1.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewNF1.Name = "listViewNF1";
             this.listViewNF1.OwnerDraw = true;
-            this.listViewNF1.Size = new System.Drawing.Size(2094, 305);
+            this.listViewNF1.Size = new System.Drawing.Size(2094, 435);
             this.listViewNF1.TabIndex = 1;
             this.listViewNF1.UseCompatibleStateImageBehavior = false;
             this.listViewNF1.View = System.Windows.Forms.View.Details;
@@ -2761,7 +2586,7 @@ namespace TraXile
             this.tabPage15.Location = new System.Drawing.Point(4, 22);
             this.tabPage15.Name = "tabPage15";
             this.tabPage15.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage15.Size = new System.Drawing.Size(2156, 690);
+            this.tabPage15.Size = new System.Drawing.Size(2156, 820);
             this.tabPage15.TabIndex = 2;
             this.tabPage15.Text = "Mapping";
             this.tabPage15.UseVisualStyleBackColor = true;
@@ -2776,9 +2601,9 @@ namespace TraXile
             this.tableLayoutPanel25.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel25.Name = "tableLayoutPanel25";
             this.tableLayoutPanel25.RowCount = 2;
-            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 83F));
             this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel25.Size = new System.Drawing.Size(2150, 684);
+            this.tableLayoutPanel25.Size = new System.Drawing.Size(2150, 814);
             this.tableLayoutPanel25.TabIndex = 0;
             // 
             // materialCard14
@@ -2796,7 +2621,7 @@ namespace TraXile
             this.materialCard14.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard14.Name = "materialCard14";
             this.materialCard14.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard14.Size = new System.Drawing.Size(2122, 32);
+            this.materialCard14.Size = new System.Drawing.Size(2122, 55);
             this.materialCard14.TabIndex = 0;
             // 
             // materialLabel13
@@ -2804,7 +2629,7 @@ namespace TraXile
             this.materialLabel13.AutoSize = true;
             this.materialLabel13.Depth = 0;
             this.materialLabel13.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel13.Location = new System.Drawing.Point(237, 8);
+            this.materialLabel13.Location = new System.Drawing.Point(239, 14);
             this.materialLabel13.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel13.Name = "materialLabel13";
             this.materialLabel13.Size = new System.Drawing.Size(32, 19);
@@ -2816,7 +2641,7 @@ namespace TraXile
             this.materialLabel12.AutoSize = true;
             this.materialLabel12.Depth = 0;
             this.materialLabel12.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel12.Location = new System.Drawing.Point(12, 8);
+            this.materialLabel12.Location = new System.Drawing.Point(11, 14);
             this.materialLabel12.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel12.Name = "materialLabel12";
             this.materialLabel12.Size = new System.Drawing.Size(37, 19);
@@ -2831,12 +2656,12 @@ namespace TraXile
             this.tableLayoutPanel27.Controls.Add(this.tableLayoutPanel28, 0, 0);
             this.tableLayoutPanel27.Controls.Add(this.tableLayoutPanel29, 1, 0);
             this.tableLayoutPanel27.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel27.Location = new System.Drawing.Point(0, 60);
+            this.tableLayoutPanel27.Location = new System.Drawing.Point(0, 83);
             this.tableLayoutPanel27.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel27.Name = "tableLayoutPanel27";
             this.tableLayoutPanel27.RowCount = 1;
             this.tableLayoutPanel27.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel27.Size = new System.Drawing.Size(2150, 624);
+            this.tableLayoutPanel27.Size = new System.Drawing.Size(2150, 731);
             this.tableLayoutPanel27.TabIndex = 1;
             // 
             // tableLayoutPanel28
@@ -2855,7 +2680,7 @@ namespace TraXile
             this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            this.tableLayoutPanel28.Size = new System.Drawing.Size(1069, 618);
+            this.tableLayoutPanel28.Size = new System.Drawing.Size(1069, 725);
             this.tableLayoutPanel28.TabIndex = 0;
             // 
             // materialLabel15
@@ -2904,23 +2729,23 @@ namespace TraXile
             // chartMapTierCount
             // 
             this.chartMapTierCount.BackColor = System.Drawing.Color.Black;
-            chartArea3.BackColor = System.Drawing.Color.Black;
-            chartArea3.Name = "ChartArea1";
-            this.chartMapTierCount.ChartAreas.Add(chartArea3);
+            chartArea19.BackColor = System.Drawing.Color.Black;
+            chartArea19.Name = "ChartArea1";
+            this.chartMapTierCount.ChartAreas.Add(chartArea19);
             this.chartMapTierCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.chartMapTierCount.Legends.Add(legend3);
+            legend19.Name = "Legend1";
+            this.chartMapTierCount.Legends.Add(legend19);
             this.chartMapTierCount.Location = new System.Drawing.Point(14, 14);
             this.chartMapTierCount.Name = "chartMapTierCount";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chartMapTierCount.Series.Add(series3);
+            series19.ChartArea = "ChartArea1";
+            series19.Legend = "Legend1";
+            series19.Name = "Series1";
+            this.chartMapTierCount.Series.Add(series19);
             this.chartMapTierCount.Size = new System.Drawing.Size(1013, 184);
             this.chartMapTierCount.TabIndex = 1;
             this.chartMapTierCount.Text = "chart2";
-            title1.Name = "Map Tiers";
-            this.chartMapTierCount.Titles.Add(title1);
+            title7.Name = "Map Tiers";
+            this.chartMapTierCount.Titles.Add(title7);
             // 
             // materialCard16
             // 
@@ -2934,7 +2759,7 @@ namespace TraXile
             this.materialCard16.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard16.Name = "materialCard16";
             this.materialCard16.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard16.Size = new System.Drawing.Size(1041, 280);
+            this.materialCard16.Size = new System.Drawing.Size(1041, 387);
             this.materialCard16.TabIndex = 3;
             // 
             // listViewMapsByArea
@@ -2947,7 +2772,7 @@ namespace TraXile
             this.columnHeader9});
             this.listViewMapsByArea.Depth = 0;
             this.listViewMapsByArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewMapsByArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewMapsByArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewMapsByArea.ForeColor = System.Drawing.Color.White;
             this.listViewMapsByArea.FullRowSelect = true;
             this.listViewMapsByArea.HideSelection = false;
@@ -2957,7 +2782,7 @@ namespace TraXile
             this.listViewMapsByArea.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewMapsByArea.Name = "listViewMapsByArea";
             this.listViewMapsByArea.OwnerDraw = true;
-            this.listViewMapsByArea.Size = new System.Drawing.Size(1013, 252);
+            this.listViewMapsByArea.Size = new System.Drawing.Size(1013, 359);
             this.listViewMapsByArea.TabIndex = 0;
             this.listViewMapsByArea.UseCompatibleStateImageBehavior = false;
             this.listViewMapsByArea.View = System.Windows.Forms.View.Details;
@@ -2990,7 +2815,7 @@ namespace TraXile
             this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 237F));
-            this.tableLayoutPanel29.Size = new System.Drawing.Size(1075, 624);
+            this.tableLayoutPanel29.Size = new System.Drawing.Size(1075, 731);
             this.tableLayoutPanel29.TabIndex = 1;
             // 
             // materialLabel17
@@ -3039,23 +2864,23 @@ namespace TraXile
             // chartMapTierAvgTime
             // 
             this.chartMapTierAvgTime.BackColor = System.Drawing.Color.Black;
-            chartArea4.BackColor = System.Drawing.Color.Black;
-            chartArea4.Name = "ChartArea1";
-            this.chartMapTierAvgTime.ChartAreas.Add(chartArea4);
+            chartArea20.BackColor = System.Drawing.Color.Black;
+            chartArea20.Name = "ChartArea1";
+            this.chartMapTierAvgTime.ChartAreas.Add(chartArea20);
             this.chartMapTierAvgTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend4.Name = "Legend1";
-            this.chartMapTierAvgTime.Legends.Add(legend4);
+            legend20.Name = "Legend1";
+            this.chartMapTierAvgTime.Legends.Add(legend20);
             this.chartMapTierAvgTime.Location = new System.Drawing.Point(14, 14);
             this.chartMapTierAvgTime.Name = "chartMapTierAvgTime";
-            series4.ChartArea = "ChartArea1";
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            this.chartMapTierAvgTime.Series.Add(series4);
+            series20.ChartArea = "ChartArea1";
+            series20.Legend = "Legend1";
+            series20.Name = "Series1";
+            this.chartMapTierAvgTime.Series.Add(series20);
             this.chartMapTierAvgTime.Size = new System.Drawing.Size(1019, 184);
             this.chartMapTierAvgTime.TabIndex = 1;
             this.chartMapTierAvgTime.Text = "chart3";
-            title2.Name = "Map Tiers";
-            this.chartMapTierAvgTime.Titles.Add(title2);
+            title8.Name = "Map Tiers";
+            this.chartMapTierAvgTime.Titles.Add(title8);
             // 
             // materialCard18
             // 
@@ -3069,7 +2894,7 @@ namespace TraXile
             this.materialCard18.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard18.Name = "materialCard18";
             this.materialCard18.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard18.Size = new System.Drawing.Size(1047, 283);
+            this.materialCard18.Size = new System.Drawing.Size(1047, 390);
             this.materialCard18.TabIndex = 4;
             // 
             // listViewTaggingOverview
@@ -3082,7 +2907,7 @@ namespace TraXile
             this.columnHeader11});
             this.listViewTaggingOverview.Depth = 0;
             this.listViewTaggingOverview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewTaggingOverview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewTaggingOverview.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewTaggingOverview.ForeColor = System.Drawing.Color.White;
             this.listViewTaggingOverview.FullRowSelect = true;
             this.listViewTaggingOverview.HideSelection = false;
@@ -3092,7 +2917,7 @@ namespace TraXile
             this.listViewTaggingOverview.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewTaggingOverview.Name = "listViewTaggingOverview";
             this.listViewTaggingOverview.OwnerDraw = true;
-            this.listViewTaggingOverview.Size = new System.Drawing.Size(1019, 255);
+            this.listViewTaggingOverview.Size = new System.Drawing.Size(1019, 362);
             this.listViewTaggingOverview.TabIndex = 0;
             this.listViewTaggingOverview.UseCompatibleStateImageBehavior = false;
             this.listViewTaggingOverview.View = System.Windows.Forms.View.Details;
@@ -3113,7 +2938,7 @@ namespace TraXile
             this.tabPage16.Location = new System.Drawing.Point(4, 22);
             this.tabPage16.Name = "tabPage16";
             this.tabPage16.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage16.Size = new System.Drawing.Size(2156, 690);
+            this.tabPage16.Size = new System.Drawing.Size(2156, 820);
             this.tabPage16.TabIndex = 3;
             this.tabPage16.Text = "Lab";
             this.tabPage16.UseVisualStyleBackColor = true;
@@ -3128,8 +2953,8 @@ namespace TraXile
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
             this.tableLayoutPanel10.RowCount = 1;
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 684F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(2150, 684);
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 814F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(2150, 814);
             this.tableLayoutPanel10.TabIndex = 1;
             // 
             // tableLayoutPanel11
@@ -3145,7 +2970,7 @@ namespace TraXile
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 1;
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(2150, 684);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(2150, 814);
             this.tableLayoutPanel11.TabIndex = 1;
             // 
             // tableLayoutPanel12
@@ -3164,7 +2989,7 @@ namespace TraXile
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(1069, 678);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(1069, 808);
             this.tableLayoutPanel12.TabIndex = 0;
             // 
             // materialLabel20
@@ -3213,23 +3038,23 @@ namespace TraXile
             // chartLabsDone
             // 
             this.chartLabsDone.BackColor = System.Drawing.Color.Black;
-            chartArea5.BackColor = System.Drawing.Color.Black;
-            chartArea5.Name = "ChartArea1";
-            this.chartLabsDone.ChartAreas.Add(chartArea5);
+            chartArea21.BackColor = System.Drawing.Color.Black;
+            chartArea21.Name = "ChartArea1";
+            this.chartLabsDone.ChartAreas.Add(chartArea21);
             this.chartLabsDone.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend5.Name = "Legend1";
-            this.chartLabsDone.Legends.Add(legend5);
+            legend21.Name = "Legend1";
+            this.chartLabsDone.Legends.Add(legend21);
             this.chartLabsDone.Location = new System.Drawing.Point(14, 14);
             this.chartLabsDone.Name = "chartLabsDone";
-            series5.ChartArea = "ChartArea1";
-            series5.Legend = "Legend1";
-            series5.Name = "Series1";
-            this.chartLabsDone.Series.Add(series5);
+            series21.ChartArea = "ChartArea1";
+            series21.Legend = "Legend1";
+            series21.Name = "Series1";
+            this.chartLabsDone.Series.Add(series21);
             this.chartLabsDone.Size = new System.Drawing.Size(1013, 184);
             this.chartLabsDone.TabIndex = 2;
             this.chartLabsDone.Text = "chart4";
-            title3.Name = "Map Tiers";
-            this.chartLabsDone.Titles.Add(title3);
+            title9.Name = "Map Tiers";
+            this.chartLabsDone.Titles.Add(title9);
             // 
             // materialCard21
             // 
@@ -3243,7 +3068,7 @@ namespace TraXile
             this.materialCard21.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard21.Name = "materialCard21";
             this.materialCard21.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard21.Size = new System.Drawing.Size(1041, 340);
+            this.materialCard21.Size = new System.Drawing.Size(1041, 470);
             this.materialCard21.TabIndex = 3;
             // 
             // listViewBestLabs
@@ -3257,7 +3082,7 @@ namespace TraXile
             this.columnHeader14});
             this.listViewBestLabs.Depth = 0;
             this.listViewBestLabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewBestLabs.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewBestLabs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listViewBestLabs.ForeColor = System.Drawing.Color.White;
             this.listViewBestLabs.FullRowSelect = true;
             this.listViewBestLabs.HideSelection = false;
@@ -3267,7 +3092,7 @@ namespace TraXile
             this.listViewBestLabs.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewBestLabs.Name = "listViewBestLabs";
             this.listViewBestLabs.OwnerDraw = true;
-            this.listViewBestLabs.Size = new System.Drawing.Size(1013, 312);
+            this.listViewBestLabs.Size = new System.Drawing.Size(1013, 442);
             this.listViewBestLabs.TabIndex = 4;
             this.listViewBestLabs.UseCompatibleStateImageBehavior = false;
             this.listViewBestLabs.View = System.Windows.Forms.View.Details;
@@ -3305,7 +3130,7 @@ namespace TraXile
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 237F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(1075, 684);
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(1075, 814);
             this.tableLayoutPanel13.TabIndex = 1;
             // 
             // materialLabel22
@@ -3354,25 +3179,25 @@ namespace TraXile
             // chartLabsAvgTime
             // 
             this.chartLabsAvgTime.BackColor = System.Drawing.Color.Black;
-            chartArea6.BackColor = System.Drawing.Color.Black;
-            chartArea6.Name = "ChartArea1";
-            this.chartLabsAvgTime.ChartAreas.Add(chartArea6);
+            chartArea22.BackColor = System.Drawing.Color.Black;
+            chartArea22.Name = "ChartArea1";
+            this.chartLabsAvgTime.ChartAreas.Add(chartArea22);
             this.chartLabsAvgTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend6.Name = "Legend1";
-            this.chartLabsAvgTime.Legends.Add(legend6);
+            legend22.Name = "Legend1";
+            this.chartLabsAvgTime.Legends.Add(legend22);
             this.chartLabsAvgTime.Location = new System.Drawing.Point(14, 14);
             this.chartLabsAvgTime.Name = "chartLabsAvgTime";
-            series6.ChartArea = "ChartArea1";
-            series6.IsValueShownAsLabel = true;
-            series6.Legend = "Legend1";
-            series6.Name = "Series1";
-            series6.SmartLabelStyle.AllowOutsidePlotArea = System.Windows.Forms.DataVisualization.Charting.LabelOutsidePlotAreaStyle.Yes;
-            this.chartLabsAvgTime.Series.Add(series6);
+            series22.ChartArea = "ChartArea1";
+            series22.IsValueShownAsLabel = true;
+            series22.Legend = "Legend1";
+            series22.Name = "Series1";
+            series22.SmartLabelStyle.AllowOutsidePlotArea = System.Windows.Forms.DataVisualization.Charting.LabelOutsidePlotAreaStyle.Yes;
+            this.chartLabsAvgTime.Series.Add(series22);
             this.chartLabsAvgTime.Size = new System.Drawing.Size(1019, 184);
             this.chartLabsAvgTime.TabIndex = 2;
             this.chartLabsAvgTime.Text = "chart5";
-            title4.Name = "Map Tiers";
-            this.chartLabsAvgTime.Titles.Add(title4);
+            title10.Name = "Map Tiers";
+            this.chartLabsAvgTime.Titles.Add(title10);
             // 
             // materialCard23
             // 
@@ -3386,7 +3211,7 @@ namespace TraXile
             this.materialCard23.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard23.Name = "materialCard23";
             this.materialCard23.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard23.Size = new System.Drawing.Size(1047, 343);
+            this.materialCard23.Size = new System.Drawing.Size(1047, 473);
             this.materialCard23.TabIndex = 4;
             // 
             // checkBoxLabHideUnknown
@@ -3414,7 +3239,7 @@ namespace TraXile
             this.tabPage17.Location = new System.Drawing.Point(4, 22);
             this.tabPage17.Name = "tabPage17";
             this.tabPage17.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage17.Size = new System.Drawing.Size(2156, 690);
+            this.tabPage17.Size = new System.Drawing.Size(2156, 820);
             this.tabPage17.TabIndex = 4;
             this.tabPage17.Text = "Heist";
             this.tabPage17.UseVisualStyleBackColor = true;
@@ -3429,8 +3254,8 @@ namespace TraXile
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
             this.tableLayoutPanel14.RowCount = 1;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 684F));
-            this.tableLayoutPanel14.Size = new System.Drawing.Size(2150, 684);
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 814F));
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(2150, 814);
             this.tableLayoutPanel14.TabIndex = 1;
             // 
             // tableLayoutPanel15
@@ -3446,7 +3271,7 @@ namespace TraXile
             this.tableLayoutPanel15.Name = "tableLayoutPanel15";
             this.tableLayoutPanel15.RowCount = 1;
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel15.Size = new System.Drawing.Size(2150, 684);
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(2150, 814);
             this.tableLayoutPanel15.TabIndex = 1;
             // 
             // tableLayoutPanel16
@@ -3465,7 +3290,7 @@ namespace TraXile
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(1069, 678);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(1069, 808);
             this.tableLayoutPanel16.TabIndex = 0;
             // 
             // materialLabel24
@@ -3493,7 +3318,7 @@ namespace TraXile
             this.materialLabel25.Name = "materialLabel25";
             this.materialLabel25.Size = new System.Drawing.Size(1063, 35);
             this.materialLabel25.TabIndex = 0;
-            this.materialLabel25.Text = "Heits done per level";
+            this.materialLabel25.Text = "Heists done per level";
             this.materialLabel25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // materialCard24
@@ -3514,23 +3339,23 @@ namespace TraXile
             // chartHeistByLevel
             // 
             this.chartHeistByLevel.BackColor = System.Drawing.Color.Black;
-            chartArea7.BackColor = System.Drawing.Color.Black;
-            chartArea7.Name = "ChartArea1";
-            this.chartHeistByLevel.ChartAreas.Add(chartArea7);
+            chartArea23.BackColor = System.Drawing.Color.Black;
+            chartArea23.Name = "ChartArea1";
+            this.chartHeistByLevel.ChartAreas.Add(chartArea23);
             this.chartHeistByLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend7.Name = "Legend1";
-            this.chartHeistByLevel.Legends.Add(legend7);
+            legend23.Name = "Legend1";
+            this.chartHeistByLevel.Legends.Add(legend23);
             this.chartHeistByLevel.Location = new System.Drawing.Point(14, 14);
             this.chartHeistByLevel.Name = "chartHeistByLevel";
-            series7.ChartArea = "ChartArea1";
-            series7.Legend = "Legend1";
-            series7.Name = "Series1";
-            this.chartHeistByLevel.Series.Add(series7);
+            series23.ChartArea = "ChartArea1";
+            series23.Legend = "Legend1";
+            series23.Name = "Series1";
+            this.chartHeistByLevel.Series.Add(series23);
             this.chartHeistByLevel.Size = new System.Drawing.Size(1013, 184);
             this.chartHeistByLevel.TabIndex = 2;
             this.chartHeistByLevel.Text = "chart6";
-            title5.Name = "Map Tiers";
-            this.chartHeistByLevel.Titles.Add(title5);
+            title11.Name = "Map Tiers";
+            this.chartHeistByLevel.Titles.Add(title11);
             // 
             // materialCard25
             // 
@@ -3544,7 +3369,7 @@ namespace TraXile
             this.materialCard25.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard25.Name = "materialCard25";
             this.materialCard25.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard25.Size = new System.Drawing.Size(1041, 340);
+            this.materialCard25.Size = new System.Drawing.Size(1041, 470);
             this.materialCard25.TabIndex = 3;
             // 
             // listView4
@@ -3557,7 +3382,7 @@ namespace TraXile
             this.columnHeader16});
             this.listView4.Depth = 0;
             this.listView4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listView4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listView4.ForeColor = System.Drawing.Color.White;
             this.listView4.FullRowSelect = true;
             this.listView4.HideSelection = false;
@@ -3567,7 +3392,7 @@ namespace TraXile
             this.listView4.MouseState = MaterialSkin.MouseState.OUT;
             this.listView4.Name = "listView4";
             this.listView4.OwnerDraw = true;
-            this.listView4.Size = new System.Drawing.Size(1013, 312);
+            this.listView4.Size = new System.Drawing.Size(1013, 442);
             this.listView4.TabIndex = 1;
             this.listView4.UseCompatibleStateImageBehavior = false;
             this.listView4.View = System.Windows.Forms.View.Details;
@@ -3600,7 +3425,7 @@ namespace TraXile
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 237F));
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(1075, 684);
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(1075, 814);
             this.tableLayoutPanel17.TabIndex = 1;
             // 
             // materialLabel26
@@ -3629,7 +3454,7 @@ namespace TraXile
             this.materialLabel27.Size = new System.Drawing.Size(1069, 38);
             this.materialLabel27.TabIndex = 1;
             this.materialLabel27.Text = "Avg. time per heist/level (minutes)";
-            this.materialLabel27.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.materialLabel27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // materialCard26
             // 
@@ -3649,23 +3474,23 @@ namespace TraXile
             // chartHeistAvgTime
             // 
             this.chartHeistAvgTime.BackColor = System.Drawing.Color.Black;
-            chartArea8.BackColor = System.Drawing.Color.Black;
-            chartArea8.Name = "ChartArea1";
-            this.chartHeistAvgTime.ChartAreas.Add(chartArea8);
+            chartArea24.BackColor = System.Drawing.Color.Black;
+            chartArea24.Name = "ChartArea1";
+            this.chartHeistAvgTime.ChartAreas.Add(chartArea24);
             this.chartHeistAvgTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend8.Name = "Legend1";
-            this.chartHeistAvgTime.Legends.Add(legend8);
+            legend24.Name = "Legend1";
+            this.chartHeistAvgTime.Legends.Add(legend24);
             this.chartHeistAvgTime.Location = new System.Drawing.Point(14, 14);
             this.chartHeistAvgTime.Name = "chartHeistAvgTime";
-            series8.ChartArea = "ChartArea1";
-            series8.Legend = "Legend1";
-            series8.Name = "Series1";
-            this.chartHeistAvgTime.Series.Add(series8);
+            series24.ChartArea = "ChartArea1";
+            series24.Legend = "Legend1";
+            series24.Name = "Series1";
+            this.chartHeistAvgTime.Series.Add(series24);
             this.chartHeistAvgTime.Size = new System.Drawing.Size(1019, 184);
             this.chartHeistAvgTime.TabIndex = 2;
             this.chartHeistAvgTime.Text = "chart7";
-            title6.Name = "Map Tiers";
-            this.chartHeistAvgTime.Titles.Add(title6);
+            title12.Name = "Map Tiers";
+            this.chartHeistAvgTime.Titles.Add(title12);
             // 
             // materialCard27
             // 
@@ -3679,7 +3504,7 @@ namespace TraXile
             this.materialCard27.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard27.Name = "materialCard27";
             this.materialCard27.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard27.Size = new System.Drawing.Size(1047, 343);
+            this.materialCard27.Size = new System.Drawing.Size(1047, 473);
             this.materialCard27.TabIndex = 4;
             // 
             // listView5
@@ -3692,7 +3517,7 @@ namespace TraXile
             this.columnHeader18});
             this.listView5.Depth = 0;
             this.listView5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listView5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listView5.ForeColor = System.Drawing.Color.White;
             this.listView5.FullRowSelect = true;
             this.listView5.HideSelection = false;
@@ -3702,7 +3527,7 @@ namespace TraXile
             this.listView5.MouseState = MaterialSkin.MouseState.OUT;
             this.listView5.Name = "listView5";
             this.listView5.OwnerDraw = true;
-            this.listView5.Size = new System.Drawing.Size(1019, 315);
+            this.listView5.Size = new System.Drawing.Size(1019, 445);
             this.listView5.TabIndex = 1;
             this.listView5.UseCompatibleStateImageBehavior = false;
             this.listView5.View = System.Windows.Forms.View.Details;
@@ -3724,7 +3549,7 @@ namespace TraXile
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(2156, 690);
+            this.tabPage1.Size = new System.Drawing.Size(2156, 820);
             this.tabPage1.TabIndex = 5;
             this.tabPage1.Text = "League Stats";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -3758,22 +3583,22 @@ namespace TraXile
             this.tableLayoutPanel8.RowCount = 17;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 81F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 109F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(2150, 684);
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(2150, 814);
             this.tableLayoutPanel8.TabIndex = 0;
             // 
             // materialCard35
@@ -3783,30 +3608,30 @@ namespace TraXile
             this.materialCard35.Depth = 0;
             this.materialCard35.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialCard35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard35.Location = new System.Drawing.Point(14, 1198);
+            this.materialCard35.Location = new System.Drawing.Point(14, 1839);
             this.materialCard35.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard35.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard35.Name = "materialCard35";
             this.materialCard35.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard35.Size = new System.Drawing.Size(2122, 92);
+            this.materialCard35.Size = new System.Drawing.Size(2122, 182);
             this.materialCard35.TabIndex = 22;
             // 
             // chartLeagueCampaign
             // 
-            chartArea9.Name = "ChartArea1";
-            this.chartLeagueCampaign.ChartAreas.Add(chartArea9);
+            chartArea25.Name = "ChartArea1";
+            this.chartLeagueCampaign.ChartAreas.Add(chartArea25);
             this.chartLeagueCampaign.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend9.Name = "Legend1";
-            this.chartLeagueCampaign.Legends.Add(legend9);
+            legend25.Name = "Legend1";
+            this.chartLeagueCampaign.Legends.Add(legend25);
             this.chartLeagueCampaign.Location = new System.Drawing.Point(14, 14);
             this.chartLeagueCampaign.Name = "chartLeagueCampaign";
-            series9.ChartArea = "ChartArea1";
-            series9.Legend = "Legend1";
-            series9.Name = "Series1";
-            series9.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series9.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chartLeagueCampaign.Series.Add(series9);
-            this.chartLeagueCampaign.Size = new System.Drawing.Size(2094, 64);
+            series25.ChartArea = "ChartArea1";
+            series25.Legend = "Legend1";
+            series25.Name = "Series1";
+            series25.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series25.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chartLeagueCampaign.Series.Add(series25);
+            this.chartLeagueCampaign.Size = new System.Drawing.Size(2094, 154);
             this.chartLeagueCampaign.TabIndex = 17;
             this.chartLeagueCampaign.Text = "chart";
             // 
@@ -3816,7 +3641,7 @@ namespace TraXile
             this.materialLabel34.Depth = 0;
             this.materialLabel34.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialLabel34.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel34.Location = new System.Drawing.Point(3, 1149);
+            this.materialLabel34.Location = new System.Drawing.Point(3, 1790);
             this.materialLabel34.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel34.Name = "materialLabel34";
             this.materialLabel34.Size = new System.Drawing.Size(2144, 35);
@@ -3829,7 +3654,7 @@ namespace TraXile
             this.materialLabel33.Depth = 0;
             this.materialLabel33.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialLabel33.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel33.Location = new System.Drawing.Point(3, 994);
+            this.materialLabel33.Location = new System.Drawing.Point(3, 1545);
             this.materialLabel33.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel33.Name = "materialLabel33";
             this.materialLabel33.Size = new System.Drawing.Size(2144, 35);
@@ -3843,30 +3668,30 @@ namespace TraXile
             this.materialCard33.Depth = 0;
             this.materialCard33.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialCard33.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard33.Location = new System.Drawing.Point(14, 888);
+            this.materialCard33.Location = new System.Drawing.Point(14, 1349);
             this.materialCard33.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard33.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard33.Name = "materialCard33";
             this.materialCard33.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard33.Size = new System.Drawing.Size(2122, 92);
+            this.materialCard33.Size = new System.Drawing.Size(2122, 182);
             this.materialCard33.TabIndex = 18;
             // 
             // chartLeagueAvgMapT16
             // 
-            chartArea10.Name = "ChartArea1";
-            this.chartLeagueAvgMapT16.ChartAreas.Add(chartArea10);
+            chartArea26.Name = "ChartArea1";
+            this.chartLeagueAvgMapT16.ChartAreas.Add(chartArea26);
             this.chartLeagueAvgMapT16.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend10.Name = "Legend1";
-            this.chartLeagueAvgMapT16.Legends.Add(legend10);
+            legend26.Name = "Legend1";
+            this.chartLeagueAvgMapT16.Legends.Add(legend26);
             this.chartLeagueAvgMapT16.Location = new System.Drawing.Point(14, 14);
             this.chartLeagueAvgMapT16.Name = "chartLeagueAvgMapT16";
-            series10.ChartArea = "ChartArea1";
-            series10.Legend = "Legend1";
-            series10.Name = "Series1";
-            series10.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series10.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chartLeagueAvgMapT16.Series.Add(series10);
-            this.chartLeagueAvgMapT16.Size = new System.Drawing.Size(2094, 64);
+            series26.ChartArea = "ChartArea1";
+            series26.Legend = "Legend1";
+            series26.Name = "Series1";
+            series26.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series26.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chartLeagueAvgMapT16.Series.Add(series26);
+            this.chartLeagueAvgMapT16.Size = new System.Drawing.Size(2094, 154);
             this.chartLeagueAvgMapT16.TabIndex = 13;
             this.chartLeagueAvgMapT16.Text = "chart";
             // 
@@ -3877,30 +3702,30 @@ namespace TraXile
             this.materialCard32.Depth = 0;
             this.materialCard32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialCard32.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard32.Location = new System.Drawing.Point(14, 733);
+            this.materialCard32.Location = new System.Drawing.Point(14, 1104);
             this.materialCard32.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard32.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard32.Name = "materialCard32";
             this.materialCard32.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard32.Size = new System.Drawing.Size(2122, 92);
+            this.materialCard32.Size = new System.Drawing.Size(2122, 182);
             this.materialCard32.TabIndex = 17;
             // 
             // chartLeagueAvgMap
             // 
-            chartArea11.Name = "ChartArea1";
-            this.chartLeagueAvgMap.ChartAreas.Add(chartArea11);
+            chartArea27.Name = "ChartArea1";
+            this.chartLeagueAvgMap.ChartAreas.Add(chartArea27);
             this.chartLeagueAvgMap.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend11.Name = "Legend1";
-            this.chartLeagueAvgMap.Legends.Add(legend11);
+            legend27.Name = "Legend1";
+            this.chartLeagueAvgMap.Legends.Add(legend27);
             this.chartLeagueAvgMap.Location = new System.Drawing.Point(14, 14);
             this.chartLeagueAvgMap.Name = "chartLeagueAvgMap";
-            series11.ChartArea = "ChartArea1";
-            series11.Legend = "Legend1";
-            series11.Name = "Series1";
-            series11.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series11.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chartLeagueAvgMap.Series.Add(series11);
-            this.chartLeagueAvgMap.Size = new System.Drawing.Size(2094, 64);
+            series27.ChartArea = "ChartArea1";
+            series27.Legend = "Legend1";
+            series27.Name = "Series1";
+            series27.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series27.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chartLeagueAvgMap.Series.Add(series27);
+            this.chartLeagueAvgMap.Size = new System.Drawing.Size(2094, 154);
             this.chartLeagueAvgMap.TabIndex = 11;
             this.chartLeagueAvgMap.Text = "chart";
             // 
@@ -3910,7 +3735,7 @@ namespace TraXile
             this.materialLabel30.Depth = 0;
             this.materialLabel30.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialLabel30.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel30.Location = new System.Drawing.Point(3, 529);
+            this.materialLabel30.Location = new System.Drawing.Point(3, 810);
             this.materialLabel30.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel30.Name = "materialLabel30";
             this.materialLabel30.Size = new System.Drawing.Size(2144, 35);
@@ -3923,7 +3748,7 @@ namespace TraXile
             this.materialLabel29.Depth = 0;
             this.materialLabel29.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialLabel29.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel29.Location = new System.Drawing.Point(3, 391);
+            this.materialLabel29.Location = new System.Drawing.Point(3, 571);
             this.materialLabel29.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel29.Name = "materialLabel29";
             this.materialLabel29.Size = new System.Drawing.Size(2144, 29);
@@ -3936,7 +3761,7 @@ namespace TraXile
             this.materialLabel28.Depth = 0;
             this.materialLabel28.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialLabel28.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel28.Location = new System.Drawing.Point(3, 236);
+            this.materialLabel28.Location = new System.Drawing.Point(3, 326);
             this.materialLabel28.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel28.Name = "materialLabel28";
             this.materialLabel28.Size = new System.Drawing.Size(2144, 35);
@@ -3960,7 +3785,6 @@ namespace TraXile
             this.materialCard19.Padding = new System.Windows.Forms.Padding(14);
             this.materialCard19.Size = new System.Drawing.Size(2122, 53);
             this.materialCard19.TabIndex = 0;
-            this.materialCard19.Paint += new System.Windows.Forms.PaintEventHandler(this.materialCard19_Paint);
             // 
             // label8
             // 
@@ -4003,6 +3827,7 @@ namespace TraXile
             this.button1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             this.button1.UseAccentColor = false;
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // comboBox10
             // 
@@ -4058,25 +3883,25 @@ namespace TraXile
             this.materialCard28.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard28.Name = "materialCard28";
             this.materialCard28.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard28.Size = new System.Drawing.Size(2122, 92);
+            this.materialCard28.Size = new System.Drawing.Size(2122, 182);
             this.materialCard28.TabIndex = 10;
             // 
             // chartLeagueTotalActivities
             // 
-            chartArea12.Name = "ChartArea1";
-            this.chartLeagueTotalActivities.ChartAreas.Add(chartArea12);
+            chartArea28.Name = "ChartArea1";
+            this.chartLeagueTotalActivities.ChartAreas.Add(chartArea28);
             this.chartLeagueTotalActivities.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend12.Name = "Legend1";
-            this.chartLeagueTotalActivities.Legends.Add(legend12);
+            legend28.Name = "Legend1";
+            this.chartLeagueTotalActivities.Legends.Add(legend28);
             this.chartLeagueTotalActivities.Location = new System.Drawing.Point(14, 14);
             this.chartLeagueTotalActivities.Name = "chartLeagueTotalActivities";
-            series12.ChartArea = "ChartArea1";
-            series12.Legend = "Legend1";
-            series12.Name = "Series1";
-            series12.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series12.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chartLeagueTotalActivities.Series.Add(series12);
-            this.chartLeagueTotalActivities.Size = new System.Drawing.Size(2094, 64);
+            series28.ChartArea = "ChartArea1";
+            series28.Legend = "Legend1";
+            series28.Name = "Series1";
+            series28.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series28.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chartLeagueTotalActivities.Series.Add(series28);
+            this.chartLeagueTotalActivities.Size = new System.Drawing.Size(2094, 154);
             this.chartLeagueTotalActivities.TabIndex = 5;
             this.chartLeagueTotalActivities.Text = "chart";
             // 
@@ -4087,30 +3912,30 @@ namespace TraXile
             this.materialCard29.Depth = 0;
             this.materialCard29.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialCard29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard29.Location = new System.Drawing.Point(14, 285);
+            this.materialCard29.Location = new System.Drawing.Point(14, 375);
             this.materialCard29.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard29.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard29.Name = "materialCard29";
             this.materialCard29.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard29.Size = new System.Drawing.Size(2122, 92);
+            this.materialCard29.Size = new System.Drawing.Size(2122, 182);
             this.materialCard29.TabIndex = 11;
             // 
             // chartLeagueActTime
             // 
-            chartArea13.Name = "ChartArea1";
-            this.chartLeagueActTime.ChartAreas.Add(chartArea13);
+            chartArea29.Name = "ChartArea1";
+            this.chartLeagueActTime.ChartAreas.Add(chartArea29);
             this.chartLeagueActTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend13.Name = "Legend1";
-            this.chartLeagueActTime.Legends.Add(legend13);
+            legend29.Name = "Legend1";
+            this.chartLeagueActTime.Legends.Add(legend29);
             this.chartLeagueActTime.Location = new System.Drawing.Point(14, 14);
             this.chartLeagueActTime.Name = "chartLeagueActTime";
-            series13.ChartArea = "ChartArea1";
-            series13.Legend = "Legend1";
-            series13.Name = "Series1";
-            series13.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series13.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chartLeagueActTime.Series.Add(series13);
-            this.chartLeagueActTime.Size = new System.Drawing.Size(2094, 64);
+            series29.ChartArea = "ChartArea1";
+            series29.Legend = "Legend1";
+            series29.Name = "Series1";
+            series29.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series29.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chartLeagueActTime.Series.Add(series29);
+            this.chartLeagueActTime.Size = new System.Drawing.Size(2094, 154);
             this.chartLeagueActTime.TabIndex = 8;
             this.chartLeagueActTime.Text = "chart";
             // 
@@ -4121,30 +3946,30 @@ namespace TraXile
             this.materialCard30.Depth = 0;
             this.materialCard30.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialCard30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard30.Location = new System.Drawing.Point(14, 434);
+            this.materialCard30.Location = new System.Drawing.Point(14, 614);
             this.materialCard30.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard30.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard30.Name = "materialCard30";
             this.materialCard30.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard30.Size = new System.Drawing.Size(2122, 81);
+            this.materialCard30.Size = new System.Drawing.Size(2122, 182);
             this.materialCard30.TabIndex = 12;
             // 
             // chartLeagueMapsDone
             // 
-            chartArea14.Name = "ChartArea1";
-            this.chartLeagueMapsDone.ChartAreas.Add(chartArea14);
+            chartArea30.Name = "ChartArea1";
+            this.chartLeagueMapsDone.ChartAreas.Add(chartArea30);
             this.chartLeagueMapsDone.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend14.Name = "Legend1";
-            this.chartLeagueMapsDone.Legends.Add(legend14);
+            legend30.Name = "Legend1";
+            this.chartLeagueMapsDone.Legends.Add(legend30);
             this.chartLeagueMapsDone.Location = new System.Drawing.Point(14, 14);
             this.chartLeagueMapsDone.Name = "chartLeagueMapsDone";
-            series14.ChartArea = "ChartArea1";
-            series14.Legend = "Legend1";
-            series14.Name = "Series1";
-            series14.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series14.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chartLeagueMapsDone.Series.Add(series14);
-            this.chartLeagueMapsDone.Size = new System.Drawing.Size(2094, 53);
+            series30.ChartArea = "ChartArea1";
+            series30.Legend = "Legend1";
+            series30.Name = "Series1";
+            series30.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series30.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chartLeagueMapsDone.Series.Add(series30);
+            this.chartLeagueMapsDone.Size = new System.Drawing.Size(2094, 154);
             this.chartLeagueMapsDone.TabIndex = 10;
             this.chartLeagueMapsDone.Text = "chart";
             // 
@@ -4154,7 +3979,7 @@ namespace TraXile
             this.materialLabel31.Depth = 0;
             this.materialLabel31.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialLabel31.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel31.Location = new System.Drawing.Point(3, 684);
+            this.materialLabel31.Location = new System.Drawing.Point(3, 1055);
             this.materialLabel31.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel31.Name = "materialLabel31";
             this.materialLabel31.Size = new System.Drawing.Size(2144, 35);
@@ -4167,7 +3992,7 @@ namespace TraXile
             this.materialLabel32.Depth = 0;
             this.materialLabel32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialLabel32.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.materialLabel32.Location = new System.Drawing.Point(3, 839);
+            this.materialLabel32.Location = new System.Drawing.Point(3, 1300);
             this.materialLabel32.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel32.Name = "materialLabel32";
             this.materialLabel32.Size = new System.Drawing.Size(2144, 35);
@@ -4181,30 +4006,30 @@ namespace TraXile
             this.materialCard31.Depth = 0;
             this.materialCard31.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialCard31.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard31.Location = new System.Drawing.Point(14, 578);
+            this.materialCard31.Location = new System.Drawing.Point(14, 859);
             this.materialCard31.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard31.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard31.Name = "materialCard31";
             this.materialCard31.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard31.Size = new System.Drawing.Size(2122, 92);
+            this.materialCard31.Size = new System.Drawing.Size(2122, 182);
             this.materialCard31.TabIndex = 16;
             // 
             // chartLeagueMapT16
             // 
-            chartArea15.Name = "ChartArea1";
-            this.chartLeagueMapT16.ChartAreas.Add(chartArea15);
+            chartArea31.Name = "ChartArea1";
+            this.chartLeagueMapT16.ChartAreas.Add(chartArea31);
             this.chartLeagueMapT16.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend15.Name = "Legend1";
-            this.chartLeagueMapT16.Legends.Add(legend15);
+            legend31.Name = "Legend1";
+            this.chartLeagueMapT16.Legends.Add(legend31);
             this.chartLeagueMapT16.Location = new System.Drawing.Point(14, 14);
             this.chartLeagueMapT16.Name = "chartLeagueMapT16";
-            series15.ChartArea = "ChartArea1";
-            series15.Legend = "Legend1";
-            series15.Name = "Series1";
-            series15.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series15.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chartLeagueMapT16.Series.Add(series15);
-            this.chartLeagueMapT16.Size = new System.Drawing.Size(2094, 64);
+            series31.ChartArea = "ChartArea1";
+            series31.Legend = "Legend1";
+            series31.Name = "Series1";
+            series31.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series31.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chartLeagueMapT16.Series.Add(series31);
+            this.chartLeagueMapT16.Size = new System.Drawing.Size(2094, 154);
             this.chartLeagueMapT16.TabIndex = 9;
             this.chartLeagueMapT16.Text = "chart";
             // 
@@ -4215,30 +4040,30 @@ namespace TraXile
             this.materialCard34.Depth = 0;
             this.materialCard34.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialCard34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard34.Location = new System.Drawing.Point(14, 1043);
+            this.materialCard34.Location = new System.Drawing.Point(14, 1594);
             this.materialCard34.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard34.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard34.Name = "materialCard34";
             this.materialCard34.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard34.Size = new System.Drawing.Size(2122, 92);
+            this.materialCard34.Size = new System.Drawing.Size(2122, 182);
             this.materialCard34.TabIndex = 19;
             // 
             // chartLeagueDeath
             // 
-            chartArea16.Name = "ChartArea1";
-            this.chartLeagueDeath.ChartAreas.Add(chartArea16);
+            chartArea32.Name = "ChartArea1";
+            this.chartLeagueDeath.ChartAreas.Add(chartArea32);
             this.chartLeagueDeath.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend16.Name = "Legend1";
-            this.chartLeagueDeath.Legends.Add(legend16);
+            legend32.Name = "Legend1";
+            this.chartLeagueDeath.Legends.Add(legend32);
             this.chartLeagueDeath.Location = new System.Drawing.Point(14, 14);
             this.chartLeagueDeath.Name = "chartLeagueDeath";
-            series16.ChartArea = "ChartArea1";
-            series16.Legend = "Legend1";
-            series16.Name = "Series1";
-            series16.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series16.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chartLeagueDeath.Series.Add(series16);
-            this.chartLeagueDeath.Size = new System.Drawing.Size(2094, 64);
+            series32.ChartArea = "ChartArea1";
+            series32.Legend = "Legend1";
+            series32.Name = "Series1";
+            series32.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series32.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chartLeagueDeath.Series.Add(series32);
+            this.chartLeagueDeath.Size = new System.Drawing.Size(2094, 154);
             this.chartLeagueDeath.TabIndex = 14;
             this.chartLeagueDeath.Text = "chart";
             // 
@@ -4263,7 +4088,7 @@ namespace TraXile
             this.tabPage18.Location = new System.Drawing.Point(4, 22);
             this.tabPage18.Name = "tabPage18";
             this.tabPage18.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage18.Size = new System.Drawing.Size(2170, 750);
+            this.tabPage18.Size = new System.Drawing.Size(2170, 880);
             this.tabPage18.TabIndex = 2;
             this.tabPage18.Text = "Settings";
             this.tabPage18.UseVisualStyleBackColor = true;
@@ -4282,7 +4107,7 @@ namespace TraXile
             this.tableLayoutPanel18.RowCount = 2;
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(2164, 744);
+            this.tableLayoutPanel18.Size = new System.Drawing.Size(2164, 874);
             this.tableLayoutPanel18.TabIndex = 0;
             // 
             // materialTabControl1
@@ -4299,7 +4124,7 @@ namespace TraXile
             this.materialTabControl1.Multiline = true;
             this.materialTabControl1.Name = "materialTabControl1";
             this.materialTabControl1.SelectedIndex = 0;
-            this.materialTabControl1.Size = new System.Drawing.Size(2164, 708);
+            this.materialTabControl1.Size = new System.Drawing.Size(2164, 838);
             this.materialTabControl1.TabIndex = 0;
             // 
             // tabPage5
@@ -4311,7 +4136,7 @@ namespace TraXile
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(2156, 682);
+            this.tabPage5.Size = new System.Drawing.Size(2156, 812);
             this.tabPage5.TabIndex = 0;
             this.tabPage5.Text = "General";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -4738,7 +4563,7 @@ namespace TraXile
             this.tabPage12.Location = new System.Drawing.Point(4, 22);
             this.tabPage12.Name = "tabPage12";
             this.tabPage12.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage12.Size = new System.Drawing.Size(2156, 682);
+            this.tabPage12.Size = new System.Drawing.Size(2156, 812);
             this.tabPage12.TabIndex = 3;
             this.tabPage12.Text = "Backup & Restore";
             this.tabPage12.UseVisualStyleBackColor = true;
@@ -4912,7 +4737,7 @@ namespace TraXile
             this.tabPage8.Location = new System.Drawing.Point(4, 22);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(2156, 682);
+            this.tabPage8.Size = new System.Drawing.Size(2156, 812);
             this.tabPage8.TabIndex = 1;
             this.tabPage8.Text = "Tags";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -4931,7 +4756,7 @@ namespace TraXile
             this.tableLayoutPanel19.RowCount = 2;
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 89F));
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel19.Size = new System.Drawing.Size(2150, 676);
+            this.tableLayoutPanel19.Size = new System.Drawing.Size(2150, 806);
             this.tableLayoutPanel19.TabIndex = 0;
             // 
             // materialCard42
@@ -5037,8 +4862,8 @@ namespace TraXile
             // tableLayoutPanel20
             // 
             this.tableLayoutPanel20.ColumnCount = 2;
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.95522F));
-            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 66.04478F));
+            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 44.63619F));
+            this.tableLayoutPanel20.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55.36381F));
             this.tableLayoutPanel20.Controls.Add(this.groupBox3, 0, 0);
             this.tableLayoutPanel20.Controls.Add(this.materialCard43, 1, 0);
             this.tableLayoutPanel20.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -5046,14 +4871,14 @@ namespace TraXile
             this.tableLayoutPanel20.Name = "tableLayoutPanel20";
             this.tableLayoutPanel20.RowCount = 1;
             this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 581F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 581F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 581F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 581F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 581F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 581F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 581F));
-            this.tableLayoutPanel20.Size = new System.Drawing.Size(2144, 581);
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 711F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 711F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 711F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 711F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 711F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 711F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 711F));
+            this.tableLayoutPanel20.Size = new System.Drawing.Size(2144, 711);
             this.tableLayoutPanel20.TabIndex = 1;
             // 
             // groupBox3
@@ -5068,7 +4893,7 @@ namespace TraXile
             this.groupBox3.MouseState = MaterialSkin.MouseState.HOVER;
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(14);
-            this.groupBox3.Size = new System.Drawing.Size(699, 553);
+            this.groupBox3.Size = new System.Drawing.Size(928, 683);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.Text = "Tags (click to edit)";
             // 
@@ -5085,19 +4910,15 @@ namespace TraXile
             this.materialCard43.Controls.Add(this.label60);
             this.materialCard43.Controls.Add(this.button13);
             this.materialCard43.Controls.Add(this.textBox5);
-            this.materialCard43.Controls.Add(this.label64);
-            this.materialCard43.Controls.Add(this.button11);
-            this.materialCard43.Controls.Add(this.label63);
-            this.materialCard43.Controls.Add(this.button12);
             this.materialCard43.Depth = 0;
             this.materialCard43.Dock = System.Windows.Forms.DockStyle.Top;
             this.materialCard43.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard43.Location = new System.Drawing.Point(741, 14);
+            this.materialCard43.Location = new System.Drawing.Point(970, 14);
             this.materialCard43.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard43.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard43.Name = "materialCard43";
             this.materialCard43.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard43.Size = new System.Drawing.Size(1389, 456);
+            this.materialCard43.Size = new System.Drawing.Size(1160, 292);
             this.materialCard43.TabIndex = 2;
             // 
             // checkBox4
@@ -5170,7 +4991,7 @@ namespace TraXile
             this.button19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button19.HighEmphasis = true;
             this.button19.Icon = null;
-            this.button19.Location = new System.Drawing.Point(186, 344);
+            this.button19.Location = new System.Drawing.Point(175, 198);
             this.button19.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.button19.MouseState = MaterialSkin.MouseState.HOVER;
             this.button19.Name = "button19";
@@ -5210,7 +5031,7 @@ namespace TraXile
             this.button14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button14.HighEmphasis = true;
             this.button14.Icon = null;
-            this.button14.Location = new System.Drawing.Point(101, 344);
+            this.button14.Location = new System.Drawing.Point(90, 198);
             this.button14.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.button14.MouseState = MaterialSkin.MouseState.HOVER;
             this.button14.Name = "button14";
@@ -5244,7 +5065,7 @@ namespace TraXile
             this.button13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button13.HighEmphasis = true;
             this.button13.Icon = null;
-            this.button13.Location = new System.Drawing.Point(29, 344);
+            this.button13.Location = new System.Drawing.Point(18, 198);
             this.button13.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.button13.MouseState = MaterialSkin.MouseState.HOVER;
             this.button13.Name = "button13";
@@ -5275,74 +5096,6 @@ namespace TraXile
             this.textBox5.TrailingIcon = null;
             this.textBox5.UseTallSize = false;
             // 
-            // label64
-            // 
-            this.label64.AutoSize = true;
-            this.label64.Depth = 0;
-            this.label64.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.label64.ForeColor = System.Drawing.Color.White;
-            this.label64.Location = new System.Drawing.Point(33, 249);
-            this.label64.MouseState = MaterialSkin.MouseState.HOVER;
-            this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(60, 19);
-            this.label64.TabIndex = 21;
-            this.label64.Text = "Preview:";
-            // 
-            // button11
-            // 
-            this.button11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.button11.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.button11.Depth = 0;
-            this.button11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button11.HighEmphasis = true;
-            this.button11.Icon = null;
-            this.button11.Location = new System.Drawing.Point(29, 186);
-            this.button11.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.button11.MouseState = MaterialSkin.MouseState.HOVER;
-            this.button11.Name = "button11";
-            this.button11.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.button11.Size = new System.Drawing.Size(91, 36);
-            this.button11.TabIndex = 18;
-            this.button11.Text = "bg color";
-            this.button11.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.button11.UseAccentColor = false;
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
-            // 
-            // label63
-            // 
-            this.label63.BackColor = System.Drawing.Color.White;
-            this.label63.Depth = 0;
-            this.label63.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.label63.Location = new System.Drawing.Point(121, 273);
-            this.label63.MouseState = MaterialSkin.MouseState.HOVER;
-            this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(199, 35);
-            this.label63.TabIndex = 20;
-            this.label63.Text = "MyCustomTag";
-            this.label63.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // button12
-            // 
-            this.button12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.button12.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.button12.Depth = 0;
-            this.button12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button12.HighEmphasis = true;
-            this.button12.Icon = null;
-            this.button12.Location = new System.Drawing.Point(126, 186);
-            this.button12.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.button12.MouseState = MaterialSkin.MouseState.HOVER;
-            this.button12.Name = "button12";
-            this.button12.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.button12.Size = new System.Drawing.Size(108, 36);
-            this.button12.TabIndex = 19;
-            this.button12.Text = "text color";
-            this.button12.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.button12.UseAccentColor = false;
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
-            // 
             // tabPage11
             // 
             this.tabPage11.Controls.Add(this.materialCard46);
@@ -5351,7 +5104,7 @@ namespace TraXile
             this.tabPage11.Location = new System.Drawing.Point(4, 22);
             this.tabPage11.Name = "tabPage11";
             this.tabPage11.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage11.Size = new System.Drawing.Size(2156, 682);
+            this.tabPage11.Size = new System.Drawing.Size(2156, 812);
             this.tabPage11.TabIndex = 2;
             this.tabPage11.Text = "Overlay";
             this.tabPage11.UseVisualStyleBackColor = true;
@@ -5642,6 +5395,202 @@ namespace TraXile
             this.materialTabSelector3.TabIndex = 1;
             this.materialTabSelector3.Text = "materialTabSelector3";
             // 
+            // materialCard4
+            // 
+            this.materialCard4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard4.Controls.Add(this.materialLabel9);
+            this.materialCard4.Controls.Add(this.btt_remove_filter);
+            this.materialCard4.Controls.Add(this.materialLabel8);
+            this.materialCard4.Controls.Add(this.textBox13);
+            this.materialCard4.Controls.Add(this.comboBox_Filter_Area_level_Operator);
+            this.materialCard4.Controls.Add(this.btt_apply_filter);
+            this.materialCard4.Controls.Add(this.textBox12);
+            this.materialCard4.Controls.Add(this.textBox_Filter_AreaLevel);
+            this.materialCard4.Controls.Add(this.button18);
+            this.materialCard4.Controls.Add(this.comboBox_Filter_Matching);
+            this.materialCard4.Controls.Add(this.materialLabel7);
+            this.materialCard4.Controls.Add(this.button17);
+            this.materialCard4.Controls.Add(this.materialLabel6);
+            this.materialCard4.Controls.Add(this.listBox_Filter_Tags);
+            this.materialCard4.Controls.Add(this.materialLabel5);
+            this.materialCard4.Controls.Add(this.comboBox_Filter_Tags);
+            this.materialCard4.Controls.Add(this.materialLabel4);
+            this.materialCard4.Controls.Add(this.materialLabel3);
+            this.materialCard4.Controls.Add(this.materialLabel1);
+            this.materialCard4.Controls.Add(this.comboBox_Filter_TimeRange);
+            this.materialCard4.Controls.Add(this.dateTimePicker1);
+            this.materialCard4.Controls.Add(this.dateTimePicker2);
+            this.materialCard4.Controls.Add(this.comboBox_Filter_Type);
+            this.materialCard4.Controls.Add(this.comboBox_Filter_Area);
+            this.materialCard4.Depth = 0;
+            this.materialCard4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.materialCard4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialCard4.Location = new System.Drawing.Point(8, 49);
+            this.materialCard4.Margin = new System.Windows.Forms.Padding(8);
+            this.materialCard4.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialCard4.Name = "materialCard4";
+            this.materialCard4.Padding = new System.Windows.Forms.Padding(14);
+            this.materialCard4.Size = new System.Drawing.Size(2162, 153);
+            this.materialCard4.TabIndex = 1;
+            // 
+            // materialLabel9
+            // 
+            this.materialLabel9.AutoSize = true;
+            this.materialLabel9.Depth = 0;
+            this.materialLabel9.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel9.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabel9.Location = new System.Drawing.Point(696, 117);
+            this.materialLabel9.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel9.Name = "materialLabel9";
+            this.materialLabel9.Size = new System.Drawing.Size(55, 14);
+            this.materialLabel9.TabIndex = 27;
+            this.materialLabel9.Text = "Matching:";
+            // 
+            // materialLabel8
+            // 
+            this.materialLabel8.AutoSize = true;
+            this.materialLabel8.Depth = 0;
+            this.materialLabel8.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel8.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabel8.Location = new System.Drawing.Point(664, 10);
+            this.materialLabel8.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel8.Name = "materialLabel8";
+            this.materialLabel8.Size = new System.Drawing.Size(31, 14);
+            this.materialLabel8.TabIndex = 26;
+            this.materialLabel8.Text = "Tags:";
+            // 
+            // comboBox_Filter_Area_level_Operator
+            // 
+            this.comboBox_Filter_Area_level_Operator.AutoResize = false;
+            this.comboBox_Filter_Area_level_Operator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.comboBox_Filter_Area_level_Operator.Depth = 0;
+            this.comboBox_Filter_Area_level_Operator.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+            this.comboBox_Filter_Area_level_Operator.DropDownHeight = 118;
+            this.comboBox_Filter_Area_level_Operator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_Filter_Area_level_Operator.DropDownWidth = 121;
+            this.comboBox_Filter_Area_level_Operator.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.comboBox_Filter_Area_level_Operator.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.comboBox_Filter_Area_level_Operator.FormattingEnabled = true;
+            this.comboBox_Filter_Area_level_Operator.IntegralHeight = false;
+            this.comboBox_Filter_Area_level_Operator.ItemHeight = 29;
+            this.comboBox_Filter_Area_level_Operator.Items.AddRange(new object[] {
+            "=",
+            ">",
+            ">=",
+            "<",
+            "<="});
+            this.comboBox_Filter_Area_level_Operator.Location = new System.Drawing.Point(454, 85);
+            this.comboBox_Filter_Area_level_Operator.MaxDropDownItems = 4;
+            this.comboBox_Filter_Area_level_Operator.MouseState = MaterialSkin.MouseState.OUT;
+            this.comboBox_Filter_Area_level_Operator.Name = "comboBox_Filter_Area_level_Operator";
+            this.comboBox_Filter_Area_level_Operator.Size = new System.Drawing.Size(42, 35);
+            this.comboBox_Filter_Area_level_Operator.StartIndex = 0;
+            this.comboBox_Filter_Area_level_Operator.TabIndex = 25;
+            this.comboBox_Filter_Area_level_Operator.UseTallSize = false;
+            // 
+            // textBox_Filter_AreaLevel
+            // 
+            this.textBox_Filter_AreaLevel.AnimateReadOnly = false;
+            this.textBox_Filter_AreaLevel.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox_Filter_AreaLevel.Depth = 0;
+            this.textBox_Filter_AreaLevel.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.textBox_Filter_AreaLevel.LeadingIcon = null;
+            this.textBox_Filter_AreaLevel.Location = new System.Drawing.Point(502, 85);
+            this.textBox_Filter_AreaLevel.MaxLength = 50;
+            this.textBox_Filter_AreaLevel.MouseState = MaterialSkin.MouseState.OUT;
+            this.textBox_Filter_AreaLevel.Multiline = false;
+            this.textBox_Filter_AreaLevel.Name = "textBox_Filter_AreaLevel";
+            this.textBox_Filter_AreaLevel.Size = new System.Drawing.Size(82, 36);
+            this.textBox_Filter_AreaLevel.TabIndex = 24;
+            this.textBox_Filter_AreaLevel.Text = "";
+            this.textBox_Filter_AreaLevel.TrailingIcon = null;
+            this.textBox_Filter_AreaLevel.UseTallSize = false;
+            // 
+            // materialLabel7
+            // 
+            this.materialLabel7.AutoSize = true;
+            this.materialLabel7.Depth = 0;
+            this.materialLabel7.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel7.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabel7.Location = new System.Drawing.Point(401, 95);
+            this.materialLabel7.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel7.Name = "materialLabel7";
+            this.materialLabel7.Size = new System.Drawing.Size(47, 14);
+            this.materialLabel7.TabIndex = 21;
+            this.materialLabel7.Text = "Area Lvl.";
+            // 
+            // materialLabel6
+            // 
+            this.materialLabel6.AutoSize = true;
+            this.materialLabel6.Depth = 0;
+            this.materialLabel6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel6.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabel6.Location = new System.Drawing.Point(401, 53);
+            this.materialLabel6.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel6.Name = "materialLabel6";
+            this.materialLabel6.Size = new System.Drawing.Size(29, 14);
+            this.materialLabel6.TabIndex = 20;
+            this.materialLabel6.Text = "Area:";
+            // 
+            // materialLabel5
+            // 
+            this.materialLabel5.AutoSize = true;
+            this.materialLabel5.Depth = 0;
+            this.materialLabel5.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel5.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabel5.Location = new System.Drawing.Point(400, 10);
+            this.materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel5.Name = "materialLabel5";
+            this.materialLabel5.Size = new System.Drawing.Size(30, 14);
+            this.materialLabel5.TabIndex = 19;
+            this.materialLabel5.Text = "Type:";
+            // 
+            // materialLabel4
+            // 
+            this.materialLabel4.AutoSize = true;
+            this.materialLabel4.Depth = 0;
+            this.materialLabel4.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel4.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabel4.Location = new System.Drawing.Point(7, 90);
+            this.materialLabel4.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel4.Name = "materialLabel4";
+            this.materialLabel4.Size = new System.Drawing.Size(18, 14);
+            this.materialLabel4.TabIndex = 7;
+            this.materialLabel4.Text = "To:";
+            // 
+            // materialLabel3
+            // 
+            this.materialLabel3.AutoSize = true;
+            this.materialLabel3.Depth = 0;
+            this.materialLabel3.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel3.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabel3.Location = new System.Drawing.Point(7, 63);
+            this.materialLabel3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel3.Name = "materialLabel3";
+            this.materialLabel3.Size = new System.Drawing.Size(33, 14);
+            this.materialLabel3.TabIndex = 6;
+            this.materialLabel3.Text = "From:";
+            // 
+            // materialLabel1
+            // 
+            this.materialLabel1.AutoSize = true;
+            this.materialLabel1.Depth = 0;
+            this.materialLabel1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel1.FontType = MaterialSkin.MaterialSkinManager.fontType.Caption;
+            this.materialLabel1.Location = new System.Drawing.Point(9, 12);
+            this.materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel1.Name = "materialLabel1";
+            this.materialLabel1.Size = new System.Drawing.Size(65, 14);
+            this.materialLabel1.TabIndex = 0;
+            this.materialLabel1.Text = "Time range:";
+            // 
+            // tagsToolStripMenuItemTagOverlay
+            // 
+            this.tagsToolStripMenuItemTagOverlay.Name = "tagsToolStripMenuItemTagOverlay";
+            this.tagsToolStripMenuItemTagOverlay.Size = new System.Drawing.Size(180, 22);
+            this.tagsToolStripMenuItemTagOverlay.Text = "Tags";
+            this.tagsToolStripMenuItemTagOverlay.Click += new System.EventHandler(this.tagOverlayToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -5650,7 +5599,7 @@ namespace TraXile
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(2184, 1081);
+            this.ClientSize = new System.Drawing.Size(2184, 1211);
             this.Controls.Add(this.tableLayoutPanel_L0);
             this.Controls.Add(this.menuStrip1);
             this.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.ActionBar_None;
@@ -5663,6 +5612,7 @@ namespace TraXile
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "TraXile";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainW_FormClosing);
+            this.Shown += new System.EventHandler(this.Main_Shown);
             this.Resize += new System.EventHandler(this.Main_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -5686,11 +5636,12 @@ namespace TraXile
             this.tableLayoutPanel_L0.ResumeLayout(false);
             this.materialCard3.ResumeLayout(false);
             this.materialCard3.PerformLayout();
-            this.materialCard4.ResumeLayout(false);
-            this.materialCard4.PerformLayout();
             this.materialTabControl2.ResumeLayout(false);
-            this.tabPage9.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
             this.materialCard7.ResumeLayout(false);
             this.materialCard7.PerformLayout();
@@ -5698,13 +5649,10 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxStopWatch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPause)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPlay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSkull)).EndInit();
             this.materialCard10.ResumeLayout(false);
             this.materialCard10.PerformLayout();
             this.tableLayoutPanel9.ResumeLayout(false);
-            this.materialCard1.ResumeLayout(false);
-            this.materialCard1.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.materialCard5.ResumeLayout(false);
@@ -5820,6 +5768,8 @@ namespace TraXile
             this.materialCard44.ResumeLayout(false);
             this.materialCard44.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.materialCard4.ResumeLayout(false);
+            this.materialCard4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -5863,14 +5813,13 @@ namespace TraXile
         private System.Windows.Forms.ToolStripMenuItem chatCommandsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem wikiToolStripMenuItem;
         public System.Windows.Forms.ImageList imageList1;
         public System.Windows.Forms.ImageList imageList2;
         private MaterialCheckbox checkBox1;
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private MaterialComboBox comboBox_Filter_TimeRange;
-        private ListViewNF listViewNF1;
+        private MaterialListView listViewNF1;
         private System.Windows.Forms.ColumnHeader columnHeader23;
         private System.Windows.Forms.ColumnHeader columnHeader24;
         private MaterialButton btt_apply_filter;
@@ -5885,21 +5834,21 @@ namespace TraXile
         private System.Windows.Forms.ToolTip toolTip5;
         private System.Windows.Forms.ToolTip toolTip6;
         private System.Windows.Forms.ToolTip toolTip7;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private MaterialComboBox comboBox3;
         private MaterialComboBox comboBox_Filter_Tags;
         private MaterialComboBox comboBox_Filter_Matching;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
-        private System.Windows.Forms.ComboBox comboBox6;
+        private MaterialComboBox comboBox6;
         private System.Windows.Forms.PictureBox pictureBox30;
-        private System.Windows.Forms.LinkLabel linkLabel5;
+        private MaterialLabel linkLabel5;
         private System.Windows.Forms.Button button18;
         private System.Windows.Forms.Button button17;
         private MaterialListBox listBox_Filter_Tags;
         private MaterialComboBox comboBox_Filter_Type;
         private MaterialComboBox comboBox_Filter_Area;
         private MaterialButton btt_remove_filter;
-        private System.Windows.Forms.Label lbl_background_update;
-        private System.Windows.Forms.Label lbl_filter;
+        private MaterialLabel lbl_background_update;
+        private MaterialLabel lbl_filter;
         private System.Windows.Forms.PictureBox pictureBox32;
         private System.Windows.Forms.PictureBox pictureBox33;
         private System.Windows.Forms.TextBox textBox13;
@@ -5908,7 +5857,7 @@ namespace TraXile
         private System.Windows.Forms.ToolStripMenuItem exportActivitiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cSVToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem jSONToolStripMenuItem;
-        private System.Windows.Forms.LinkLabel linkLabelUpdateAvailable;
+        private MaterialLabel linkLabelUpdateAvailable;
         private System.Windows.Forms.PictureBox pictureBoxUpdateAvailable;
         private System.Windows.Forms.Timer timerUpdateCheck;
         private TableLayoutPanel tableLayoutPanel_L0;
@@ -5927,7 +5876,6 @@ namespace TraXile
         private MaterialTabSelector materialTabSelector1;
         private MaterialProgressBar progressBar1;
         private MaterialTabControl materialTabControl2;
-        private TabPage tabPage9;
         private TabPage tabPage10;
         private TableLayoutPanel tableLayoutPanel1;
         private MaterialTabControl materialTabControl3;
@@ -5942,34 +5890,28 @@ namespace TraXile
         private MaterialLabel materialLabel10;
         private TableLayoutPanel tableLayoutPanel7;
         private MaterialLabel label6;
-        private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel5;
         private MaterialCard materialCard7;
         private MaterialLabel labelAreaCurrent;
         private MaterialLabel labelStopWatch;
-        private MaterialLabel labelActivityCurrent;
         private PictureBox pictureBoxStop;
         private MaterialLabel labelTrackingArea;
         private PictureBox pictureBoxStopWatch;
         private PictureBox pictureBoxPause;
         private MaterialLabel labelTrackingType;
         private PictureBox pictureBoxPlay;
-        private PictureBox pictureBox10;
         private PictureBox pictureBoxSkull;
         private MaterialCard groupBoxTrackingTags;
         private TableLayoutPanel tableLayoutPanel9;
-        private MaterialCard materialCard1;
         private MaterialLabel labelItemCount;
-        private ComboBox comboBoxShowMaxItems;
+        private MaterialComboBox comboBoxShowMaxItems;
         private MaterialCard groupBox10;
         private MaterialDrawer materialDrawer2;
-        private Label label73;
         private MaterialButton materialButton1;
         private MaterialLabel materialLabel2;
         private MaterialLabel materialLabelSummary;
         private MaterialTextBox textBox8;
         private MaterialButton buttonStartSearch;
-        private LinkLabel linkLabelSearchSyntax;
         private MaterialCard materialCard2;
         private Chart chartGlobalDashboard;
         private MaterialCard materialCard5;
@@ -6153,10 +6095,6 @@ namespace TraXile
         private MaterialLabel label60;
         private MaterialButton button13;
         private MaterialTextBox textBox5;
-        private MaterialLabel label64;
-        private MaterialButton button11;
-        private MaterialLabel label63;
-        private MaterialButton button12;
         private MaterialCard materialCard44;
         private MaterialLabel label38;
         private MaterialLabel materialLabel46;
@@ -6174,6 +6112,11 @@ namespace TraXile
         private MaterialCheckbox checkBox5;
         private MaterialLabel materialLabel47;
         private MaterialLabel materialLabel48;
+        private MaterialLabel materialLabel50;
+        private TabPage tabPage3;
+        private SplitContainer splitContainer1;
+        private MaterialLabel materialLabel51;
+        private ToolStripMenuItem tagsToolStripMenuItemTagOverlay;
     }
 }
 

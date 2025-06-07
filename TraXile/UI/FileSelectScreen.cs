@@ -4,10 +4,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using MaterialSkin.Controls;
 
 namespace TraXile
 {
-    public partial class FileSelectScreen : Form
+    public partial class FileSelectScreen : MaterialForm
     {
         readonly Main _mainWindow;
         private List<string> _autoDiscovered;
@@ -39,7 +40,7 @@ namespace TraXile
                 lbl.Width = 600;
                 lbl.ForeColor = Color.Gold;
                 lbl.Location = new Point(10, 20);
-                groupBox1.Controls.Add(lbl);
+                panelAutoSelect.Controls.Add(lbl);
 
                 LinkLabel llbl = new LinkLabel();
                 llbl.Text = "https://github.com/dermow/TraXile/blob/master/README.md";
@@ -49,25 +50,25 @@ namespace TraXile
                 llbl.LinkColor = Color.Gold;
                 llbl.VisitedLinkColor = Color.Gold;
                 llbl.Location = new Point(10, 45);
-                groupBox1.Controls.Add(llbl);
+                panelAutoSelect.Controls.Add(llbl);
             }
             else
             {
                 button2.Select();
 
                 int x = 10;
-                int y = 20;
+                int y = 50;
                 bool first = true;
                 foreach (string s in _autoDiscovered)
                 {
-                    RadioButton rb = new RadioButton();
+                    MaterialRadioButton rb = new MaterialRadioButton();
                     rb.Text = s;
                     rb.Location = new Point(x, y);
                     rb.Width = 400;
                     rb.Checked = first;
-                    groupBox1.Controls.Add(rb);
-                    y += 20;
-
+                    rb.ForeColor = Color.Gold;
+                    panelAutoSelect.Controls.Add(rb);
+                    y += 30;
                     first = false;
                 }
             }
@@ -90,7 +91,7 @@ namespace TraXile
                 }
                 else
                 {
-                    labelDiscoverStatus.Text = "The logfile you selected does not exist or is no valid Client.txt file";
+                    labelDiscoverStatus.Text = "ERROR: The logfile you selected does not exist or is no valid Client.txt file";
                     labelDiscoverStatus.ForeColor = Color.Red;
                 }
                 
@@ -101,7 +102,7 @@ namespace TraXile
         private void button2_Click(object sender, EventArgs e)
         {
             string path = "";
-            foreach (RadioButton rb in groupBox1.Controls)
+            foreach (MaterialRadioButton rb in TrX_Helpers.GetAll(panelAutoSelect, typeof(MaterialRadioButton)))
             {
                 if(rb.Checked)
                 {
@@ -117,7 +118,7 @@ namespace TraXile
             }
             else
             {
-                labelDiscoverStatus.Text = "The logfile you selected does not exist or is no valid Client.txt file";
+                labelDiscoverStatus.Text = "ERROR: The logfile you selected does not exist or is no valid Client.txt file";
                 labelDiscoverStatus.ForeColor = Color.Red;
             }
         }
