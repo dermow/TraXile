@@ -45,7 +45,7 @@ and backwards for all data in your Client.txt logfile.
 
 ## Statistic
 Collect and show statistics around the Game.
-<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/MappingChart.png?raw=true" />
+<img src="https://github.com/rework_326/TraXile/blob/master/Docu/Images/MappingChart.png?raw=true" />
 
 ## Analyze your activities
 <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Summary.png?raw=true" />
