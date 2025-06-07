@@ -1,6 +1,3 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -33,6 +30,7 @@ Traxile can be a potential alternative to "Mapwatch", a similar tool that was re
 You can check out my introduction video to get started:
 https://www.youtube.com/watch?v=jZ8eiCNOiM4
 
+
 # Features
 ## Activity Tracking (Live and backwards)
 Track time and other stats for your ingame activities (maps, heist contracts, sanctum...). Works for live tracking (TraXile open while you are playing)
@@ -46,16 +44,20 @@ Collect and show statistics around the Game.
 <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/MappingChart.png?raw=true" />
 
 ## Analyze your activities
+Especially for farming strategies. TraXile can provide a lot of useful data.
 <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/SummaryWindow.png?raw=true" />
 
 ## Ingame Overlay
+Keep track of your map time while playing or show which content you already encountered.
 <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/Overlays.png?raw=true" />
 
 ## Installation
-Download the latest release and execute the MSI-Installer file.
+Download the latest release and execute the MSI-Installer file. You will find  the latest release <a href="https://github.com/dermow/TraXile/releases/latest">here</a>
 
 ## First steps
-After the first start, you have to select the path to your Client.txt logfile. The most common default paths listed below:
+When you launch TraXile for the first time, you'll need to specify the path to your Client.txt log file. In most cases, TraXile will detect this automatically. If not, you can select the path manually.
+
+The default locations for the Client.txt file are:
 
 | Client  | Path | Example |
 |---|---|---|
@@ -63,8 +65,7 @@ After the first start, you have to select the path to your Client.txt logfile. T
 | Windows (Standalone)  | %InstallDirectory%\Logs\Client.txt  | C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt |
 | Mac OS (with Crossover or similar)  | /Users/YOUR_USERNAME/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt  | /Users/mow/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt |
 
-After you selected the logfile, TraXile will start importing all data thats inside it - and writes that data in its own database. After the initial import, the start of TraXile will
-be much faster.
+Once you've selected the log file, TraXile will begin importing all existing data and store it in its own internal database. This initial import may take a moment, but afterwards, TraXile will start up much faster.
 
 ## Update
 You will be automatically notified when a new version is available. Just follow the instructions to update.
