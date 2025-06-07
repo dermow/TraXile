@@ -408,11 +408,7 @@ namespace TraXile
 
             InitializeComponent();
 
-            Rectangle workingArea = Screen.GetWorkingArea(this);
-            this.MaximizedBounds = new Rectangle(workingArea.X + 2, workingArea.Y + 5, workingArea.Width, workingArea.Height - 5);
-
-
-            tableLayoutPanel_L0.RowStyles[1].Height = 16;
+            tableLayoutPanel_L0.RowStyles[2].Height = 16;
             linkLabel5.Text = "show filters";
             filterBarShown = false;
 
@@ -5153,13 +5149,13 @@ namespace TraXile
         {
             if (filterBarShown)
             {
-                tableLayoutPanel_L0.RowStyles[1].Height = 16;
+                tableLayoutPanel_L0.RowStyles[2].Height = 16;
                 linkLabel5.Text = "show filters";
                 filterBarShown = false;
             }
             else
             {
-                tableLayoutPanel_L0.RowStyles[1].Height = 160;
+                tableLayoutPanel_L0.RowStyles[2].Height = 160;
                 linkLabel5.Text = "hide filters";
                 filterBarShown = true;
             }
@@ -5228,8 +5224,7 @@ namespace TraXile
 
         private void Main_Move(object sender, EventArgs e)
         {
-            Rectangle workingArea = Screen.GetWorkingArea(this);
-            this.MaximizedBounds = new Rectangle(workingArea.X + 2, workingArea.Y + 5, workingArea.Width, workingArea.Height - 5);
+            SetMaximizedBounds();
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
