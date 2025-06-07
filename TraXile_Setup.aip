@@ -32,8 +32,6 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
     <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
-    <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
-    <ROW Directory="StartMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="STARTM~1|StartMenuFolder" IsPseudoRoot="1"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
     <ROW Directory="app.publish_Dir" Directory_Parent="APPDIR" DefaultDir="APP~1.PUB|app.publish"/>
     <ROW Directory="native_1_Dir" Directory_Parent="winx64_Dir" DefaultDir="native"/>
@@ -50,35 +48,35 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="APPDIR" ComponentId="{7720AF12-AF74-404E-9D4F-9675ADE898A7}" Directory_="APPDIR" Attributes="0"/>
-    <ROW Component="Json.Net.dll" ComponentId="{0146C7DD-7564-429F-8209-C9A599D1847E}" Directory_="APPDIR" Attributes="0" KeyPath="Json.Net.dll"/>
-    <ROW Component="MaterialSkin.dll" ComponentId="{D93AB34B-53C4-4F8C-ACB1-9F79A9C93B47}" Directory_="APPDIR" Attributes="0" KeyPath="MaterialSkin.dll"/>
-    <ROW Component="Microsoft.Data.Sqlite.dll" ComponentId="{2624A6C6-A937-4D94-8C89-6844BD2239D1}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.Data.Sqlite.dll"/>
-    <ROW Component="Newtonsoft.Json.dll" ComponentId="{6D3AEC20-4AF7-4161-AC83-1CDEDED7DA96}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
+    <ROW Component="Json.Net.dll" ComponentId="{CE88ADDC-2202-41B5-9436-C73277802374}" Directory_="APPDIR" Attributes="0" KeyPath="Json.Net.dll"/>
+    <ROW Component="MaterialSkin.dll" ComponentId="{5DFFB34F-7FF8-46AB-A24B-F658DD678721}" Directory_="APPDIR" Attributes="0" KeyPath="MaterialSkin.dll"/>
+    <ROW Component="Microsoft.Data.Sqlite.dll" ComponentId="{60BE51FC-75AC-4F6C-9606-C2D62E273462}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.Data.Sqlite.dll"/>
+    <ROW Component="Microsoft.Data.Sqlite.xml" ComponentId="{C92A8BF9-7787-4723-B7C0-3ACE232B98D7}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.Data.Sqlite.xml" Type="0"/>
+    <ROW Component="Newtonsoft.Json.dll" ComponentId="{BEB33390-3D98-49FC-9BA1-D0267C4AA1EE}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
     <ROW Component="ProductInformation" ComponentId="{5AB4E3D5-11EF-410A-B715-D7FF2EC0F407}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
-    <ROW Component="SQLitePCLRaw.batteries_v2.dll" ComponentId="{CB8CE49C-CF70-4DB9-9FC0-DFFECB6A4B03}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.batteries_v2.dll"/>
-    <ROW Component="SQLitePCLRaw.core.dll" ComponentId="{4521095B-EB5E-4C3A-B4B4-51BBFC610BB2}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.core.dll"/>
-    <ROW Component="SQLitePCLRaw.nativelibrary.dll" ComponentId="{1C1EA3CE-3085-46CE-8CF4-2E01C0FF4D28}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.nativelibrary.dll"/>
-    <ROW Component="SQLitePCLRaw.provider.dynamic_cdecl.dll" ComponentId="{176A90DC-E2D7-464B-AA3D-D327E2DE3127}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.provider.dynamic_cdecl.dll"/>
-    <ROW Component="Sprache.dll" ComponentId="{46DFE816-E9F4-41B9-8078-1F923E2C6638}" Directory_="APPDIR" Attributes="0" KeyPath="Sprache.dll"/>
-    <ROW Component="System.Buffers.dll" ComponentId="{E967ECAB-6C9C-42F6-93D7-CC3352E282B0}" Directory_="APPDIR" Attributes="0" KeyPath="System.Buffers.dll"/>
-    <ROW Component="System.Configuration.ConfigurationManager.dll" ComponentId="{F2EE401E-916C-4C63-9A29-307031A1C175}" Directory_="APPDIR" Attributes="0" KeyPath="System.Configuration.ConfigurationManager.dll"/>
-    <ROW Component="System.Memory.dll" ComponentId="{1633178F-F3F2-41D5-8568-28BAC669B39B}" Directory_="APPDIR" Attributes="0" KeyPath="System.Memory.dll"/>
-    <ROW Component="System.Numerics.Vectors.dll" ComponentId="{475DC2B6-02F2-4850-B142-9081A412FC5B}" Directory_="APPDIR" Attributes="0" KeyPath="System.Numerics.Vectors.dll"/>
-    <ROW Component="System.Reactive.dll" ComponentId="{A9F3CFC1-96C0-4B03-A882-5EF5C6413333}" Directory_="APPDIR" Attributes="0" KeyPath="System.Reactive.dll"/>
-    <ROW Component="System.Runtime.CompilerServices.Unsafe.dll" ComponentId="{4E3747D1-9502-4FDE-9F8D-CA27ECD7C9FF}" Directory_="APPDIR" Attributes="0" KeyPath="System.Runtime.CompilerServices.Unsafe.dll"/>
-    <ROW Component="System.Security.AccessControl.dll" ComponentId="{0B649526-EECA-4A94-8061-5CD6DC4C31CC}" Directory_="APPDIR" Attributes="0" KeyPath="System.Security.AccessControl.dll"/>
-    <ROW Component="System.Security.Permissions.dll" ComponentId="{978D3EF8-5D5F-428A-BDBA-18D2329015E2}" Directory_="APPDIR" Attributes="0" KeyPath="System.Security.Permissions.dll"/>
-    <ROW Component="System.Security.Principal.Windows.dll" ComponentId="{8C61B5D0-E749-4792-B00C-5A0C060E3640}" Directory_="APPDIR" Attributes="0" KeyPath="System.Security.Principal.Windows.dll"/>
-    <ROW Component="System.Threading.Tasks.Extensions.dll" ComponentId="{5ECBC9B2-AD45-4A71-B2DC-1AD70D68B15A}" Directory_="APPDIR" Attributes="0" KeyPath="System.Threading.Tasks.Extensions.dll"/>
-    <ROW Component="System.ValueTuple.dll" ComponentId="{CE266636-B5CC-4813-8AB0-00954A232235}" Directory_="APPDIR" Attributes="0" KeyPath="System.ValueTuple.dll"/>
-    <ROW Component="TraXile.Updater.exe" ComponentId="{14A74270-B42C-4795-B6E0-41E3461646C7}" Directory_="APPDIR" Attributes="0" KeyPath="TraXile.Updater.exe"/>
-    <ROW Component="TraXile.exe" ComponentId="{419629C2-DEE4-48D2-98F9-82B6DA670824}" Directory_="APPDIR" Attributes="0" KeyPath="TraXile.exe"/>
+    <ROW Component="SQLitePCLRaw.batteries_v2.dll" ComponentId="{9ACC0D22-B01C-46A4-B989-70E63E7973D7}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.batteries_v2.dll"/>
+    <ROW Component="SQLitePCLRaw.core.dll" ComponentId="{AEF986EB-0D0F-43F8-8ED2-351F0C47A40C}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.core.dll"/>
+    <ROW Component="SQLitePCLRaw.nativelibrary.dll" ComponentId="{03405532-C9F8-493D-A3BF-C00554C1C691}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.nativelibrary.dll"/>
+    <ROW Component="SQLitePCLRaw.provider.dynamic_cdecl.dll" ComponentId="{F86C53B5-C132-47CC-A5BC-25B48F14A716}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.provider.dynamic_cdecl.dll"/>
+    <ROW Component="Sprache.dll" ComponentId="{C7168FF8-9FCE-422F-A322-2236F6C2492B}" Directory_="APPDIR" Attributes="0" KeyPath="Sprache.dll"/>
+    <ROW Component="System.Buffers.dll" ComponentId="{711CE091-F7E0-4A13-8BC3-AD9C0C4AB8B6}" Directory_="APPDIR" Attributes="0" KeyPath="System.Buffers.dll"/>
+    <ROW Component="System.Configuration.ConfigurationManager.dll" ComponentId="{0C8AEE1A-6D90-407A-8BF9-A00B11BE582B}" Directory_="APPDIR" Attributes="0" KeyPath="System.Configuration.ConfigurationManager.dll"/>
+    <ROW Component="System.Memory.dll" ComponentId="{2E3C07DD-E082-41FC-A28C-315BFA28E03F}" Directory_="APPDIR" Attributes="0" KeyPath="System.Memory.dll"/>
+    <ROW Component="System.Numerics.Vectors.dll" ComponentId="{800E7CE6-5141-494F-A4A2-71FED84415AD}" Directory_="APPDIR" Attributes="0" KeyPath="System.Numerics.Vectors.dll"/>
+    <ROW Component="System.Reactive.dll" ComponentId="{75D8439B-E264-4312-8658-F4785E994DA5}" Directory_="APPDIR" Attributes="0" KeyPath="System.Reactive.dll"/>
+    <ROW Component="System.Runtime.CompilerServices.Unsafe.dll" ComponentId="{731E050C-D578-4B94-9C00-70A07FE9ECA1}" Directory_="APPDIR" Attributes="0" KeyPath="System.Runtime.CompilerServices.Unsafe.dll"/>
+    <ROW Component="System.Security.AccessControl.dll" ComponentId="{A41E7013-102E-4A71-9C36-06A6B20B093D}" Directory_="APPDIR" Attributes="0" KeyPath="System.Security.AccessControl.dll"/>
+    <ROW Component="System.Security.Permissions.dll" ComponentId="{E19311E9-C95D-4792-9255-0C0E63F57B88}" Directory_="APPDIR" Attributes="0" KeyPath="System.Security.Permissions.dll"/>
+    <ROW Component="System.Security.Principal.Windows.dll" ComponentId="{EFFE31FE-788B-4724-81EA-F68EF3F6C0D2}" Directory_="APPDIR" Attributes="0" KeyPath="System.Security.Principal.Windows.dll"/>
+    <ROW Component="System.Threading.Tasks.Extensions.dll" ComponentId="{85CDB4C6-1E81-4784-9FFA-7F744E221DA5}" Directory_="APPDIR" Attributes="0" KeyPath="System.Threading.Tasks.Extensions.dll"/>
+    <ROW Component="System.ValueTuple.dll" ComponentId="{9CE90036-F10C-4F03-A824-5A84B4AD6EA2}" Directory_="APPDIR" Attributes="0" KeyPath="System.ValueTuple.dll"/>
+    <ROW Component="TraXile.Updater.exe" ComponentId="{FFBA3633-9F58-4BB2-8595-C105A35370A0}" Directory_="APPDIR" Attributes="0" KeyPath="TraXile.Updater.exe"/>
+    <ROW Component="TraXile.exe" ComponentId="{7F8D65B7-5C9C-4135-9B9D-F5BC0445DDD4}" Directory_="APPDIR" Attributes="0" KeyPath="TraXile.exe"/>
     <ROW Component="TraXile.exe_1" ComponentId="{4EF1E5BE-AEFE-4079-A81B-72E6E979E4A9}" Directory_="app.publish_Dir" Attributes="0" KeyPath="TraXile.exe_1"/>
     <ROW Component="e_sqlite3.dll" ComponentId="{BB62CC42-12EC-4EDF-A514-414FD7439406}" Directory_="native_Dir" Attributes="0" KeyPath="e_sqlite3.dll"/>
     <ROW Component="e_sqlite3.dll_1" ComponentId="{BA370012-76AB-4EA9-9A32-49A6DB9A727C}" Directory_="native_1_Dir" Attributes="256" KeyPath="e_sqlite3.dll_1"/>
     <ROW Component="e_sqlite3.dll_2" ComponentId="{53C5BC39-9DE2-4049-9FE2-E8C06F38F07C}" Directory_="native_2_Dir" Attributes="0" KeyPath="e_sqlite3.dll_2"/>
-    <ROW Component="log4net.config" ComponentId="{5E1DB9D6-23AB-497D-BA28-B808B5260E28}" Directory_="APPDIR" Attributes="0" KeyPath="log4net.config" Type="0"/>
-    <ROW Component="log4net.dll" ComponentId="{9C334E07-41EF-4252-8F71-003AF542DC62}" Directory_="APPDIR" Attributes="0" KeyPath="log4net.dll"/>
+    <ROW Component="log4net.dll" ComponentId="{6B606B37-2866-4870-8930-694ADE8FA435}" Directory_="APPDIR" Attributes="0" KeyPath="log4net.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0"/>
@@ -89,51 +87,51 @@
     <ROW File="e_sqlite3.dll_1" Component_="e_sqlite3.dll_1" FileName="E_SQLI~1.DLL|e_sqlite3.dll" Attributes="0" SourcePath="TraXile\bin\Release\runtimes\win-x64\native\e_sqlite3.dll" SelfReg="false"/>
     <ROW File="e_sqlite3.dll_2" Component_="e_sqlite3.dll_2" FileName="E_SQLI~1.DLL|e_sqlite3.dll" Attributes="0" SourcePath="TraXile\bin\Release\runtimes\win-x86\native\e_sqlite3.dll" SelfReg="false"/>
     <ROW File="TraXile.exe_1" Component_="TraXile.exe_1" FileName="TraXile.exe" Attributes="0" SourcePath="TraXile\bin\Release\app.publish\TraXile.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="Json.Net.dll" Component_="Json.Net.dll" FileName="JSONNE~1.DLL|Json.Net.dll" Attributes="0" SourcePath="TraXile\bin\Release\Json.Net.dll" SelfReg="false"/>
-    <ROW File="log4net.config" Component_="log4net.config" FileName="LOG4NE~1.CON|log4net.config" Attributes="0" SourcePath="TraXile\bin\Release\log4net.config" SelfReg="false"/>
-    <ROW File="log4net.dll" Component_="log4net.dll" FileName="log4net.dll" Attributes="0" SourcePath="TraXile\bin\Release\log4net.dll" SelfReg="false"/>
-    <ROW File="MaterialSkin.dll" Component_="MaterialSkin.dll" FileName="MATERI~1.DLL|MaterialSkin.dll" Attributes="0" SourcePath="TraXile\bin\Release\MaterialSkin.dll" SelfReg="false"/>
     <ROW File="Microsoft.Data.Sqlite.dll" Component_="Microsoft.Data.Sqlite.dll" FileName="MICROS~1.DLL|Microsoft.Data.Sqlite.dll" Attributes="0" SourcePath="TraXile\bin\Release\Microsoft.Data.Sqlite.dll" SelfReg="false"/>
-    <ROW File="Microsoft.Data.Sqlite.xml" Component_="log4net.config" FileName="MICROS~1.XML|Microsoft.Data.Sqlite.xml" Attributes="0" SourcePath="TraXile\bin\Release\Microsoft.Data.Sqlite.xml" SelfReg="false"/>
+    <ROW File="Microsoft.Data.Sqlite.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="MICROS~1.XML|Microsoft.Data.Sqlite.xml" Attributes="0" SourcePath="TraXile\bin\Release\Microsoft.Data.Sqlite.xml" SelfReg="false"/>
     <ROW File="Newtonsoft.Json.dll" Component_="Newtonsoft.Json.dll" FileName="NEWTON~1.DLL|Newtonsoft.Json.dll" Attributes="0" SourcePath="TraXile\bin\Release\Newtonsoft.Json.dll" SelfReg="false"/>
-    <ROW File="Newtonsoft.Json.xml" Component_="log4net.config" FileName="NEWTON~1.XML|Newtonsoft.Json.xml" Attributes="0" SourcePath="TraXile\bin\Release\Newtonsoft.Json.xml" SelfReg="false"/>
+    <ROW File="Newtonsoft.Json.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="NEWTON~1.XML|Newtonsoft.Json.xml" Attributes="0" SourcePath="TraXile\bin\Release\Newtonsoft.Json.xml" SelfReg="false"/>
     <ROW File="Sprache.dll" Component_="Sprache.dll" FileName="Sprache.dll" Attributes="0" SourcePath="TraXile\bin\Release\Sprache.dll" SelfReg="false"/>
     <ROW File="Sprache.pdb" Component_="Sprache.dll" FileName="Sprache.pdb" Attributes="0" SourcePath="TraXile\bin\Release\Sprache.pdb" SelfReg="false"/>
-    <ROW File="Sprache.xml" Component_="log4net.config" FileName="Sprache.xml" Attributes="0" SourcePath="TraXile\bin\Release\Sprache.xml" SelfReg="false"/>
+    <ROW File="Sprache.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="Sprache.xml" Attributes="0" SourcePath="TraXile\bin\Release\Sprache.xml" SelfReg="false"/>
     <ROW File="SQLitePCLRaw.batteries_v2.dll" Component_="SQLitePCLRaw.batteries_v2.dll" FileName="SQLITE~1.DLL|SQLitePCLRaw.batteries_v2.dll" Attributes="0" SourcePath="TraXile\bin\Release\SQLitePCLRaw.batteries_v2.dll" SelfReg="false"/>
     <ROW File="SQLitePCLRaw.core.dll" Component_="SQLitePCLRaw.core.dll" FileName="SQLITE~2.DLL|SQLitePCLRaw.core.dll" Attributes="0" SourcePath="TraXile\bin\Release\SQLitePCLRaw.core.dll" SelfReg="false"/>
     <ROW File="SQLitePCLRaw.nativelibrary.dll" Component_="SQLitePCLRaw.nativelibrary.dll" FileName="SQLITE~3.DLL|SQLitePCLRaw.nativelibrary.dll" Attributes="0" SourcePath="TraXile\bin\Release\SQLitePCLRaw.nativelibrary.dll" SelfReg="false"/>
     <ROW File="SQLitePCLRaw.provider.dynamic_cdecl.dll" Component_="SQLitePCLRaw.provider.dynamic_cdecl.dll" FileName="SQLITE~4.DLL|SQLitePCLRaw.provider.dynamic_cdecl.dll" Attributes="0" SourcePath="TraXile\bin\Release\SQLitePCLRaw.provider.dynamic_cdecl.dll" SelfReg="false"/>
     <ROW File="System.Buffers.dll" Component_="System.Buffers.dll" FileName="SYSTEM~1.DLL|System.Buffers.dll" Attributes="0" SourcePath="TraXile\bin\Release\System.Buffers.dll" SelfReg="false"/>
-    <ROW File="System.Buffers.xml" Component_="log4net.config" FileName="SYSTEM~1.XML|System.Buffers.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Buffers.xml" SelfReg="false"/>
+    <ROW File="System.Buffers.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTEM~1.XML|System.Buffers.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Buffers.xml" SelfReg="false"/>
     <ROW File="System.Configuration.ConfigurationManager.dll" Component_="System.Configuration.ConfigurationManager.dll" FileName="SYSTEM~2.DLL|System.Configuration.ConfigurationManager.dll" Attributes="0" SourcePath="TraXile\bin\Release\System.Configuration.ConfigurationManager.dll" SelfReg="false"/>
-    <ROW File="System.Configuration.ConfigurationManager.xml" Component_="log4net.config" FileName="SYSTEM~2.XML|System.Configuration.ConfigurationManager.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Configuration.ConfigurationManager.xml" SelfReg="false"/>
+    <ROW File="System.Configuration.ConfigurationManager.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTEM~2.XML|System.Configuration.ConfigurationManager.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Configuration.ConfigurationManager.xml" SelfReg="false"/>
     <ROW File="System.Memory.dll" Component_="System.Memory.dll" FileName="SYSTEM~3.DLL|System.Memory.dll" Attributes="0" SourcePath="TraXile\bin\Release\System.Memory.dll" SelfReg="false"/>
-    <ROW File="System.Memory.xml" Component_="log4net.config" FileName="SYSTEM~3.XML|System.Memory.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Memory.xml" SelfReg="false"/>
+    <ROW File="System.Memory.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTEM~3.XML|System.Memory.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Memory.xml" SelfReg="false"/>
     <ROW File="System.Numerics.Vectors.dll" Component_="System.Numerics.Vectors.dll" FileName="SYSTEM~4.DLL|System.Numerics.Vectors.dll" Attributes="0" SourcePath="TraXile\bin\Release\System.Numerics.Vectors.dll" SelfReg="false"/>
-    <ROW File="System.Numerics.Vectors.xml" Component_="log4net.config" FileName="SYSTEM~4.XML|System.Numerics.Vectors.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Numerics.Vectors.xml" SelfReg="false"/>
+    <ROW File="System.Numerics.Vectors.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTEM~4.XML|System.Numerics.Vectors.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Numerics.Vectors.xml" SelfReg="false"/>
     <ROW File="System.Runtime.CompilerServices.Unsafe.dll" Component_="System.Runtime.CompilerServices.Unsafe.dll" FileName="SYSTEM~5.DLL|System.Runtime.CompilerServices.Unsafe.dll" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Runtime.CompilerServices.Unsafe.dll" SelfReg="false"/>
-    <ROW File="System.Runtime.CompilerServices.Unsafe.xml" Component_="log4net.config" FileName="SYSTEM~5.XML|System.Runtime.CompilerServices.Unsafe.xml" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Runtime.CompilerServices.Unsafe.xml" SelfReg="false"/>
+    <ROW File="System.Runtime.CompilerServices.Unsafe.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTEM~5.XML|System.Runtime.CompilerServices.Unsafe.xml" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Runtime.CompilerServices.Unsafe.xml" SelfReg="false"/>
     <ROW File="System.Security.AccessControl.dll" Component_="System.Security.AccessControl.dll" FileName="SYSTEM~6.DLL|System.Security.AccessControl.dll" Attributes="0" SourcePath="TraXile\bin\Release\System.Security.AccessControl.dll" SelfReg="false"/>
-    <ROW File="System.Security.AccessControl.xml" Component_="log4net.config" FileName="SYSTEM~6.XML|System.Security.AccessControl.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Security.AccessControl.xml" SelfReg="false"/>
+    <ROW File="System.Security.AccessControl.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTEM~6.XML|System.Security.AccessControl.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Security.AccessControl.xml" SelfReg="false"/>
     <ROW File="System.Security.Permissions.dll" Component_="System.Security.Permissions.dll" FileName="SYSTEM~7.DLL|System.Security.Permissions.dll" Attributes="0" SourcePath="TraXile\bin\Release\System.Security.Permissions.dll" SelfReg="false"/>
-    <ROW File="System.Security.Permissions.xml" Component_="log4net.config" FileName="SYSTEM~7.XML|System.Security.Permissions.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Security.Permissions.xml" SelfReg="false"/>
+    <ROW File="System.Security.Permissions.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTEM~7.XML|System.Security.Permissions.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Security.Permissions.xml" SelfReg="false"/>
     <ROW File="System.Security.Principal.Windows.dll" Component_="System.Security.Principal.Windows.dll" FileName="SYSTEM~8.DLL|System.Security.Principal.Windows.dll" Attributes="0" SourcePath="TraXile\bin\Release\System.Security.Principal.Windows.dll" SelfReg="false"/>
-    <ROW File="System.Security.Principal.Windows.xml" Component_="log4net.config" FileName="SYSTEM~8.XML|System.Security.Principal.Windows.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Security.Principal.Windows.xml" SelfReg="false"/>
-    <ROW File="TraXile.application" Component_="log4net.config" FileName="TRAXIL~1.APP|TraXile.application" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.application" SelfReg="false"/>
+    <ROW File="System.Security.Principal.Windows.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTEM~8.XML|System.Security.Principal.Windows.xml" Attributes="0" SourcePath="TraXile\bin\Release\System.Security.Principal.Windows.xml" SelfReg="false"/>
+    <ROW File="TraXile.application" Component_="Microsoft.Data.Sqlite.xml" FileName="TRAXIL~1.APP|TraXile.application" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.application" SelfReg="false"/>
     <ROW File="TraXile.exe" Component_="TraXile.exe" FileName="TraXile.exe" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="TraXile.exe.config" Component_="log4net.config" FileName="TRAXIL~1.CON|TraXile.exe.config" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.exe.config" SelfReg="false"/>
-    <ROW File="TraXile.exe.manifest" Component_="log4net.config" FileName="TRAXIL~1.MAN|TraXile.exe.manifest" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.exe.manifest" SelfReg="false"/>
+    <ROW File="TraXile.exe.config" Component_="Microsoft.Data.Sqlite.xml" FileName="TRAXIL~1.CON|TraXile.exe.config" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.exe.config" SelfReg="false"/>
+    <ROW File="TraXile.exe.manifest" Component_="Microsoft.Data.Sqlite.xml" FileName="TRAXIL~1.MAN|TraXile.exe.manifest" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.exe.manifest" SelfReg="false"/>
     <ROW File="TraXile.pdb" Component_="TraXile.exe" FileName="TraXile.pdb" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.pdb" SelfReg="false"/>
+    <ROW File="Json.Net.dll" Component_="Json.Net.dll" FileName="JSONNE~1.DLL|Json.Net.dll" Attributes="0" SourcePath="TraXile\bin\Release\Json.Net.dll" SelfReg="false"/>
+    <ROW File="log4net.config" Component_="Microsoft.Data.Sqlite.xml" FileName="LOG4NE~1.CON|log4net.config" Attributes="0" SourcePath="TraXile\bin\Release\log4net.config" SelfReg="false"/>
+    <ROW File="log4net.dll" Component_="log4net.dll" FileName="log4net.dll" Attributes="0" SourcePath="TraXile\bin\Release\log4net.dll" SelfReg="false"/>
+    <ROW File="MaterialSkin.dll" Component_="MaterialSkin.dll" FileName="MATERI~1.DLL|MaterialSkin.dll" Attributes="0" SourcePath="TraXile\bin\Release\MaterialSkin.dll" SelfReg="false"/>
+    <ROW File="System.Reactive.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTEM~9.XML|System.Reactive.xml" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Reactive.xml" SelfReg="false"/>
     <ROW File="System.Threading.Tasks.Extensions.dll" Component_="System.Threading.Tasks.Extensions.dll" FileName="SYSTEM~9.DLL|System.Threading.Tasks.Extensions.dll" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Threading.Tasks.Extensions.dll" SelfReg="false"/>
-    <ROW File="System.Threading.Tasks.Extensions.xml" Component_="log4net.config" FileName="SYSTEM~9.XML|System.Threading.Tasks.Extensions.xml" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Threading.Tasks.Extensions.xml" SelfReg="false"/>
+    <ROW File="System.Threading.Tasks.Extensions.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTE~10.XML|System.Threading.Tasks.Extensions.xml" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Threading.Tasks.Extensions.xml" SelfReg="false"/>
     <ROW File="System.ValueTuple.dll" Component_="System.ValueTuple.dll" FileName="SYSTE~10.DLL|System.ValueTuple.dll" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.ValueTuple.dll" SelfReg="false"/>
-    <ROW File="System.ValueTuple.xml" Component_="log4net.config" FileName="SYSTE~10.XML|System.ValueTuple.xml" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.ValueTuple.xml" SelfReg="false"/>
+    <ROW File="System.ValueTuple.xml" Component_="Microsoft.Data.Sqlite.xml" FileName="SYSTE~11.XML|System.ValueTuple.xml" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.ValueTuple.xml" SelfReg="false"/>
     <ROW File="TraXile.Updater.exe" Component_="TraXile.Updater.exe" FileName="TRAXIL~1.EXE|TraXile.Updater.exe" Attributes="0" SourcePath="TraXile.Updater\bin\Release\TraXile.Updater.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="TraXile.Updater.exe.config" Component_="log4net.config" FileName="TRAXIL~2.CON|TraXile.Updater.exe.config" Attributes="0" SourcePath="TraXile.Updater\bin\Release\TraXile.Updater.exe.config" SelfReg="false"/>
+    <ROW File="TraXile.Updater.exe.config" Component_="Microsoft.Data.Sqlite.xml" FileName="TRAXIL~2.CON|TraXile.Updater.exe.config" Attributes="0" SourcePath="TraXile.Updater\bin\Release\TraXile.Updater.exe.config" SelfReg="false"/>
     <ROW File="TraXile.Updater.pdb" Component_="TraXile.Updater.exe" FileName="TRAXIL~1.PDB|TraXile.Updater.pdb" Attributes="0" SourcePath="TraXile.Updater\bin\Release\TraXile.Updater.pdb" SelfReg="false"/>
     <ROW File="System.Reactive.dll" Component_="System.Reactive.dll" FileName="SYSTE~11.DLL|System.Reactive.dll" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Reactive.dll" SelfReg="false"/>
-    <ROW File="System.Reactive.xml" Component_="log4net.config" FileName="SYSTE~11.XML|System.Reactive.xml" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Reactive.xml" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" Languages="en" InstallationType="4" UseLargeSchema="true"/>
@@ -207,11 +205,8 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatCompsComponent">
     <ROW Feature_="MainFeature" Component_="APPDIR"/>
     <ROW Feature_="MainFeature" Component_="ProductInformation"/>
-    <ROW Feature_="MainFeature" Component_="Json.Net.dll"/>
-    <ROW Feature_="MainFeature" Component_="log4net.config"/>
-    <ROW Feature_="MainFeature" Component_="log4net.dll"/>
-    <ROW Feature_="MainFeature" Component_="MaterialSkin.dll"/>
     <ROW Feature_="MainFeature" Component_="Microsoft.Data.Sqlite.dll"/>
+    <ROW Feature_="MainFeature" Component_="Microsoft.Data.Sqlite.xml"/>
     <ROW Feature_="MainFeature" Component_="Newtonsoft.Json.dll"/>
     <ROW Feature_="MainFeature" Component_="Sprache.dll"/>
     <ROW Feature_="MainFeature" Component_="SQLitePCLRaw.batteries_v2.dll"/>
@@ -219,11 +214,11 @@
     <ROW Feature_="MainFeature" Component_="SQLitePCLRaw.nativelibrary.dll"/>
     <ROW Feature_="MainFeature" Component_="SQLitePCLRaw.provider.dynamic_cdecl.dll"/>
     <ROW Feature_="MainFeature" Component_="System.Buffers.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Configuration.ConfigurationManager.dll"/>
     <ROW Feature_="MainFeature" Component_="e_sqlite3.dll"/>
     <ROW Feature_="MainFeature" Component_="e_sqlite3.dll_1"/>
     <ROW Feature_="MainFeature" Component_="e_sqlite3.dll_2"/>
     <ROW Feature_="MainFeature" Component_="TraXile.exe_1"/>
+    <ROW Feature_="MainFeature" Component_="System.Configuration.ConfigurationManager.dll"/>
     <ROW Feature_="MainFeature" Component_="System.Memory.dll"/>
     <ROW Feature_="MainFeature" Component_="System.Numerics.Vectors.dll"/>
     <ROW Feature_="MainFeature" Component_="System.Runtime.CompilerServices.Unsafe.dll"/>
@@ -231,6 +226,9 @@
     <ROW Feature_="MainFeature" Component_="System.Security.Permissions.dll"/>
     <ROW Feature_="MainFeature" Component_="System.Security.Principal.Windows.dll"/>
     <ROW Feature_="MainFeature" Component_="TraXile.exe"/>
+    <ROW Feature_="MainFeature" Component_="Json.Net.dll"/>
+    <ROW Feature_="MainFeature" Component_="log4net.dll"/>
+    <ROW Feature_="MainFeature" Component_="MaterialSkin.dll"/>
     <ROW Feature_="MainFeature" Component_="System.Threading.Tasks.Extensions.dll"/>
     <ROW Feature_="MainFeature" Component_="System.ValueTuple.dll"/>
     <ROW Feature_="MainFeature" Component_="TraXile.Updater.exe"/>
@@ -267,10 +265,6 @@
     <ROW Registry="ProductName" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="\"/>
     <ROW Registry="Software" Root="-1" Key="Software" Name="\"/>
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
-  </COMPONENT>
-  <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
-    <ROW Shortcut="TraXile" Directory_="DesktopFolder" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Description="TraXile" Hotkey="0" Icon_="favicon96x96.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
-    <ROW Shortcut="TraXile_1" Directory_="StartMenuFolder" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Description="TraXile" Hotkey="0" Icon_="favicon96x96.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>
