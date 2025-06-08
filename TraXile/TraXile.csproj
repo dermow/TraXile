@@ -77,7 +77,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>favicon-96x96.ico</ApplicationIcon>
+    <ApplicationIcon>ic-task.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TEST|AnyCPU'">
     <OutputPath>bin\TEST\</OutputPath>
@@ -388,6 +388,14 @@
     <None Include="Resources\d73a9d7f881b3ee6d3e11c5c13382e37.jpg" />
     <None Include="Resources\trax.jpg" />
     <None Include="Resources\Changelog.md" />
+    <None Include="Resources\ic-play.png" />
+    <None Include="Resources\ic-play-small.png" />
+    <None Include="Resources\ic-pause-small.png" />
+    <None Include="Resources\ic-stop-small.png" />
+    <None Include="Resources\ic-stopwatch-transparent.png" />
+    <None Include="Resources\logo-bk.png" />
+    <None Include="Resources\logo-white.png" />
+    <Content Include="ic-task.ico" />
     <Content Include="TraXileOverlay.png" />
     <Content Include="version.xml" />
     <None Include="log4net.config">

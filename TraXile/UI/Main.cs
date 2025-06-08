@@ -4318,7 +4318,7 @@ namespace TraXile
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenChildWindow(new AboutForm());
+            OpenChildWindow(new AboutForm(msm.Theme.ToString()));
         }
 
         private void pictureBox14_Click_1(object sender, EventArgs e)
@@ -4594,12 +4594,12 @@ namespace TraXile
 
         private void infoToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            OpenChildWindow(new AboutForm());
+            OpenChildWindow(new AboutForm(msm.Theme.ToString()));
         }
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            OpenChildWindow(new AboutForm(), true);
+            OpenChildWindow(new AboutForm(msm.Theme.ToString()), true);
         }
 
         private void button21_Click(object sender, EventArgs e)
@@ -5313,6 +5313,11 @@ namespace TraXile
         private void debugToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ShowDebugInfo();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

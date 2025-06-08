@@ -1,13 +1,26 @@
 ﻿using System.Windows.Forms;
+using MaterialSkin;
 using MaterialSkin.Controls;
 
 namespace TraXile.UI
 {
     public partial class AboutForm : MaterialForm
     {
-        public AboutForm()
+        public PictureBox pictureBox => this.pictureBox1;
+
+        public AboutForm(string theme)
         {
             InitializeComponent();
+
+            if(theme == "DARK")
+            {
+                pictureBox1.Image = Properties.Resources.logo_white;
+            }
+            else
+            {
+                pictureBox1.Image = Properties.Resources.logo_bk;
+            }
+
             materialLabel2.Text = $"{TrX_Static.VERSION} (Build: {TrX_Static.BUILDTIME})";
         }
 
