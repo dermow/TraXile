@@ -44,19 +44,19 @@ TraXile is a potential alternative to "Mapwatch," a similar tool that was recent
 
 - **Activity Tracking (Live & Historical) ⏱️**  
   Track time and stats for your in-game activities (maps, heist contracts, sanctum, etc.) both live (while TraXile is open) and retroactively from your Client.txt log file.  
-  <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_TimeTracking.png?raw=true" width="600"/>
+  <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/NewUI_1.png?raw=true" width="600"/>
 
 - **Comprehensive Statistics 📊**  
   Collect and analyze various game-related statistics.  
-  <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/MappingChart.png?raw=true" width="600"/>
+  <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/MappingChart.png?raw=true" width="600"/>
 
 - **Activity Analysis 🔍**  
   Deep-dive into farming strategies and optimize your gameplay with detailed analysis.  
-  <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/SummaryWindow.png?raw=true" width="600"/>
+  <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/SummaryWindow.png?raw=true" width="600"/>
 
 - **In-Game Overlay 🖥️**  
   Keep track of your map time and see which content you’ve encountered, all while playing.  
-  <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/Overlays.png?raw=true" width="600"/>
+  <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Overlays.png?raw=true" width="600"/>
 
 ---
 
