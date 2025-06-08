@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using static System.Windows.Forms.ListViewItem;
-using System;
 
 namespace TraXile
 {
@@ -94,7 +93,7 @@ namespace TraXile
             catch
             {
             }
-           
+
             FilterByNameList(names);
         }
 

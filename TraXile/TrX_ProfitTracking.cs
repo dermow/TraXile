@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TraXile
 {
@@ -68,7 +64,7 @@ namespace TraXile
                 StreamReader r = new StreamReader(_xmlSavePath);
                 string xmlstr = r.ReadToEnd();
 
-                if(xmlstr.Contains("Exalts"))
+                if (xmlstr.Contains("Exalts"))
                 {
                     xmlstr = xmlstr.Replace("Exalts", "Divines");
                     r.Close();

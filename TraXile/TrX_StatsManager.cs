@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.Sqlite;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.Sqlite;
 
 namespace TraXile
 {
@@ -214,6 +214,6 @@ namespace TraXile
             _myDB.DoNonQuery("INSERT INTO tx_stats (timestamp, stat_name, stat_value) VALUES (" + ((DateTimeOffset)dt).ToUnixTimeSeconds() + ", '" + s_key + "', " + _numericStats[s_key] + ")");
         }
 
-       
+
     }
 }

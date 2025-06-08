@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TraXile.UI
@@ -87,29 +81,29 @@ namespace TraXile.UI
             lbl.ForeColor = Color.LightGray;
         }
 
-        private void SetLabelToTag(Label lbl, TrX_ActivityTag tag)
+        private void SetLableActive(Label lbl, TrX_ActivityTag tag)
         {
-            lbl.ForeColor = tag.ForeColor;
-            lbl.BackColor = tag.BackColor;
+            lbl.ForeColor = _mainWindow.msm.ColorScheme.TextColor;
+            lbl.BackColor = _mainWindow.msm.ColorScheme.AccentColor;
             lbl.Text = tag.DisplayName;
         }
 
         public void UpdateOverlay()
         {
-            if(_currentActivity == null)
+            if (_currentActivity == null)
             {
                 SetLabelInactive(label1);
                 SetLabelInactive(label2);
                 SetLabelInactive(label3);
             }
 
-            if(_tag1 != null)
+            if (_tag1 != null)
             {
                 label1.Text = _tag1.DisplayName;
 
-                if(_currentActivity != null && _currentActivity.HasTag(_tag1.ID))
+                if (_currentActivity != null && _currentActivity.HasTag(_tag1.ID))
                 {
-                    SetLabelToTag(label1, _tag1);
+                    SetLableActive(label1, _tag1);
                 }
                 else
                 {
@@ -128,7 +122,7 @@ namespace TraXile.UI
 
                 if (_currentActivity != null && _currentActivity.HasTag(_tag2.ID))
                 {
-                    SetLabelToTag(label2, _tag2);
+                    SetLableActive(label2, _tag2);
                 }
                 else
                 {
@@ -147,7 +141,7 @@ namespace TraXile.UI
 
                 if (_currentActivity != null && _currentActivity.HasTag(_tag3.ID))
                 {
-                    SetLabelToTag(label3, _tag3);
+                    SetLableActive(label3, _tag3);
                 }
                 else
                 {
@@ -157,7 +151,7 @@ namespace TraXile.UI
             else
             {
                 label3.Text = "-";
-               SetLabelInactive(label3);
+                SetLabelInactive(label3);
             }
         }
 

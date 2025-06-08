@@ -1,6 +1,3 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -9,105 +6,127 @@
 
 <div align="center">
   <a href="https://github.com/dermow/TraXile">
-    <img src="https://github.com/dermow/TraXile/blob/master/TraXile/Resources/trax.jpg?raw=true" />
+    <img src="https://github.com/dermow/TraXile/blob/master/TraXile/Resources/trax.jpg?raw=true" alt="TraXile Logo" width="400"/>
   </a>
+  <h1>TraXile</h1>
+  <p>
+    <strong>Track and analyze your Path of Exile activities in real time and historically.</strong>
+  </p>
+  <p>
+    <a href="https://www.youtube.com/watch?v=jZ8eiCNOiM4">▶️ Introduction Video</a> |
+    <a href="https://github.com/dermow/TraXile/releases/latest">⬇️ Download Latest Release</a>
+  </p>
 </div>
 
-# Table of Contents
-<!--ts-->
-   * [About](#About)
-   * [Features](#Features)
-   * [Getting Started](#Getting-Started)
-        * [Video](#Video)
-        * [Installation](#Installation)
-        * [First Steps](#First-Steps)
-        * [Update](#Update)
-   * [FAQ](#FAQ)
-<!--te-->
+---
 
-# About
-Traxile is a tracking and statistics tool for Path of Exile. It reads your client log file and provides you with real-time and long-term statistics for your in-game activities. Download Traxile from GitHub, install it, and select your log file. The tool gives you detailed information about your maps, boss fights, and other activities. Additionally, Traxile offers a "Stop Watch Overlay," allowing you to see your map time directly in-game.
+## 📑 Table of Contents
 
-Traxile can be a potential alternative to "Mapwatch", a similar tool that was recently discontinued. Many thanks to the developer of Mapwatch, whose work inspired me to create this tool.
+- [ℹ️ About](#about)
+- [✨ Features](#features)
+- [🚀 Getting Started](#getting-started)
+  - [💾 Installation](#installation)
+  - [🛠️ First Steps](#first-steps)
+  - [⬆️ Update](#update)
+- [❓ FAQ](#faq)
 
-You can check out my introduction video to get started:
-https://www.youtube.com/watch?v=jZ8eiCNOiM4
+---
 
-# Features
-## Activity Tracking (Live and backwards)
-Track time and other stats for your ingame activities (maps, heist contracts, sanctum...). Works for live tracking (TraXile open while you are playing)
-and backwards for all data in your Client.txt logfile.
+## ℹ️ About
 
-<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_TimeTracking.png?raw=true" />
+**TraXile** is a tracking and statistics tool for Path of Exile. It reads your game’s client log file and provides real-time and historical statistics about your in-game activities.
 
-## Ingame Overlay
-<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Overlay.png?raw=true" />
+TraXile is a potential alternative to "Mapwatch," a similar tool that was recently discontinued. Special thanks to Mapwatch’s developer for the inspiration!
 
-## Statistic collection
-Collect and show statistics around the Game.
-<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Stats.png?raw=true" />
+---
 
-## Analyze your activities
-<img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_Summary.png?raw=true" />
+## ✨ Features
 
-## Installation
-Download the latest release and execute the MSI-Installer file.
+- **Activity Tracking (Live & Historical) ⏱️**  
+  Track time and stats for your in-game activities (maps, heist contracts, sanctum, etc.) both live (while TraXile is open) and retroactively from your Client.txt log file.  
+  <img src="https://github.com/dermow/TraXile/blob/master/Docu/Images/Traxile_Screenshot_TimeTracking.png?raw=true" width="600"/>
 
-## First steps
-After the first start, you have to select the path to your Client.txt logfile. The most common default paths listed below:
+- **Comprehensive Statistics 📊**  
+  Collect and analyze various game-related statistics.  
+  <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/MappingChart.png?raw=true" width="600"/>
 
-| Client  | Path | Example |
-|---|---|---|
-| Windows (Steam)  | %SteamLibrary%\steamapps\commmon\Path of Exile\Logs\Client.txt  | C:\Steam\steamapps\common\Path of Exile\logs\Client.txt |
-| Windows (Standalone)  | %InstallDirectory%\Logs\Client.txt  | C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt |
-| Mac OS (with Crossover or similar)  | /Users/YOUR_USERNAME/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt  | /Users/mow/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt |
+- **Activity Analysis 🔍**  
+  Deep-dive into farming strategies and optimize your gameplay with detailed analysis.  
+  <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/SummaryWindow.png?raw=true" width="600"/>
 
-After you selected the logfile, TraXile will start importing all data thats inside it - and writes that data in its own database. After the initial import, the start of TraXile will
-be much faster.
+- **In-Game Overlay 🖥️**  
+  Keep track of your map time and see which content you’ve encountered, all while playing.  
+  <img src="https://github.com/dermow/TraXile/blob/rework_326/Docu/Images/Overlays.png?raw=true" width="600"/>
 
-## Update
-You will be automatically notified when a new version is available. Just follow the instructions to update.
-If this is not working for any reason, you can always download the latest relase here and install it manually.
+---
 
-# FAQ
-### TraXile is not tracking any of my activities, even if I seleted the correct path to Client.txt file
-Make sure your local area chat is enabled, TraXile depends on the log lines to work.
+## 🚀 Getting Started
 
-### Why can´t the data be filtered by character name?
-Unfornately, the name of your in character is not written to the Client logfile.
+### 💾 Installation
 
-### Are only activities tracked if I have TraXile running while playing?
-No, TraXile reads all data that is in your Client.txt logfile, so even If TraXile is not running, your maps and stuff like that will still appear in history. But you have a bunch of
-options while TraXile is running - for exampel you can manually pause the stopwatch.
+1. **Download** the latest release from the [releases page](https://github.com/dermow/TraXile/releases/latest).
+2. **Run** the MSI installer and follow the on-screen instructions.
 
-### Why is Windows warning me during the installation?
-As I am developing TraXile completely in my sparetime, I am not paying for a Code Signing certificate, which is needed to be a trusted developer for Windows.
+### 🛠️ First Steps
 
-### Is this app sending any data to the Internet?
-Only internet connections are the check for a new version and the download of some metadata (league start and end-dates for example)
+1. **Select your Client.txt log file:**  
+   On first launch, TraXile will try to auto-detect the log file. If not found, select it manually.
 
-### I ran two maps of the same area - and TraXile counted them as one map?
-This could happen if you are running the same map multiple time in a row, and randomly two maps in a row gets the same server instance. In that case TraXile has no chance to 
-seperate this maps automatically. There is an ingame chat command "trax::split" you could use to solve this (if it is very important for you).
+   **Default locations:**
 
-### Why isn´t that a web based appliation?
-Because TraXile permanently reads you Client.txt logfile - thats much easier with a desktop application.
+   | Platform        | Path                                                                 | Example                                                        |
+   |-----------------|----------------------------------------------------------------------|----------------------------------------------------------------|
+   | Windows (Steam) | `%SteamLibrary%\steamapps\common\Path of Exile\Logs\Client.txt`      | `C:\Steam\steamapps\common\Path of Exile\logs\Client.txt`      |
+   | Windows (Standalone) | `%InstallDirectory%\Logs\Client.txt`                            | `C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt` |
+   | Mac (with Crossover) | `/Users/YOUR_USERNAME/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt` | `/Users/mow/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt` |
 
-### Can I install TraXile on my Mac?
-TraXile is designed for Windows computers. But you can use Crossover to install it on mac anyway. Here is a short How-To (thanks to reddit user [Unifer1](https://www.reddit.com/user/Unifer1/))
+2. **Import your data:**  
+   TraXile will import all historical data from your log file into its internal database. This may take a moment on first use.
 
-    * Install the newest version of Crossover
-    * Click "Install a new bottle"
-    * Click "Install an unlisted application"
-    * Create a new Windows 10 64-bit bottle named Traxile
-    * Select the "Setup.msi" installer file
-    * Click Install
-    * Once the install is done, open Traxile.
-    * On first open, you'll need to find the Client.txt logfile; on macOS it's located at: /Users/[yourusername]/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt
-    * Should work automatically every time you start up from now on!
+### ⬆️ Update
+
+- TraXile will notify you when a new version is available.  
+  If auto-update fails, manually [download the latest release](https://github.com/dermow/TraXile/releases/latest) and install it.
+
+---
+
+## ❓ FAQ
+
+**TraXile isn’t tracking any activities, even with the correct Client.txt path.**  
+Make sure your local area chat is enabled; TraXile depends on these log lines.
+
+**Why can't I filter data by character name?**  
+Unfortunately, the Client.txt log file does not include the character name.
+
+**Do I need TraXile running while playing to track activities?**  
+No. TraXile reads all data in your Client.txt file, so past activities are tracked even if TraXile wasn’t running.
+
+**Why does Windows warn me during installation?**  
+As an independent developer, I do not use a Code Signing certificate, which causes Windows to show a warning.
+
+**Does the app send data to the Internet?**  
+Only to check for new versions and download some metadata (e.g., league dates).
+
+**Why did running two maps in a row count as one map?**  
+If two maps use the same server instance, TraXile may group them together. Use the in-game chat command `trax::split` to separate them if needed.
+
+**Why isn’t this a web-based application?**  
+Continuous log file reading is much easier with a desktop app.
+
+**Can I install TraXile on Mac?**  
+TraXile is designed for Windows, but you can use Crossover to install it on Mac.  
+[Unifer1’s Reddit Guide](https://www.reddit.com/user/Unifer1/):
+
+- Install Crossover
+- "Install a new bottle" → "Install an unlisted application"
+- Create a Windows 10 64-bit bottle named TraXile
+- Select and install the `Setup.msi`
+- On first run, select your Client.txt log file
+- Should work automatically after setup
+
+---
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/dermow/TraXIle.svg?style=for-the-badge
 [contributors-url]: https://github.com/dermow/TraXile/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/dermow/TraXile.svg?style=for-the-badge
@@ -118,6 +137,3 @@ TraXile is designed for Windows computers. But you can use Crossover to install 
 [issues-url]: https://github.com/dermow/TraXile/issues
 [license-shield]: https://img.shields.io/github/license/dermow/TraXile.svg?style=for-the-badge
 [license-url]: https://github.com/dermow/TraXile/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png

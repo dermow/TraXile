@@ -315,7 +315,7 @@ namespace TraXile
                 { "] The Trialmaster: Your series of victories has reached its end.", EVENT_TYPES.TRIALMASTER_PLAYER_LOSS },
                 { "] The Trialmaster: Hahahahaha! Your luck is over, fool!", EVENT_TYPES.TRIALMASTER_PLAYER_LOSS },
                 { "] The Trialmaster: My master, it is done! Torture me no longer!", EVENT_TYPES.TRIALMASTER_PLAYER_LOSS },
-                
+
                 { "] The Trialmaster: ", EVENT_TYPES.TRIALMASTER_ENCOUNTERED },
 
                 {"Strange Voice: So be it.", EVENT_TYPES.SIMULACRUM_FULLCLEAR },
