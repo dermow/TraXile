@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TraXile.UI
@@ -38,7 +33,7 @@ namespace TraXile.UI
                 panel2.BackColor = Color.Green;
                 button1.Enabled = true;
 
-                foreach(string s in _changes)
+                foreach (string s in _changes)
                 {
                     textBox1.AppendText($"- {s}{Environment.NewLine}");
                 }

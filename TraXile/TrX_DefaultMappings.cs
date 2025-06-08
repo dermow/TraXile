@@ -70,7 +70,7 @@ namespace TraXile
 
         // Abyss areas
         private List<string> _abyssAreas;
-        
+
 
         public List<string> AbyssalAreas => _abyssAreas;
 

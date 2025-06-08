@@ -11,7 +11,7 @@ namespace TraXile
         readonly string _xmlPath;
 
         // Key value store
-        readonly Dictionary<string, string> kvStore;
+        public readonly Dictionary<string, string> kvStore;
 
         /// <summary>
         /// Constructor

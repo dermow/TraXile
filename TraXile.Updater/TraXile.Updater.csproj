@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>favicon-96x96.ico</ApplicationIcon>
+    <ApplicationIcon>ic-task.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TEST|AnyCPU'">
     <OutputPath>bin\TEST\</OutputPath>
@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon-96x96.ico" />
+    <Content Include="ic-task.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

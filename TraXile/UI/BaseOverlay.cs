@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using MaterialSkin;
 
 namespace TraXile.UI
 {
@@ -30,7 +23,7 @@ namespace TraXile.UI
         // https://stackoverflow.com/questions/4163655/form-height-problem-when-formborderstyle-is-none
         internal Size _customSize = new Size(200, 27);
         internal Main _mainWindow;
-       
+
         public Main MainWindow
         {
             get { return _mainWindow; }
@@ -39,6 +32,7 @@ namespace TraXile.UI
 
         internal Color _defaultBackColor;
         internal Color _defaultForeColor;
+
 
         public BaseOverlay()
         {
@@ -55,7 +49,7 @@ namespace TraXile.UI
             this.MouseMove += OverlayStopwatchSimple_MouseMove;
             this.MouseClick += BaseOverlay_MouseClick;
             this.Load += BaseOverlay_Load1;
-            
+
             InitializeComponent();
             _initalPoint = new Point();
         }
@@ -67,7 +61,7 @@ namespace TraXile.UI
 
         internal void BaseOverlay_MouseClick(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
                 contextMenuStrip1.Show(this, e.Location);
             }
@@ -75,7 +69,7 @@ namespace TraXile.UI
 
         internal void OverlayStopwatchSimple_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
                 _flagMouseDown = true;
                 _initalPoint = e.Location;
@@ -92,7 +86,7 @@ namespace TraXile.UI
 
         internal void OverlayStopwatchSimple_MouseMove(object sender, MouseEventArgs e)
         {
-            if(_flagMouseDown && _isMovable)
+            if (_flagMouseDown && _isMovable)
             {
                 this.Location = new Point(e.X + this.Left - _initalPoint.X,
                       e.Y + this.Top - _initalPoint.Y);
@@ -105,11 +99,16 @@ namespace TraXile.UI
             BackColor = _isMovable ? Color.LightBlue : _defaultBackColor;
             contextMenuStrip1.Items[0].Text = _isMovable ? "Fix Position" : "Move";
 
-            if(!_isMovable)
+            if (!_isMovable)
             {
                 _mainWindow.AddUpdateAppSettings($"overlay.{_id}.x", this.Location.X.ToString());
                 _mainWindow.AddUpdateAppSettings($"overlay.{_id}.y", this.Location.Y.ToString());
             }
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private void BaseOverlay_Load(object sender, EventArgs e)

@@ -59,7 +59,7 @@ namespace TraXile.Updater
             Log("Download successful. Saved installer to: " + _myAppData);
 
             Process[] p = Process.GetProcessesByName("TraXile");
-            
+
             if (p.Length > 0)
             {
                 Log("TraXile is running and will be closed now.");

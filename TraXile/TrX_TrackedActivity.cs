@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
-using Json.Net;
 using Newtonsoft.Json;
 
 namespace TraXile
@@ -109,7 +107,7 @@ namespace TraXile
             set { _totalSeconds = value; }
         }
 
-       
+
 
         // Activity Type
         private ACTIVITY_TYPES _activityType;
@@ -278,8 +276,8 @@ namespace TraXile
         public DateTime Started
         {
             get { return _startTime; }
-            set 
-            { 
+            set
+            {
                 _startTime = value;
                 _lastTimeEntered = value;
             }
@@ -349,7 +347,7 @@ namespace TraXile
         private DateTime _lastTimeEntered;
         public DateTime LastTimeEntered
         {
-            get {  return _lastTimeEntered; }
+            get { return _lastTimeEntered; }
             set { _lastTimeEntered = value; }
         }
 
@@ -377,13 +375,13 @@ namespace TraXile
             string s;
             ts = TimeSpan.FromSeconds(_totalSeconds > cap ? cap : _totalSeconds);
             s = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
-            if(_totalSeconds > cap)
+            if (_totalSeconds > cap)
             {
                 s += " (cap)";
             }
             return s;
         }
-        
+
         /// <summary>
         ///  Check if this activity has a specific tag
         /// </summary>
@@ -539,10 +537,10 @@ namespace TraXile
             output = "{0};{1};{2};{3};{4};{5};{6}";
             tags = "";
 
-            for(int i = 0; i < _tagIDs.Count; i++)
+            for (int i = 0; i < _tagIDs.Count; i++)
             {
                 tags += _tagIDs[i];
-                if(i < (_tagIDs.Count-1))
+                if (i < (_tagIDs.Count - 1))
                 {
                     tags += ",";
                 }
@@ -560,27 +558,27 @@ namespace TraXile
             List<TrX_TrackedActivity> results;
             results = new List<TrX_TrackedActivity>();
 
-            if(_logbbookSide != null)
+            if (_logbbookSide != null)
             {
                 results.Add(_logbbookSide);
             }
 
-            if(_zanaMap != null)
+            if (_zanaMap != null)
             {
                 results.Add(_zanaMap);
             }
 
-            if(_labTrial != null)
+            if (_labTrial != null)
             {
                 results.Add(_labTrial);
             }
 
-            if(_vaalArea != null)
+            if (_vaalArea != null)
             {
                 results.Add(_vaalArea);
             }
 
-            if(_abyssArea != null)
+            if (_abyssArea != null)
             {
                 results.Add(_abyssArea);
             }
@@ -615,6 +613,6 @@ namespace TraXile
         }
 
 
-      
+
     }
 }

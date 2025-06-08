@@ -1,6 +1,6 @@
-﻿using log4net;
+﻿using System;
+using log4net;
 using Microsoft.Data.Sqlite;
-using System;
 
 namespace TraXile
 {
@@ -97,7 +97,7 @@ namespace TraXile
             cmd.CommandText = "create table if not exists tx_enchant_history " +
                 "(" +
                 "lab_timestamp integer, " +
-                "enchant_id integer, " + 
+                "enchant_id integer, " +
                 "action text)";
             cmd.ExecuteNonQuery();
 
@@ -108,7 +108,7 @@ namespace TraXile
                 "enchant_id integer, " +
                 "enchant_note text)";
             cmd.ExecuteNonQuery();
-            
+
             Patch();
         }
 
@@ -196,6 +196,18 @@ namespace TraXile
             catch
             {
             }
+
+            // Update 2.0.0
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "update tx_tags set tag_display = 'ultimatum-reward' where tag_display = 'ultimatum-took-reward'";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 2.0.0 -> " + cmd.CommandText);
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>
@@ -206,7 +218,7 @@ namespace TraXile
         public void SetKVStoreValue(string key, string value)
         {
             string query;
-            if(!CheckIfKVEntryExists(key))
+            if (!CheckIfKVEntryExists(key))
             {
                 query = string.Format("INSERT INTO tx_kvstore (key, value) VALUES ('{0}', '{1}')", key, value);
             }
@@ -226,9 +238,9 @@ namespace TraXile
         {
             SqliteDataReader reader;
             reader = GetSQLReader(string.Format("SELECT COUNT(*) FROM tx_kvstore WHERE key = '{0}'", key));
-            while(reader.Read())
+            while (reader.Read())
             {
-                if(reader.GetInt32(0) > 0)
+                if (reader.GetInt32(0) > 0)
                 {
                     return true;
                 }
@@ -249,7 +261,7 @@ namespace TraXile
             {
                 val = GetSingleValue(string.Format("SELECT value FROM tx_kvstore WHERE key = '{0}'", key));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _log.Error(ex.Message);
                 _log.Debug(ex.ToString());
@@ -271,7 +283,7 @@ namespace TraXile
             try
             {
                 reader = GetSQLReader(query);
-                while(reader.Read())
+                while (reader.Read())
                 {
                     return reader.GetString(0);
                 }
@@ -279,7 +291,7 @@ namespace TraXile
             }
             catch
             {
-                return null; 
+                return null;
             }
         }
 

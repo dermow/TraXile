@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows.Forms;
+using MaterialSkin.Controls;
 
 namespace TraXile
 {
-    public partial class ChatCommandHelp : Form
+    public partial class ChatCommandHelp : MaterialForm
     {
         public ChatCommandHelp()
         {
