@@ -17,6 +17,7 @@ using MaterialSkin;
 using MaterialSkin.Controls;
 using Newtonsoft.Json;
 using TraXile.UI;
+using System.IO.Compression;
 
 
 namespace TraXile
@@ -266,7 +267,15 @@ namespace TraXile
 
             foreach (TableLayoutPanel cnt in TrX_Helpers.GetAll(form, typeof(TableLayoutPanel)))
             {
-                cnt.BackColor = msm.BackdropColor;
+                 cnt.BackColor = msm.BackdropColor;
+            }
+
+            // Special Table Panels
+            tableLayoutPanel2.BackColor = msm.BackgroundColor;
+
+            foreach (Panel cnt in TrX_Helpers.GetAll(form, typeof(Panel)))
+            {
+                cnt.BackColor = msm.BackgroundColor;
             }
 
             foreach (MenuStrip cnt in TrX_Helpers.GetAll(form, typeof(MenuStrip)))
@@ -1508,12 +1517,12 @@ namespace TraXile
                 _tagLabels.Clear();
             }
 
-            int iOffsetX = 10;
+            int iOffsetX = 30;
             int ioffsetY = 55;
             int iLabelWidth = 120;
             int iMaxCols = 5;
 
-            iMaxCols = (groupBoxTrackingTags.Width - 40) / iLabelWidth;
+            iMaxCols = (groupBoxTrackingTags.Width - (iOffsetX*2)) / iLabelWidth;
 
             int iX = iOffsetX;
             int iY = ioffsetY;
@@ -5013,16 +5022,8 @@ namespace TraXile
             this.ShowInTaskbar = true;
         }
 
-        private void SetMaximizedBounds()
-        {
-            Rectangle workingArea = Screen.GetWorkingArea(this);
-            this.MaximizedBounds = new Rectangle(workingArea.X + 2, workingArea.Y + 5, workingArea.Width, workingArea.Height - 5);
-        }
-
         private void Main_Resize(object sender, EventArgs e)
         {
-            SetMaximizedBounds();
-
             if (this.WindowState == FormWindowState.Minimized)
             {
                 if (_minimizeToTray)
@@ -5199,7 +5200,7 @@ namespace TraXile
                 _splitterBackFromMinimizedWinddow = true;
             }
 
-            if (this.WindowState == FormWindowState.Normal)
+            if (this.WindowState == FormWindowState.Normal || this.WindowState == FormWindowState.Maximized)
             {
                 if (_splitterBackFromMinimizedWinddow)
                 {
@@ -5224,7 +5225,94 @@ namespace TraXile
 
         private void Main_Move(object sender, EventArgs e)
         {
-            SetMaximizedBounds();
+        }
+
+        private void ShowDebugInfo()
+        {
+            DebugInfo di = new DebugInfo(this);
+            di.DebugInfoTextBox.Text = GetSupportInfoText();
+            OpenChildWindow(di);
+        }
+
+        private void AddSupportTextLine(string key, string value, StringBuilder sb)
+        {
+            sb.AppendLine($"{key}: {value}");
+        }
+
+        public string GetSupportInfoText()
+        {
+            StringBuilder sb = new StringBuilder();
+            AddSupportTextLine("Date and time", DateTime.Now.ToString(), sb);
+            AddSupportTextLine("Timezone", TimeZone.CurrentTimeZone.StandardName.ToString(), sb);
+            AddSupportTextLine("Calendar", CultureInfo.CurrentCulture.Calendar.ToString(), sb);
+            AddSupportTextLine("Application Version", TrX_Static.VERSION, sb);
+            AddSupportTextLine("Application Build Timestamp", TrX_Static.BUILD.ToString(), sb);
+            AddSupportTextLine("Startup Path", Application.StartupPath, sb);
+            AddSupportTextLine("AppData Path", TrX_Static.APPDATA_PATH, sb); 
+            AddSupportTextLine("Window Size", $"{this.Size.Width}x{this.Size.Height}", sb);
+            AddSupportTextLine("Window Location", $"{this.Location.X}x{this.Location.Y}", sb);
+            AddSupportTextLine("Window State", this.WindowState.ToString(), sb);
+            AddSupportTextLine("Logfile Path", _logic.ClientTxtPath, sb);
+            AddSupportTextLine("Logfile Last Write", File.GetLastWriteTime(_logic.ClientTxtPath).ToString(), sb);
+            AddSupportTextLine("Logfile Size", $"{new FileInfo(_logic.ClientTxtPath).Length} bytes", sb);
+            AddSupportTextLine("Operating System", Environment.OSVersion.ToString(), sb);
+            AddSupportTextLine("OS Language", CultureInfo.InstalledUICulture.Name, sb);
+            
+
+            foreach (KeyValuePair<string, string> kvp in _mySettings.kvStore)
+            {
+                AddSupportTextLine($"Setting: {kvp.Key}", kvp.Value, sb);
+            }
+
+            return sb.ToString();
+        }
+
+        public void BuildSupportBundle()
+        {
+            try
+            {
+                string debugInfoPath = $@"{TrX_Static.APPDATA_PATH}\Support";
+                string debugInfoPathTmp = $@"{TrX_Static.APPDATA_PATH}\Support\temp";
+              
+                if (Directory.Exists(debugInfoPath)) ;
+                {
+                    Directory.Delete(debugInfoPath, true);
+                }
+                Directory.CreateDirectory(debugInfoPath);
+                Directory.CreateDirectory(debugInfoPathTmp);
+                Directory.CreateDirectory(debugInfoPathTmp + @"\APP_DATA");
+                Directory.CreateDirectory(debugInfoPathTmp + @"\APP_DIR");
+
+                string copyDestination = debugInfoPathTmp + @"\APP_DATA";
+                string copyDestination2 = debugInfoPathTmp + @"\APP_DIR";
+
+                TrX_Helpers.CopyFilesRecursively(TrX_Static.APPDATA_PATH, copyDestination);
+                TrX_Helpers.CopyFilesRecursively(Application.StartupPath, copyDestination2);
+
+                if (File.Exists(_logic.ClientTxtPath))
+                {
+                    File.Copy(_logic.ClientTxtPath, debugInfoPathTmp + @"\Client.txt", true);
+                }
+                File.WriteAllText(debugInfoPathTmp + @"\debug_info.txt", GetSupportInfoText(), Encoding.UTF8);
+                ZipFile.CreateFromDirectory(debugInfoPathTmp, debugInfoPath + @"\TraXile_Support_Bundle_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".zip");
+
+                if (!Directory.Exists(debugInfoPathTmp)) ;
+                {
+                    Directory.Delete(debugInfoPathTmp, true);
+                }
+
+                MessageBox.Show("Support Bundle created successfully! You can find it in the 'Support' folder in your TraXile AppData directory.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+            catch (NullReferenceException ex)
+            {
+                MessageBox.Show($"Error clearing debug info: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void debugToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowDebugInfo();
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

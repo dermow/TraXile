@@ -142,6 +142,8 @@
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\PrivateAssemblies\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Design" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
@@ -206,6 +208,12 @@
     </Compile>
     <Compile Include="UI\BaseOverlay.Designer.cs">
       <DependentUpon>BaseOverlay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\DebugInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DebugInfo.Designer.cs">
+      <DependentUpon>DebugInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\SummaryForm.cs">
       <SubType>Form</SubType>
@@ -309,6 +317,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ChatCommandHelp.resx">
       <DependentUpon>ChatCommandHelp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\DebugInfo.resx">
+      <DependentUpon>DebugInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ExportActvityList.resx">
       <DependentUpon>ExportActvityList.cs</DependentUpon>
