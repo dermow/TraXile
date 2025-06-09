@@ -125,15 +125,17 @@ TraXile is designed for Windows, but you can use Crossover to install it on Mac.
 TraXile is not natively supported on Linux, but it can run successfully using Wine. Here's how:
 
 - Install the required dependencies:
+  
   `sudo pacman -S wine mono lib32-gnutls`
+  
   `cert-sync /etc/ssl/certs/ca-certificates.crt`
 
-- Run `TraXile.exe` or the MSI installer using Wine:
-  wine TraXile.exe
+- Run `TraXile.exe` or the MSI installer using Wine: `wine TraXile.exe`
 
 - On first launch, TraXile prompts for your `Client.txt` log file location. Wine uses its own file browser, which cannot see hidden directories such as `.steam`.
 
   To work around this, create a symlink in your home directory:
+  
   `ln -s .steam steam`
 
   This allows the Wine file browser to navigate into your Steam game folders.
