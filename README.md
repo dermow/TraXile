@@ -107,9 +107,6 @@ As an independent developer, I do not use a Code Signing certificate, which caus
 **Does the app send data to the Internet?**  
 Only to check for new versions and download some metadata (e.g., league dates).
 
-**Why did running two maps in a row count as one map?**  
-If two maps use the same server instance, TraXile may group them together. Use the in-game chat command `trax::split` to separate them if needed.
-
 **Why isn’t this a web-based application?**  
 Continuous log file reading is much easier with a desktop app.
 
