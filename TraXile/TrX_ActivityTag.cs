@@ -44,6 +44,20 @@ namespace TraXile
             set { _showInList = value; }
         }
 
+        private bool _soundEnabled;
+        public bool SoundEnabled
+        {
+            get { return _soundEnabled; }
+            set { _soundEnabled = value; }
+        }
+
+        private string _soundID;
+        public string SoundID
+        {
+            get { return _soundID; }
+            set { _soundID = value; }
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -57,6 +71,8 @@ namespace TraXile
             _isDefault = b_is_default;
             _displayName = _tagID;
             _showInList = false;
+            _soundEnabled = false;
+            _soundID = string.Empty;
         }
     }
 }
