@@ -254,6 +254,7 @@ namespace TraXile
 
         private TrX_SoundManager soundManager;
         private bool soundComboboxTagsSupressSound;
+        private string selectedTabNameConfig;
 
         public void DoManualThemeAdjustments(Form form)
         {
@@ -5375,10 +5376,25 @@ namespace TraXile
 
         private void materialButton4_Click(object sender, EventArgs e)
         {
-            soundManager.PlaySound(materialComboBox1.SelectedItem.ToString());
+            if(materialComboBox1.SelectedItem != null)
+            {
+                soundManager.PlaySound(materialComboBox1.SelectedItem.ToString());
+            }
         }
 
         private void materialButton5_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void materialButton6_Click(object sender, EventArgs e)
+        {
+            selectedTabNameConfig = materialComboBox1.Text;
+            LoadSoundFiles();
+            materialComboBox1.Text = selectedTabNameConfig;
+        }
+
+        private void materialButton5_Click_1(object sender, EventArgs e)
         {
             Process.Start(Application.StartupPath + @"\audio");
         }
