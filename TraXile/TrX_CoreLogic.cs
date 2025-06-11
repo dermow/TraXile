@@ -495,7 +495,9 @@ namespace TraXile
                     DisplayName = sqlReader.GetString(1),
                     BackColor = Color.FromArgb(Convert.ToInt32(sqlReader.GetString(2))),
                     ForeColor = Color.FromArgb(Convert.ToInt32(sqlReader.GetString(3))),
-                    ShowInListView = sqlReader.GetInt32(5) == 1
+                    ShowInListView = sqlReader.GetInt32(5) == 1,
+                    SoundEnabled = sqlReader.GetInt32(6) == 1,
+                    SoundID = sqlReader.GetString(7)
                 };
                 _tags.Add(tag);
             }

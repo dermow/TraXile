@@ -208,6 +208,30 @@ namespace TraXile
             catch
             {
             }
+
+            // Update 2.0.0
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "alter table tx_tags add column audio_on int default 0";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 2.1.0 -> " + cmd.CommandText);
+            }
+            catch
+            {
+            }
+
+            // Update 2.0.0
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "alter table tx_tags add column audio_file_name text default 'none'";
+                cmd.ExecuteNonQuery();
+                _log.Info("PatchDatabase 2.1.0 -> " + cmd.CommandText);
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>

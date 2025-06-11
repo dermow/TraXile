@@ -250,6 +250,11 @@ namespace TraXile
 
         public MaterialSkinManager msm = MaterialSkinManager.Instance;
         private bool _splitterBackFromMinimizedWinddow;
+        private List<string> _soundFiles;
+
+        private TrX_SoundManager soundManager;
+        private bool soundComboboxTagsSupressSound;
+        private string selectedTabNameConfig;
 
         public void DoManualThemeAdjustments(Form form)
         {
@@ -1029,6 +1034,8 @@ namespace TraXile
             _defaultMappings = new TrX_DefaultMappings();
             _loadScreenWindow = new LoadScreen();
 
+            soundManager = new TrX_SoundManager();
+
             SaveVersion();
             DownloadMetaData();
             CheckForUpdate(false, false);
@@ -1175,6 +1182,8 @@ namespace TraXile
 
             lbl_filter.Visible = false;
             pictureBox32.Visible = false;
+
+            LoadSoundFiles();
 
             ResetFilter();
 
@@ -1478,6 +1487,14 @@ namespace TraXile
             textBox4.Text = tag.ID;
             textBox5.Text = tag.DisplayName;
             checkBox4.Checked = tag.ShowInListView;
+            materialCheckbox1.Checked = tag.SoundEnabled;
+            materialComboBox1.Visible = tag.SoundEnabled;
+
+            soundComboboxTagsSupressSound = true;
+
+            materialComboBox1.Text = tag.SoundID;
+            materialComboBox1.Invalidate();
+            materialComboBox1.Update();
         }
 
         /// <summary>
@@ -1578,6 +1595,15 @@ namespace TraXile
 
                         if (mapToCheck.Tags.Contains(tag.ID))
                         {
+                            // SOUND NOTIFY?
+                            if(_tagLabels[tag.ID].BackColor == Color.Gray)
+                            {
+                                if(tag.SoundEnabled)
+                                {
+                                    soundManager.PlaySound(tag.SoundID);
+                                }
+                            }
+
                             _tagLabels[tag.ID].BackColor = msm.ColorScheme.PrimaryColor;
                             _tagLabels[tag.ID].ForeColor = msm.ColorScheme.TextColor;
                         }
@@ -3940,7 +3966,7 @@ namespace TraXile
         /// <param name="s_forecolor"></param>
         /// <param name="s_backcolor"></param>
         /// <param name="b_show_in_hist"></param>
-        private void UpdateTag(string s_id, string s_display_name, bool b_show_in_hist)
+        private void UpdateTag(string s_id, string s_display_name, bool b_show_in_hist, bool b_sound_enabled, string s_sound_id)
         {
             int iTagIndex = GetTagIndex(s_id);
 
@@ -3948,9 +3974,11 @@ namespace TraXile
             {
                 _logic.Tags[iTagIndex].DisplayName = s_display_name;
                 _logic.Tags[iTagIndex].ShowInListView = b_show_in_hist;
+                _logic.Tags[iTagIndex].SoundEnabled = b_sound_enabled;
+                _logic.Tags[iTagIndex].SoundID = s_sound_id;
 
                 _logic.Database.DoNonQuery($"UPDATE tx_tags SET tag_display = '{s_display_name}', " +
-                    $"tag_show_in_lv = {(b_show_in_hist ? "1" : "0")} WHERE tag_id = '{s_id}'");
+                    $"tag_show_in_lv = {(b_show_in_hist ? "1" : "0")},  audio_on = {(b_sound_enabled ? "1" : "0")}, audio_file_name = '{s_sound_id}' WHERE tag_id = '{s_id}'");
             }
 
             RenderTagsForConfig(true);
@@ -4524,7 +4552,7 @@ namespace TraXile
 
         private void button13_Click(object sender, EventArgs e)
         {
-            UpdateTag(textBox4.Text, textBox5.Text, checkBox4.Checked);
+            UpdateTag(textBox4.Text, textBox5.Text, checkBox4.Checked, materialCheckbox1.Checked, materialComboBox1.SelectedItem != null ? materialComboBox1.SelectedItem.ToString() : "None" );
         }
 
         private void button14_Click(object sender, EventArgs e)
@@ -5239,6 +5267,20 @@ namespace TraXile
             sb.AppendLine($"{key}: {value}");
         }
 
+        private void LoadSoundFiles()
+        {
+            _log.Info("Loading audio files...");
+            _soundFiles = new List<string>();
+            materialComboBox1.Items.Clear();
+
+            foreach (string file in Directory.GetFiles(Application.StartupPath + @"\audio"))
+            {
+                _soundFiles.Add(file);
+                materialComboBox1.Items.Add(Path.GetFileName(file));
+            }
+
+        }
+
         public string GetSupportInfoText()
         {
             StringBuilder sb = new StringBuilder();
@@ -5274,10 +5316,11 @@ namespace TraXile
                 string debugInfoPath = $@"{TrX_Static.APPDATA_PATH}\Support";
                 string debugInfoPathTmp = $@"{TrX_Static.APPDATA_PATH}\Support\temp";
               
-                if (Directory.Exists(debugInfoPath)) ;
+                if (Directory.Exists(debugInfoPath))
                 {
                     Directory.Delete(debugInfoPath, true);
                 }
+
                 Directory.CreateDirectory(debugInfoPath);
                 Directory.CreateDirectory(debugInfoPathTmp);
                 Directory.CreateDirectory(debugInfoPathTmp + @"\APP_DATA");
@@ -5315,9 +5358,45 @@ namespace TraXile
             ShowDebugInfo();
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
+            TrX_SoundManager sm = new TrX_SoundManager();
+            sm.PlaySound("sound1.mp3");
+        }
 
+        private void materialCheckbox1_CheckedChanged(object sender, EventArgs e)
+        {
+            materialComboBox1.Visible = materialCheckbox1.Checked;
+        }
+
+        private void materialComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void materialButton4_Click(object sender, EventArgs e)
+        {
+            if(materialComboBox1.SelectedItem != null)
+            {
+                soundManager.PlaySound(materialComboBox1.SelectedItem.ToString());
+            }
+        }
+
+        private void materialButton5_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void materialButton6_Click(object sender, EventArgs e)
+        {
+            selectedTabNameConfig = materialComboBox1.Text;
+            LoadSoundFiles();
+            materialComboBox1.Text = selectedTabNameConfig;
+        }
+
+        private void materialButton5_Click_1(object sender, EventArgs e)
+        {
+            Process.Start(Application.StartupPath + @"\audio");
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)
