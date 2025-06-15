@@ -2577,7 +2577,7 @@ namespace TraXile
             // columnHeader23
             // 
             this.columnHeader23.Text = "Stat";
-            this.columnHeader23.Width = 200;
+            this.columnHeader23.Width = 275;
             // 
             // columnHeader24
             // 
