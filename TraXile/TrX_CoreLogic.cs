@@ -431,6 +431,8 @@ namespace TraXile
                 new TrX_ActivityTag("zana") { BackColor = Color.Blue, ForeColor = Color.White, ShowInListView = true },
                 new TrX_ActivityTag("niko") { BackColor = Color.OrangeRed, ForeColor = Color.Black, ShowInListView = true },
                 new TrX_ActivityTag("zana-map") { BackColor = Color.Blue, ForeColor = Color.Black, ShowInListView = true },
+                new TrX_ActivityTag("seer") { BackColor = Color.Red, ForeColor = Color.Black, ShowInListView = true },
+                new TrX_ActivityTag("mist") { BackColor = Color.Red, ForeColor = Color.Black, ShowInListView = true },
                 new TrX_ActivityTag("expedition") { BackColor = Color.Turquoise, ForeColor = Color.Black, ShowInListView = true },
                 new TrX_ActivityTag("rog") { BackColor = Color.Turquoise, ForeColor = Color.Black },
                 new TrX_ActivityTag("gwennen") { BackColor = Color.Turquoise, ForeColor = Color.Black },
@@ -598,6 +600,8 @@ namespace TraXile
                 { "LabsFinished", 0 },
                 { "LabsStarted", 0 },
                 { "LevelUps", 0 },
+                { "NamelessSeerEncounters", 0 },
+                { "ReflectingMistEncounters", 0 },
                 { "TotalMapsDone", 0 },
                 { "TotalHeistsDone", 0 },
                 { "SanctumKilledLycia1", 0 },
@@ -625,6 +629,8 @@ namespace TraXile
                 { "TrialMasterVictory", "Ultimatum: cleared all rounds" },
                 { "TrialMasterSuccess", "Ultimatum: did not fail" },
                 { "LevelUps", "Level Ups" },
+                { "NamelessSeerEncounters", "Encounters with The Nameless Seer" },
+                { "ReflectingMistEncounters", "Encounters with The Reflecting Mist" },
                 { "SimulacrumStarted", "Simulacrum started" },
                 { "SimulacrumCleared", "Simulacrum 100% done" },
                 { "LabsFinished", "Finished labs" },
@@ -2381,6 +2387,38 @@ namespace TraXile
                             else
                             {
                                 _currentActivity.AddTag("delirium");
+                            }
+                        }
+                        break;
+                    case EVENT_TYPES.NAMELESSSEER_ENCOUNTER:
+
+                        IncrementStat("NamelessSeerEncounters", ev.EventTime, 1);
+
+                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        {
+                            if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
+                            {
+                                _currentActivity.SideArea_ZanaMap.AddTag("seer");
+                            }
+                            else
+                            {
+                                _currentActivity.AddTag("seer");
+                            }
+                        }
+                        break;
+                    case EVENT_TYPES.REFLECTINGMIST_ENCOUNTER:
+
+                        IncrementStat("ReflectingMistEncounters", ev.EventTime, 1);
+
+                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        {
+                            if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
+                            {
+                                _currentActivity.SideArea_ZanaMap.AddTag("mist");
+                            }
+                            else
+                            {
+                                _currentActivity.AddTag("mist");
                             }
                         }
                         break;

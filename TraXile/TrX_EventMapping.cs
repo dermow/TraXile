@@ -24,6 +24,8 @@ namespace TraXile
         EINHAR_ENCOUNTER,
         ZANA_ENCOUNTER,
         SYNDICATE_ENCOUNTER,
+        NAMELESSSEER_ENCOUNTER,
+        REFLECTINGMIST_ENCOUNTER,
         LEVELUP,
         SIMULACRUM_FULLCLEAR,
         CHAT_CMD_RECEIVED,
@@ -322,6 +324,8 @@ namespace TraXile
 
                 // Encounters
                 {"Strange Voice: ", EVENT_TYPES.DELIRIUM_ENCOUNTER },
+                {"The Nameless Seer has appeared nearby.", EVENT_TYPES.NAMELESSSEER_ENCOUNTER },
+                {"A Reflecting Mist has manifested nearby.", EVENT_TYPES.REFLECTINGMIST_ENCOUNTER },
                 {"Sister Cassia: ", EVENT_TYPES.BLIGHT_ENCOUNTER },
                 {"Niko, Master of the Depths: ", EVENT_TYPES.NIKO_ENCOUNTER },
                 {"Alva, Master Explorer: ", EVENT_TYPES.INCURSION_ENCOUNTER },
