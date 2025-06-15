@@ -1489,6 +1489,12 @@ namespace TraXile
             checkBox4.Checked = tag.ShowInListView;
             materialCheckbox1.Checked = tag.SoundEnabled;
             materialComboBox1.Visible = tag.SoundEnabled;
+            materialButton4.Visible = tag.SoundEnabled;
+            materialButton5.Visible = tag.SoundEnabled;
+            materialButton6.Visible = tag.SoundEnabled;
+            materialLabel52.Visible = tag.SoundEnabled;
+            materialLabel53.Visible = tag.SoundEnabled;
+            materialLabel54.Visible = tag.SoundEnabled;
 
             soundComboboxTagsSupressSound = true;
 
@@ -5367,6 +5373,12 @@ namespace TraXile
         private void materialCheckbox1_CheckedChanged(object sender, EventArgs e)
         {
             materialComboBox1.Visible = materialCheckbox1.Checked;
+            materialButton4.Visible = materialCheckbox1.Checked;
+            materialButton5.Visible = materialCheckbox1.Checked;
+            materialButton6.Visible = materialCheckbox1.Checked;
+            materialLabel52.Visible = materialCheckbox1.Checked;
+            materialLabel53.Visible = materialCheckbox1.Checked;
+            materialLabel54.Visible = materialCheckbox1.Checked;
         }
 
         private void materialComboBox1_SelectedIndexChanged(object sender, EventArgs e)
