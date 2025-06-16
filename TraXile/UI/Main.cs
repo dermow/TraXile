@@ -795,7 +795,7 @@ namespace TraXile
                 List<string> src = new List<string>();
                 foreach (MaterialListBoxItem s in listBox_Filter_Tags.Items)
                 {
-                    src.Add(s.ToString());
+                    src.Add(s.Text.ToString());
                 }
 
                 _statsDataSource = FilterActivitiesByTags(src, comboBox_Filter_Matching.SelectedItem.ToString(), _statsDataSource);

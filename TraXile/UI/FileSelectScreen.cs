@@ -63,7 +63,7 @@ namespace TraXile
                     MaterialRadioButton rb = new MaterialRadioButton();
                     rb.Text = s;
                     rb.Location = new Point(x, y);
-                    rb.Width = 400;
+                    rb.Width = 700;
                     rb.Checked = first;
                     rb.ForeColor = Color.Gold;
                     panelAutoSelect.Controls.Add(rb);
