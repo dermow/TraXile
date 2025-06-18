@@ -158,6 +158,16 @@ namespace TraXile
         private List<string> _ultimatumAreas;
         public List<string> UltimatumAreas => _ultimatumAreas;
 
+        // Dread/Fear/Neglect Pinnacle Boses
+        private List<string> _incarnationOfDreadAreas;
+        public List<string> IncarnationOfDreadAreas => _incarnationOfDreadAreas;
+
+        private List<string> _incarnationOfFearAreas;
+        public List<string> IncarnationOfFearAreas => _incarnationOfFearAreas;
+
+        private List<string> _incarnationOfNeglectAreas;
+        public List<string> IncarnationOfNeglectAreas => _incarnationOfNeglectAreas;
+
         // All
         public List<string> AllAreas
         {
@@ -192,6 +202,9 @@ namespace TraXile
                 lst.AddRange(TotAAreas);
                 lst.AddRange(UltimatumAreas);
                 lst.AddRange(KingsmarchAreas);
+                lst.AddRange(IncarnationOfDreadAreas);
+                lst.AddRange(IncarnationOfFearAreas);
+                lst.AddRange(IncarnationOfNeglectAreas);
                 lst.Sort();
                 return lst;
             }
@@ -830,6 +843,21 @@ namespace TraXile
                 "Domain of Timeless Conflict"
             };
 
+            _incarnationOfDreadAreas = new List<string>
+            {
+                "Moment of Reverence"
+            };
+
+            _incarnationOfFearAreas = new List<string>
+            {
+                "Moment of Trauma"
+            };
+
+            _incarnationOfNeglectAreas = new List<string>
+            {
+                "Moment of Loneliness"
+            };
+
             _pausableActivityTypes = new List<ACTIVITY_TYPES>
             {
                 ACTIVITY_TYPES.MAP,
@@ -853,7 +881,10 @@ namespace TraXile
                 ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT,
                 ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT,
                 ACTIVITY_TYPES.TIMELESS_LEGION,
-                ACTIVITY_TYPES.INSCRIBED_ULTIMATUM
+                ACTIVITY_TYPES.INSCRIBED_ULTIMATUM,
+                ACTIVITY_TYPES.ECHO_OF_REVERENCE,
+                ACTIVITY_TYPES.ECHO_OF_TRAUMA,
+                ACTIVITY_TYPES.ECHO_OF_LONELINESS
             };
 
             // Map areas with enabled death counter
@@ -887,6 +918,9 @@ namespace TraXile
             _deathCountEnabledAreas.AddRange(SanctumAreas);
             _deathCountEnabledAreas.AddRange(TrialMasterAreas);
             _deathCountEnabledAreas.AddRange(UltimatumAreas);
+            _deathCountEnabledAreas.AddRange(IncarnationOfDreadAreas);
+            _deathCountEnabledAreas.AddRange(IncarnationOfFearAreas);
+            _deathCountEnabledAreas.AddRange(IncarnationOfNeglectAreas);
         }
     }
 }
