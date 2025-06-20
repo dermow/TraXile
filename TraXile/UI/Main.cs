@@ -59,9 +59,12 @@ namespace TraXile
         ANCESTOR_TRIAL,
         INSCRIBED_ULTIMATUM,
         KINGSMARCH,
-        ECHO_OF_REVERENCE, // Dread
-        ECHO_OF_TRAUMA, // Fear
-        ECHO_OF_LONELINESS // Neglect
+        INCARNATION_OF_DREAD_FIGHT, // Dread
+        INCARNATION_OF_FEAR_FIGHT, // Fear
+        INCARNATION_OF_NEGLECT_FIGHT, // Neglect
+        NEGLECTED_FLAME_FIGHT,
+        CARDINAL_OF_FEAR_FIGHT,
+        DECEITFUL_GOD_FIGHT
     }
 
     /// <summary>
@@ -1919,303 +1922,6 @@ namespace TraXile
         }
 
         /// <summary>
-        /// Get matching image indax for an activity
-        /// </summary>
-        /// <param name="activity">Activity</param>
-        /// <returns>numeric index in image list to use</returns>
-        public int GetImageIndex(TrX_TrackedActivity activity)
-        {
-            int imageIndex = 0;
-            // Calculate Image Index
-            if (activity.Type == ACTIVITY_TYPES.MAP)
-            {
-                if (activity.MapTier > 0 && activity.MapTier <= 5)
-                {
-                    imageIndex = 0;
-                }
-                else if (activity.MapTier >= 6 && activity.MapTier <= 10)
-                {
-                    imageIndex = 1;
-                }
-                else if (activity.MapTier >= 11 && activity.MapTier <= 16)
-                {
-                    imageIndex = 2;
-                }
-                else if (activity.MapTier >= 17)
-                {
-                    imageIndex = 57;
-                }
-            }
-            else if (activity.Type == ACTIVITY_TYPES.TEMPLE)
-            {
-                imageIndex = 3;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.HEIST)
-            {
-                imageIndex = 4;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.ABYSSAL_DEPTHS)
-            {
-                imageIndex = 5;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.LABYRINTH || activity.Type == ACTIVITY_TYPES.LAB_TRIAL)
-            {
-                imageIndex = 6;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.CAMPAIGN)
-            {
-                imageIndex = 7;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.LOGBOOK || activity.Type == ACTIVITY_TYPES.LOGBOOK_SIDE)
-            {
-                imageIndex = 8;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.VAAL_SIDEAREA)
-            {
-                imageIndex = 9;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.CATARINA_FIGHT)
-            {
-                imageIndex = 10;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.SAFEHOUSE)
-            {
-                imageIndex = 11;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.DELVE)
-            {
-                imageIndex = 12;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.MAVEN_INVITATION)
-            {
-                imageIndex = 13;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.SIRUS_FIGHT)
-            {
-                imageIndex = 14;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.ATZIRI)
-            {
-                imageIndex = 15;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.UBER_ATZIRI)
-            {
-                imageIndex = 16;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.ELDER_FIGHT)
-            {
-                imageIndex = 17;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.SHAPER_FIGHT)
-            {
-                imageIndex = 18;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.SIMULACRUM)
-            {
-                imageIndex = 19;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.MAVEN_FIGHT)
-            {
-                imageIndex = 20;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.ECHO_OF_REVERENCE) // Dread
-            {
-                imageIndex = 46;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.ECHO_OF_TRAUMA) // Fear
-            {
-                imageIndex = 47;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.ECHO_OF_LONELINESS) // Neglect
-            {
-                imageIndex = 48;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.BREACHSTONE)
-            {
-                if (activity.Area.Contains("Chayula"))
-                {
-                    switch (activity.AreaLevel)
-                    {
-                        // Normal
-                        case 80:
-                            imageIndex = 21;
-                            break;
-                        // Charged
-                        case 81:
-                            imageIndex = 41;
-                            break;
-                        // Enriched
-                        case 82:
-                            imageIndex = 40;
-                            break;
-                        // Pure
-                        case 83:
-                            imageIndex = 39;
-                            break;
-                        // Flawless
-                        case 84:
-                            imageIndex = 38;
-                            break;
-                    }
-                }
-                else if (activity.Area.Contains("Esh"))
-                {
-                    switch (activity.AreaLevel)
-                    {
-                        // Normal
-                        case 70:
-                            imageIndex = 22;
-                            break;
-                        // Charged
-                        case 74:
-                            imageIndex = 45;
-                            break;
-                        // Enriched
-                        case 79:
-                            imageIndex = 44;
-                            break;
-                        // Pure
-                        case 81:
-                            imageIndex = 43;
-                            break;
-                        // Flawless
-                        case 84:
-                            imageIndex = 42;
-                            break;
-                    }
-                }
-                else if (activity.Area.Contains("Xoph"))
-                {
-                    switch (activity.AreaLevel)
-                    {
-                        // Normal
-                        case 70:
-                            imageIndex = 23;
-                            break;
-                        // Charged
-                        case 74:
-                            imageIndex = 37;
-                            break;
-                        // Enriched
-                        case 79:
-                            imageIndex = 36;
-                            break;
-                        // Pure
-                        case 81:
-                            imageIndex = 35;
-                            break;
-                        // Flawless
-                        case 84:
-                            imageIndex =
-                                34;
-                            break;
-                    }
-                }
-                else if (activity.Area.Contains("Uul-Netol"))
-                {
-                    switch (activity.AreaLevel)
-                    {
-                        // Normal
-                        case 75:
-                            imageIndex = 24;
-                            break;
-                        // Charged
-                        case 78:
-                            imageIndex = 33;
-                            break;
-                        // Enriched
-                        case 81:
-                            imageIndex = 32;
-                            break;
-                        // Pure
-                        case 82:
-                            imageIndex = 31;
-                            break;
-                        // Flawless
-                        case 84:
-                            imageIndex = 30;
-                            break;
-                    }
-                }
-                else if (activity.Area.Contains("Tul"))
-                {
-                    switch (activity.AreaLevel)
-                    {
-                        // Normal
-                        case 70:
-                            imageIndex = 25;
-                            break;
-                        // Charged
-                        case 74:
-                            imageIndex = 29;
-                            break;
-                        // Enriched
-                        case 79:
-                            imageIndex = 28;
-                            break;
-                        // Pure
-                        case 81:
-                            imageIndex = 27;
-                            break;
-                        // Flawless
-                        case 84:
-                            imageIndex = 26;
-                            break;
-                    }
-                }
-            }
-            else if (activity.Type == ACTIVITY_TYPES.SEARING_EXARCH_FIGHT)
-            {
-                imageIndex = 46;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.BLACK_STAR_FIGHT)
-            {
-                imageIndex = 47;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT)
-            {
-                imageIndex = 48;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT)
-            {
-                imageIndex = 49;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.TIMELESS_LEGION)
-            {
-                imageIndex = 50;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.LAKE_OF_KALANDRA)
-            {
-                imageIndex = 51;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.SANCTUM)
-            {
-                imageIndex = 52;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.TRIALMASTER_FIGHT)
-            {
-                imageIndex = 53;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.TANES_LABORATORY)
-            {
-                imageIndex = 54;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.ANCESTOR_TRIAL)
-            {
-                imageIndex = 55;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.INSCRIBED_ULTIMATUM)
-            {
-                imageIndex = 56;
-            }
-            else if (activity.Type == ACTIVITY_TYPES.KINGSMARCH)
-            {
-                imageIndex = 58;
-            }
-            return imageIndex;
-        }
-
-        /// <summary>
         /// Add listview Item for single activity
         /// </summary>
         /// <param name="map"></param>
@@ -2250,9 +1956,6 @@ namespace TraXile
                 lvi.SubItems.Add(sTier);
                 lvi.SubItems.Add(isZana ? map.CustomStopWatchValue : map.GetCappedStopwatchValue(_timeCaps[map.Type]));
                 lvi.SubItems.Add(map.DeathCounter.ToString());
-
-                // Calculate Image Index
-                lvi.ImageIndex = GetImageIndex(map);
 
                 foreach (TrX_ActivityTag t in _logic.Tags)
                 {
@@ -2853,9 +2556,12 @@ namespace TraXile
                 { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0},
                 { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0},
                 { ACTIVITY_TYPES.KINGSMARCH, 0},
-                { ACTIVITY_TYPES.ECHO_OF_REVERENCE, 0 },
-                { ACTIVITY_TYPES.ECHO_OF_TRAUMA, 0 },
-                { ACTIVITY_TYPES.ECHO_OF_LONELINESS, 0 }
+                { ACTIVITY_TYPES.INCARNATION_OF_DREAD_FIGHT, 0 },
+                { ACTIVITY_TYPES.INCARNATION_OF_FEAR_FIGHT, 0 },
+                { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, 0 },
+                { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, 0 },
+                { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, 0 },
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2895,9 +2601,12 @@ namespace TraXile
                 { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0},
                 { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0},
                 { ACTIVITY_TYPES.KINGSMARCH, 0},
-                { ACTIVITY_TYPES.ECHO_OF_REVERENCE, 0 },
-                { ACTIVITY_TYPES.ECHO_OF_TRAUMA, 0 },
-                { ACTIVITY_TYPES.ECHO_OF_LONELINESS, 0 }
+                { ACTIVITY_TYPES.INCARNATION_OF_DREAD_FIGHT, 0 },
+                { ACTIVITY_TYPES.INCARNATION_OF_FEAR_FIGHT, 0 },
+                { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, 0 },
+                { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, 0 },
+                { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, 0 },
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2936,9 +2645,12 @@ namespace TraXile
                 { ACTIVITY_TYPES.ANCESTOR_TRIAL, Color.Turquoise},
                 { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, Color.MediumVioletRed},
                 { ACTIVITY_TYPES.KINGSMARCH, Color.SaddleBrown },
-                { ACTIVITY_TYPES.ECHO_OF_REVERENCE, Color.Blue },
-                { ACTIVITY_TYPES.ECHO_OF_TRAUMA, Color.Blue },
-                { ACTIVITY_TYPES.ECHO_OF_LONELINESS, Color.Blue }
+                { ACTIVITY_TYPES.INCARNATION_OF_DREAD_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.INCARNATION_OF_FEAR_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, Color.Blue }
 
             };
             double hideOutTime = 0;
