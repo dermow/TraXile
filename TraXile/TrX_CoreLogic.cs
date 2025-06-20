@@ -433,6 +433,7 @@ namespace TraXile
                 new TrX_ActivityTag("zana-map") { BackColor = Color.Blue, ForeColor = Color.Black, ShowInListView = true },
                 new TrX_ActivityTag("seer") { BackColor = Color.Red, ForeColor = Color.Black, ShowInListView = true },
                 new TrX_ActivityTag("mist") { BackColor = Color.Red, ForeColor = Color.Black, ShowInListView = true },
+                new TrX_ActivityTag("memory") { BackColor = Color.Red, ForeColor = Color.Black, ShowInListView = true },
                 new TrX_ActivityTag("expedition") { BackColor = Color.Turquoise, ForeColor = Color.Black, ShowInListView = true },
                 new TrX_ActivityTag("rog") { BackColor = Color.Turquoise, ForeColor = Color.Black },
                 new TrX_ActivityTag("gwennen") { BackColor = Color.Turquoise, ForeColor = Color.Black },
@@ -602,6 +603,7 @@ namespace TraXile
                 { "LevelUps", 0 },
                 { "NamelessSeerEncounters", 0 },
                 { "ReflectingMistEncounters", 0 },
+                { "MemoryTears", 0 },
                 { "TotalMapsDone", 0 },
                 { "TotalHeistsDone", 0 },
                 { "SanctumKilledLycia1", 0 },
@@ -631,6 +633,7 @@ namespace TraXile
                 { "LevelUps", "Level Ups" },
                 { "NamelessSeerEncounters", "Encounters with The Nameless Seer" },
                 { "ReflectingMistEncounters", "Encounters with The Reflecting Mist" },
+                { "MemoryTears", "Memory Tears opened" },
                 { "SimulacrumStarted", "Simulacrum started" },
                 { "SimulacrumCleared", "Simulacrum 100% done" },
                 { "LabsFinished", "Finished labs" },
@@ -1242,7 +1245,10 @@ namespace TraXile
             bTargetAreaIsTrialmaster = _defaultMappings.TrialMasterAreas.Contains(sTargetArea),
             bTargetAreaIsToTa = _defaultMappings.TotAAreas.Contains(sTargetArea),
             bTargetAreaIsUltimatum = _defaultMappings.UltimatumAreas.Contains(sTargetArea),
-            bTargetAreaIsKingsmarch = _defaultMappings.KingsmarchAreas.Contains(sTargetArea);
+            bTargetAreaIsKingsmarch = _defaultMappings.KingsmarchAreas.Contains(sTargetArea),
+            bTargetAreaIsDread = _defaultMappings.IncarnationOfDreadAreas.Contains(sTargetArea),
+            bTargetAreaIsFear = _defaultMappings.IncarnationOfFearAreas.Contains(sTargetArea),
+            bTargetAreaIsNeglect = _defaultMappings.IncarnationOfNeglectAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1490,6 +1496,18 @@ namespace TraXile
             else if (bTargetAreaIsKingsmarch)
             {
                 actType = ACTIVITY_TYPES.KINGSMARCH;
+            }
+            else if (bTargetAreaIsDread)
+            {
+                actType = ACTIVITY_TYPES.ECHO_OF_REVERENCE;
+            }
+            else if (bTargetAreaIsFear)
+            {
+                actType = ACTIVITY_TYPES.ECHO_OF_TRAUMA;
+            }
+            else if (bTargetAreaIsNeglect)
+            {
+                actType = ACTIVITY_TYPES.ECHO_OF_LONELINESS;
             }
 
             // Special handling for logbook cemetery + vaal temple
@@ -1877,7 +1895,10 @@ namespace TraXile
                     || _defaultMappings.TimelessLegionAreas.Contains(sSourceArea)
                     || _defaultMappings.TrialMasterAreas.Contains(sSourceArea)
                     || _defaultMappings.UltimatumAreas.Contains(sSourceArea)
-                    || _defaultMappings.LakeOfKalandraAreas.Contains(sSourceArea);
+                    || _defaultMappings.LakeOfKalandraAreas.Contains(sSourceArea)
+                    || _defaultMappings.IncarnationOfDreadAreas.Contains(sSourceArea)
+                    || _defaultMappings.IncarnationOfFearAreas.Contains(sSourceArea)
+                    || _defaultMappings.IncarnationOfNeglectAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
                 if (!_StartedFlag && !bFromActivity)
@@ -1973,7 +1994,10 @@ namespace TraXile
                 bTargetAreaIsLegion ||
                 bTargetAreaIsTrialmaster ||
                 bTargetAreaIsUltimatum ||
-                bTargetAreaIsKalandra;
+                bTargetAreaIsKalandra ||
+                bTargetAreaIsDread ||
+                bTargetAreaIsFear ||
+                bTargetAreaIsNeglect;
 
             // Check if opened activity needs to be opened on Mapdevice
             bool isMapDeviceActivity =
@@ -1997,7 +2021,10 @@ namespace TraXile
                 bTargetAreaIsLegion ||
                 bTargetAreaIsTrialmaster ||
                 bTargetAreaIsUltimatum ||
-                bTargetAreaIsKalandra;
+                bTargetAreaIsKalandra ||
+                bTargetAreaIsDread ||
+                bTargetAreaIsFear ||
+                bTargetAreaIsNeglect;
 
             if (enteringDefaultTrackableActivity)
             {
@@ -2419,6 +2446,24 @@ namespace TraXile
                             else
                             {
                                 _currentActivity.AddTag("mist");
+                            }
+                        }
+
+                        
+                        break;
+                    case EVENT_TYPES.MEMORYTEAR_ENCOUNTER:
+
+                        IncrementStat("MemoryTears", ev.EventTime, 1);
+                        
+                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        {
+                            if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
+                            {
+                                _currentActivity.SideArea_ZanaMap.AddTag("memory");
+                            }
+                            else
+                            {
+                                _currentActivity.AddTag("memory");
                             }
                         }
                         break;
@@ -3439,6 +3484,18 @@ namespace TraXile
             {
                 iIndex = 20;
             }
+            else if (map.Type == ACTIVITY_TYPES.ECHO_OF_REVERENCE) // Dread
+            {
+                iIndex = 46;
+            }
+            else if (map.Type == ACTIVITY_TYPES.ECHO_OF_TRAUMA) // Fear
+            {
+                iIndex = 47;
+            }
+            else if (map.Type == ACTIVITY_TYPES.ECHO_OF_LONELINESS) // Neglect
+            {
+                iIndex = 48;
+            }
             else if (map.Type == ACTIVITY_TYPES.BREACHSTONE)
             {
                 if (map.Area.Contains("Chayula"))
@@ -3515,8 +3572,7 @@ namespace TraXile
                             break;
                         // Flawless
                         case 84:
-                            iIndex =
-                                34;
+                            iIndex = 34;
                             break;
                     }
                 }

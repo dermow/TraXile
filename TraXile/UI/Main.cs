@@ -58,7 +58,10 @@ namespace TraXile
         TANES_LABORATORY,
         ANCESTOR_TRIAL,
         INSCRIBED_ULTIMATUM,
-        KINGSMARCH
+        KINGSMARCH,
+        ECHO_OF_REVERENCE, // Dread
+        ECHO_OF_TRAUMA, // Fear
+        ECHO_OF_LONELINESS // Neglect
     }
 
     /// <summary>
@@ -2015,6 +2018,18 @@ namespace TraXile
             {
                 imageIndex = 20;
             }
+            else if (activity.Type == ACTIVITY_TYPES.ECHO_OF_REVERENCE) // Dread
+            {
+                imageIndex = 46;
+            }
+            else if (activity.Type == ACTIVITY_TYPES.ECHO_OF_TRAUMA) // Fear
+            {
+                imageIndex = 47;
+            }
+            else if (activity.Type == ACTIVITY_TYPES.ECHO_OF_LONELINESS) // Neglect
+            {
+                imageIndex = 48;
+            }
             else if (activity.Type == ACTIVITY_TYPES.BREACHSTONE)
             {
                 if (activity.Area.Contains("Chayula"))
@@ -2837,7 +2852,10 @@ namespace TraXile
                 { ACTIVITY_TYPES.TANES_LABORATORY, 0 },
                 { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0},
                 { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0},
-                { ACTIVITY_TYPES.KINGSMARCH, 0}
+                { ACTIVITY_TYPES.KINGSMARCH, 0},
+                { ACTIVITY_TYPES.ECHO_OF_REVERENCE, 0 },
+                { ACTIVITY_TYPES.ECHO_OF_TRAUMA, 0 },
+                { ACTIVITY_TYPES.ECHO_OF_LONELINESS, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2876,7 +2894,10 @@ namespace TraXile
                 { ACTIVITY_TYPES.TANES_LABORATORY, 0 },
                 { ACTIVITY_TYPES.ANCESTOR_TRIAL, 0},
                 { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, 0},
-                { ACTIVITY_TYPES.KINGSMARCH, 0}
+                { ACTIVITY_TYPES.KINGSMARCH, 0},
+                { ACTIVITY_TYPES.ECHO_OF_REVERENCE, 0 },
+                { ACTIVITY_TYPES.ECHO_OF_TRAUMA, 0 },
+                { ACTIVITY_TYPES.ECHO_OF_LONELINESS, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2914,7 +2935,10 @@ namespace TraXile
                 { ACTIVITY_TYPES.TANES_LABORATORY, Color.LimeGreen },
                 { ACTIVITY_TYPES.ANCESTOR_TRIAL, Color.Turquoise},
                 { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, Color.MediumVioletRed},
-                { ACTIVITY_TYPES.KINGSMARCH, Color.SaddleBrown }
+                { ACTIVITY_TYPES.KINGSMARCH, Color.SaddleBrown },
+                { ACTIVITY_TYPES.ECHO_OF_REVERENCE, Color.Blue },
+                { ACTIVITY_TYPES.ECHO_OF_TRAUMA, Color.Blue },
+                { ACTIVITY_TYPES.ECHO_OF_LONELINESS, Color.Blue }
 
             };
             double hideOutTime = 0;
