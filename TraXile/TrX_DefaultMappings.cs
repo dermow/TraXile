@@ -168,6 +168,15 @@ namespace TraXile
         private List<string> _incarnationOfNeglectAreas;
         public List<string> IncarnationOfNeglectAreas => _incarnationOfNeglectAreas;
 
+        private List<string> _neglectedFlameAreas;
+        public List<string> NeglectedFlameAreas => _neglectedFlameAreas;
+
+        private List<string> _cardinalOfFearAreas;
+        public List<string> CardinalOfFearAreas => _cardinalOfFearAreas;
+
+        private List<string> _deceitfulGodAreas;
+        public List<string> DeceitfulGodAreas => _deceitfulGodAreas;
+
         // All
         public List<string> AllAreas
         {
@@ -858,6 +867,21 @@ namespace TraXile
                 "Moment of Loneliness"
             };
 
+            _neglectedFlameAreas = new List<string>
+            {
+                "Courtyard of Wasting"
+            };
+
+            _deceitfulGodAreas = new List<string>
+            {
+                "Theatre of Lies"
+            };
+
+            _cardinalOfFearAreas = new List<string>
+            {
+                "Chambers of Impurity"
+            };
+
             _pausableActivityTypes = new List<ACTIVITY_TYPES>
             {
                 ACTIVITY_TYPES.MAP,
@@ -882,9 +906,12 @@ namespace TraXile
                 ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT,
                 ACTIVITY_TYPES.TIMELESS_LEGION,
                 ACTIVITY_TYPES.INSCRIBED_ULTIMATUM,
-                ACTIVITY_TYPES.ECHO_OF_REVERENCE,
-                ACTIVITY_TYPES.ECHO_OF_TRAUMA,
-                ACTIVITY_TYPES.ECHO_OF_LONELINESS
+                ACTIVITY_TYPES.INCARNATION_OF_DREAD_FIGHT,
+                ACTIVITY_TYPES.INCARNATION_OF_FEAR_FIGHT,
+                ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT,
+                ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT,
+                ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT,
+                ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT
             };
 
             // Map areas with enabled death counter
@@ -921,6 +948,9 @@ namespace TraXile
             _deathCountEnabledAreas.AddRange(IncarnationOfDreadAreas);
             _deathCountEnabledAreas.AddRange(IncarnationOfFearAreas);
             _deathCountEnabledAreas.AddRange(IncarnationOfNeglectAreas);
+            _deathCountEnabledAreas.AddRange(NeglectedFlameAreas);
+            _deathCountEnabledAreas.AddRange(DeceitfulGodAreas);
+            _deathCountEnabledAreas.AddRange(CardinalOfFearAreas);
         }
     }
 }

@@ -1248,6 +1248,9 @@ namespace TraXile
             bTargetAreaIsKingsmarch = _defaultMappings.KingsmarchAreas.Contains(sTargetArea),
             bTargetAreaIsDread = _defaultMappings.IncarnationOfDreadAreas.Contains(sTargetArea),
             bTargetAreaIsFear = _defaultMappings.IncarnationOfFearAreas.Contains(sTargetArea),
+            bTargetAreaIsNeglectedFlame = _defaultMappings.NeglectedFlameAreas.Contains(sTargetArea),
+            bTargetAreaIsDeceitfulGod = _defaultMappings.DeceitfulGodAreas.Contains(sTargetArea),
+            bTargetAreaIsCardinalOfFear = _defaultMappings.CardinalOfFearAreas.Contains(sTargetArea),
             bTargetAreaIsNeglect = _defaultMappings.IncarnationOfNeglectAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
@@ -1499,16 +1502,33 @@ namespace TraXile
             }
             else if (bTargetAreaIsDread)
             {
-                actType = ACTIVITY_TYPES.ECHO_OF_REVERENCE;
+                actType = ACTIVITY_TYPES.INCARNATION_OF_DREAD_FIGHT;
             }
             else if (bTargetAreaIsFear)
             {
-                actType = ACTIVITY_TYPES.ECHO_OF_TRAUMA;
+                actType = ACTIVITY_TYPES.INCARNATION_OF_FEAR_FIGHT;
             }
             else if (bTargetAreaIsNeglect)
             {
-                actType = ACTIVITY_TYPES.ECHO_OF_LONELINESS;
+                actType = ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT;
             }
+            else if (bTargetAreaIsNeglectedFlame)
+            {
+                actType = ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT;
+            }
+            else if (bTargetAreaIsDeceitfulGod)
+            {
+                actType = ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT;
+            }
+            else if (bTargetAreaIsCardinalOfFear)
+            {
+                actType = ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT;
+            }
+            else
+            {
+                actType = ACTIVITY_TYPES.OTHER;
+            }
+
 
             // Special handling for logbook cemetery + vaal temple
             if (bTargetAreaIsLogbook && bTargetAreaIsMap)
@@ -1997,6 +2017,9 @@ namespace TraXile
                 bTargetAreaIsKalandra ||
                 bTargetAreaIsDread ||
                 bTargetAreaIsFear ||
+                bTargetAreaIsNeglectedFlame ||
+                bTargetAreaIsCardinalOfFear ||
+                bTargetAreaIsDeceitfulGod ||
                 bTargetAreaIsNeglect;
 
             // Check if opened activity needs to be opened on Mapdevice
@@ -2022,6 +2045,9 @@ namespace TraXile
                 bTargetAreaIsTrialmaster ||
                 bTargetAreaIsUltimatum ||
                 bTargetAreaIsKalandra ||
+                bTargetAreaIsNeglectedFlame ||
+                bTargetAreaIsCardinalOfFear ||
+                bTargetAreaIsDeceitfulGod ||
                 bTargetAreaIsDread ||
                 bTargetAreaIsFear ||
                 bTargetAreaIsNeglect;
@@ -3484,15 +3510,15 @@ namespace TraXile
             {
                 iIndex = 20;
             }
-            else if (map.Type == ACTIVITY_TYPES.ECHO_OF_REVERENCE) // Dread
+            else if (map.Type == ACTIVITY_TYPES.INCARNATION_OF_DREAD_FIGHT) // Dread
             {
                 iIndex = 46;
             }
-            else if (map.Type == ACTIVITY_TYPES.ECHO_OF_TRAUMA) // Fear
+            else if (map.Type == ACTIVITY_TYPES.INCARNATION_OF_FEAR_FIGHT) // Fear
             {
                 iIndex = 47;
             }
-            else if (map.Type == ACTIVITY_TYPES.ECHO_OF_LONELINESS) // Neglect
+            else if (map.Type == ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT) // Neglect
             {
                 iIndex = 48;
             }
