@@ -65,8 +65,9 @@ namespace TraXile.UI
                 }
                 else
                 {
-                    _mainWindow.RemoveTagFromActivity(tag.ID, _activity);
                     _activity.RemoveTag(tag.ID);
+                    _mainWindow.RemoveTagFromActivity(tag.ID, _activity);
+                    
                     RenderTags(true);
                     _mainWindow.ResetMapHistory();
                     _mainWindow.RequestHistoryUpdate();
@@ -77,9 +78,10 @@ namespace TraXile.UI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (_mainWindow.ValidateTagName(materialComboBox1.Text, true))
+            TrX_ActivityTag tag = _mainWindow.GetTagByDisplayName(materialComboBox1.Text);
+            if (_mainWindow.ValidateTagName(tag.ID, true))
             {
-                _mainWindow.AddTagAutoCreate(materialComboBox1.Text, _activity);
+                _mainWindow.AddTagAutoCreate(tag.ID, _activity);
                 RenderTags(true);
                 _mainWindow.ResetMapHistory();
                 _mainWindow.RequestHistoryUpdate();

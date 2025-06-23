@@ -3565,6 +3565,23 @@ namespace TraXile
         }
 
         /// <summary>
+        /// Check if a tag with given ID exists
+        /// </summary>
+        /// <param name="s_id"></param>
+        /// <returns></returns>
+        private bool CheckTagDisplayExists(string s_display)
+        {
+            foreach (TrX_ActivityTag tag in _logic.Tags)
+            {
+                if (tag.DisplayName == s_display)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Add a new tag
         /// </summary>
         /// <param name="tag"></param>
@@ -4283,10 +4300,18 @@ namespace TraXile
             {
                 if (!CheckTagExists(textBox2.Text))
                 {
-                    AddTag(new TrX_ActivityTag(textBox2.Text, false) { DisplayName = textBox3.Text });
-                    RenderTagsForConfig(true);
-                    RenderTagsForTracking(true);
-                    textBox2.Clear();
+                    if(!CheckTagDisplayExists(textBox3.Text))
+                    {
+                        AddTag(new TrX_ActivityTag(textBox2.Text, false) { DisplayName = textBox3.Text });
+                        RenderTagsForConfig(true);
+                        RenderTagsForTracking(true);
+                        textBox2.Clear();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Display name '" + textBox3.Text + "' already exists.");
+                        return;
+                    }
                 }
                 else
                 {
