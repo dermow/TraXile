@@ -4026,7 +4026,11 @@ namespace TraXile
 
             _stopwatchOverlay.TopMost = true;
             _stopwatchOverlay.Opacity = _overlayOpacity / 100.0;
-            _stopwatchOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatch.x", "0")), (Convert.ToInt32(ReadSetting("overlay.stopwatch.y", "0"))));
+
+            int defaultX = this.Location.X;
+            int defaultY = this.Location.Y;
+
+            _stopwatchOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.stopwatch.x", defaultX.ToString())), (Convert.ToInt32(ReadSetting("overlay.stopwatch.y", defaultY.ToString()))));
         }
 
         private void ActivateTagOverlay()
@@ -4042,7 +4046,11 @@ namespace TraXile
 
             _tagsOverlay.TopMost = true;
             _tagsOverlay.Opacity = _overlayOpacity / 100.0;
-            _tagsOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.tags.x", "0")), (Convert.ToInt32(ReadSetting("overlay.tags.y", "0"))));
+
+            int defaultX = this.Location.X + 200;
+            int defaultY = this.Location.Y;
+
+            _tagsOverlay.Location = new Point(Convert.ToInt32(ReadSetting("overlay.tags.x", defaultX.ToString())), (Convert.ToInt32(ReadSetting("overlay.tags.y", defaultY.ToString()))));
         }
 
         private void DeleteActivities()
@@ -5145,6 +5153,19 @@ namespace TraXile
         private void materialButton5_Click_1(object sender, EventArgs e)
         {
             Process.Start(Application.StartupPath + @"\audio");
+        }
+
+        private void materialButton7_Click(object sender, EventArgs e)
+        {
+            if(_stopwatchOverlay != null)
+            {
+                _stopwatchOverlay.Location = new Point(this.Location.X, this.Location.Y);
+            }
+
+            if (_tagsOverlay != null)
+            {
+                _tagsOverlay.Location = new Point(this.Location.X + 200, this.Location.Y);
+            }
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

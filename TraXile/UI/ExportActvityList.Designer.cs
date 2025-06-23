@@ -57,7 +57,7 @@ namespace TraXile
             this.groupBox1.MouseState = MaterialSkin.MouseState.HOVER;
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(14);
-            this.groupBox1.Size = new System.Drawing.Size(400, 243);
+            this.groupBox1.Size = new System.Drawing.Size(416, 282);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.Text = "Export Activity log";
             // 
@@ -166,7 +166,7 @@ namespace TraXile
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(406, 270);
+            this.ClientSize = new System.Drawing.Size(422, 309);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.FormStyle = MaterialSkin.Controls.MaterialForm.FormStyles.ActionBar_None;
