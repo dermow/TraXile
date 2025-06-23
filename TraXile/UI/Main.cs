@@ -926,6 +926,7 @@ namespace TraXile
                     if (!check_only)
                     {
                         UpdateCheckForm updateCheckForm = new UpdateCheckForm(true, TrX_Static.VERSION, sVersion, changes);
+                        updateCheckForm.Location = this.Location;
                         msm.AddFormToManage(updateCheckForm);
                         DoManualThemeAdjustments(updateCheckForm);
                         updateCheckForm.SetState();
@@ -948,6 +949,7 @@ namespace TraXile
                     if (b_notify_ok)
                     {
                         UpdateCheckForm updateCheckForm = new UpdateCheckForm(false, TrX_Static.VERSION, sVersion, changes);
+                        updateCheckForm.Location = this.Location;
                         msm.AddFormToManage(updateCheckForm);
                         DoManualThemeAdjustments(updateCheckForm);
                         updateCheckForm.SetState();
