@@ -169,6 +169,10 @@ namespace TraXile
         private bool _isMapVaalArea;
         public bool IsMapVaalArea => _isMapVaalArea;
 
+        // Property: Is current map black knight fight
+        private bool _isBlackKnightFight;
+        public bool IsBlackKnightFight => _isBlackKnightFight;
+
         // Property: Is current map sanctum
         private bool _isMapSanctum;
         public bool IsMapSanctum => _isMapSanctum;
@@ -460,7 +464,8 @@ namespace TraXile
                 new TrX_ActivityTag("ultimatum-win") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
                 new TrX_ActivityTag("ultimatum-loss") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
                 new TrX_ActivityTag("ultimatum-loss") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
-                new TrX_ActivityTag("ultimatum-took-reward") { BackColor = Color.MediumVioletRed, ForeColor = Color.White }
+                new TrX_ActivityTag("ultimatum-took-reward") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
+                new TrX_ActivityTag("black-knight") { BackColor = Color.DarkBlue, ForeColor = Color.White }
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -520,66 +525,6 @@ namespace TraXile
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Mouse click handler for label
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Lbl_MouseClick(object sender, MouseEventArgs e)
-        {
-            TrX_ActivityTag tag = GetTagByDisplayName(((Label)sender).Text);
-            if (!tag.IsDefault)
-            {
-                if (_currentActivity != null)
-                {
-                    if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
-                    {
-                        if (_currentActivity.SideArea_ZanaMap.HasTag(tag.ID))
-                        {
-                            _currentActivity.SideArea_ZanaMap.RemoveTag(tag.ID);
-                        }
-                        else
-                        {
-                            _currentActivity.SideArea_ZanaMap.AddTag(tag.ID);
-                        }
-                    }
-                    else
-                    {
-                        if (_currentActivity.HasTag(tag.ID))
-                        {
-                            _currentActivity.RemoveTag(tag.ID);
-                        }
-                        else
-                        {
-                            _currentActivity.AddTag(tag.ID);
-                        }
-
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Mouse over handler for label
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Lbl_MouseHover(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Reload the Poe Logfile
-        /// </summary>
-        public void ReloadLogFile()
-        {
-            ResetStats();
-            _eventQueueInitizalized = false;
-            _lastHash = 0;
-            Application.Restart();
         }
 
         /// <summary>
@@ -1212,6 +1157,7 @@ namespace TraXile
             bSourceAreaIsAbyss = _defaultMappings.AbyssalAreas.Contains(sSourceArea),
             bSourceAreaIsLabTrial = sSourceArea.Contains("Trial of"),
             bSourceAreaIsLogbookSide = _defaultMappings.LogbookSideAreas.Contains(sSourceArea),
+            bSourceAreaIsBlackKnight = _defaultMappings.BlackKnightAreas.Contains(sSourceArea),
             bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea),
             bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea),
             bTargetAreaIsSimu = false,
@@ -1251,7 +1197,11 @@ namespace TraXile
             bTargetAreaIsNeglectedFlame = _defaultMappings.NeglectedFlameAreas.Contains(sTargetArea),
             bTargetAreaIsDeceitfulGod = _defaultMappings.DeceitfulGodAreas.Contains(sTargetArea),
             bTargetAreaIsCardinalOfFear = _defaultMappings.CardinalOfFearAreas.Contains(sTargetArea),
-            bTargetAreaIsNeglect = _defaultMappings.IncarnationOfNeglectAreas.Contains(sTargetArea);
+            bTargetAreaIsNeglect = _defaultMappings.IncarnationOfNeglectAreas.Contains(sTargetArea),
+            bTargetAreaIsMists = _defaultMappings.KingInTheMistsAreas.Contains(sTargetArea),
+            bTargetAreaIsBlackKnight = _defaultMappings.BlackKnightAreas.Contains(sTargetArea),
+            bTargetAreaIsValerius = _defaultMappings.AdmiralValeriusAreas.Contains(sTargetArea),
+            bTargetAreaIsSasan = _defaultMappings.SasanAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1524,6 +1474,22 @@ namespace TraXile
             {
                 actType = ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT;
             }
+            else if (bTargetAreaIsMists)
+            {
+                actType = ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT;
+            }
+            else if (bTargetAreaIsBlackKnight)
+            {
+                actType = ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT;
+            }
+            else if (bTargetAreaIsValerius)
+            {
+                actType = ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT;
+            }
+            else if (bTargetAreaIsSasan)
+            {
+                actType = ACTIVITY_TYPES.SASAN_FIGHT;
+            }
             else
             {
                 actType = ACTIVITY_TYPES.OTHER;
@@ -1690,6 +1656,50 @@ namespace TraXile
                 }
             }
 
+            // Black Knight Side area entered?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && actType == ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT)
+            {
+                if (_currentActivity.SideArea_BlackKnight == null)
+                {
+                    _currentActivity.SideArea_BlackKnight = new TrX_TrackedActivity
+                    {
+                        Area = sTargetArea,
+                        AreaLevel = _nextAreaLevel,
+                        AreaSeed = _nextAreaSeed,
+                        Type = actType,
+                        Started = ev.EventTime,
+                        TimeStamp = lTS,
+                        InstanceEndpoint = _currentActivity.InstanceEndpoint
+                    };
+                    _currentActivity.AddTag("black-knight");
+                }
+
+                _currentActivity.Pause();
+                _currentActivity.StartPauseTime(ev.EventTime);
+
+                _currentActivity.SideArea_BlackKnight.StartStopWatch();
+                _currentActivity.SideArea_BlackKnight.EndPauseTime(ev.EventTime);
+                _isBlackKnightFight = true;
+            }
+            else
+            {
+                _isBlackKnightFight = false;
+            }
+
+            // Left Black Knight Fight
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && bSourceAreaIsBlackKnight)
+            {
+                if (_currentActivity.SideArea_BlackKnight != null)
+                {
+                    _currentActivity.SideArea_BlackKnight.LastEnded = ev.EventTime;
+                    _currentActivity.SideArea_BlackKnight.StopStopWatch();
+                    _currentActivity.SideArea_BlackKnight.StartPauseTime(ev.EventTime);
+
+                    _currentActivity.Resume();
+                    _currentActivity.EndPauseTime(ev.EventTime);
+                }
+            }
+
             // Logbook Side area entered?
             if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.LOGBOOK && actType == ACTIVITY_TYPES.LOGBOOK_SIDE)
             {
@@ -1823,6 +1833,36 @@ namespace TraXile
                 }
             }
 
+            // Kingsmarch?
+            if ((_currentActivity == null || _currentActivity.Type != ACTIVITY_TYPES.KINGSMARCH) && actType == ACTIVITY_TYPES.KINGSMARCH)
+            {
+                // Finish activity
+                if (_currentActivity != null)
+                {
+                    _currentActivity.LastEnded = ev.EventTime;
+                    FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
+                }
+
+                _currentActivity = new TrX_TrackedActivity
+                {
+                    Area = sTargetArea,
+                    Type = actType,
+                    Started = ev.EventTime,
+                    TimeStamp = lTS,
+                    InstanceEndpoint = _currentInstanceEndpoint
+                };
+
+                _prevActivityOverlay = GetLastActivityByType(actType);
+                OnActivityStarted(new TrX_CoreLogicActivityEventArgs(this, _currentActivity));
+            }
+
+            // End Kingsmarch?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.KINGSMARCH && !bTargetAreaIsKingsmarch)
+            {
+                _currentActivity.LastEnded = ev.EventTime;
+                FinishActivity(_currentActivity, null, ACTIVITY_TYPES.KINGSMARCH, DateTime.Now);
+            }
+
             // Delving?
             if ((_currentActivity == null || _currentActivity.Type != ACTIVITY_TYPES.DELVE) && actType == ACTIVITY_TYPES.DELVE)
             {
@@ -1918,7 +1958,10 @@ namespace TraXile
                     || _defaultMappings.LakeOfKalandraAreas.Contains(sSourceArea)
                     || _defaultMappings.IncarnationOfDreadAreas.Contains(sSourceArea)
                     || _defaultMappings.IncarnationOfFearAreas.Contains(sSourceArea)
-                    || _defaultMappings.IncarnationOfNeglectAreas.Contains(sSourceArea);
+                    || _defaultMappings.IncarnationOfNeglectAreas.Contains(sSourceArea)
+                    || _defaultMappings.DeceitfulGodAreas.Contains(sSourceArea)
+                    || _defaultMappings.AdmiralValeriusAreas.Contains(sSourceArea)
+                    || _defaultMappings.SasanAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
                 if (!_StartedFlag && !bFromActivity)
@@ -2020,7 +2063,10 @@ namespace TraXile
                 bTargetAreaIsNeglectedFlame ||
                 bTargetAreaIsCardinalOfFear ||
                 bTargetAreaIsDeceitfulGod ||
-                bTargetAreaIsNeglect;
+                bTargetAreaIsNeglect ||
+                bTargetAreaIsSasan ||
+                bTargetAreaIsValerius ||
+                bTargetAreaIsMists;
 
             // Check if opened activity needs to be opened on Mapdevice
             bool isMapDeviceActivity =
@@ -2050,7 +2096,10 @@ namespace TraXile
                 bTargetAreaIsDeceitfulGod ||
                 bTargetAreaIsDread ||
                 bTargetAreaIsFear ||
-                bTargetAreaIsNeglect;
+                bTargetAreaIsNeglect ||
+                bTargetAreaIsSasan ||
+                bTargetAreaIsValerius ||
+                bTargetAreaIsMists;
 
             if (enteringDefaultTrackableActivity)
             {
@@ -2936,6 +2985,7 @@ namespace TraXile
                 TimeSpan ts = new TimeSpan();
                 TimeSpan tsZana = new TimeSpan();
                 TimeSpan tsVaal = new TimeSpan();
+                TimeSpan tsBlackKnight = new TimeSpan();
                 TimeSpan tsAbyss = new TimeSpan();
                 TimeSpan tsLabTrial = new TimeSpan();
                 TimeSpan tsLogbookSide = new TimeSpan();
@@ -2943,6 +2993,7 @@ namespace TraXile
                 int totalSecondsMainActivity;
                 int totalSecondsZanaMap = 0;
                 int totalSecondsVallSideArea = 0;
+                int totalSecondsBlackKnightSideArea = 0;
                 int totalSecondsSanctum = 0;
                 int totalSecondsAbyss = 0;
                 int totalSecondsLabTrial = 0;
@@ -2988,6 +3039,11 @@ namespace TraXile
                     if (activity.SideArea_VaalArea != null)
                     {
                         tsVaal = (activity.SideArea_VaalArea.LastEnded - activity.SideArea_VaalArea.Started);
+                    }
+
+                    if (activity.SideArea_BlackKnight != null)
+                    {
+                        tsBlackKnight = (activity.SideArea_BlackKnight.LastEnded - activity.SideArea_BlackKnight.Started);
                     }
 
                     if (activity.SideArea_Sanctum != null)
@@ -3038,6 +3094,11 @@ namespace TraXile
                         tsVaal = (activity.SideArea_VaalArea.StopWatchTimeSpan);
                     }
 
+                    if (activity.SideArea_BlackKnight != null)
+                    {
+                        tsVaal = (activity.SideArea_BlackKnight.StopWatchTimeSpan);
+                    }
+
                     if (activity.SideArea_Sanctum != null)
                     {
                         tsSanctum = (activity.SideArea_Sanctum.StopWatchTimeSpan);
@@ -3062,6 +3123,7 @@ namespace TraXile
                 // Calculate times
                 totalSecondsZanaMap = Convert.ToInt32(tsZana.TotalSeconds); // historic, no zana side aras
                 totalSecondsVallSideArea = Convert.ToInt32(tsVaal.TotalSeconds);
+                totalSecondsBlackKnightSideArea = Convert.ToInt32(tsBlackKnight.TotalSeconds);
                 totalSecondsLogBookSide = Convert.ToInt32(tsLogbookSide.TotalSeconds);
                 totalSecondsAbyss = Convert.ToInt32(tsAbyss.TotalSeconds);
                 totalSecondsLabTrial = Convert.ToInt32(tsLabTrial.TotalSeconds);
@@ -3124,6 +3186,24 @@ namespace TraXile
                             //Save to DB
                             SaveToActivityLog(((DateTimeOffset)activity.SideArea_VaalArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_VaalArea.Type), activity.SideArea_VaalArea.Area, activity.SideArea_VaalArea.AreaLevel, totalSecondsVallSideArea, activity.SideArea_VaalArea.DeathCounter, activity.SideArea_VaalArea.TrialMasterCount, true, activity.SideArea_VaalArea
                                 .Tags, activity.SideArea_VaalArea.Success, Convert.ToInt32(activity.SideArea_VaalArea.PausedTime));
+                        }
+                    }
+
+                    if (activity.SideArea_BlackKnight != null)
+                    {
+                        TimeSpan tsBlackKnightMap = TimeSpan.FromSeconds(totalSecondsBlackKnightSideArea);
+                        activity.SideArea_BlackKnight.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                               tsBlackKnightMap.Hours, tsBlackKnightMap.Minutes, tsBlackKnightMap.Seconds);
+
+                        activity.SideArea_BlackKnight.TotalSeconds = totalSecondsBlackKnightSideArea;
+
+                        if (greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_BlackKnight);
+
+                        if (!_parsedActivities.Contains(activity.SideArea_BlackKnight.UniqueID))
+                        {
+                            //Save to DB
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_BlackKnight.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_BlackKnight.Type), activity.SideArea_BlackKnight.Area, activity.SideArea_BlackKnight.AreaLevel, totalSecondsBlackKnightSideArea, activity.SideArea_BlackKnight.DeathCounter, activity.SideArea_BlackKnight.TrialMasterCount, true, activity.SideArea_BlackKnight
+                                .Tags, activity.SideArea_BlackKnight.Success, Convert.ToInt32(activity.SideArea_BlackKnight.PausedTime));
                         }
                     }
 

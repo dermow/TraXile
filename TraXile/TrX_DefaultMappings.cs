@@ -177,6 +177,23 @@ namespace TraXile
         private List<string> _deceitfulGodAreas;
         public List<string> DeceitfulGodAreas => _deceitfulGodAreas;
 
+        // King of Mists
+        private List<string> _kingInTheMistsAreas;
+        public List<string> KingInTheMistsAreas => _kingInTheMistsAreas;
+
+        // Black Knight
+        public List<string> _blackKnightAreas;
+        public List<string> BlackKnightAreas => _blackKnightAreas;
+
+        // Admiral Valerius
+        public List<string> _admiralValeriusAreas;
+        public List<string> AdmiralValeriusAreas => _admiralValeriusAreas;
+
+        // Sasan
+        public List<string> _sasanAreas;
+        public List<string> SasanAreas => _sasanAreas;
+
+
         // All
         public List<string> AllAreas
         {
@@ -214,6 +231,10 @@ namespace TraXile
                 lst.AddRange(IncarnationOfDreadAreas);
                 lst.AddRange(IncarnationOfFearAreas);
                 lst.AddRange(IncarnationOfNeglectAreas);
+                lst.AddRange(KingInTheMistsAreas);
+                lst.AddRange(BlackKnightAreas);
+                lst.AddRange(AdmiralValeriusAreas);
+                lst.AddRange(SasanAreas);
                 lst.Sort();
                 return lst;
             }
@@ -882,6 +903,26 @@ namespace TraXile
                 "Chambers of Impurity"
             };
 
+            _kingInTheMistsAreas = new List<string>
+            {
+                "Crux of Nothingness"
+            };
+
+            _blackKnightAreas = new List<string>
+            {
+                "Starfall Crater"
+            };
+
+            _admiralValeriusAreas = new List<string>
+            {
+                "Sailors Folly"
+            };
+
+            _sasanAreas = new List<string>
+            {
+                "Abandoned Port"
+            };
+
             _pausableActivityTypes = new List<ACTIVITY_TYPES>
             {
                 ACTIVITY_TYPES.MAP,
@@ -911,7 +952,11 @@ namespace TraXile
                 ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT,
                 ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT,
                 ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT,
-                ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT
+                ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT,
+                ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT,
+                ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT,
+                ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT,
+                ACTIVITY_TYPES.SASAN_FIGHT
             };
 
             // Map areas with enabled death counter
@@ -951,6 +996,10 @@ namespace TraXile
             _deathCountEnabledAreas.AddRange(NeglectedFlameAreas);
             _deathCountEnabledAreas.AddRange(DeceitfulGodAreas);
             _deathCountEnabledAreas.AddRange(CardinalOfFearAreas);
+            _deathCountEnabledAreas.AddRange(KingInTheMistsAreas);
+            _deathCountEnabledAreas.AddRange(BlackKnightAreas);
+            _deathCountEnabledAreas.AddRange(AdmiralValeriusAreas);
+            _deathCountEnabledAreas.AddRange(SasanAreas);
         }
     }
 }

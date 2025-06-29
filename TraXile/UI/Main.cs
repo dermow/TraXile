@@ -64,7 +64,11 @@ namespace TraXile
         INCARNATION_OF_NEGLECT_FIGHT, // Neglect
         NEGLECTED_FLAME_FIGHT,
         CARDINAL_OF_FEAR_FIGHT,
-        DECEITFUL_GOD_FIGHT
+        DECEITFUL_GOD_FIGHT,
+        KING_IN_THE_MISTS_FIGHT,
+        BLACK_KNIGHT_FIGHT,
+        ADMIRAL_VALERIUS_FIGHT,
+        SASAN_FIGHT
     }
 
     /// <summary>
@@ -615,9 +619,20 @@ namespace TraXile
             DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, dt1.Hour, dt1.Minute, dt1.Second, _dateTimeFormatInfo.Calendar);
             DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, dt2.Hour, dt2.Minute, dt2.Second, _dateTimeFormatInfo.Calendar);
 
+            // Debug log for GitHub Issue #120
+            _log.Debug($"Filtering activities by time range: {date1} - {date2}");
+            bool bLogged = false;
+
 
             foreach (TrX_TrackedActivity act in source)
             {
+                // Log values from first activitiy
+                if (!bLogged)
+                {
+                    _log.Debug($"Logging first checked filter Activity: {act.UniqueID}, Started: {act.Started}, Type: {act.Type}, TotalSeconds: {act.TotalSeconds}");
+                    bLogged = true;
+                }
+
                 if (act.Started >= date1 && act.Started <= date2)
                 {
                     if (act.TotalSeconds > _minimumTimeCap)
@@ -2563,7 +2578,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, 0 },
                 { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, 0 },
                 { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, 0 },
-                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 }
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 },
+                { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, 0 },
+                { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, 0 },
+                { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, 0 },
+                { ACTIVITY_TYPES.SASAN_FIGHT, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2608,7 +2627,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, 0 },
                 { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, 0 },
                 { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, 0 },
-                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 }
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 },
+                { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, 0 },
+                { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, 0 },
+                { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, 0 },
+                { ACTIVITY_TYPES.SASAN_FIGHT, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2652,7 +2675,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, Color.Blue },
                 { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, Color.Blue },
                 { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, Color.Blue }
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, Color.DarkViolet },
+                { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, Color.DarkRed },
+                { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, Color.Aqua },
+                { ACTIVITY_TYPES.SASAN_FIGHT, Color.Aqua }
 
             };
             double hideOutTime = 0;
@@ -4619,6 +4646,12 @@ namespace TraXile
             lbl_filter.Visible = true;
             pictureBox32.Visible = true;
             lbl_filter.Text = "Your data is filtered!";
+            
+            _log.Debug("Filter was applied in MainWindow. Requesting updates for all dashboards and resetting activity list.");
+
+            // Debug logging for GitHub Issue #120
+            _log.Debug($"DateTimePicker 1 Value: {dateTimePicker1.Value.ToString()}, DateTimePicker 2 Value: {dateTimePicker2.Value.ToString()}");
+            
 
             RequestDashboardUpdates();
             RequestActivityListReset();
@@ -5163,11 +5196,6 @@ namespace TraXile
             {
                 soundManager.PlaySound(materialComboBox1.SelectedItem.ToString());
             }
-        }
-
-        private void materialButton5_Click(object sender, EventArgs e)
-        {
-           
         }
 
         private void materialButton6_Click(object sender, EventArgs e)

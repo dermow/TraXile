@@ -53,6 +53,14 @@ namespace TraXile
             set { _abyssArea = value; }
         }
 
+        // Sub-Activity: Black Knight Fight
+        private TrX_TrackedActivity _blackKnightArea;
+        public TrX_TrackedActivity SideArea_BlackKnight
+        {
+            get { return _blackKnightArea; }
+            set { _blackKnightArea = value; }
+        }
+
         // Sub-Activity: Lab trial
         private TrX_TrackedActivity _labTrial;
         public TrX_TrackedActivity SideArea_LabTrial
