@@ -5,3 +5,4 @@
 - Added: Tracking for Sasan fight (Logfile reload needed for history!)
 - Bugfix: "Change Logfile and reload" button now works correctly
 - Bugfix: Operator dropdown was not readable in filter UI
+- Info: Added some debug logging for specific issues
