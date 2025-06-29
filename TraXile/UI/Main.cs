@@ -64,7 +64,11 @@ namespace TraXile
         INCARNATION_OF_NEGLECT_FIGHT, // Neglect
         NEGLECTED_FLAME_FIGHT,
         CARDINAL_OF_FEAR_FIGHT,
-        DECEITFUL_GOD_FIGHT
+        DECEITFUL_GOD_FIGHT,
+        KING_IN_THE_MISTS_FIGHT,
+        BLACK_KNIGHT_FIGHT,
+        ADMIRAL_VALERIUS_FIGHT,
+        SASAN_FIGHT
     }
 
     /// <summary>
@@ -2563,7 +2567,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, 0 },
                 { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, 0 },
                 { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, 0 },
-                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 }
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 },
+                { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, 0 },
+                { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, 0 },
+                { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, 0 },
+                { ACTIVITY_TYPES.SASAN_FIGHT, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2608,7 +2616,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, 0 },
                 { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, 0 },
                 { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, 0 },
-                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 }
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, 0 },
+                { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, 0 },
+                { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, 0 },
+                { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, 0 },
+                { ACTIVITY_TYPES.SASAN_FIGHT, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2652,7 +2664,11 @@ namespace TraXile
                 { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, Color.Blue },
                 { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, Color.Blue },
                 { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, Color.Blue }
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, Color.Blue },
+                { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, Color.DarkViolet },
+                { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, Color.DarkRed },
+                { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, Color.Aqua },
+                { ACTIVITY_TYPES.SASAN_FIGHT, Color.Aqua }
 
             };
             double hideOutTime = 0;
@@ -5163,11 +5179,6 @@ namespace TraXile
             {
                 soundManager.PlaySound(materialComboBox1.SelectedItem.ToString());
             }
-        }
-
-        private void materialButton5_Click(object sender, EventArgs e)
-        {
-           
         }
 
         private void materialButton6_Click(object sender, EventArgs e)
