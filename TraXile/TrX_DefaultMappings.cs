@@ -177,6 +177,11 @@ namespace TraXile
         private List<string> _deceitfulGodAreas;
         public List<string> DeceitfulGodAreas => _deceitfulGodAreas;
 
+        // Areas of the "pre-incarnations"
+        private List<string> _preIncarnationAreas;
+        public List<string> PreIncarnationAreas => _preIncarnationAreas;
+        
+
         // King of Mists
         private List<string> _kingInTheMistsAreas;
         public List<string> KingInTheMistsAreas => _kingInTheMistsAreas;
@@ -903,6 +908,11 @@ namespace TraXile
                 "Chambers of Impurity"
             };
 
+            _preIncarnationAreas = new List<string>();
+            _preIncarnationAreas.AddRange(_deceitfulGodAreas);
+            _preIncarnationAreas.AddRange(_cardinalOfFearAreas);
+            _preIncarnationAreas.AddRange(_neglectedFlameAreas);
+
             _kingInTheMistsAreas = new List<string>
             {
                 "Crux of Nothingness"
@@ -958,6 +968,8 @@ namespace TraXile
                 ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT,
                 ACTIVITY_TYPES.SASAN_FIGHT
             };
+
+            
 
             // Map areas with enabled death counter
             _deathCountEnabledAreas = new List<string>();

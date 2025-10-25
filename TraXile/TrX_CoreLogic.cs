@@ -991,6 +991,11 @@ namespace TraXile
             }
         }
 
+        private bool CheckIfAreaIsPreIncarnationMemory(string sArea)
+        {
+            return _defaultMappings.PreIncarnationAreas.Contains(sArea);
+        }
+
         /// <summary>
         /// Check if a given area is a Map.
         /// </summary>
@@ -2480,7 +2485,7 @@ namespace TraXile
                         break;
                     case EVENT_TYPES.DELIRIUM_ENCOUNTER:
 
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2496,7 +2501,7 @@ namespace TraXile
 
                         IncrementStat("NamelessSeerEncounters", ev.EventTime, 1);
 
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2512,7 +2517,7 @@ namespace TraXile
 
                         IncrementStat("ReflectingMistEncounters", ev.EventTime, 1);
 
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2530,7 +2535,7 @@ namespace TraXile
 
                         IncrementStat("MemoryTears", ev.EventTime, 1);
                         
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2543,7 +2548,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.BLIGHT_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2556,7 +2561,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EINHAR_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2569,7 +2574,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.INCURSION_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2582,7 +2587,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.NIKO_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2595,13 +2600,13 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.ZANA_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             _currentActivity.AddTag("zana");
                         }
                         break;
                     case EVENT_TYPES.SYNDICATE_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2660,7 +2665,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_DANNIG_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("dannig") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        if (_currentActivity != null && !_currentActivity.HasTag("dannig") && (_currentActivity.Type == ACTIVITY_TYPES.MAP || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Dannig", ev.EventTime, 1);
@@ -2670,7 +2675,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_GWENNEN_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("gwennen") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        if (_currentActivity != null && !_currentActivity.HasTag("gwennen") && (_currentActivity.Type == ACTIVITY_TYPES.MAP || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Gwennen", ev.EventTime, 1);
@@ -2679,7 +2684,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_TUJEN_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("tujen") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        if (_currentActivity != null && !_currentActivity.HasTag("tujen") && (_currentActivity.Type == ACTIVITY_TYPES.MAP || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Tujen", ev.EventTime, 1);
@@ -2688,7 +2693,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_ROG_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("rog") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        if (_currentActivity != null && !_currentActivity.HasTag("rog") && (_currentActivity.Type == ACTIVITY_TYPES.MAP || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Rog", ev.EventTime, 1);
