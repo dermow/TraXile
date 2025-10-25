@@ -2898,7 +2898,7 @@ namespace TraXile
                         break;
                     case EVENT_TYPES.TRIALMASTER_ENCOUNTERED:
                         if (_currentActivity != null
-                            && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN))
+                            && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             _currentActivity.AddTag("ultimatum");
                         }
