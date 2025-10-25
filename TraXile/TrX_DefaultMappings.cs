@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace TraXile
 {
@@ -198,6 +199,13 @@ namespace TraXile
         public List<string> _sasanAreas;
         public List<string> SasanAreas => _sasanAreas;
 
+        // Oshabi
+        public List<string> _oshabiAreas;
+        public List<string> OshabiAreas => _oshabiAreas;
+
+        // Voidborn Keys
+        public List<string> _reliqKeyAreas;
+        public List<string> ReliqKeyAreas => _reliqKeyAreas;
 
         // All
         public List<string> AllAreas
@@ -240,6 +248,7 @@ namespace TraXile
                 lst.AddRange(BlackKnightAreas);
                 lst.AddRange(AdmiralValeriusAreas);
                 lst.AddRange(SasanAreas);
+                lst.AddRange(OshabiAreas);
                 lst.Sort();
                 return lst;
             }
@@ -931,6 +940,27 @@ namespace TraXile
             _sasanAreas = new List<string>
             {
                 "Abandoned Port"
+            };
+
+            _oshabiAreas = new List<string>
+            {
+                "The Sacred Grove"
+            };
+
+            _reliqKeyAreas = new List<string>
+            {
+                "Voidborn Reliquary",
+                "Timeworn Reliquary",
+                "Ancient Reliquary",
+                "Visceral Reliquary",
+                "Shiny Reliquary",
+                "Archive Reliquary",
+                "Cosmic Reliquary",
+                "Oubliette Reliquary",
+                "Decaying Reliquary",
+                "Forgotten Reliquary",
+                "Vaal Reliquary",
+
             };
 
             _pausableActivityTypes = new List<ACTIVITY_TYPES>

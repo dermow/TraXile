@@ -1206,6 +1206,8 @@ namespace TraXile
             bTargetAreaIsMists = _defaultMappings.KingInTheMistsAreas.Contains(sTargetArea),
             bTargetAreaIsBlackKnight = _defaultMappings.BlackKnightAreas.Contains(sTargetArea),
             bTargetAreaIsValerius = _defaultMappings.AdmiralValeriusAreas.Contains(sTargetArea),
+            bTargetAreaIsOshabi = _defaultMappings.OshabiAreas.Contains(sTargetArea),
+            bTargetAreaIsReliqKey = _defaultMappings.ReliqKeyAreas.Contains(sTargetArea),
             bTargetAreaIsSasan = _defaultMappings.SasanAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
@@ -1494,6 +1496,14 @@ namespace TraXile
             else if (bTargetAreaIsSasan)
             {
                 actType = ACTIVITY_TYPES.SASAN_FIGHT;
+            }
+            else if (bTargetAreaIsOshabi)
+            {
+                actType = ACTIVITY_TYPES.OSHABI_FIGHT;
+            }
+            else if (bTargetAreaIsReliqKey)
+            {
+                actType = ACTIVITY_TYPES.RELIQUARY_KEY;
             }
             else
             {
@@ -1966,6 +1976,8 @@ namespace TraXile
                     || _defaultMappings.IncarnationOfNeglectAreas.Contains(sSourceArea)
                     || _defaultMappings.DeceitfulGodAreas.Contains(sSourceArea)
                     || _defaultMappings.AdmiralValeriusAreas.Contains(sSourceArea)
+                    || _defaultMappings.OshabiAreas.Contains(sSourceArea)
+                    || _defaultMappings.ReliqKeyAreas.Contains(sSourceArea)
                     || _defaultMappings.SasanAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
@@ -2071,6 +2083,8 @@ namespace TraXile
                 bTargetAreaIsNeglect ||
                 bTargetAreaIsSasan ||
                 bTargetAreaIsValerius ||
+                bTargetAreaIsOshabi ||
+                bTargetAreaIsReliqKey ||
                 bTargetAreaIsMists;
 
             // Check if opened activity needs to be opened on Mapdevice
@@ -2104,6 +2118,8 @@ namespace TraXile
                 bTargetAreaIsNeglect ||
                 bTargetAreaIsSasan ||
                 bTargetAreaIsValerius ||
+                bTargetAreaIsOshabi ||
+                bTargetAreaIsReliqKey ||
                 bTargetAreaIsMists;
 
             if (enteringDefaultTrackableActivity)

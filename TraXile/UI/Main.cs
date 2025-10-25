@@ -68,7 +68,9 @@ namespace TraXile
         KING_IN_THE_MISTS_FIGHT,
         BLACK_KNIGHT_FIGHT,
         ADMIRAL_VALERIUS_FIGHT,
-        SASAN_FIGHT
+        SASAN_FIGHT,
+        OSHABI_FIGHT,
+        RELIQUARY_KEY
     }
 
     /// <summary>
@@ -2582,7 +2584,9 @@ namespace TraXile
                 { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, 0 },
                 { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, 0 },
                 { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, 0 },
-                { ACTIVITY_TYPES.SASAN_FIGHT, 0 }
+                { ACTIVITY_TYPES.SASAN_FIGHT, 0 },
+                { ACTIVITY_TYPES.OSHABI_FIGHT, 0 },
+                { ACTIVITY_TYPES.RELIQUARY_KEY, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2631,7 +2635,9 @@ namespace TraXile
                 { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, 0 },
                 { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, 0 },
                 { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, 0 },
-                { ACTIVITY_TYPES.SASAN_FIGHT, 0 }
+                { ACTIVITY_TYPES.SASAN_FIGHT, 0 },
+                { ACTIVITY_TYPES.OSHABI_FIGHT, 0 },
+                { ACTIVITY_TYPES.RELIQUARY_KEY, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2679,7 +2685,9 @@ namespace TraXile
                 { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, Color.DarkViolet },
                 { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, Color.DarkRed },
                 { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, Color.Aqua },
-                { ACTIVITY_TYPES.SASAN_FIGHT, Color.Aqua }
+                { ACTIVITY_TYPES.SASAN_FIGHT, Color.Aqua },
+                { ACTIVITY_TYPES.OSHABI_FIGHT, Color.CadetBlue },
+                { ACTIVITY_TYPES.RELIQUARY_KEY, Color.Orange },
 
             };
             double hideOutTime = 0;
@@ -3285,10 +3293,10 @@ namespace TraXile
 
             double[] tierAverages = new double[]
             {
-                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
             };
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 17; i++)
             {
                 int iSum = 0;
                 int iCount = 0;
