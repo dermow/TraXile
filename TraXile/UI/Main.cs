@@ -3903,7 +3903,6 @@ namespace TraXile
             {
                 //_lvmActlog.Clear();
                 _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
-
             }
             else
             {
@@ -3928,7 +3927,6 @@ namespace TraXile
             }
 
             DoManualThemeAdjustments(this);
-
             AddUpdateAppSettings("theme", theme);
         }
 

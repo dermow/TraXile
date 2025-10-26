@@ -61,7 +61,8 @@ namespace TraXile
         ANCESTOR_MATCH_WON,
         ANCESTOR_MATCH_LOST,
         TRIALMASTER_ENCOUNTERED,
-        TRIALMASTER_PLAYER_LOSS
+        TRIALMASTER_PLAYER_LOSS,
+        ZANA_ORIGINATOR_SPEAK
     }
 
     public class TrX_EventMapping
@@ -401,6 +402,9 @@ namespace TraXile
                 {"] Lycia, Unholy Heretic: I have such sights to show you...", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
                 {"] Lycia, Unholy Heretic: Beidat, give me your power!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
                 {"] Lycia, Unholy Heretic: Yes! The blood moon rises! Beidat, give me your power!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
+
+                // ZANA ORIGINATOR
+                 {"] Zana, the Originator", EVENT_TYPES.ZANA_ORIGINATOR_SPEAK },
 
                 // ANCESTOR: Lost Matches
                 {"] Navali: There is no shame in defeat... at least, not yet.", EVENT_TYPES.ANCESTOR_MATCH_LOST },

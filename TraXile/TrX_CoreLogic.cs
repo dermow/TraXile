@@ -465,7 +465,8 @@ namespace TraXile
                 new TrX_ActivityTag("ultimatum-loss") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
                 new TrX_ActivityTag("ultimatum-loss") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
                 new TrX_ActivityTag("ultimatum-took-reward") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
-                new TrX_ActivityTag("black-knight") { BackColor = Color.DarkBlue, ForeColor = Color.White }
+                new TrX_ActivityTag("black-knight") { BackColor = Color.DarkBlue, ForeColor = Color.White },
+                new TrX_ActivityTag("t16.5") { DisplayName = "T16.5", BackColor = Color.DeepSkyBlue, ForeColor = Color.White }
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -492,7 +493,7 @@ namespace TraXile
         private void LoadTags()
         {
             SqliteDataReader sqlReader;
-            sqlReader = _dataBackend.GetSQLReader("SELECT * FROM tx_tags ORDER BY tag_display ASC");
+            sqlReader = _dataBackend.GetSQLReader("SELECT * FROM tx_tags ORDER BY tag_display COLLATE NOCASE ASC");
 
             while (sqlReader.Read())
             {
@@ -2917,6 +2918,12 @@ namespace TraXile
                             && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             _currentActivity.AddTag("ultimatum");
+                        }
+                        break;
+                    case EVENT_TYPES.ZANA_ORIGINATOR_SPEAK:
+                        if(_currentActivity != null && CheckIfAreaIsMap(_currentActivity.Area))
+                        {
+                            _currentActivity.AddTag("t16.5");
                         }
                         break;
                 }
