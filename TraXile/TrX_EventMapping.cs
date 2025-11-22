@@ -61,7 +61,9 @@ namespace TraXile
         ANCESTOR_MATCH_WON,
         ANCESTOR_MATCH_LOST,
         TRIALMASTER_ENCOUNTERED,
-        TRIALMASTER_PLAYER_LOSS
+        TRIALMASTER_PLAYER_LOSS,
+        ZANA_ORIGINATOR_SPEAK,
+        HEIST_MEMBER_INTRODUCED
     }
 
     public class TrX_EventMapping
@@ -374,6 +376,14 @@ namespace TraXile
                 { "] Dannig, Warrior Skald:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
                 { "] Dannig:", EVENT_TYPES.EXP_DANNIG_ENCOUNTER },
 
+                 // Introduction
+                { "] Vinderi, the Dismantler: Exile this is... This is...", EVENT_TYPES.HEIST_MEMBER_INTRODUCED },
+                { "] Karst, the Lockpick: Forgot to tell ya, bringing this lug with us on this job.", EVENT_TYPES.HEIST_MEMBER_INTRODUCED },
+                { "] Huck, the Soldier: Thought we might be able to use another hand on this one. Meet Niles.", EVENT_TYPES.HEIST_MEMBER_INTRODUCED },
+                { "] Niles, the Interrogator: Exile, this is Vinderi. Expert demolitionist.", EVENT_TYPES.HEIST_MEMBER_INTRODUCED },
+                { "] Tibbs, the Giant: I've brought an old mate of mine along for this job. Her name's Tullina.", EVENT_TYPES.HEIST_MEMBER_INTRODUCED },
+                { "] Tullina, the Catburglar: Before we set off, I'd like to introduce you to an associate of mine. This is Nenet.", EVENT_TYPES.HEIST_MEMBER_INTRODUCED },
+
                 // Heist
                 { "] Karst, the Lockpick: ", EVENT_TYPES.HEIST_KARST_SPEAK },
                 { "] Tullina, the Catburglar: ", EVENT_TYPES.HEIST_TULLINA_SPEAK },
@@ -401,6 +411,9 @@ namespace TraXile
                 {"] Lycia, Unholy Heretic: I have such sights to show you...", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
                 {"] Lycia, Unholy Heretic: Beidat, give me your power!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
                 {"] Lycia, Unholy Heretic: Yes! The blood moon rises! Beidat, give me your power!", EVENT_TYPES.SANCTUM_LYCIA_1_KILLED },
+
+                // ZANA ORIGINATOR
+                 {"] Zana, the Originator", EVENT_TYPES.ZANA_ORIGINATOR_SPEAK },
 
                 // ANCESTOR: Lost Matches
                 {"] Navali: There is no shame in defeat... at least, not yet.", EVENT_TYPES.ANCESTOR_MATCH_LOST },

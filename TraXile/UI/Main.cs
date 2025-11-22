@@ -68,7 +68,9 @@ namespace TraXile
         KING_IN_THE_MISTS_FIGHT,
         BLACK_KNIGHT_FIGHT,
         ADMIRAL_VALERIUS_FIGHT,
-        SASAN_FIGHT
+        SASAN_FIGHT,
+        OSHABI_FIGHT,
+        RELIQUARY_KEY
     }
 
     /// <summary>
@@ -265,6 +267,7 @@ namespace TraXile
         private TrX_SoundManager soundManager;
         private bool soundComboboxTagsSupressSound;
         private string selectedTabNameConfig;
+        private List<Control> controlTmp;
 
         public void DoManualThemeAdjustments(Form form)
         {
@@ -435,6 +438,8 @@ namespace TraXile
             tableLayoutPanel_L0.RowStyles[2].Height = 16;
             linkLabel5.Text = "show filters";
             filterBarShown = false;
+
+            controlTmp = new List<Control>();
 
             Init();
 
@@ -2582,7 +2587,9 @@ namespace TraXile
                 { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, 0 },
                 { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, 0 },
                 { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, 0 },
-                { ACTIVITY_TYPES.SASAN_FIGHT, 0 }
+                { ACTIVITY_TYPES.SASAN_FIGHT, 0 },
+                { ACTIVITY_TYPES.OSHABI_FIGHT, 0 },
+                { ACTIVITY_TYPES.RELIQUARY_KEY, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2631,7 +2638,9 @@ namespace TraXile
                 { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, 0 },
                 { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, 0 },
                 { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, 0 },
-                { ACTIVITY_TYPES.SASAN_FIGHT, 0 }
+                { ACTIVITY_TYPES.SASAN_FIGHT, 0 },
+                { ACTIVITY_TYPES.OSHABI_FIGHT, 0 },
+                { ACTIVITY_TYPES.RELIQUARY_KEY, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2679,7 +2688,9 @@ namespace TraXile
                 { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, Color.DarkViolet },
                 { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, Color.DarkRed },
                 { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, Color.Aqua },
-                { ACTIVITY_TYPES.SASAN_FIGHT, Color.Aqua }
+                { ACTIVITY_TYPES.SASAN_FIGHT, Color.Aqua },
+                { ACTIVITY_TYPES.OSHABI_FIGHT, Color.CadetBlue },
+                { ACTIVITY_TYPES.RELIQUARY_KEY, Color.Orange },
 
             };
             double hideOutTime = 0;
@@ -3285,10 +3296,10 @@ namespace TraXile
 
             double[] tierAverages = new double[]
             {
-                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
             };
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 17; i++)
             {
                 int iSum = 0;
                 int iCount = 0;
@@ -3895,7 +3906,6 @@ namespace TraXile
             {
                 //_lvmActlog.Clear();
                 _lvmActlog.FilterByRange(0, Convert.ToInt32(ReadSetting("actlog.maxitems", "500")));
-
             }
             else
             {
@@ -3920,7 +3930,6 @@ namespace TraXile
             }
 
             DoManualThemeAdjustments(this);
-
             AddUpdateAppSettings("theme", theme);
         }
 
@@ -5063,6 +5072,7 @@ namespace TraXile
 
         private void Main_Move(object sender, EventArgs e)
         {
+           // Control.ControlCollection tmp = this.Controls;
         }
 
         private void ShowDebugInfo()
@@ -5221,6 +5231,29 @@ namespace TraXile
             {
                 _tagsOverlay.Location = new Point(this.Location.X + 200, this.Location.Y);
             }
+        }
+
+        private void Main_ResizeBegin(object sender, EventArgs e)
+        {
+            this.controlTmp.Clear();
+            foreach(Control c in this.Controls)
+            {
+                this.controlTmp.Add(c);
+            }
+
+            this.Controls.Clear();
+        }
+
+        private void Main_ResizeEnd(object sender, EventArgs e)
+        {
+            if(controlTmp.Count > 0)
+            {
+                foreach(Control c in controlTmp)
+                {
+                    this.Controls.Add(c);
+                }
+            }
+            DoManualThemeAdjustments(this);
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

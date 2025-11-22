@@ -204,6 +204,13 @@ namespace TraXile
             set { _portalsUsed = value; }
         }
 
+        private bool _heistMemberIntroduced;
+        public bool HeistMemberIntroduced
+        {
+            get { return _heistMemberIntroduced; }
+            set { _heistMemberIntroduced = value; }
+        }
+
         // Tier of thet current area
         public int MapTier
         {

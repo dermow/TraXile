@@ -465,7 +465,8 @@ namespace TraXile
                 new TrX_ActivityTag("ultimatum-loss") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
                 new TrX_ActivityTag("ultimatum-loss") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
                 new TrX_ActivityTag("ultimatum-took-reward") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
-                new TrX_ActivityTag("black-knight") { BackColor = Color.DarkBlue, ForeColor = Color.White }
+                new TrX_ActivityTag("black-knight") { BackColor = Color.DarkBlue, ForeColor = Color.White },
+                new TrX_ActivityTag("t16.5") { DisplayName = "T16.5", BackColor = Color.DeepSkyBlue, ForeColor = Color.White }
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -492,7 +493,7 @@ namespace TraXile
         private void LoadTags()
         {
             SqliteDataReader sqlReader;
-            sqlReader = _dataBackend.GetSQLReader("SELECT * FROM tx_tags ORDER BY tag_display ASC");
+            sqlReader = _dataBackend.GetSQLReader("SELECT * FROM tx_tags ORDER BY tag_display COLLATE NOCASE ASC");
 
             while (sqlReader.Read())
             {
@@ -991,6 +992,11 @@ namespace TraXile
             }
         }
 
+        private bool CheckIfAreaIsPreIncarnationMemory(string sArea)
+        {
+            return _defaultMappings.PreIncarnationAreas.Contains(sArea);
+        }
+
         /// <summary>
         /// Check if a given area is a Map.
         /// </summary>
@@ -1201,6 +1207,8 @@ namespace TraXile
             bTargetAreaIsMists = _defaultMappings.KingInTheMistsAreas.Contains(sTargetArea),
             bTargetAreaIsBlackKnight = _defaultMappings.BlackKnightAreas.Contains(sTargetArea),
             bTargetAreaIsValerius = _defaultMappings.AdmiralValeriusAreas.Contains(sTargetArea),
+            bTargetAreaIsOshabi = _defaultMappings.OshabiAreas.Contains(sTargetArea),
+            bTargetAreaIsReliqKey = _defaultMappings.ReliqKeyAreas.Contains(sTargetArea),
             bTargetAreaIsSasan = _defaultMappings.SasanAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
@@ -1489,6 +1497,14 @@ namespace TraXile
             else if (bTargetAreaIsSasan)
             {
                 actType = ACTIVITY_TYPES.SASAN_FIGHT;
+            }
+            else if (bTargetAreaIsOshabi)
+            {
+                actType = ACTIVITY_TYPES.OSHABI_FIGHT;
+            }
+            else if (bTargetAreaIsReliqKey)
+            {
+                actType = ACTIVITY_TYPES.RELIQUARY_KEY;
             }
             else
             {
@@ -1961,6 +1977,8 @@ namespace TraXile
                     || _defaultMappings.IncarnationOfNeglectAreas.Contains(sSourceArea)
                     || _defaultMappings.DeceitfulGodAreas.Contains(sSourceArea)
                     || _defaultMappings.AdmiralValeriusAreas.Contains(sSourceArea)
+                    || _defaultMappings.OshabiAreas.Contains(sSourceArea)
+                    || _defaultMappings.ReliqKeyAreas.Contains(sSourceArea)
                     || _defaultMappings.SasanAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
@@ -2066,6 +2084,8 @@ namespace TraXile
                 bTargetAreaIsNeglect ||
                 bTargetAreaIsSasan ||
                 bTargetAreaIsValerius ||
+                bTargetAreaIsOshabi ||
+                bTargetAreaIsReliqKey ||
                 bTargetAreaIsMists;
 
             // Check if opened activity needs to be opened on Mapdevice
@@ -2099,6 +2119,8 @@ namespace TraXile
                 bTargetAreaIsNeglect ||
                 bTargetAreaIsSasan ||
                 bTargetAreaIsValerius ||
+                bTargetAreaIsOshabi ||
+                bTargetAreaIsReliqKey ||
                 bTargetAreaIsMists;
 
             if (enteringDefaultTrackableActivity)
@@ -2480,7 +2502,7 @@ namespace TraXile
                         break;
                     case EVENT_TYPES.DELIRIUM_ENCOUNTER:
 
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2496,7 +2518,7 @@ namespace TraXile
 
                         IncrementStat("NamelessSeerEncounters", ev.EventTime, 1);
 
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2512,7 +2534,7 @@ namespace TraXile
 
                         IncrementStat("ReflectingMistEncounters", ev.EventTime, 1);
 
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2530,7 +2552,7 @@ namespace TraXile
 
                         IncrementStat("MemoryTears", ev.EventTime, 1);
                         
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2543,7 +2565,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.BLIGHT_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2556,7 +2578,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EINHAR_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2569,7 +2591,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.INCURSION_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2582,7 +2604,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.NIKO_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2595,13 +2617,13 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.ZANA_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             _currentActivity.AddTag("zana");
                         }
                         break;
                     case EVENT_TYPES.SYNDICATE_ENCOUNTER:
-                        if (CheckIfAreaIsMap(_currentArea) && _currentActivity != null)
+                        if ((CheckIfAreaIsMap(_currentArea) || CheckIfAreaIsPreIncarnationMemory(_currentArea)) && _currentActivity != null)
                         {
                             if (_isMapZana && _currentActivity.SideArea_ZanaMap != null)
                             {
@@ -2660,7 +2682,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_DANNIG_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("dannig") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        if (_currentActivity != null && !_currentActivity.HasTag("dannig") && (_currentActivity.Type == ACTIVITY_TYPES.MAP || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Dannig", ev.EventTime, 1);
@@ -2670,7 +2692,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_GWENNEN_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("gwennen") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        if (_currentActivity != null && !_currentActivity.HasTag("gwennen") && (_currentActivity.Type == ACTIVITY_TYPES.MAP || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Gwennen", ev.EventTime, 1);
@@ -2679,7 +2701,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_TUJEN_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("tujen") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        if (_currentActivity != null && !_currentActivity.HasTag("tujen") && (_currentActivity.Type == ACTIVITY_TYPES.MAP || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Tujen", ev.EventTime, 1);
@@ -2688,7 +2710,7 @@ namespace TraXile
                         }
                         break;
                     case EVENT_TYPES.EXP_ROG_ENCOUNTER:
-                        if (_currentActivity != null && !_currentActivity.HasTag("rog") && _currentActivity.Type == ACTIVITY_TYPES.MAP)
+                        if (_currentActivity != null && !_currentActivity.HasTag("rog") && (_currentActivity.Type == ACTIVITY_TYPES.MAP || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             IncrementStat("ExpeditionEncounters", ev.EventTime, 1);
                             IncrementStat("ExpeditionEncounters_Rog", ev.EventTime, 1);
@@ -2706,7 +2728,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("gianna");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2724,7 +2746,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("huck");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2742,7 +2764,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("isla");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2760,7 +2782,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("nenet");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2778,7 +2800,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("niles");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2786,6 +2808,17 @@ namespace TraXile
                             }
                         }
                         break;
+
+                    case EVENT_TYPES.HEIST_MEMBER_INTRODUCED:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.HeistMemberIntroduced = true;
+                            }
+                        }
+                        break;
+
                     case EVENT_TYPES.HEIST_TIBBS_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
@@ -2796,7 +2829,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("tibbs");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2814,7 +2847,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("tullina");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2832,7 +2865,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("vinderi");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2849,8 +2882,7 @@ namespace TraXile
                                 {
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("karst");
-
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2893,9 +2925,15 @@ namespace TraXile
                         break;
                     case EVENT_TYPES.TRIALMASTER_ENCOUNTERED:
                         if (_currentActivity != null
-                            && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN))
+                            && (_currentActivity.Type == ACTIVITY_TYPES.MAP || _currentActivity.Type == ACTIVITY_TYPES.CAMPAIGN || CheckIfAreaIsPreIncarnationMemory(_currentArea)))
                         {
                             _currentActivity.AddTag("ultimatum");
+                        }
+                        break;
+                    case EVENT_TYPES.ZANA_ORIGINATOR_SPEAK:
+                        if(_currentActivity != null && CheckIfAreaIsMap(_currentActivity.Area))
+                        {
+                            _currentActivity.AddTag("t16.5");
                         }
                         break;
                 }

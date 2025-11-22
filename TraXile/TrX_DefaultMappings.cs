@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace TraXile
 {
@@ -177,6 +178,11 @@ namespace TraXile
         private List<string> _deceitfulGodAreas;
         public List<string> DeceitfulGodAreas => _deceitfulGodAreas;
 
+        // Areas of the "pre-incarnations"
+        private List<string> _preIncarnationAreas;
+        public List<string> PreIncarnationAreas => _preIncarnationAreas;
+        
+
         // King of Mists
         private List<string> _kingInTheMistsAreas;
         public List<string> KingInTheMistsAreas => _kingInTheMistsAreas;
@@ -193,6 +199,15 @@ namespace TraXile
         public List<string> _sasanAreas;
         public List<string> SasanAreas => _sasanAreas;
 
+        // Oshabi
+        public List<string> _oshabiAreas;
+        public List<string> OshabiAreas => _oshabiAreas;
+
+        // Voidborn Keys
+        public List<string> _reliqKeyAreas;
+        private List<string> _heistIntroVoiceLines;
+
+        public List<string> ReliqKeyAreas => _reliqKeyAreas;
 
         // All
         public List<string> AllAreas
@@ -235,6 +250,7 @@ namespace TraXile
                 lst.AddRange(BlackKnightAreas);
                 lst.AddRange(AdmiralValeriusAreas);
                 lst.AddRange(SasanAreas);
+                lst.AddRange(OshabiAreas);
                 lst.Sort();
                 return lst;
             }
@@ -903,6 +919,11 @@ namespace TraXile
                 "Chambers of Impurity"
             };
 
+            _preIncarnationAreas = new List<string>();
+            _preIncarnationAreas.AddRange(_deceitfulGodAreas);
+            _preIncarnationAreas.AddRange(_cardinalOfFearAreas);
+            _preIncarnationAreas.AddRange(_neglectedFlameAreas);
+
             _kingInTheMistsAreas = new List<string>
             {
                 "Crux of Nothingness"
@@ -923,6 +944,27 @@ namespace TraXile
                 "Abandoned Port"
             };
 
+            _oshabiAreas = new List<string>
+            {
+                "The Sacred Grove"
+            };
+
+            _reliqKeyAreas = new List<string>
+            {
+                "Voidborn Reliquary",
+                "Timeworn Reliquary",
+                "Ancient Reliquary",
+                "Visceral Reliquary",
+                "Shiny Reliquary",
+                "Archive Reliquary",
+                "Cosmic Reliquary",
+                "Oubliette Reliquary",
+                "Decaying Reliquary",
+                "Forgotten Reliquary",
+                "Vaal Reliquary",
+
+            };
+           
             _pausableActivityTypes = new List<ACTIVITY_TYPES>
             {
                 ACTIVITY_TYPES.MAP,
@@ -958,6 +1000,8 @@ namespace TraXile
                 ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT,
                 ACTIVITY_TYPES.SASAN_FIGHT
             };
+
+            
 
             // Map areas with enabled death counter
             _deathCountEnabledAreas = new List<string>();
