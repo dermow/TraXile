@@ -267,6 +267,7 @@ namespace TraXile
         private TrX_SoundManager soundManager;
         private bool soundComboboxTagsSupressSound;
         private string selectedTabNameConfig;
+        private List<Control> controlTmp;
 
         public void DoManualThemeAdjustments(Form form)
         {
@@ -437,6 +438,8 @@ namespace TraXile
             tableLayoutPanel_L0.RowStyles[2].Height = 16;
             linkLabel5.Text = "show filters";
             filterBarShown = false;
+
+            controlTmp = new List<Control>();
 
             Init();
 
@@ -5069,6 +5072,7 @@ namespace TraXile
 
         private void Main_Move(object sender, EventArgs e)
         {
+           // Control.ControlCollection tmp = this.Controls;
         }
 
         private void ShowDebugInfo()
@@ -5227,6 +5231,29 @@ namespace TraXile
             {
                 _tagsOverlay.Location = new Point(this.Location.X + 200, this.Location.Y);
             }
+        }
+
+        private void Main_ResizeBegin(object sender, EventArgs e)
+        {
+            this.controlTmp.Clear();
+            foreach(Control c in this.Controls)
+            {
+                this.controlTmp.Add(c);
+            }
+
+            this.Controls.Clear();
+        }
+
+        private void Main_ResizeEnd(object sender, EventArgs e)
+        {
+            if(controlTmp.Count > 0)
+            {
+                foreach(Control c in controlTmp)
+                {
+                    this.Controls.Add(c);
+                }
+            }
+            DoManualThemeAdjustments(this);
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

@@ -205,6 +205,8 @@ namespace TraXile
 
         // Voidborn Keys
         public List<string> _reliqKeyAreas;
+        private List<string> _heistIntroVoiceLines;
+
         public List<string> ReliqKeyAreas => _reliqKeyAreas;
 
         // All
@@ -962,7 +964,7 @@ namespace TraXile
                 "Vaal Reliquary",
 
             };
-
+           
             _pausableActivityTypes = new List<ACTIVITY_TYPES>
             {
                 ACTIVITY_TYPES.MAP,

@@ -2728,7 +2728,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("gianna");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2746,7 +2746,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("huck");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2764,7 +2764,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("isla");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2782,7 +2782,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("nenet");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2800,7 +2800,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("niles");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2808,6 +2808,17 @@ namespace TraXile
                             }
                         }
                         break;
+
+                    case EVENT_TYPES.HEIST_MEMBER_INTRODUCED:
+                        if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
+                        {
+                            if (CheckIfAreaIsHeist(_currentArea, "The Rogue Harbour"))
+                            {
+                                _currentActivity.HeistMemberIntroduced = true;
+                            }
+                        }
+                        break;
+
                     case EVENT_TYPES.HEIST_TIBBS_SPEAK:
                         if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.HEIST)
                         {
@@ -2818,7 +2829,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("tibbs");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2836,7 +2847,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("tullina");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2854,7 +2865,7 @@ namespace TraXile
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("vinderi");
 
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
@@ -2871,8 +2882,7 @@ namespace TraXile
                                 {
                                     _currentActivity.RougeCont++;
                                     _currentActivity.AddTag("karst");
-
-                                    if (_currentActivity.RougeCont >= 3)
+                                    if (_currentActivity.RougeCont >= 2 && (!_currentActivity.HeistMemberIntroduced))
                                     {
                                         _currentActivity.AddTag("blueprint");
                                     }
