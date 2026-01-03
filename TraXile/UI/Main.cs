@@ -624,20 +624,8 @@ namespace TraXile
             DateTime date1 = new DateTime(dt1.Year, dt1.Month, dt1.Day, dt1.Hour, dt1.Minute, dt1.Second, _dateTimeFormatInfo.Calendar);
             DateTime date2 = new DateTime(dt2.Year, dt2.Month, dt2.Day, dt2.Hour, dt2.Minute, dt2.Second, _dateTimeFormatInfo.Calendar);
 
-            // Debug log for GitHub Issue #120
-            _log.Debug($"Filtering activities by time range: {date1} - {date2}");
-            bool bLogged = false;
-
-
             foreach (TrX_TrackedActivity act in source)
             {
-                // Log values from first activitiy
-                if (!bLogged)
-                {
-                    _log.Debug($"Logging first checked filter Activity: {act.UniqueID}, Started: {act.Started}, Type: {act.Type}, TotalSeconds: {act.TotalSeconds}");
-                    bLogged = true;
-                }
-
                 if (act.Started >= date1 && act.Started <= date2)
                 {
                     if (act.TotalSeconds > _minimumTimeCap)

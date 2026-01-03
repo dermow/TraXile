@@ -201,6 +201,7 @@ namespace TraXile
 
         // Oshabi
         public List<string> _oshabiAreas;
+
         public List<string> OshabiAreas => _oshabiAreas;
 
         // Voidborn Keys

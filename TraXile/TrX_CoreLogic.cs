@@ -169,6 +169,10 @@ namespace TraXile
         private bool _isMapVaalArea;
         public bool IsMapVaalArea => _isMapVaalArea;
 
+        // Property: Is current map safehouse side area
+        private bool _isMapSafeHouseSide;
+        public bool IsMapSafeHouseSideArea => _isMapSafeHouseSide;
+
         // Property: Is current map black knight fight
         private bool _isBlackKnightFight;
         public bool IsBlackKnightFight => _isBlackKnightFight;
@@ -466,7 +470,8 @@ namespace TraXile
                 new TrX_ActivityTag("ultimatum-loss") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
                 new TrX_ActivityTag("ultimatum-took-reward") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
                 new TrX_ActivityTag("black-knight") { BackColor = Color.DarkBlue, ForeColor = Color.White },
-                new TrX_ActivityTag("t16.5") { DisplayName = "T16.5", BackColor = Color.DeepSkyBlue, ForeColor = Color.White }
+                new TrX_ActivityTag("t16.5") { DisplayName = "T16.5", BackColor = Color.DeepSkyBlue, ForeColor = Color.White },
+                new TrX_ActivityTag("side-area") { BackColor = Color.Blue, ForeColor = Color.White }
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -1164,6 +1169,7 @@ namespace TraXile
             bSourceAreaIsLabTrial = sSourceArea.Contains("Trial of"),
             bSourceAreaIsLogbookSide = _defaultMappings.LogbookSideAreas.Contains(sSourceArea),
             bSourceAreaIsBlackKnight = _defaultMappings.BlackKnightAreas.Contains(sSourceArea),
+            bSourceAreaIsSafeHouse = _defaultMappings.SyndicateSafehouseAreas.Contains(sSourceArea),
             bTargetAreaIsMap = CheckIfAreaIsMap(sTargetArea, sSourceArea),
             bTargetAreaIsHeist = CheckIfAreaIsHeist(sTargetArea, sSourceArea),
             bTargetAreaIsSimu = false,
@@ -1643,6 +1649,7 @@ namespace TraXile
                         TimeStamp = lTS,
                         InstanceEndpoint = _currentActivity.InstanceEndpoint
                     };
+                    _currentActivity.SideArea_VaalArea.AddTag("side-area");
                     _currentActivity.AddTag("vaal-area");
                 }
 
@@ -1656,6 +1663,53 @@ namespace TraXile
             else
             {
                 _isMapVaalArea = false;
+            }
+
+            // Safehouse can be started inside or outside map:
+
+            // Entered Safehouse side?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && actType == ACTIVITY_TYPES.SAFEHOUSE && sSourceArea == _currentActivity.Area)
+            {
+                if (_currentActivity.SideArea_SafeHouse == null)
+                {
+                    _currentActivity.SideArea_SafeHouse = new TrX_TrackedActivity
+                    {
+                        Area = sTargetArea,
+                        AreaLevel = _nextAreaLevel,
+                        AreaSeed = _nextAreaSeed,
+                        Type = actType,
+                        Started = ev.EventTime,
+                        TimeStamp = lTS,
+                        InstanceEndpoint = _currentActivity.InstanceEndpoint
+                    };
+                    _currentActivity.SideArea_SafeHouse.AddTag("side-area");
+                    //_currentActivity.AddTag("safehouse-side");
+                }
+
+                _currentActivity.Pause();
+                _currentActivity.StartPauseTime(ev.EventTime);
+
+                _currentActivity.SideArea_SafeHouse.StartStopWatch();
+                _currentActivity.SideArea_SafeHouse.EndPauseTime(ev.EventTime);
+                _isMapSafeHouseSide = true;
+            }
+            else
+            {
+                _isMapSafeHouseSide = false;
+            }
+
+            // Left safehouse side?
+            if (_currentActivity != null && _currentActivity.Type == ACTIVITY_TYPES.MAP && bSourceAreaIsSafeHouse)
+            {
+                if (_currentActivity.SideArea_SafeHouse != null)
+                {
+                    _currentActivity.SideArea_SafeHouse.LastEnded = ev.EventTime;
+                    _currentActivity.SideArea_SafeHouse.StopStopWatch();
+                    _currentActivity.SideArea_SafeHouse.StartPauseTime(ev.EventTime);
+
+                    _currentActivity.Resume();
+                    _currentActivity.EndPauseTime(ev.EventTime);
+                }
             }
 
             // Left Vaal Side area?
@@ -1687,6 +1741,7 @@ namespace TraXile
                         TimeStamp = lTS,
                         InstanceEndpoint = _currentActivity.InstanceEndpoint
                     };
+                    _currentActivity.SideArea_BlackKnight.AddTag("side-area");
                     _currentActivity.AddTag("black-knight");
                 }
 
@@ -1776,6 +1831,7 @@ namespace TraXile
                         TimeStamp = lTS,
                         InstanceEndpoint = _currentActivity.InstanceEndpoint
                     };
+                    _currentActivity.SideArea_AbyssArea.AddTag("side-area");
                     _currentActivity.AddTag("abyss-depths");
                 }
 
@@ -1820,6 +1876,7 @@ namespace TraXile
                         TimeStamp = lTS,
                         InstanceEndpoint = _currentActivity.InstanceEndpoint
                     };
+                    _currentActivity.SideArea_LabTrial.AddTag("side-area");
                     _currentActivity.AddTag("lab-trial");
                 }
 
@@ -2065,7 +2122,7 @@ namespace TraXile
                 bTargetAreaIsMavenFight ||
                 bTargetAreaIsSirusFight ||
                 bTargetAreaIsLogbook ||
-                bTargetAreaIsSafehouse ||
+                (bTargetAreaIsSafehouse && !_isMapSafeHouseSide)||
                 bTargetAreaIsCata ||
                 bTargetAreaIsExarch ||
                 bTargetAreaIsBreachStone ||
@@ -2096,7 +2153,7 @@ namespace TraXile
                 bTargetAreaIsElder ||
                 bTargetAreaIsShaper ||
                 bTargetAreaIsSimu ||
-                bTargetAreaIsSafehouse ||
+                (bTargetAreaIsSafehouse && ! _isMapSafeHouseSide) ||
                 bTargetAreaIsSirusFight ||
                 bTargetAreaTemple ||
                 bTargetAreaIsMI ||
@@ -2321,6 +2378,14 @@ namespace TraXile
                             _currentActivity.SideArea_LogbookSide.LastEnded = ev.EventTime;
                         }
                     }
+                    else if (_isMapSafeHouseSide)
+                    {
+                        if (_currentActivity.SideArea_SafeHouse != null)
+                        {
+                            _currentActivity.SideArea_SafeHouse.DeathCounter++;
+                            _currentActivity.SideArea_SafeHouse.LastEnded = ev.EventTime;
+                        }
+                    }
                     else
                     {
                         _currentActivity.DeathCounter++;
@@ -2421,6 +2486,31 @@ namespace TraXile
                                     }
 
                                 }
+                                if (_currentActivity.SideArea_SafeHouse != null)
+                                {
+                                    if (_currentActivity.SideArea_SafeHouse.LastEnded.Year < 2000)
+                                    {
+                                        _currentActivity.SideArea_SafeHouse = null;
+                                    }
+                                    else
+                                    {
+                                        _currentActivity.SideArea_SafeHouse.IsFinished = true;
+                                    }
+
+                                }
+                                if (_currentActivity.SideArea_BlackKnight != null)
+                                {
+                                    if (_currentActivity.SideArea_BlackKnight.LastEnded.Year < 2000)
+                                    {
+                                        _currentActivity.SideArea_BlackKnight = null;
+                                    }
+                                    else
+                                    {
+                                        _currentActivity.SideArea_BlackKnight.IsFinished = true;
+                                    }
+
+                                }
+                               
                                 FinishActivity(_currentActivity, null, ACTIVITY_TYPES.MAP, ev.EventTime);
                             }
                         }
@@ -3028,6 +3118,7 @@ namespace TraXile
                 TimeSpan tsLabTrial = new TimeSpan();
                 TimeSpan tsLogbookSide = new TimeSpan();
                 TimeSpan tsSanctum = new TimeSpan();
+                TimeSpan tsSafeHouse = new TimeSpan();
                 int totalSecondsMainActivity;
                 int totalSecondsZanaMap = 0;
                 int totalSecondsVallSideArea = 0;
@@ -3036,6 +3127,7 @@ namespace TraXile
                 int totalSecondsAbyss = 0;
                 int totalSecondsLabTrial = 0;
                 int totalSecondsLogBookSide = 0;
+                int totalSecondsSafeHouseSide = 0;
 
                 // Filter out invalid labs (discnnect etc)
                 if (activity.Type == ACTIVITY_TYPES.LABYRINTH)
@@ -3104,6 +3196,11 @@ namespace TraXile
                         tsLabTrial = (activity.SideArea_LabTrial.LastEnded - activity.SideArea_LabTrial.Started);
                     }
 
+                    if (activity.SideArea_SafeHouse != null)
+                    {
+                        tsSafeHouse = (activity.SideArea_SafeHouse.LastEnded - activity.SideArea_SafeHouse.Started);
+                    }
+
                     // Filter out town activities without end date
                     if (activity.LastEnded.Year < 2000)
                     {
@@ -3156,6 +3253,11 @@ namespace TraXile
                     {
                         tsLabTrial = (activity.SideArea_LabTrial.StopWatchTimeSpan);
                     }
+
+                    if (activity.SideArea_SafeHouse != null)
+                    {
+                        tsSafeHouse = (activity.SideArea_SafeHouse.StopWatchTimeSpan);
+                    }
                 }
 
                 // Calculate times
@@ -3166,6 +3268,7 @@ namespace TraXile
                 totalSecondsAbyss = Convert.ToInt32(tsAbyss.TotalSeconds);
                 totalSecondsLabTrial = Convert.ToInt32(tsLabTrial.TotalSeconds);
                 totalSecondsSanctum = Convert.ToInt32(tsSanctum.TotalSeconds);
+                totalSecondsSafeHouseSide = Convert.ToInt32(tsSafeHouse.TotalSeconds);
 
                 if (isValid)
                 {
@@ -3222,7 +3325,7 @@ namespace TraXile
                         if (!_parsedActivities.Contains(activity.SideArea_VaalArea.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_VaalArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_VaalArea.Type), activity.SideArea_VaalArea.Area, activity.SideArea_VaalArea.AreaLevel, totalSecondsVallSideArea, activity.SideArea_VaalArea.DeathCounter, activity.SideArea_VaalArea.TrialMasterCount, true, activity.SideArea_VaalArea
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_VaalArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_VaalArea.Type), activity.SideArea_VaalArea.Area, activity.SideArea_VaalArea.AreaLevel, totalSecondsVallSideArea, activity.SideArea_VaalArea.DeathCounter, activity.SideArea_VaalArea.TrialMasterCount, false, activity.SideArea_VaalArea
                                 .Tags, activity.SideArea_VaalArea.Success, Convert.ToInt32(activity.SideArea_VaalArea.PausedTime));
                         }
                     }
@@ -3240,7 +3343,7 @@ namespace TraXile
                         if (!_parsedActivities.Contains(activity.SideArea_BlackKnight.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_BlackKnight.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_BlackKnight.Type), activity.SideArea_BlackKnight.Area, activity.SideArea_BlackKnight.AreaLevel, totalSecondsBlackKnightSideArea, activity.SideArea_BlackKnight.DeathCounter, activity.SideArea_BlackKnight.TrialMasterCount, true, activity.SideArea_BlackKnight
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_BlackKnight.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_BlackKnight.Type), activity.SideArea_BlackKnight.Area, activity.SideArea_BlackKnight.AreaLevel, totalSecondsBlackKnightSideArea, activity.SideArea_BlackKnight.DeathCounter, activity.SideArea_BlackKnight.TrialMasterCount, false, activity.SideArea_BlackKnight
                                 .Tags, activity.SideArea_BlackKnight.Success, Convert.ToInt32(activity.SideArea_BlackKnight.PausedTime));
                         }
                     }
@@ -3258,7 +3361,7 @@ namespace TraXile
                         if (!_parsedActivities.Contains(activity.SideArea_Sanctum.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_Sanctum.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_Sanctum.Type), activity.SideArea_Sanctum.Area, activity.SideArea_Sanctum.AreaLevel, totalSecondsSanctum, activity.SideArea_Sanctum.DeathCounter, activity.SideArea_Sanctum.TrialMasterCount, true, activity.SideArea_Sanctum
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_Sanctum.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_Sanctum.Type), activity.SideArea_Sanctum.Area, activity.SideArea_Sanctum.AreaLevel, totalSecondsSanctum, activity.SideArea_Sanctum.DeathCounter, activity.SideArea_Sanctum.TrialMasterCount, false, activity.SideArea_Sanctum
                                 .Tags, activity.SideArea_Sanctum.Success, Convert.ToInt32(activity.SideArea_Sanctum.PausedTime));
                         }
                     }
@@ -3276,7 +3379,7 @@ namespace TraXile
                         if (!_parsedActivities.Contains(activity.SideArea_LogbookSide.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LogbookSide.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LogbookSide.Type), activity.SideArea_LogbookSide.Area, activity.SideArea_LogbookSide.AreaLevel, totalSecondsVallSideArea, activity.SideArea_LogbookSide.DeathCounter, activity.SideArea_LogbookSide.TrialMasterCount, true, activity.SideArea_LogbookSide
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LogbookSide.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LogbookSide.Type), activity.SideArea_LogbookSide.Area, activity.SideArea_LogbookSide.AreaLevel, totalSecondsVallSideArea, activity.SideArea_LogbookSide.DeathCounter, activity.SideArea_LogbookSide.TrialMasterCount, false, activity.SideArea_LogbookSide
                                 .Tags, activity.SideArea_LogbookSide.Success, Convert.ToInt32(activity.SideArea_LogbookSide.PausedTime));
                         }
                     }
@@ -3294,7 +3397,7 @@ namespace TraXile
                         if (!_parsedActivities.Contains(activity.SideArea_AbyssArea.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_AbyssArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_AbyssArea.Type), activity.SideArea_AbyssArea.Area, activity.SideArea_AbyssArea.AreaLevel, totalSecondsAbyss, activity.SideArea_AbyssArea.DeathCounter, activity.SideArea_AbyssArea.TrialMasterCount, true, activity.SideArea_AbyssArea
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_AbyssArea.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_AbyssArea.Type), activity.SideArea_AbyssArea.Area, activity.SideArea_AbyssArea.AreaLevel, totalSecondsAbyss, activity.SideArea_AbyssArea.DeathCounter, activity.SideArea_AbyssArea.TrialMasterCount, false, activity.SideArea_AbyssArea
                                 .Tags, activity.SideArea_AbyssArea.Success, Convert.ToInt32(activity.SideArea_AbyssArea.PausedTime));
                         }
                     }
@@ -3304,13 +3407,34 @@ namespace TraXile
                         TimeSpan tsLabTrial2 = TimeSpan.FromSeconds(totalSecondsLabTrial);
                         activity.SideArea_LabTrial.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
                                tsLabTrial2.Hours, tsLabTrial2.Minutes, tsLabTrial2.Seconds);
+
+                        activity.SideArea_LabTrial.TotalSeconds = totalSecondsLabTrial;
+
                         if (greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_LabTrial);
+
 
                         if (!_parsedActivities.Contains(activity.SideArea_LabTrial.UniqueID))
                         {
                             //Save to DB
-                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LabTrial.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LabTrial.Type), activity.SideArea_LabTrial.Area, activity.SideArea_LabTrial.AreaLevel, totalSecondsLabTrial, activity.SideArea_LabTrial.DeathCounter, activity.SideArea_LabTrial.TrialMasterCount, true, activity.SideArea_LabTrial
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_LabTrial.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_LabTrial.Type), activity.SideArea_LabTrial.Area, activity.SideArea_LabTrial.AreaLevel, totalSecondsLabTrial, activity.SideArea_LabTrial.DeathCounter, activity.SideArea_LabTrial.TrialMasterCount, false, activity.SideArea_LabTrial
                                 .Tags, activity.SideArea_LabTrial.Success, Convert.ToInt32(activity.SideArea_LabTrial.PausedTime));
+                        }
+                    }
+
+                    if (activity.SideArea_SafeHouse != null)
+                    {
+                        TimeSpan tsSafHouse2 = TimeSpan.FromSeconds(totalSecondsSafeHouseSide);
+                        activity.SideArea_SafeHouse.CustomStopWatchValue = String.Format("{0:00}:{1:00}:{2:00}",
+                               tsSafHouse2.Hours, tsSafHouse2.Minutes, tsSafHouse2.Seconds);
+                        if (greaterThenMinCap) _eventHistory.Insert(0, _currentActivity.SideArea_SafeHouse);
+
+                        activity.SideArea_SafeHouse.TotalSeconds = totalSecondsSafeHouseSide;
+                        
+                        if (!_parsedActivities.Contains(activity.SideArea_SafeHouse.UniqueID))
+                        {
+                            //Save to DB
+                            SaveToActivityLog(((DateTimeOffset)activity.SideArea_SafeHouse.Started).ToUnixTimeSeconds(), GetStringFromActType(activity.SideArea_SafeHouse.Type), activity.SideArea_SafeHouse.Area, activity.SideArea_SafeHouse.AreaLevel, totalSecondsSafeHouseSide, activity.SideArea_SafeHouse.DeathCounter, activity.SideArea_SafeHouse.TrialMasterCount, false, activity.SideArea_SafeHouse
+                                .Tags, activity.SideArea_SafeHouse.Success, Convert.ToInt32(activity.SideArea_SafeHouse.PausedTime));
                         }
                     }
 

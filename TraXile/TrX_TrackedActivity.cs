@@ -69,6 +69,14 @@ namespace TraXile
             set { _labTrial = value; }
         }
 
+        // Sub-Activity: Safehouse
+        private TrX_TrackedActivity _safeHouse;
+        public TrX_TrackedActivity SideArea_SafeHouse
+        {
+            get { return _safeHouse; }
+            set { _safeHouse = value; }
+        }
+
         // Activity finished successful?
         private bool _success;
         public bool Success
@@ -601,6 +609,11 @@ namespace TraXile
             if (_sanctumArea != null)
             {
                 results.Add(_sanctumArea);
+            }
+
+            if (_safeHouse != null)
+            {
+                results.Add(_safeHouse);
             }
 
             return results;
