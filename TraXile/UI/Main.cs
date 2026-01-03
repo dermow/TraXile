@@ -1390,9 +1390,6 @@ namespace TraXile
                     AddUpdateAppSettings("layout.tracking.splitter_distance", splitContainer1.SplitterDistance.ToString());
                 }
             }
-
-
-
         }
 
         /// <summary>
@@ -1613,14 +1610,39 @@ namespace TraXile
                 {
                     if (_logic.CurrentActivity != null)
                     {
-                        TrX_TrackedActivity mapToCheck = _logic.IsMapZana ? _logic.CurrentActivity.SideArea_ZanaMap : _logic.CurrentActivity;
+                        TrX_TrackedActivity mapToCheck = null;
+                        
+                        if(_logic.IsBlackKnightFight && _logic.CurrentActivity.SideArea_BlackKnight != null)
+                        {
+                            mapToCheck = _logic.CurrentActivity.SideArea_BlackKnight;
+                        }
+                        else if (_logic.IsMapAbyssArea && _logic.CurrentActivity.SideArea_AbyssArea != null)
+                        {
+                            mapToCheck = _logic.CurrentActivity.SideArea_AbyssArea;
+                        }
+                        else if (_logic.IsMapLabTrial && _logic.CurrentActivity.SideArea_LabTrial != null)
+                        {
+                            mapToCheck = _logic.CurrentActivity.SideArea_LabTrial;
+                        }
+                        else if (_logic.IsMapSafeHouseSideArea && _logic.CurrentActivity.SideArea_SafeHouse != null)
+                        {
+                            mapToCheck = _logic.CurrentActivity.SideArea_SafeHouse;
+                        }
+                        else if (_logic.IsMapVaalArea && _logic.CurrentActivity.SideArea_VaalArea != null)
+                        {
+                            mapToCheck = _logic.CurrentActivity.SideArea_VaalArea;
+                        }
+                        else
+                        {
+                            mapToCheck = _logic.CurrentActivity;
+                        }
 
                         if (mapToCheck.Tags.Contains(tag.ID))
                         {
                             // SOUND NOTIFY?
-                            if(_tagLabels[tag.ID].BackColor == Color.Gray)
+                            if (_tagLabels[tag.ID].BackColor == Color.Gray)
                             {
-                                if(tag.SoundEnabled)
+                                if (tag.SoundEnabled)
                                 {
                                     soundManager.PlaySound(tag.SoundID);
                                 }
@@ -2190,6 +2212,22 @@ namespace TraXile
                             labelTrackingArea.Text = _logic.CurrentActivity.SideArea_Sanctum.Area;
                             materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_Sanctum.DeathCounter.ToString();
                             labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_Sanctum.Type));
+                            pictureBoxStop.Hide();
+                        }
+                        else if ((_logic.IsBlackKnightFight && _logic.CurrentActivity.SideArea_BlackKnight != null))
+                        {
+                            labelStopWatch.Text = _logic.CurrentActivity.SideArea_BlackKnight.StopWatchValue.ToString();
+                            labelTrackingArea.Text = _logic.CurrentActivity.SideArea_BlackKnight.Area;
+                            materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_BlackKnight.DeathCounter.ToString();
+                            labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_BlackKnight.Type));
+                            pictureBoxStop.Hide();
+                        }
+                        else if ((_logic.IsMapSafeHouseSideArea && _logic.CurrentActivity.SideArea_SafeHouse != null))
+                        {
+                            labelStopWatch.Text = _logic.CurrentActivity.SideArea_SafeHouse.StopWatchValue.ToString();
+                            labelTrackingArea.Text = _logic.CurrentActivity.SideArea_SafeHouse.Area;
+                            materialLabell_DeathCounter.Text = _logic.CurrentActivity.SideArea_SafeHouse.DeathCounter.ToString();
+                            labelTrackingType.Text = TrX_Helpers.CapitalFirstLetter(GetStringFromActType(_logic.CurrentActivity.SideArea_SafeHouse.Type));
                             pictureBoxStop.Hide();
                         }
                         else
@@ -3344,7 +3382,6 @@ namespace TraXile
         public void AddUpdateAppSettings(string key, string value)
         {
             _mySettings.AddOrUpdateSetting(key, value);
-            _mySettings.WriteToXml();
         }
 
         /// <summary>
@@ -4051,8 +4088,6 @@ namespace TraXile
                 _timeCaps[type] = value;
                 _mySettings.AddOrUpdateSetting(sett, value.ToString());
             }
-
-            _mySettings.WriteToXml();
         }
 
 
