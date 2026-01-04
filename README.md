@@ -4,11 +4,10 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
+<img width="977" height="128" alt="grafik" src="https://github.com/user-attachments/assets/6400ad73-717c-4d68-a852-d7787e70086f" />
+
 <div align="center">
-  <a href="https://github.com/dermow/TraXile">
-    <img src="https://github.com/dermow/TraXile/blob/master/TraXile/Resources/trax.jpg?raw=true" alt="TraXile Logo" width="400"/>
-  </a>
-  <h1>TraXile</h1>
+ 
   <p>
     <strong>Track and analyze your Path of Exile activities in real time and historically.</strong>
   </p>
@@ -17,6 +16,7 @@
     <a href="https://github.com/dermow/TraXile/releases/latest">⬇️ Download Latest Release</a>
   </p>
 </div>
+
 
 ---
 
