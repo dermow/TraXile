@@ -22,13 +22,13 @@
 
 ## 📑 Table of Contents
 
-- [ℹ️ About](#about)
-- [✨ Features](#features)
-- [🚀 Getting Started](#getting-started)
-  - [💾 Installation](#installation)
-  - [🛠️ First Steps](#first-steps)
-  - [⬆️ Update](#update)
-- [❓ FAQ](#faq)
+- [ℹ️ About](#ℹ%EF%B8%8F-about)
+- [✨ Features](#-features)
+- [🚀 Getting Started](#-getting-started)
+  - [💾 Installation](#-installation)
+  - [🛠️ First Steps](#%EF%B8%8F-first-steps)
+  - [⬆️ Update](#%EF%B8%8F-update)
+- [❓ FAQ](#-faq)
 
 ---
 
