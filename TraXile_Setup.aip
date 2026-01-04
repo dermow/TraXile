@@ -12,10 +12,10 @@
     <ROW Property="ARPURLUPDATEINFO" Value="https://github.com/dermow/TraXile"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="dermow"/>
-    <ROW Property="ProductCode" Value="1033:{106062E5-DA58-49BE-B4BE-049C94226407} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{7CB86737-E554-4179-88E3-586DF71A31D5} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="TraXile"/>
-    <ROW Property="ProductVersion" Value="2.2.2" Options="32"/>
+    <ROW Property="ProductVersion" Value="2.2.3" Options="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{E4B8E0B2-1577-4E31-ACDE-2C19A61BD8B6}"/>
@@ -156,8 +156,8 @@
     <ROW File="System.Threading.Tasks.Extensions.xml" Component_="log4net.xml" FileName="SYSTEM~9.XML|System.Threading.Tasks.Extensions.xml" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Threading.Tasks.Extensions.xml" SelfReg="false"/>
     <ROW File="System.ValueTuple.dll" Component_="System.ValueTuple.dll" FileName="SYSTE~10.DLL|System.ValueTuple.dll" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.ValueTuple.dll" SelfReg="false"/>
     <ROW File="System.ValueTuple.xml" Component_="log4net.xml" FileName="SYSTE~10.XML|System.ValueTuple.xml" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.ValueTuple.xml" SelfReg="false"/>
-    <ROW File="TraXile.Updater.exe" Component_="TraXile.Updater.exe" FileName="TRAXIL~1.EXE|TraXile.Updater.exe" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile.Updater\bin\Release\TraXile.Updater.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="TraXile.Updater.exe.config" Component_="log4net.xml" FileName="TRAXIL~2.CON|TraXile.Updater.exe.config" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile.Updater\bin\Release\TraXile.Updater.exe.config" SelfReg="false"/>
+    <ROW File="TraXile.Updater.exe" Component_="TraXile.Updater.exe" FileName="TRAXIL~1.EXE|TraXile.Updater.exe" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.Updater.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="TraXile.Updater.exe.config" Component_="log4net.xml" FileName="TRAXIL~2.CON|TraXile.Updater.exe.config" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile\bin\Release\TraXile.Updater.exe.config" SelfReg="false"/>
     <ROW File="TraXile.Updater.pdb" Component_="TraXile.Updater.exe" FileName="TRAXIL~1.PDB|TraXile.Updater.pdb" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile.Updater\bin\Release\TraXile.Updater.pdb" SelfReg="false"/>
     <ROW File="System.Reactive.dll" Component_="System.Reactive.dll" FileName="SYSTE~11.DLL|System.Reactive.dll" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Reactive.dll" SelfReg="false"/>
     <ROW File="System.Reactive.xml" Component_="log4net.xml" FileName="SYSTE~11.XML|System.Reactive.xml" Version="65535.65535.65535.65535" Attributes="0" SourcePath="TraXile.Updater\bin\Release\System.Reactive.xml" SelfReg="false"/>
