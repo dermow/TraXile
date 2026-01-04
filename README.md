@@ -4,7 +4,8 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-<img width="977" height="128" alt="grafik" src="https://github.com/user-attachments/assets/6400ad73-717c-4d68-a852-d7787e70086f" />
+<img width="1295" height="126" alt="grafik" src="https://github.com/user-attachments/assets/e9de1c91-8edc-40c1-9126-de67e7e875fc" />
+
 
 <div align="center">
  
