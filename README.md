@@ -93,34 +93,36 @@ TraXile is a potential alternative to "Mapwatch," a similar tool that was recent
 
 ## ❓ FAQ
 
-**TraXile isn’t tracking any activities, even with the correct Client.txt path.**  
+### TraXile isn’t tracking any activities, even with the correct Client.txt path
 Make sure your local area chat is enabled; TraXile depends on these log lines.
 
-**Why can't I filter data by character name?**  
+### Why can't I filter data by character name?
 Unfortunately, the Client.txt log file does not include the character name.
 
-**Do I need TraXile running while playing to track activities?**  
+### Do I need TraXile running while playing to track activities?
 No. TraXile reads all data in your Client.txt file, so past activities are tracked even if TraXile wasn’t running.
 
-**Why does Windows warn me during installation?**  
+### Why does Windows warn me during installation?
 As an independent developer, I do not use a Code Signing certificate, which causes Windows to show a warning.
 
-**Does the app send data to the Internet?**  
+### Does the app send data to the Internet?  
 Only to check for new versions and download some metadata (e.g., league dates).
 
-**Why isn’t this a web-based application?**  
+### Why isn’t this a web-based application?
 Continuous log file reading is much easier with a desktop app.
 
-**Can I install TraXile on Mac?**  
+### Can I install TraXile on Mac?
 TraXile is designed for Windows, but you can use Crossover to install it on Mac.  
 [Unifer1’s Reddit Guide](https://www.reddit.com/user/Unifer1/):
 
+```
 - Install Crossover
 - "Install a new bottle" → "Install an unlisted application"
 - Create a Windows 10 64-bit bottle named TraXile
 - Select and install the `Setup.msi`
 - On first run, select your Client.txt log file
 - Should work automatically after setup
+```
 
 **Can I install TraXile on Linux?**  
 TraXile is not natively supported on Linux, but it can run successfully using Wine. Here's how:
