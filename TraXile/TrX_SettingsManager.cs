@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Xml;
+using log4net;
 
 namespace TraXile
 {
@@ -9,6 +10,8 @@ namespace TraXile
     {
         // Patah to XML file
         readonly string _xmlPath;
+
+        private readonly ILog _log;
 
         // Key value store
         public readonly Dictionary<string, string> kvStore;
@@ -19,6 +22,8 @@ namespace TraXile
         /// <param name="file_path"></param>
         public TrX_SettingsManager(string file_path)
         {
+            _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            _log.Info("TrX_SettingsManager initialized.");
             kvStore = new Dictionary<string, string>();
             _xmlPath = file_path;
         }
@@ -48,13 +53,29 @@ namespace TraXile
         /// <param name="s_value"></param>
         public void AddOrUpdateSetting(string s_key, string s_value)
         {
+            bool hasChanged = false;
+
             if (kvStore.ContainsKey(s_key))
             {
-                kvStore[s_key] = s_value;
+                // Logging
+                if(kvStore[s_key] != s_value)
+                {
+                    string sOldValue = kvStore[s_key];
+                    kvStore[s_key] = s_value;
+                    hasChanged = true;
+
+                    _log.Debug($"Changed setting '{s_key}': '{sOldValue}' -> '{s_value}'");
+                }
             }
             else
             {
                 kvStore.Add(s_key, s_value);
+                hasChanged = true;
+            }
+
+            if(hasChanged)
+            {
+                WriteToXml();
             }
         }
 
@@ -63,6 +84,8 @@ namespace TraXile
         /// </summary>
         public void LoadFromXml()
         {
+            _log.Debug("Loading settings from config.xml");
+
             if (File.Exists(_xmlPath))
             {
                 XmlDocument xml = new XmlDocument();
@@ -72,6 +95,8 @@ namespace TraXile
                 {
                     kvStore.Add(n.Attributes["key"].Value, n.Attributes["value"].Value);
                 }
+
+                _log.Debug("Loaded settings from config.xml");
             }
         }
 
@@ -98,6 +123,10 @@ namespace TraXile
             wrt.WriteEndElement();
             wrt.WriteEndDocument();
             wrt.Close();
+
+            // Debug empty config.xml problem
+            long configXmlSize = new FileInfo(_xmlPath).Length;
+            _log.Debug($"Written settings to config.xml, file size is {configXmlSize} bytes.");
         }
     }
 }

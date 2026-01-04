@@ -67,7 +67,7 @@ namespace TraXile
             {
                 foreach (ListViewItem lvi in _masterList)
                 {
-                    if (Regex.IsMatch(lvi.Text, s_filter))
+                    if (Regex.IsMatch(lvi.Text, s_filter, RegexOptions.IgnoreCase))
                     {
                         if (!names.Contains(lvi.Name))
                         {
@@ -78,7 +78,7 @@ namespace TraXile
                     {
                         foreach (ListViewSubItem si in lvi.SubItems)
                         {
-                            if (Regex.IsMatch(si.Text, s_filter))
+                            if (Regex.IsMatch(si.Text, s_filter, RegexOptions.IgnoreCase))
                             {
                                 if (!names.Contains(lvi.Name))
                                 {
