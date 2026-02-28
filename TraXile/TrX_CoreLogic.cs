@@ -49,6 +49,9 @@ namespace TraXile
         // Event: initialization of history is finished
         public event Trx_GenericEventHandler OnHistoryInitialized;
 
+        // Event: DivCardDrawn
+        public event Trx_GenericEventHandler OnDivCardDrawn;
+
         // Event: called when an activity is finished
         public event TrX_ActivityEventHandler OnActivityFinished;
 
@@ -3026,6 +3029,9 @@ namespace TraXile
                             _currentActivity.AddTag("t16.5");
                         }
                         break;
+                    case EVENT_TYPES.DIV_CARD_DRAWN:
+                        _HandleDivCardDraw(ev);
+                        break;
                 }
 
                 if (_eventQueueInitizalized)
@@ -3038,6 +3044,26 @@ namespace TraXile
                 _log.Error($"Error handling event: {ex.Message}.");
                 _log.Debug(ex.ToString());
             }
+        }
+
+        private void _HandleDivCardDraw(TrX_TrackingEvent ev)
+        {
+            try
+            {
+                string sDivCard = ev.LogLine.Split(new string[] { "{" }, StringSplitOptions.None)[1].Replace("}", "");
+                
+                _dataBackend.AddDivCardEntry(sDivCard, ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds());
+                _log.Debug($"drawn divination card: {sDivCard}");
+
+                OnDivCardDrawn(new TrX_CoreLogicGenericEventArgs(this));
+
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Error handling div card draw event: {ex.Message}.");
+                _log.Debug(ex.ToString());
+            }
+
         }
 
         /// <summary>

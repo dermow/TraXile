@@ -18,6 +18,7 @@ using MaterialSkin.Controls;
 using Newtonsoft.Json;
 using TraXile.UI;
 using System.IO.Compression;
+using System.Text.RegularExpressions;
 
 
 namespace TraXile
@@ -253,6 +254,7 @@ namespace TraXile
         // Setting: Mimimize to tray
         private bool _minimizeToTray;
         private bool _uiFlagLeagueDashboard;
+        private bool _uiFlagDivCards;
         private bool _uiFlagTagOverlay_TagsChanged;
         private bool _updateAvailable;
         private string _newVersion;
@@ -1067,6 +1069,7 @@ namespace TraXile
             _logic.OnActivityFinished += Logic_OnActivityFinished;
             _logic.OnTagsUpdated += Logic_OnTagsUpdated;
             _logic.OnActivityStarted += _logic_OnActivityStarted;
+            _logic.OnDivCardDrawn += _logic_OnDivCardDrawn;
             _logic.Start();
 
             // Data Sources
@@ -1157,7 +1160,7 @@ namespace TraXile
             _uiFlagActivityListReset = true;
             _uiFlagAllStatsDashboard = true;
             _uiFlagLeagueDashboard = true;
-
+            _uiFlagDivCards = true;
 
             // Map filter
             comboBox3.Items.Add("All");
@@ -1208,6 +1211,10 @@ namespace TraXile
             timer1.Start();
         }
 
+        private void _logic_OnDivCardDrawn(TrX_CoreLogicGenericEventArgs e)
+        {
+           _uiFlagDivCards = true;
+        }
 
         private void _workerAllStatsChart_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -2133,6 +2140,7 @@ namespace TraXile
 
                     RenderTagsForTracking();
                     RenderTagsForConfig();
+                    //RenderDivCards();
                     textBoxLogFilePath.Text = ReadSetting("poe_logfile_path");
                     labelItemCount.Text = $"items: {_actLogItemCount}";
 
@@ -2294,6 +2302,13 @@ namespace TraXile
                     {
                         RenderAllStatsDashboard();
                         _uiFlagAllStatsDashboard = false;
+                    }
+
+                    // Divcard Dashboard
+                    if(_uiFlagDivCards)
+                    {
+                        RenderDivCards();
+                        _uiFlagDivCards = false;
                     }
 
                     // Global Dashbaord
@@ -2560,6 +2575,46 @@ namespace TraXile
             };
             BeginInvoke(mi);
 
+        }
+
+        public void RenderDivCards()
+        {
+            List<KeyValuePair<string, int>> divCards = _logic.Database.GetDivCardStats(_statsDate1, _statsDate2);
+
+            int total = 0;
+
+            listViewDivCards.Items.Clear();
+
+            bool bAdded = false;
+
+            foreach (KeyValuePair<string, int> kvp in divCards)
+            {
+                string divCard = kvp.Key;
+
+                DateTime first = _logic.Database.GetFirstDivCardDraw(divCard, _statsDate1, _statsDate2);
+                DateTime last = _logic.Database.GetLatestDivCardDraw(divCard, _statsDate1, _statsDate2);
+
+                if (!String.IsNullOrEmpty(materialTextBoxSeachDivCard.Text))
+                {
+                    bAdded = Regex.IsMatch(divCard, materialTextBoxSeachDivCard.Text, RegexOptions.IgnoreCase);
+                }
+                else
+                {
+                    bAdded = true;
+                }
+
+                if (bAdded)
+                {
+                    ListViewItem lvi = new ListViewItem(kvp.Key);
+                    lvi.SubItems.Add(kvp.Value.ToString());
+                    lvi.SubItems.Add(last.ToString());
+                    lvi.SubItems.Add(first.ToString());
+                    listViewDivCards.Items.Add(lvi);
+                    total+= kvp.Value;
+                }
+            }
+
+            materialLabel60.Text = $"Total Divcards: {total}";
         }
 
         /// <summary>
@@ -3920,6 +3975,7 @@ namespace TraXile
             _uiFlagMapDashboard = true;
             _uiFlagStatisticsChart = true;
             _uiFlagLeagueDashboard = true;
+            _uiFlagDivCards = true;
         }
 
         /// <summary>
@@ -5277,6 +5333,45 @@ namespace TraXile
                 }
             }
             DoManualThemeAdjustments(this);
+        }
+
+        private void materialButton9_Click(object sender, EventArgs e)
+        {
+            MethodInvoker mi = delegate { RenderDivCards(); };
+            BeginInvoke(mi);
+        }
+
+        private void materialButton8_Click(object sender, EventArgs e)
+        {
+            materialTextBoxSeachDivCard.Text = "";
+            MethodInvoker mi = delegate { RenderDivCards(); };
+            BeginInvoke(mi);
+        }
+
+        private void ExportDivCards()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Divination Card; Count; Last draw; First draw");
+            foreach(ListViewItem lvi in listViewDivCards.Items)
+            {
+                sb.AppendLine($"{lvi.SubItems[0].Text};{lvi.SubItems[1].Text};{lvi.SubItems[2].Text};{lvi.SubItems[3].Text}");
+            }
+
+            string sPath = "";
+            SaveFileDialog sfd = new SaveFileDialog();  
+            sfd.FileName = "TraXile_DivinationCards_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".csv";
+            sfd.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                sPath = sfd.FileName;
+                File.WriteAllText(sPath, sb.ToString(), Encoding.UTF8);
+            }
+        }
+
+        private void materialButton10_Click(object sender, EventArgs e)
+        {
+            ExportDivCards();
         }
 
         private void comboBoxStopWatchTag2_SelectedIndexChanged(object sender, EventArgs e)

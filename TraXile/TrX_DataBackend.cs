@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using log4net;
 using Microsoft.Data.Sqlite;
 
@@ -232,6 +233,59 @@ namespace TraXile
             catch
             {
             }
+
+
+            // Update 2.2.4
+            try
+            {
+                cmd = _dbConnection.CreateCommand();
+                cmd.CommandText = "create table if not exists tx_divcards" +
+                    "(id INTEGER PRIMARY KEY," +
+                    "timestamp INTEGER, " +
+                    "divcard TEXT)";
+                cmd.ExecuteNonQuery();
+               // cmd = _dbConnection.CreateCommand();
+               // cmd.CommandText = "create unique index if not exists kvstore on tx_kvstore(key)";
+                _log.Info("PatchDatabase 2.2.4 -> " + cmd.CommandText);
+               // DoNonQuery("INSERT INTO tx_kvstore (key, value) VALUES ('last_hash', '0')", false);
+            }
+            catch
+            {
+            }
+        }
+
+        public List<KeyValuePair<string,int>> GetDivCardStats(DateTime filterFrom, DateTime filterTo)
+        {
+            List<KeyValuePair<string, int>> divCardStats = new List<KeyValuePair<string, int>>();
+
+            SqliteDataReader reader;
+            reader = GetSQLReader(string.Format("SELECT divcard, COUNT(*) FROM tx_divcards WHERE timestamp >= {0} AND timestamp <= {1} GROUP BY divcard ORDER BY COUNT(*) DESC", ((DateTimeOffset)filterFrom).ToUnixTimeSeconds(), ((DateTimeOffset)filterTo).ToUnixTimeSeconds()));
+            while (reader.Read())
+            {
+                divCardStats.Add(new KeyValuePair<string, int>(reader.GetString(0), reader.GetInt32(1)));
+            }
+            return divCardStats;
+
+        }
+
+        public DateTime GetFirstDivCardDraw(string divcard, DateTime from, DateTime to)
+        {             SqliteDataReader reader;
+            reader = GetSQLReader(string.Format("SELECT timestamp FROM tx_divcards WHERE divcard = '{0}' AND timestamp >= {1} AND timestamp <= {2} ORDER BY timestamp ASC LIMIT 1", divcard, ((DateTimeOffset)from).ToUnixTimeSeconds(), ((DateTimeOffset)to).ToUnixTimeSeconds()));
+            reader.Read();
+            return DateTimeOffset.FromUnixTimeSeconds(reader.GetInt64(0)).DateTime;
+        }
+
+        public DateTime GetLatestDivCardDraw(string divcard, DateTime from, DateTime to)
+        {
+            SqliteDataReader reader;
+            reader = GetSQLReader(string.Format("SELECT timestamp FROM tx_divcards WHERE divcard = '{0}' AND timestamp >= {1} AND timestamp <= {2} ORDER BY timestamp DESC LIMIT 1", divcard, ((DateTimeOffset)from).ToUnixTimeSeconds(), ((DateTimeOffset)to).ToUnixTimeSeconds()));
+            reader.Read();
+            return DateTimeOffset.FromUnixTimeSeconds(reader.GetInt64(0)).DateTime;
+        }
+
+        public void AddDivCardEntry(string divcard, long timestamp)
+        {
+            DoNonQuery(string.Format("INSERT INTO tx_divcards (timestamp, divcard) VALUES ({0}, '{1}')", timestamp, divcard));
         }
 
         /// <summary>

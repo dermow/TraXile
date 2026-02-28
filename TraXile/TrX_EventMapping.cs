@@ -63,7 +63,8 @@ namespace TraXile
         TRIALMASTER_ENCOUNTERED,
         TRIALMASTER_PLAYER_LOSS,
         ZANA_ORIGINATOR_SPEAK,
-        HEIST_MEMBER_INTRODUCED
+        HEIST_MEMBER_INTRODUCED,
+        DIV_CARD_DRAWN
     }
 
     public class TrX_EventMapping
@@ -324,6 +325,10 @@ namespace TraXile
                 { "] The Trialmaster: ", EVENT_TYPES.TRIALMASTER_ENCOUNTERED },
 
                 {"Strange Voice: So be it.", EVENT_TYPES.SIMULACRUM_FULLCLEAR },
+
+                // DivCards
+                {"Card drawn from the deck:", EVENT_TYPES.DIV_CARD_DRAWN },
+
 
                 // Encounters
                 {"Strange Voice: ", EVENT_TYPES.DELIRIUM_ENCOUNTER },
