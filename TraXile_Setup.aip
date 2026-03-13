@@ -12,10 +12,10 @@
     <ROW Property="ARPURLUPDATEINFO" Value="https://github.com/dermow/TraXile"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="dermow"/>
-    <ROW Property="ProductCode" Value="1033:{7CB86737-E554-4179-88E3-586DF71A31D5} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{64E55271-95A2-492F-9008-9C84A78F1651} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="TraXile"/>
-    <ROW Property="ProductVersion" Value="2.2.3" Options="32"/>
+    <ROW Property="ProductVersion" Value="2.2.5" Options="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{E4B8E0B2-1577-4E31-ACDE-2C19A61BD8B6}"/>

@@ -337,11 +337,29 @@ namespace TraXile
             this.chartLeagueMapT16 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.materialCard34 = new MaterialSkin.Controls.MaterialCard();
             this.chartLeagueDeath = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.materialCard48 = new MaterialSkin.Controls.MaterialCard();
+            this.listViewDivCards = new MaterialSkin.Controls.MaterialListView();
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader25 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader26 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.materialCard49 = new MaterialSkin.Controls.MaterialCard();
+            this.materialLabel61 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialLabel60 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialButton10 = new MaterialSkin.Controls.MaterialButton();
+            this.materialButton9 = new MaterialSkin.Controls.MaterialButton();
+            this.materialButton8 = new MaterialSkin.Controls.MaterialButton();
+            this.materialLabel59 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialTextBoxSeachDivCard = new MaterialSkin.Controls.MaterialTextBox();
             this.materialTabSelector2 = new MaterialSkin.Controls.MaterialTabSelector();
             this.tabPage18 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
             this.materialTabControl1 = new MaterialSkin.Controls.MaterialTabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.materialCard47 = new MaterialSkin.Controls.MaterialCard();
+            this.materialCheckbox2 = new MaterialSkin.Controls.MaterialCheckbox();
             this.materialCard39 = new MaterialSkin.Controls.MaterialCard();
             this.materialButton3 = new MaterialSkin.Controls.MaterialButton();
             this.textBox11 = new MaterialSkin.Controls.MaterialTextBox();
@@ -361,12 +379,12 @@ namespace TraXile
             this.materialCard37 = new MaterialSkin.Controls.MaterialCard();
             this.buttonRollLog = new MaterialSkin.Controls.MaterialButton();
             this.buttonFullReset = new MaterialSkin.Controls.MaterialButton();
-            this.buttonChangeLogReload = new MaterialSkin.Controls.MaterialButton();
             this.buttonReloadLogfile = new MaterialSkin.Controls.MaterialButton();
             this.materialLabel36 = new MaterialSkin.Controls.MaterialLabel();
             this.materialCard36 = new MaterialSkin.Controls.MaterialCard();
             this.materialLabel35 = new MaterialSkin.Controls.MaterialLabel();
             this.textBoxLogFilePath = new MaterialSkin.Controls.MaterialTextBox();
+            this.buttonChangeLogReload = new MaterialSkin.Controls.MaterialButton();
             this.tabPage12 = new System.Windows.Forms.TabPage();
             this.materialCard41 = new MaterialSkin.Controls.MaterialCard();
             this.buttonDeleteBackup = new MaterialSkin.Controls.MaterialButton();
@@ -547,10 +565,15 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.chartLeagueMapT16)).BeginInit();
             this.materialCard34.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartLeagueDeath)).BeginInit();
+            this.tabPage4.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.materialCard48.SuspendLayout();
+            this.materialCard49.SuspendLayout();
             this.tabPage18.SuspendLayout();
             this.tableLayoutPanel18.SuspendLayout();
             this.materialTabControl1.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.materialCard47.SuspendLayout();
             this.materialCard39.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.materialCard38.SuspendLayout();
@@ -727,7 +750,7 @@ namespace TraXile
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2618, 26);
+            this.menuStrip1.Size = new System.Drawing.Size(2818, 26);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1337,7 +1360,7 @@ namespace TraXile
             this.tableLayoutPanel_L0.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 177F));
             this.tableLayoutPanel_L0.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
             this.tableLayoutPanel_L0.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 645F));
-            this.tableLayoutPanel_L0.Size = new System.Drawing.Size(2618, 1899);
+            this.tableLayoutPanel_L0.Size = new System.Drawing.Size(2818, 2329);
             this.tableLayoutPanel_L0.TabIndex = 3;
             // 
             // materialCard3
@@ -1360,7 +1383,7 @@ namespace TraXile
             this.materialCard3.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard3.Name = "materialCard3";
             this.materialCard3.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard3.Size = new System.Drawing.Size(2602, 32);
+            this.materialCard3.Size = new System.Drawing.Size(2802, 32);
             this.materialCard3.TabIndex = 0;
             // 
             // progressBar1
@@ -1423,7 +1446,7 @@ namespace TraXile
             this.materialTabSelector1.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
             this.materialTabSelector1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialTabSelector1.Name = "materialTabSelector1";
-            this.materialTabSelector1.Size = new System.Drawing.Size(2602, 40);
+            this.materialTabSelector1.Size = new System.Drawing.Size(2802, 40);
             this.materialTabSelector1.TabIndex = 3;
             this.materialTabSelector1.Text = "materialTabSelector1";
             // 
@@ -1440,7 +1463,7 @@ namespace TraXile
             this.materialTabControl2.Multiline = true;
             this.materialTabControl2.Name = "materialTabControl2";
             this.materialTabControl2.SelectedIndex = 0;
-            this.materialTabControl2.Size = new System.Drawing.Size(2618, 1602);
+            this.materialTabControl2.Size = new System.Drawing.Size(2818, 2032);
             this.materialTabControl2.TabIndex = 0;
             // 
             // tabPage3
@@ -1450,7 +1473,7 @@ namespace TraXile
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(2610, 1576);
+            this.tabPage3.Size = new System.Drawing.Size(2810, 2006);
             this.tabPage3.TabIndex = 3;
             this.tabPage3.Text = "Tracking";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1468,8 +1491,8 @@ namespace TraXile
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel9);
-            this.splitContainer1.Size = new System.Drawing.Size(2604, 1570);
-            this.splitContainer1.SplitterDistance = 856;
+            this.splitContainer1.Size = new System.Drawing.Size(2804, 2000);
+            this.splitContainer1.SplitterDistance = 916;
             this.splitContainer1.TabIndex = 0;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
@@ -1489,7 +1512,7 @@ namespace TraXile
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 138F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 78F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 430F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(856, 1570);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(916, 2000);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
             // materialCard7
@@ -1504,7 +1527,7 @@ namespace TraXile
             this.materialCard7.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard7.Name = "materialCard7";
             this.materialCard7.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard7.Size = new System.Drawing.Size(828, 110);
+            this.materialCard7.Size = new System.Drawing.Size(888, 110);
             this.materialCard7.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -1520,7 +1543,7 @@ namespace TraXile
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(800, 82);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(860, 82);
             this.tableLayoutPanel2.TabIndex = 14;
             // 
             // pictureBoxStopWatch
@@ -1530,7 +1553,7 @@ namespace TraXile
             this.pictureBoxStopWatch.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxStopWatch.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBoxStopWatch.Name = "pictureBoxStopWatch";
-            this.pictureBoxStopWatch.Size = new System.Drawing.Size(102, 82);
+            this.pictureBoxStopWatch.Size = new System.Drawing.Size(110, 82);
             this.pictureBoxStopWatch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxStopWatch.TabIndex = 0;
             this.pictureBoxStopWatch.TabStop = false;
@@ -1546,10 +1569,10 @@ namespace TraXile
             this.panel1.Controls.Add(this.pictureBoxPlay);
             this.panel1.Controls.Add(this.pictureBoxPause);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(102, 0);
+            this.panel1.Location = new System.Drawing.Point(110, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(698, 82);
+            this.panel1.Size = new System.Drawing.Size(750, 82);
             this.panel1.TabIndex = 1;
             // 
             // labelTrackingArea
@@ -1658,7 +1681,7 @@ namespace TraXile
             this.groupBoxTrackingTags.MouseState = MaterialSkin.MouseState.HOVER;
             this.groupBoxTrackingTags.Name = "groupBoxTrackingTags";
             this.groupBoxTrackingTags.Padding = new System.Windows.Forms.Padding(14);
-            this.groupBoxTrackingTags.Size = new System.Drawing.Size(828, 1326);
+            this.groupBoxTrackingTags.Size = new System.Drawing.Size(888, 1756);
             this.groupBoxTrackingTags.TabIndex = 1;
             // 
             // materialLabel2
@@ -1687,7 +1710,7 @@ namespace TraXile
             this.materialCard10.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard10.Name = "materialCard10";
             this.materialCard10.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard10.Size = new System.Drawing.Size(828, 50);
+            this.materialCard10.Size = new System.Drawing.Size(888, 50);
             this.materialCard10.TabIndex = 2;
             // 
             // materialLabel51
@@ -1732,7 +1755,7 @@ namespace TraXile
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 78F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(1744, 1570);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(1884, 2000);
             this.tableLayoutPanel9.TabIndex = 1;
             this.tableLayoutPanel9.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel9_Paint);
             // 
@@ -1751,7 +1774,7 @@ namespace TraXile
             this.groupBox10.MouseState = MaterialSkin.MouseState.HOVER;
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Padding = new System.Windows.Forms.Padding(14);
-            this.groupBox10.Size = new System.Drawing.Size(1716, 110);
+            this.groupBox10.Size = new System.Drawing.Size(1856, 110);
             this.groupBox10.TabIndex = 12;
             this.groupBox10.Text = "Search";
             // 
@@ -1848,7 +1871,7 @@ namespace TraXile
             this.materialCard5.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard5.Name = "materialCard5";
             this.materialCard5.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard5.Size = new System.Drawing.Size(1716, 1326);
+            this.materialCard5.Size = new System.Drawing.Size(1856, 1756);
             this.materialCard5.TabIndex = 15;
             // 
             // listViewActLog
@@ -1876,7 +1899,7 @@ namespace TraXile
             this.listViewActLog.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewActLog.Name = "listViewActLog";
             this.listViewActLog.OwnerDraw = true;
-            this.listViewActLog.Size = new System.Drawing.Size(1688, 1298);
+            this.listViewActLog.Size = new System.Drawing.Size(1828, 1728);
             this.listViewActLog.TabIndex = 14;
             this.listViewActLog.UseCompatibleStateImageBehavior = false;
             this.listViewActLog.View = System.Windows.Forms.View.Details;
@@ -1920,7 +1943,7 @@ namespace TraXile
             this.materialCard9.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard9.Name = "materialCard9";
             this.materialCard9.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard9.Size = new System.Drawing.Size(1716, 50);
+            this.materialCard9.Size = new System.Drawing.Size(1856, 50);
             this.materialCard9.TabIndex = 16;
             // 
             // materialLabelDetails
@@ -2036,7 +2059,7 @@ namespace TraXile
             this.tabPage10.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage10.Name = "tabPage10";
             this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage10.Size = new System.Drawing.Size(2590, 1533);
+            this.tabPage10.Size = new System.Drawing.Size(2790, 1963);
             this.tabPage10.TabIndex = 1;
             this.tabPage10.Text = "Statistics";
             this.tabPage10.UseVisualStyleBackColor = true;
@@ -2054,7 +2077,7 @@ namespace TraXile
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(2584, 1527);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(2784, 1957);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // materialTabControl3
@@ -2065,6 +2088,7 @@ namespace TraXile
             this.materialTabControl3.Controls.Add(this.tabPage16);
             this.materialTabControl3.Controls.Add(this.tabPage17);
             this.materialTabControl3.Controls.Add(this.tabPage1);
+            this.materialTabControl3.Controls.Add(this.tabPage4);
             this.materialTabControl3.Depth = 0;
             this.materialTabControl3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.materialTabControl3.Location = new System.Drawing.Point(0, 36);
@@ -2073,7 +2097,7 @@ namespace TraXile
             this.materialTabControl3.Multiline = true;
             this.materialTabControl3.Name = "materialTabControl3";
             this.materialTabControl3.SelectedIndex = 0;
-            this.materialTabControl3.Size = new System.Drawing.Size(2584, 1491);
+            this.materialTabControl3.Size = new System.Drawing.Size(2784, 1921);
             this.materialTabControl3.TabIndex = 0;
             // 
             // tabPage2
@@ -2083,7 +2107,7 @@ namespace TraXile
             this.tabPage2.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(2576, 1465);
+            this.tabPage2.Size = new System.Drawing.Size(2776, 1895);
             this.tabPage2.TabIndex = 0;
             this.tabPage2.Text = "Overview";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -2103,7 +2127,7 @@ namespace TraXile
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 315F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 77F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(2570, 1459);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(2770, 1889);
             this.tableLayoutPanel7.TabIndex = 1;
             // 
             // materialCard2
@@ -2118,7 +2142,7 @@ namespace TraXile
             this.materialCard2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard2.Name = "materialCard2";
             this.materialCard2.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard2.Size = new System.Drawing.Size(2542, 287);
+            this.materialCard2.Size = new System.Drawing.Size(2742, 287);
             this.materialCard2.TabIndex = 3;
             // 
             // chartGlobalDashboard
@@ -2135,7 +2159,7 @@ namespace TraXile
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chartGlobalDashboard.Series.Add(series1);
-            this.chartGlobalDashboard.Size = new System.Drawing.Size(2514, 259);
+            this.chartGlobalDashboard.Size = new System.Drawing.Size(2714, 259);
             this.chartGlobalDashboard.TabIndex = 1;
             this.chartGlobalDashboard.Text = "chart8";
             // 
@@ -2153,7 +2177,7 @@ namespace TraXile
             this.materialCard6.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard6.Name = "materialCard6";
             this.materialCard6.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard6.Size = new System.Drawing.Size(2542, 49);
+            this.materialCard6.Size = new System.Drawing.Size(2742, 49);
             this.materialCard6.TabIndex = 4;
             // 
             // materialLabel10
@@ -2212,7 +2236,7 @@ namespace TraXile
             this.materialCard8.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard8.Name = "materialCard8";
             this.materialCard8.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard8.Size = new System.Drawing.Size(2542, 1039);
+            this.materialCard8.Size = new System.Drawing.Size(2742, 1469);
             this.materialCard8.TabIndex = 5;
             // 
             // listView1
@@ -2236,7 +2260,7 @@ namespace TraXile
             this.listView1.MouseState = MaterialSkin.MouseState.OUT;
             this.listView1.Name = "listView1";
             this.listView1.OwnerDraw = true;
-            this.listView1.Size = new System.Drawing.Size(2514, 1011);
+            this.listView1.Size = new System.Drawing.Size(2714, 1441);
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -2267,7 +2291,7 @@ namespace TraXile
             this.tabPage14.Location = new System.Drawing.Point(4, 22);
             this.tabPage14.Name = "tabPage14";
             this.tabPage14.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage14.Size = new System.Drawing.Size(2556, 1422);
+            this.tabPage14.Size = new System.Drawing.Size(2776, 1895);
             this.tabPage14.TabIndex = 1;
             this.tabPage14.Text = "General Stats";
             this.tabPage14.UseVisualStyleBackColor = true;
@@ -2289,7 +2313,7 @@ namespace TraXile
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 217F));
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 115F));
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
-            this.tableLayoutPanel24.Size = new System.Drawing.Size(2550, 1416);
+            this.tableLayoutPanel24.Size = new System.Drawing.Size(2770, 1889);
             this.tableLayoutPanel24.TabIndex = 0;
             // 
             // label100
@@ -2302,7 +2326,7 @@ namespace TraXile
             this.label100.Location = new System.Drawing.Point(3, 0);
             this.label100.MouseState = MaterialSkin.MouseState.HOVER;
             this.label100.Name = "label100";
-            this.label100.Size = new System.Drawing.Size(2544, 60);
+            this.label100.Size = new System.Drawing.Size(2764, 60);
             this.label100.TabIndex = 3;
             this.label100.Text = "(select stat below to show chart)";
             this.label100.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2319,7 +2343,7 @@ namespace TraXile
             this.materialCard11.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard11.Name = "materialCard11";
             this.materialCard11.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard11.Size = new System.Drawing.Size(2522, 189);
+            this.materialCard11.Size = new System.Drawing.Size(2742, 189);
             this.materialCard11.TabIndex = 4;
             // 
             // chart1
@@ -2338,7 +2362,7 @@ namespace TraXile
             series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series2.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chart1.Series.Add(series2);
-            this.chart1.Size = new System.Drawing.Size(2494, 161);
+            this.chart1.Size = new System.Drawing.Size(2714, 161);
             this.chart1.TabIndex = 5;
             this.chart1.Text = "chart1";
             // 
@@ -2356,7 +2380,7 @@ namespace TraXile
             this.materialCard12.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard12.Name = "materialCard12";
             this.materialCard12.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard12.Size = new System.Drawing.Size(2522, 87);
+            this.materialCard12.Size = new System.Drawing.Size(2742, 87);
             this.materialCard12.TabIndex = 5;
             // 
             // materialButton2
@@ -2422,7 +2446,7 @@ namespace TraXile
             this.materialCard13.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard13.Name = "materialCard13";
             this.materialCard13.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard13.Size = new System.Drawing.Size(2522, 996);
+            this.materialCard13.Size = new System.Drawing.Size(2742, 1469);
             this.materialCard13.TabIndex = 6;
             // 
             // listViewNF1
@@ -2444,7 +2468,7 @@ namespace TraXile
             this.listViewNF1.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewNF1.Name = "listViewNF1";
             this.listViewNF1.OwnerDraw = true;
-            this.listViewNF1.Size = new System.Drawing.Size(2494, 968);
+            this.listViewNF1.Size = new System.Drawing.Size(2714, 1441);
             this.listViewNF1.TabIndex = 1;
             this.listViewNF1.UseCompatibleStateImageBehavior = false;
             this.listViewNF1.View = System.Windows.Forms.View.Details;
@@ -2468,7 +2492,7 @@ namespace TraXile
             this.tabPage15.Location = new System.Drawing.Point(4, 22);
             this.tabPage15.Name = "tabPage15";
             this.tabPage15.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage15.Size = new System.Drawing.Size(2556, 1422);
+            this.tabPage15.Size = new System.Drawing.Size(2776, 1895);
             this.tabPage15.TabIndex = 2;
             this.tabPage15.Text = "Mapping";
             this.tabPage15.UseVisualStyleBackColor = true;
@@ -2485,7 +2509,7 @@ namespace TraXile
             this.tableLayoutPanel25.RowCount = 2;
             this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 83F));
             this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel25.Size = new System.Drawing.Size(2550, 1416);
+            this.tableLayoutPanel25.Size = new System.Drawing.Size(2770, 1889);
             this.tableLayoutPanel25.TabIndex = 0;
             // 
             // materialCard14
@@ -2503,7 +2527,7 @@ namespace TraXile
             this.materialCard14.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard14.Name = "materialCard14";
             this.materialCard14.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard14.Size = new System.Drawing.Size(2522, 55);
+            this.materialCard14.Size = new System.Drawing.Size(2742, 55);
             this.materialCard14.TabIndex = 0;
             // 
             // materialLabel13
@@ -2543,7 +2567,7 @@ namespace TraXile
             this.tableLayoutPanel27.Name = "tableLayoutPanel27";
             this.tableLayoutPanel27.RowCount = 1;
             this.tableLayoutPanel27.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel27.Size = new System.Drawing.Size(2550, 1333);
+            this.tableLayoutPanel27.Size = new System.Drawing.Size(2770, 1806);
             this.tableLayoutPanel27.TabIndex = 1;
             // 
             // tableLayoutPanel28
@@ -2562,7 +2586,7 @@ namespace TraXile
             this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel28.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            this.tableLayoutPanel28.Size = new System.Drawing.Size(1269, 1327);
+            this.tableLayoutPanel28.Size = new System.Drawing.Size(1379, 1800);
             this.tableLayoutPanel28.TabIndex = 0;
             // 
             // materialLabel15
@@ -2574,7 +2598,7 @@ namespace TraXile
             this.materialLabel15.Location = new System.Drawing.Point(3, 275);
             this.materialLabel15.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel15.Name = "materialLabel15";
-            this.materialLabel15.Size = new System.Drawing.Size(1263, 35);
+            this.materialLabel15.Size = new System.Drawing.Size(1373, 35);
             this.materialLabel15.TabIndex = 2;
             this.materialLabel15.Text = "Maps by Area";
             this.materialLabel15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2588,7 +2612,7 @@ namespace TraXile
             this.materialLabel14.Location = new System.Drawing.Point(3, 0);
             this.materialLabel14.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel14.Name = "materialLabel14";
-            this.materialLabel14.Size = new System.Drawing.Size(1263, 35);
+            this.materialLabel14.Size = new System.Drawing.Size(1373, 35);
             this.materialLabel14.TabIndex = 0;
             this.materialLabel14.Text = "Maps by Tier";
             this.materialLabel14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2605,7 +2629,7 @@ namespace TraXile
             this.materialCard15.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard15.Name = "materialCard15";
             this.materialCard15.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard15.Size = new System.Drawing.Size(1241, 212);
+            this.materialCard15.Size = new System.Drawing.Size(1351, 212);
             this.materialCard15.TabIndex = 1;
             // 
             // chartMapTierCount
@@ -2623,7 +2647,7 @@ namespace TraXile
             series3.Legend = "Legend1";
             series3.Name = "Series1";
             this.chartMapTierCount.Series.Add(series3);
-            this.chartMapTierCount.Size = new System.Drawing.Size(1213, 184);
+            this.chartMapTierCount.Size = new System.Drawing.Size(1323, 184);
             this.chartMapTierCount.TabIndex = 1;
             this.chartMapTierCount.Text = "chart2";
             title1.Name = "Map Tiers";
@@ -2641,7 +2665,7 @@ namespace TraXile
             this.materialCard16.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard16.Name = "materialCard16";
             this.materialCard16.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard16.Size = new System.Drawing.Size(1241, 989);
+            this.materialCard16.Size = new System.Drawing.Size(1351, 1462);
             this.materialCard16.TabIndex = 3;
             // 
             // listViewMapsByArea
@@ -2664,7 +2688,7 @@ namespace TraXile
             this.listViewMapsByArea.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewMapsByArea.Name = "listViewMapsByArea";
             this.listViewMapsByArea.OwnerDraw = true;
-            this.listViewMapsByArea.Size = new System.Drawing.Size(1213, 961);
+            this.listViewMapsByArea.Size = new System.Drawing.Size(1323, 1434);
             this.listViewMapsByArea.TabIndex = 0;
             this.listViewMapsByArea.UseCompatibleStateImageBehavior = false;
             this.listViewMapsByArea.View = System.Windows.Forms.View.Details;
@@ -2689,7 +2713,7 @@ namespace TraXile
             this.tableLayoutPanel29.Controls.Add(this.materialCard17, 0, 1);
             this.tableLayoutPanel29.Controls.Add(this.materialCard18, 0, 3);
             this.tableLayoutPanel29.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel29.Location = new System.Drawing.Point(1275, 0);
+            this.tableLayoutPanel29.Location = new System.Drawing.Point(1385, 0);
             this.tableLayoutPanel29.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel29.Name = "tableLayoutPanel29";
             this.tableLayoutPanel29.RowCount = 4;
@@ -2697,7 +2721,7 @@ namespace TraXile
             this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 237F));
-            this.tableLayoutPanel29.Size = new System.Drawing.Size(1275, 1333);
+            this.tableLayoutPanel29.Size = new System.Drawing.Size(1385, 1806);
             this.tableLayoutPanel29.TabIndex = 1;
             // 
             // materialLabel17
@@ -2709,7 +2733,7 @@ namespace TraXile
             this.materialLabel17.Location = new System.Drawing.Point(3, 278);
             this.materialLabel17.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel17.Name = "materialLabel17";
-            this.materialLabel17.Size = new System.Drawing.Size(1269, 35);
+            this.materialLabel17.Size = new System.Drawing.Size(1379, 35);
             this.materialLabel17.TabIndex = 3;
             this.materialLabel17.Text = "Tagging Overview";
             this.materialLabel17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2723,7 +2747,7 @@ namespace TraXile
             this.materialLabel16.Location = new System.Drawing.Point(3, 0);
             this.materialLabel16.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel16.Name = "materialLabel16";
-            this.materialLabel16.Size = new System.Drawing.Size(1269, 38);
+            this.materialLabel16.Size = new System.Drawing.Size(1379, 38);
             this.materialLabel16.TabIndex = 1;
             this.materialLabel16.Text = "Avg. Time per Map/Tier (minutes)";
             this.materialLabel16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2740,7 +2764,7 @@ namespace TraXile
             this.materialCard17.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard17.Name = "materialCard17";
             this.materialCard17.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard17.Size = new System.Drawing.Size(1247, 212);
+            this.materialCard17.Size = new System.Drawing.Size(1357, 212);
             this.materialCard17.TabIndex = 2;
             // 
             // chartMapTierAvgTime
@@ -2758,7 +2782,7 @@ namespace TraXile
             series4.Legend = "Legend1";
             series4.Name = "Series1";
             this.chartMapTierAvgTime.Series.Add(series4);
-            this.chartMapTierAvgTime.Size = new System.Drawing.Size(1219, 184);
+            this.chartMapTierAvgTime.Size = new System.Drawing.Size(1329, 184);
             this.chartMapTierAvgTime.TabIndex = 1;
             this.chartMapTierAvgTime.Text = "chart3";
             title2.Name = "Map Tiers";
@@ -2776,7 +2800,7 @@ namespace TraXile
             this.materialCard18.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard18.Name = "materialCard18";
             this.materialCard18.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard18.Size = new System.Drawing.Size(1247, 992);
+            this.materialCard18.Size = new System.Drawing.Size(1357, 1465);
             this.materialCard18.TabIndex = 4;
             // 
             // listViewTaggingOverview
@@ -2799,7 +2823,7 @@ namespace TraXile
             this.listViewTaggingOverview.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewTaggingOverview.Name = "listViewTaggingOverview";
             this.listViewTaggingOverview.OwnerDraw = true;
-            this.listViewTaggingOverview.Size = new System.Drawing.Size(1219, 964);
+            this.listViewTaggingOverview.Size = new System.Drawing.Size(1329, 1437);
             this.listViewTaggingOverview.TabIndex = 0;
             this.listViewTaggingOverview.UseCompatibleStateImageBehavior = false;
             this.listViewTaggingOverview.View = System.Windows.Forms.View.Details;
@@ -2820,7 +2844,7 @@ namespace TraXile
             this.tabPage16.Location = new System.Drawing.Point(4, 22);
             this.tabPage16.Name = "tabPage16";
             this.tabPage16.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage16.Size = new System.Drawing.Size(2556, 1422);
+            this.tabPage16.Size = new System.Drawing.Size(2776, 1895);
             this.tabPage16.TabIndex = 3;
             this.tabPage16.Text = "Lab";
             this.tabPage16.UseVisualStyleBackColor = true;
@@ -2835,8 +2859,8 @@ namespace TraXile
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
             this.tableLayoutPanel10.RowCount = 1;
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1416F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(2550, 1416);
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1889F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(2770, 1889);
             this.tableLayoutPanel10.TabIndex = 1;
             // 
             // tableLayoutPanel11
@@ -2852,7 +2876,7 @@ namespace TraXile
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 1;
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(2550, 1416);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(2770, 1889);
             this.tableLayoutPanel11.TabIndex = 1;
             // 
             // tableLayoutPanel12
@@ -2871,7 +2895,7 @@ namespace TraXile
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(1269, 1410);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(1379, 1883);
             this.tableLayoutPanel12.TabIndex = 0;
             // 
             // materialLabel20
@@ -2883,7 +2907,7 @@ namespace TraXile
             this.materialLabel20.Location = new System.Drawing.Point(3, 275);
             this.materialLabel20.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel20.Name = "materialLabel20";
-            this.materialLabel20.Size = new System.Drawing.Size(1263, 35);
+            this.materialLabel20.Size = new System.Drawing.Size(1373, 35);
             this.materialLabel20.TabIndex = 2;
             this.materialLabel20.Text = "Best Lap times";
             this.materialLabel20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2897,7 +2921,7 @@ namespace TraXile
             this.materialLabel21.Location = new System.Drawing.Point(3, 0);
             this.materialLabel21.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel21.Name = "materialLabel21";
-            this.materialLabel21.Size = new System.Drawing.Size(1263, 35);
+            this.materialLabel21.Size = new System.Drawing.Size(1373, 35);
             this.materialLabel21.TabIndex = 0;
             this.materialLabel21.Text = "Successful labs by Type";
             this.materialLabel21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2914,7 +2938,7 @@ namespace TraXile
             this.materialCard20.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard20.Name = "materialCard20";
             this.materialCard20.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard20.Size = new System.Drawing.Size(1241, 212);
+            this.materialCard20.Size = new System.Drawing.Size(1351, 212);
             this.materialCard20.TabIndex = 1;
             // 
             // chartLabsDone
@@ -2932,7 +2956,7 @@ namespace TraXile
             series5.Legend = "Legend1";
             series5.Name = "Series1";
             this.chartLabsDone.Series.Add(series5);
-            this.chartLabsDone.Size = new System.Drawing.Size(1213, 184);
+            this.chartLabsDone.Size = new System.Drawing.Size(1323, 184);
             this.chartLabsDone.TabIndex = 2;
             this.chartLabsDone.Text = "chart4";
             title3.Name = "Map Tiers";
@@ -2950,7 +2974,7 @@ namespace TraXile
             this.materialCard21.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard21.Name = "materialCard21";
             this.materialCard21.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard21.Size = new System.Drawing.Size(1241, 1072);
+            this.materialCard21.Size = new System.Drawing.Size(1351, 1545);
             this.materialCard21.TabIndex = 3;
             // 
             // listViewBestLabs
@@ -2974,7 +2998,7 @@ namespace TraXile
             this.listViewBestLabs.MouseState = MaterialSkin.MouseState.OUT;
             this.listViewBestLabs.Name = "listViewBestLabs";
             this.listViewBestLabs.OwnerDraw = true;
-            this.listViewBestLabs.Size = new System.Drawing.Size(1213, 1044);
+            this.listViewBestLabs.Size = new System.Drawing.Size(1323, 1517);
             this.listViewBestLabs.TabIndex = 4;
             this.listViewBestLabs.UseCompatibleStateImageBehavior = false;
             this.listViewBestLabs.View = System.Windows.Forms.View.Details;
@@ -3004,7 +3028,7 @@ namespace TraXile
             this.tableLayoutPanel13.Controls.Add(this.materialCard22, 0, 1);
             this.tableLayoutPanel13.Controls.Add(this.materialCard23, 0, 3);
             this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel13.Location = new System.Drawing.Point(1275, 0);
+            this.tableLayoutPanel13.Location = new System.Drawing.Point(1385, 0);
             this.tableLayoutPanel13.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel13.Name = "tableLayoutPanel13";
             this.tableLayoutPanel13.RowCount = 4;
@@ -3012,7 +3036,7 @@ namespace TraXile
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 237F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(1275, 1416);
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(1385, 1889);
             this.tableLayoutPanel13.TabIndex = 1;
             // 
             // materialLabel22
@@ -3024,7 +3048,7 @@ namespace TraXile
             this.materialLabel22.Location = new System.Drawing.Point(3, 278);
             this.materialLabel22.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel22.Name = "materialLabel22";
-            this.materialLabel22.Size = new System.Drawing.Size(1269, 35);
+            this.materialLabel22.Size = new System.Drawing.Size(1379, 35);
             this.materialLabel22.TabIndex = 3;
             this.materialLabel22.Text = "Options";
             this.materialLabel22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -3038,7 +3062,7 @@ namespace TraXile
             this.materialLabel23.Location = new System.Drawing.Point(3, 0);
             this.materialLabel23.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel23.Name = "materialLabel23";
-            this.materialLabel23.Size = new System.Drawing.Size(1269, 38);
+            this.materialLabel23.Size = new System.Drawing.Size(1379, 38);
             this.materialLabel23.TabIndex = 1;
             this.materialLabel23.Text = "Avg. time per successful lab";
             this.materialLabel23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -3055,7 +3079,7 @@ namespace TraXile
             this.materialCard22.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard22.Name = "materialCard22";
             this.materialCard22.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard22.Size = new System.Drawing.Size(1247, 212);
+            this.materialCard22.Size = new System.Drawing.Size(1357, 212);
             this.materialCard22.TabIndex = 2;
             // 
             // chartLabsAvgTime
@@ -3075,7 +3099,7 @@ namespace TraXile
             series6.Name = "Series1";
             series6.SmartLabelStyle.AllowOutsidePlotArea = System.Windows.Forms.DataVisualization.Charting.LabelOutsidePlotAreaStyle.Yes;
             this.chartLabsAvgTime.Series.Add(series6);
-            this.chartLabsAvgTime.Size = new System.Drawing.Size(1219, 184);
+            this.chartLabsAvgTime.Size = new System.Drawing.Size(1329, 184);
             this.chartLabsAvgTime.TabIndex = 2;
             this.chartLabsAvgTime.Text = "chart5";
             title4.Name = "Map Tiers";
@@ -3093,7 +3117,7 @@ namespace TraXile
             this.materialCard23.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard23.Name = "materialCard23";
             this.materialCard23.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard23.Size = new System.Drawing.Size(1247, 1075);
+            this.materialCard23.Size = new System.Drawing.Size(1357, 1548);
             this.materialCard23.TabIndex = 4;
             // 
             // checkBoxLabHideUnknown
@@ -3121,7 +3145,7 @@ namespace TraXile
             this.tabPage17.Location = new System.Drawing.Point(4, 22);
             this.tabPage17.Name = "tabPage17";
             this.tabPage17.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage17.Size = new System.Drawing.Size(2556, 1422);
+            this.tabPage17.Size = new System.Drawing.Size(2776, 1895);
             this.tabPage17.TabIndex = 4;
             this.tabPage17.Text = "Heist";
             this.tabPage17.UseVisualStyleBackColor = true;
@@ -3136,8 +3160,8 @@ namespace TraXile
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
             this.tableLayoutPanel14.RowCount = 1;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1416F));
-            this.tableLayoutPanel14.Size = new System.Drawing.Size(2550, 1416);
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1889F));
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(2770, 1889);
             this.tableLayoutPanel14.TabIndex = 1;
             // 
             // tableLayoutPanel15
@@ -3153,7 +3177,7 @@ namespace TraXile
             this.tableLayoutPanel15.Name = "tableLayoutPanel15";
             this.tableLayoutPanel15.RowCount = 1;
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel15.Size = new System.Drawing.Size(2550, 1416);
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(2770, 1889);
             this.tableLayoutPanel15.TabIndex = 1;
             // 
             // tableLayoutPanel16
@@ -3172,7 +3196,7 @@ namespace TraXile
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(1269, 1410);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(1379, 1883);
             this.tableLayoutPanel16.TabIndex = 0;
             // 
             // materialLabel24
@@ -3184,7 +3208,7 @@ namespace TraXile
             this.materialLabel24.Location = new System.Drawing.Point(3, 275);
             this.materialLabel24.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel24.Name = "materialLabel24";
-            this.materialLabel24.Size = new System.Drawing.Size(1263, 35);
+            this.materialLabel24.Size = new System.Drawing.Size(1373, 35);
             this.materialLabel24.TabIndex = 2;
             this.materialLabel24.Text = "Heists done per area";
             this.materialLabel24.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -3198,7 +3222,7 @@ namespace TraXile
             this.materialLabel25.Location = new System.Drawing.Point(3, 0);
             this.materialLabel25.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel25.Name = "materialLabel25";
-            this.materialLabel25.Size = new System.Drawing.Size(1263, 35);
+            this.materialLabel25.Size = new System.Drawing.Size(1373, 35);
             this.materialLabel25.TabIndex = 0;
             this.materialLabel25.Text = "Heists done per level";
             this.materialLabel25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -3215,7 +3239,7 @@ namespace TraXile
             this.materialCard24.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard24.Name = "materialCard24";
             this.materialCard24.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard24.Size = new System.Drawing.Size(1241, 212);
+            this.materialCard24.Size = new System.Drawing.Size(1351, 212);
             this.materialCard24.TabIndex = 1;
             // 
             // chartHeistByLevel
@@ -3233,7 +3257,7 @@ namespace TraXile
             series7.Legend = "Legend1";
             series7.Name = "Series1";
             this.chartHeistByLevel.Series.Add(series7);
-            this.chartHeistByLevel.Size = new System.Drawing.Size(1213, 184);
+            this.chartHeistByLevel.Size = new System.Drawing.Size(1323, 184);
             this.chartHeistByLevel.TabIndex = 2;
             this.chartHeistByLevel.Text = "chart6";
             title5.Name = "Map Tiers";
@@ -3251,7 +3275,7 @@ namespace TraXile
             this.materialCard25.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard25.Name = "materialCard25";
             this.materialCard25.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard25.Size = new System.Drawing.Size(1241, 1072);
+            this.materialCard25.Size = new System.Drawing.Size(1351, 1545);
             this.materialCard25.TabIndex = 3;
             // 
             // listView4
@@ -3274,7 +3298,7 @@ namespace TraXile
             this.listView4.MouseState = MaterialSkin.MouseState.OUT;
             this.listView4.Name = "listView4";
             this.listView4.OwnerDraw = true;
-            this.listView4.Size = new System.Drawing.Size(1213, 1044);
+            this.listView4.Size = new System.Drawing.Size(1323, 1517);
             this.listView4.TabIndex = 1;
             this.listView4.UseCompatibleStateImageBehavior = false;
             this.listView4.View = System.Windows.Forms.View.Details;
@@ -3299,7 +3323,7 @@ namespace TraXile
             this.tableLayoutPanel17.Controls.Add(this.materialCard26, 0, 1);
             this.tableLayoutPanel17.Controls.Add(this.materialCard27, 0, 3);
             this.tableLayoutPanel17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel17.Location = new System.Drawing.Point(1275, 0);
+            this.tableLayoutPanel17.Location = new System.Drawing.Point(1385, 0);
             this.tableLayoutPanel17.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel17.Name = "tableLayoutPanel17";
             this.tableLayoutPanel17.RowCount = 4;
@@ -3307,7 +3331,7 @@ namespace TraXile
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 237F));
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(1275, 1416);
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(1385, 1889);
             this.tableLayoutPanel17.TabIndex = 1;
             // 
             // materialLabel26
@@ -3319,7 +3343,7 @@ namespace TraXile
             this.materialLabel26.Location = new System.Drawing.Point(3, 278);
             this.materialLabel26.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel26.Name = "materialLabel26";
-            this.materialLabel26.Size = new System.Drawing.Size(1269, 35);
+            this.materialLabel26.Size = new System.Drawing.Size(1379, 35);
             this.materialLabel26.TabIndex = 3;
             this.materialLabel26.Text = "Tagging Overview";
             this.materialLabel26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -3333,7 +3357,7 @@ namespace TraXile
             this.materialLabel27.Location = new System.Drawing.Point(3, 0);
             this.materialLabel27.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel27.Name = "materialLabel27";
-            this.materialLabel27.Size = new System.Drawing.Size(1269, 38);
+            this.materialLabel27.Size = new System.Drawing.Size(1379, 38);
             this.materialLabel27.TabIndex = 1;
             this.materialLabel27.Text = "Avg. time per heist/level (minutes)";
             this.materialLabel27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -3350,7 +3374,7 @@ namespace TraXile
             this.materialCard26.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard26.Name = "materialCard26";
             this.materialCard26.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard26.Size = new System.Drawing.Size(1247, 212);
+            this.materialCard26.Size = new System.Drawing.Size(1357, 212);
             this.materialCard26.TabIndex = 2;
             // 
             // chartHeistAvgTime
@@ -3368,7 +3392,7 @@ namespace TraXile
             series8.Legend = "Legend1";
             series8.Name = "Series1";
             this.chartHeistAvgTime.Series.Add(series8);
-            this.chartHeistAvgTime.Size = new System.Drawing.Size(1219, 184);
+            this.chartHeistAvgTime.Size = new System.Drawing.Size(1329, 184);
             this.chartHeistAvgTime.TabIndex = 2;
             this.chartHeistAvgTime.Text = "chart7";
             title6.Name = "Map Tiers";
@@ -3386,7 +3410,7 @@ namespace TraXile
             this.materialCard27.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard27.Name = "materialCard27";
             this.materialCard27.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard27.Size = new System.Drawing.Size(1247, 1075);
+            this.materialCard27.Size = new System.Drawing.Size(1357, 1548);
             this.materialCard27.TabIndex = 4;
             // 
             // listView5
@@ -3409,7 +3433,7 @@ namespace TraXile
             this.listView5.MouseState = MaterialSkin.MouseState.OUT;
             this.listView5.Name = "listView5";
             this.listView5.OwnerDraw = true;
-            this.listView5.Size = new System.Drawing.Size(1219, 1047);
+            this.listView5.Size = new System.Drawing.Size(1329, 1520);
             this.listView5.TabIndex = 1;
             this.listView5.UseCompatibleStateImageBehavior = false;
             this.listView5.View = System.Windows.Forms.View.Details;
@@ -3431,7 +3455,7 @@ namespace TraXile
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(2556, 1422);
+            this.tabPage1.Size = new System.Drawing.Size(2776, 1895);
             this.tabPage1.TabIndex = 5;
             this.tabPage1.Text = "League Stats";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -3480,7 +3504,7 @@ namespace TraXile
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(2550, 1416);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(2770, 1889);
             this.tableLayoutPanel8.TabIndex = 0;
             // 
             // materialCard35
@@ -3495,7 +3519,7 @@ namespace TraXile
             this.materialCard35.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard35.Name = "materialCard35";
             this.materialCard35.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard35.Size = new System.Drawing.Size(2505, 182);
+            this.materialCard35.Size = new System.Drawing.Size(2725, 182);
             this.materialCard35.TabIndex = 22;
             // 
             // chartLeagueCampaign
@@ -3513,7 +3537,7 @@ namespace TraXile
             series9.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series9.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chartLeagueCampaign.Series.Add(series9);
-            this.chartLeagueCampaign.Size = new System.Drawing.Size(2477, 154);
+            this.chartLeagueCampaign.Size = new System.Drawing.Size(2697, 154);
             this.chartLeagueCampaign.TabIndex = 17;
             this.chartLeagueCampaign.Text = "chart";
             // 
@@ -3526,7 +3550,7 @@ namespace TraXile
             this.materialLabel34.Location = new System.Drawing.Point(3, 1790);
             this.materialLabel34.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel34.Name = "materialLabel34";
-            this.materialLabel34.Size = new System.Drawing.Size(2527, 35);
+            this.materialLabel34.Size = new System.Drawing.Size(2747, 35);
             this.materialLabel34.TabIndex = 21;
             this.materialLabel34.Text = "Time in campaign";
             // 
@@ -3539,7 +3563,7 @@ namespace TraXile
             this.materialLabel33.Location = new System.Drawing.Point(3, 1545);
             this.materialLabel33.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel33.Name = "materialLabel33";
-            this.materialLabel33.Size = new System.Drawing.Size(2527, 35);
+            this.materialLabel33.Size = new System.Drawing.Size(2747, 35);
             this.materialLabel33.TabIndex = 20;
             this.materialLabel33.Text = "Number of deaths";
             // 
@@ -3555,7 +3579,7 @@ namespace TraXile
             this.materialCard33.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard33.Name = "materialCard33";
             this.materialCard33.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard33.Size = new System.Drawing.Size(2505, 182);
+            this.materialCard33.Size = new System.Drawing.Size(2725, 182);
             this.materialCard33.TabIndex = 18;
             // 
             // chartLeagueAvgMapT16
@@ -3573,7 +3597,7 @@ namespace TraXile
             series10.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series10.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chartLeagueAvgMapT16.Series.Add(series10);
-            this.chartLeagueAvgMapT16.Size = new System.Drawing.Size(2477, 154);
+            this.chartLeagueAvgMapT16.Size = new System.Drawing.Size(2697, 154);
             this.chartLeagueAvgMapT16.TabIndex = 13;
             this.chartLeagueAvgMapT16.Text = "chart";
             // 
@@ -3589,7 +3613,7 @@ namespace TraXile
             this.materialCard32.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard32.Name = "materialCard32";
             this.materialCard32.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard32.Size = new System.Drawing.Size(2505, 182);
+            this.materialCard32.Size = new System.Drawing.Size(2725, 182);
             this.materialCard32.TabIndex = 17;
             // 
             // chartLeagueAvgMap
@@ -3607,7 +3631,7 @@ namespace TraXile
             series11.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series11.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chartLeagueAvgMap.Series.Add(series11);
-            this.chartLeagueAvgMap.Size = new System.Drawing.Size(2477, 154);
+            this.chartLeagueAvgMap.Size = new System.Drawing.Size(2697, 154);
             this.chartLeagueAvgMap.TabIndex = 11;
             this.chartLeagueAvgMap.Text = "chart";
             // 
@@ -3620,7 +3644,7 @@ namespace TraXile
             this.materialLabel30.Location = new System.Drawing.Point(3, 810);
             this.materialLabel30.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel30.Name = "materialLabel30";
-            this.materialLabel30.Size = new System.Drawing.Size(2527, 35);
+            this.materialLabel30.Size = new System.Drawing.Size(2747, 35);
             this.materialLabel30.TabIndex = 13;
             this.materialLabel30.Text = "Total Maps T16+";
             // 
@@ -3633,7 +3657,7 @@ namespace TraXile
             this.materialLabel29.Location = new System.Drawing.Point(3, 571);
             this.materialLabel29.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel29.Name = "materialLabel29";
-            this.materialLabel29.Size = new System.Drawing.Size(2527, 29);
+            this.materialLabel29.Size = new System.Drawing.Size(2747, 29);
             this.materialLabel29.TabIndex = 8;
             this.materialLabel29.Text = "Total Maps Done";
             // 
@@ -3646,7 +3670,7 @@ namespace TraXile
             this.materialLabel28.Location = new System.Drawing.Point(3, 326);
             this.materialLabel28.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel28.Name = "materialLabel28";
-            this.materialLabel28.Size = new System.Drawing.Size(2527, 35);
+            this.materialLabel28.Size = new System.Drawing.Size(2747, 35);
             this.materialLabel28.TabIndex = 5;
             this.materialLabel28.Text = "Total Activity Time";
             // 
@@ -3665,7 +3689,7 @@ namespace TraXile
             this.materialCard19.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard19.Name = "materialCard19";
             this.materialCard19.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard19.Size = new System.Drawing.Size(2505, 53);
+            this.materialCard19.Size = new System.Drawing.Size(2725, 53);
             this.materialCard19.TabIndex = 0;
             // 
             // label8
@@ -3749,7 +3773,7 @@ namespace TraXile
             this.materialLabel19.Location = new System.Drawing.Point(3, 81);
             this.materialLabel19.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel19.Name = "materialLabel19";
-            this.materialLabel19.Size = new System.Drawing.Size(2527, 35);
+            this.materialLabel19.Size = new System.Drawing.Size(2747, 35);
             this.materialLabel19.TabIndex = 1;
             this.materialLabel19.Text = "Total Activities";
             // 
@@ -3765,7 +3789,7 @@ namespace TraXile
             this.materialCard28.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard28.Name = "materialCard28";
             this.materialCard28.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard28.Size = new System.Drawing.Size(2505, 182);
+            this.materialCard28.Size = new System.Drawing.Size(2725, 182);
             this.materialCard28.TabIndex = 10;
             // 
             // chartLeagueTotalActivities
@@ -3783,7 +3807,7 @@ namespace TraXile
             series12.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series12.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chartLeagueTotalActivities.Series.Add(series12);
-            this.chartLeagueTotalActivities.Size = new System.Drawing.Size(2477, 154);
+            this.chartLeagueTotalActivities.Size = new System.Drawing.Size(2697, 154);
             this.chartLeagueTotalActivities.TabIndex = 5;
             this.chartLeagueTotalActivities.Text = "chart";
             // 
@@ -3799,7 +3823,7 @@ namespace TraXile
             this.materialCard29.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard29.Name = "materialCard29";
             this.materialCard29.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard29.Size = new System.Drawing.Size(2505, 182);
+            this.materialCard29.Size = new System.Drawing.Size(2725, 182);
             this.materialCard29.TabIndex = 11;
             // 
             // chartLeagueActTime
@@ -3817,7 +3841,7 @@ namespace TraXile
             series13.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series13.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chartLeagueActTime.Series.Add(series13);
-            this.chartLeagueActTime.Size = new System.Drawing.Size(2477, 154);
+            this.chartLeagueActTime.Size = new System.Drawing.Size(2697, 154);
             this.chartLeagueActTime.TabIndex = 8;
             this.chartLeagueActTime.Text = "chart";
             // 
@@ -3833,7 +3857,7 @@ namespace TraXile
             this.materialCard30.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard30.Name = "materialCard30";
             this.materialCard30.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard30.Size = new System.Drawing.Size(2505, 182);
+            this.materialCard30.Size = new System.Drawing.Size(2725, 182);
             this.materialCard30.TabIndex = 12;
             // 
             // chartLeagueMapsDone
@@ -3851,7 +3875,7 @@ namespace TraXile
             series14.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series14.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chartLeagueMapsDone.Series.Add(series14);
-            this.chartLeagueMapsDone.Size = new System.Drawing.Size(2477, 154);
+            this.chartLeagueMapsDone.Size = new System.Drawing.Size(2697, 154);
             this.chartLeagueMapsDone.TabIndex = 10;
             this.chartLeagueMapsDone.Text = "chart";
             // 
@@ -3864,7 +3888,7 @@ namespace TraXile
             this.materialLabel31.Location = new System.Drawing.Point(3, 1055);
             this.materialLabel31.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel31.Name = "materialLabel31";
-            this.materialLabel31.Size = new System.Drawing.Size(2527, 35);
+            this.materialLabel31.Size = new System.Drawing.Size(2747, 35);
             this.materialLabel31.TabIndex = 14;
             this.materialLabel31.Text = "Avg. Map duration (all)";
             // 
@@ -3877,7 +3901,7 @@ namespace TraXile
             this.materialLabel32.Location = new System.Drawing.Point(3, 1300);
             this.materialLabel32.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel32.Name = "materialLabel32";
-            this.materialLabel32.Size = new System.Drawing.Size(2527, 35);
+            this.materialLabel32.Size = new System.Drawing.Size(2747, 35);
             this.materialLabel32.TabIndex = 15;
             this.materialLabel32.Text = "Avg. Map duration (T16+)";
             // 
@@ -3893,7 +3917,7 @@ namespace TraXile
             this.materialCard31.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard31.Name = "materialCard31";
             this.materialCard31.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard31.Size = new System.Drawing.Size(2505, 182);
+            this.materialCard31.Size = new System.Drawing.Size(2725, 182);
             this.materialCard31.TabIndex = 16;
             // 
             // chartLeagueMapT16
@@ -3911,7 +3935,7 @@ namespace TraXile
             series15.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series15.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chartLeagueMapT16.Series.Add(series15);
-            this.chartLeagueMapT16.Size = new System.Drawing.Size(2477, 154);
+            this.chartLeagueMapT16.Size = new System.Drawing.Size(2697, 154);
             this.chartLeagueMapT16.TabIndex = 9;
             this.chartLeagueMapT16.Text = "chart";
             // 
@@ -3927,7 +3951,7 @@ namespace TraXile
             this.materialCard34.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard34.Name = "materialCard34";
             this.materialCard34.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard34.Size = new System.Drawing.Size(2505, 182);
+            this.materialCard34.Size = new System.Drawing.Size(2725, 182);
             this.materialCard34.TabIndex = 19;
             // 
             // chartLeagueDeath
@@ -3945,9 +3969,234 @@ namespace TraXile
             series16.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
             series16.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
             this.chartLeagueDeath.Series.Add(series16);
-            this.chartLeagueDeath.Size = new System.Drawing.Size(2477, 154);
+            this.chartLeagueDeath.Size = new System.Drawing.Size(2697, 154);
             this.chartLeagueDeath.TabIndex = 14;
             this.chartLeagueDeath.Text = "chart";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.tableLayoutPanel3);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(2776, 1895);
+            this.tabPage4.TabIndex = 6;
+            this.tabPage4.Text = "Div. Cards";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Controls.Add(this.materialCard48, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.materialCard49, 0, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 130F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(2776, 1895);
+            this.tableLayoutPanel3.TabIndex = 0;
+            // 
+            // materialCard48
+            // 
+            this.materialCard48.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard48.Controls.Add(this.listViewDivCards);
+            this.materialCard48.Depth = 0;
+            this.materialCard48.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.materialCard48.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialCard48.Location = new System.Drawing.Point(14, 144);
+            this.materialCard48.Margin = new System.Windows.Forms.Padding(14);
+            this.materialCard48.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialCard48.Name = "materialCard48";
+            this.materialCard48.Padding = new System.Windows.Forms.Padding(14);
+            this.materialCard48.Size = new System.Drawing.Size(2748, 1737);
+            this.materialCard48.TabIndex = 7;
+            // 
+            // listViewDivCards
+            // 
+            this.listViewDivCards.AutoSizeTable = false;
+            this.listViewDivCards.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.listViewDivCards.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewDivCards.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader5,
+            this.columnHeader6,
+            this.columnHeader25,
+            this.columnHeader26});
+            this.listViewDivCards.Depth = 0;
+            this.listViewDivCards.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewDivCards.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listViewDivCards.FullRowSelect = true;
+            this.listViewDivCards.HideSelection = false;
+            this.listViewDivCards.Location = new System.Drawing.Point(14, 14);
+            this.listViewDivCards.MinimumSize = new System.Drawing.Size(200, 100);
+            this.listViewDivCards.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.listViewDivCards.MouseState = MaterialSkin.MouseState.OUT;
+            this.listViewDivCards.Name = "listViewDivCards";
+            this.listViewDivCards.OwnerDraw = true;
+            this.listViewDivCards.Size = new System.Drawing.Size(2720, 1709);
+            this.listViewDivCards.TabIndex = 1;
+            this.listViewDivCards.UseCompatibleStateImageBehavior = false;
+            this.listViewDivCards.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Card";
+            this.columnHeader5.Width = 275;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Count";
+            this.columnHeader6.Width = 90;
+            // 
+            // columnHeader25
+            // 
+            this.columnHeader25.Text = "Last";
+            this.columnHeader25.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader25.Width = 160;
+            // 
+            // columnHeader26
+            // 
+            this.columnHeader26.Text = "First";
+            this.columnHeader26.Width = 120;
+            // 
+            // materialCard49
+            // 
+            this.materialCard49.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard49.Controls.Add(this.materialLabel61);
+            this.materialCard49.Controls.Add(this.materialLabel60);
+            this.materialCard49.Controls.Add(this.materialButton10);
+            this.materialCard49.Controls.Add(this.materialButton9);
+            this.materialCard49.Controls.Add(this.materialButton8);
+            this.materialCard49.Controls.Add(this.materialLabel59);
+            this.materialCard49.Controls.Add(this.materialTextBoxSeachDivCard);
+            this.materialCard49.Depth = 0;
+            this.materialCard49.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.materialCard49.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialCard49.Location = new System.Drawing.Point(14, 14);
+            this.materialCard49.Margin = new System.Windows.Forms.Padding(14);
+            this.materialCard49.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialCard49.Name = "materialCard49";
+            this.materialCard49.Padding = new System.Windows.Forms.Padding(14);
+            this.materialCard49.Size = new System.Drawing.Size(2748, 102);
+            this.materialCard49.TabIndex = 8;
+            // 
+            // materialLabel61
+            // 
+            this.materialLabel61.AutoSize = true;
+            this.materialLabel61.Depth = 0;
+            this.materialLabel61.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel61.ForeColor = System.Drawing.Color.Red;
+            this.materialLabel61.Location = new System.Drawing.Point(11, 69);
+            this.materialLabel61.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel61.Name = "materialLabel61";
+            this.materialLabel61.Size = new System.Drawing.Size(791, 19);
+            this.materialLabel61.TabIndex = 6;
+            this.materialLabel61.Text = "Important: Divination cards are only trackable if you draw them into your invento" +
+    "ry! (Control + Shift + Right click)";
+            // 
+            // materialLabel60
+            // 
+            this.materialLabel60.AutoSize = true;
+            this.materialLabel60.Depth = 0;
+            this.materialLabel60.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel60.Location = new System.Drawing.Point(565, 16);
+            this.materialLabel60.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel60.Name = "materialLabel60";
+            this.materialLabel60.Size = new System.Drawing.Size(121, 19);
+            this.materialLabel60.TabIndex = 5;
+            this.materialLabel60.Text = "Total Divcards: 0";
+            // 
+            // materialButton10
+            // 
+            this.materialButton10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialButton10.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.materialButton10.Depth = 0;
+            this.materialButton10.HighEmphasis = true;
+            this.materialButton10.Icon = null;
+            this.materialButton10.Location = new System.Drawing.Point(799, 9);
+            this.materialButton10.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.materialButton10.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialButton10.Name = "materialButton10";
+            this.materialButton10.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.materialButton10.Size = new System.Drawing.Size(131, 36);
+            this.materialButton10.TabIndex = 4;
+            this.materialButton10.Text = "Export to CSV";
+            this.materialButton10.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.materialButton10.UseAccentColor = false;
+            this.materialButton10.UseVisualStyleBackColor = true;
+            this.materialButton10.Click += new System.EventHandler(this.materialButton10_Click);
+            // 
+            // materialButton9
+            // 
+            this.materialButton9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialButton9.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.materialButton9.Depth = 0;
+            this.materialButton9.HighEmphasis = true;
+            this.materialButton9.Icon = null;
+            this.materialButton9.Location = new System.Drawing.Point(364, 9);
+            this.materialButton9.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.materialButton9.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialButton9.Name = "materialButton9";
+            this.materialButton9.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.materialButton9.Size = new System.Drawing.Size(68, 36);
+            this.materialButton9.TabIndex = 3;
+            this.materialButton9.Text = "Filter";
+            this.materialButton9.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.materialButton9.UseAccentColor = false;
+            this.materialButton9.UseVisualStyleBackColor = true;
+            this.materialButton9.Click += new System.EventHandler(this.materialButton9_Click);
+            // 
+            // materialButton8
+            // 
+            this.materialButton8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialButton8.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.materialButton8.Depth = 0;
+            this.materialButton8.HighEmphasis = true;
+            this.materialButton8.Icon = null;
+            this.materialButton8.Location = new System.Drawing.Point(438, 9);
+            this.materialButton8.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.materialButton8.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialButton8.Name = "materialButton8";
+            this.materialButton8.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.materialButton8.Size = new System.Drawing.Size(66, 36);
+            this.materialButton8.TabIndex = 2;
+            this.materialButton8.Text = "Clear";
+            this.materialButton8.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.materialButton8.UseAccentColor = false;
+            this.materialButton8.UseVisualStyleBackColor = true;
+            this.materialButton8.Click += new System.EventHandler(this.materialButton8_Click);
+            // 
+            // materialLabel59
+            // 
+            this.materialLabel59.AutoSize = true;
+            this.materialLabel59.Depth = 0;
+            this.materialLabel59.Font = new System.Drawing.Font("Roboto", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialLabel59.Location = new System.Drawing.Point(17, 17);
+            this.materialLabel59.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel59.Name = "materialLabel59";
+            this.materialLabel59.Size = new System.Drawing.Size(54, 19);
+            this.materialLabel59.TabIndex = 1;
+            this.materialLabel59.Text = "Search:";
+            // 
+            // materialTextBoxSeachDivCard
+            // 
+            this.materialTextBoxSeachDivCard.AnimateReadOnly = false;
+            this.materialTextBoxSeachDivCard.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.materialTextBoxSeachDivCard.Depth = 0;
+            this.materialTextBoxSeachDivCard.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.materialTextBoxSeachDivCard.LeadingIcon = null;
+            this.materialTextBoxSeachDivCard.Location = new System.Drawing.Point(85, 9);
+            this.materialTextBoxSeachDivCard.MaxLength = 50;
+            this.materialTextBoxSeachDivCard.MouseState = MaterialSkin.MouseState.OUT;
+            this.materialTextBoxSeachDivCard.Multiline = false;
+            this.materialTextBoxSeachDivCard.Name = "materialTextBoxSeachDivCard";
+            this.materialTextBoxSeachDivCard.Size = new System.Drawing.Size(273, 36);
+            this.materialTextBoxSeachDivCard.TabIndex = 0;
+            this.materialTextBoxSeachDivCard.Text = "";
+            this.materialTextBoxSeachDivCard.TrailingIcon = null;
+            this.materialTextBoxSeachDivCard.UseTallSize = false;
             // 
             // materialTabSelector2
             // 
@@ -3960,7 +4209,7 @@ namespace TraXile
             this.materialTabSelector2.Margin = new System.Windows.Forms.Padding(4, 3, 3, 3);
             this.materialTabSelector2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialTabSelector2.Name = "materialTabSelector2";
-            this.materialTabSelector2.Size = new System.Drawing.Size(2577, 30);
+            this.materialTabSelector2.Size = new System.Drawing.Size(2777, 30);
             this.materialTabSelector2.TabIndex = 1;
             this.materialTabSelector2.Text = "materialTabSelector2";
             // 
@@ -3970,7 +4219,7 @@ namespace TraXile
             this.tabPage18.Location = new System.Drawing.Point(4, 22);
             this.tabPage18.Name = "tabPage18";
             this.tabPage18.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage18.Size = new System.Drawing.Size(2590, 1533);
+            this.tabPage18.Size = new System.Drawing.Size(2790, 1963);
             this.tabPage18.TabIndex = 2;
             this.tabPage18.Text = "Settings";
             this.tabPage18.UseVisualStyleBackColor = true;
@@ -3989,7 +4238,7 @@ namespace TraXile
             this.tableLayoutPanel18.RowCount = 2;
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(2584, 1527);
+            this.tableLayoutPanel18.Size = new System.Drawing.Size(2784, 1957);
             this.tableLayoutPanel18.TabIndex = 0;
             // 
             // materialTabControl1
@@ -4006,11 +4255,12 @@ namespace TraXile
             this.materialTabControl1.Multiline = true;
             this.materialTabControl1.Name = "materialTabControl1";
             this.materialTabControl1.SelectedIndex = 0;
-            this.materialTabControl1.Size = new System.Drawing.Size(2584, 1491);
+            this.materialTabControl1.Size = new System.Drawing.Size(2784, 1921);
             this.materialTabControl1.TabIndex = 0;
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.materialCard47);
             this.tabPage5.Controls.Add(this.materialCard39);
             this.tabPage5.Controls.Add(this.materialCard38);
             this.tabPage5.Controls.Add(this.materialCard37);
@@ -4018,10 +4268,40 @@ namespace TraXile
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(2576, 1465);
+            this.tabPage5.Size = new System.Drawing.Size(2776, 1895);
             this.tabPage5.TabIndex = 0;
             this.tabPage5.Text = "General";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // materialCard47
+            // 
+            this.materialCard47.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.materialCard47.Controls.Add(this.materialCheckbox2);
+            this.materialCard47.Depth = 0;
+            this.materialCard47.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialCard47.Location = new System.Drawing.Point(10, 107);
+            this.materialCard47.Margin = new System.Windows.Forms.Padding(14);
+            this.materialCard47.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialCard47.Name = "materialCard47";
+            this.materialCard47.Padding = new System.Windows.Forms.Padding(14);
+            this.materialCard47.Size = new System.Drawing.Size(1013, 62);
+            this.materialCard47.TabIndex = 4;
+            // 
+            // materialCheckbox2
+            // 
+            this.materialCheckbox2.AutoSize = true;
+            this.materialCheckbox2.Depth = 0;
+            this.materialCheckbox2.Location = new System.Drawing.Point(12, 15);
+            this.materialCheckbox2.Margin = new System.Windows.Forms.Padding(0);
+            this.materialCheckbox2.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.materialCheckbox2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialCheckbox2.Name = "materialCheckbox2";
+            this.materialCheckbox2.ReadOnly = false;
+            this.materialCheckbox2.Ripple = true;
+            this.materialCheckbox2.Size = new System.Drawing.Size(226, 37);
+            this.materialCheckbox2.TabIndex = 0;
+            this.materialCheckbox2.Text = "Start TraXile with Windows";
+            this.materialCheckbox2.UseVisualStyleBackColor = true;
             // 
             // materialCard39
             // 
@@ -4033,7 +4313,7 @@ namespace TraXile
             this.materialCard39.Controls.Add(this.materialLabel39);
             this.materialCard39.Depth = 0;
             this.materialCard39.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard39.Location = new System.Drawing.Point(626, 109);
+            this.materialCard39.Location = new System.Drawing.Point(626, 173);
             this.materialCard39.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard39.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard39.Name = "materialCard39";
@@ -4139,7 +4419,7 @@ namespace TraXile
             this.materialCard38.Controls.Add(this.materialLabel37);
             this.materialCard38.Depth = 0;
             this.materialCard38.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard38.Location = new System.Drawing.Point(318, 109);
+            this.materialCard38.Location = new System.Drawing.Point(318, 173);
             this.materialCard38.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard38.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard38.Name = "materialCard38";
@@ -4279,12 +4559,11 @@ namespace TraXile
             this.materialCard37.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.materialCard37.Controls.Add(this.buttonRollLog);
             this.materialCard37.Controls.Add(this.buttonFullReset);
-            this.materialCard37.Controls.Add(this.buttonChangeLogReload);
             this.materialCard37.Controls.Add(this.buttonReloadLogfile);
             this.materialCard37.Controls.Add(this.materialLabel36);
             this.materialCard37.Depth = 0;
             this.materialCard37.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard37.Location = new System.Drawing.Point(10, 109);
+            this.materialCard37.Location = new System.Drawing.Point(10, 173);
             this.materialCard37.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard37.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard37.Name = "materialCard37";
@@ -4301,7 +4580,7 @@ namespace TraXile
             this.buttonRollLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonRollLog.HighEmphasis = true;
             this.buttonRollLog.Icon = null;
-            this.buttonRollLog.Location = new System.Drawing.Point(16, 200);
+            this.buttonRollLog.Location = new System.Drawing.Point(18, 155);
             this.buttonRollLog.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.buttonRollLog.MouseState = MaterialSkin.MouseState.HOVER;
             this.buttonRollLog.Name = "buttonRollLog";
@@ -4323,7 +4602,7 @@ namespace TraXile
             this.buttonFullReset.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonFullReset.HighEmphasis = true;
             this.buttonFullReset.Icon = null;
-            this.buttonFullReset.Location = new System.Drawing.Point(16, 152);
+            this.buttonFullReset.Location = new System.Drawing.Point(16, 107);
             this.buttonFullReset.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.buttonFullReset.MouseState = MaterialSkin.MouseState.HOVER;
             this.buttonFullReset.Name = "buttonFullReset";
@@ -4335,28 +4614,6 @@ namespace TraXile
             this.buttonFullReset.UseAccentColor = false;
             this.buttonFullReset.UseVisualStyleBackColor = false;
             this.buttonFullReset.Click += new System.EventHandler(this.button15_Click);
-            // 
-            // buttonChangeLogReload
-            // 
-            this.buttonChangeLogReload.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonChangeLogReload.BackColor = System.Drawing.Color.White;
-            this.buttonChangeLogReload.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            this.buttonChangeLogReload.Depth = 0;
-            this.buttonChangeLogReload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonChangeLogReload.HighEmphasis = true;
-            this.buttonChangeLogReload.Icon = null;
-            this.buttonChangeLogReload.Location = new System.Drawing.Point(16, 104);
-            this.buttonChangeLogReload.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.buttonChangeLogReload.MouseState = MaterialSkin.MouseState.HOVER;
-            this.buttonChangeLogReload.Name = "buttonChangeLogReload";
-            this.buttonChangeLogReload.NoAccentTextColor = System.Drawing.Color.Empty;
-            this.buttonChangeLogReload.Size = new System.Drawing.Size(234, 36);
-            this.buttonChangeLogReload.TabIndex = 6;
-            this.buttonChangeLogReload.Text = "Change logfile and reload";
-            this.buttonChangeLogReload.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            this.buttonChangeLogReload.UseAccentColor = false;
-            this.buttonChangeLogReload.UseVisualStyleBackColor = false;
-            this.buttonChangeLogReload.Click += new System.EventHandler(this.button6_Click);
             // 
             // buttonReloadLogfile
             // 
@@ -4398,6 +4655,7 @@ namespace TraXile
             this.materialCard36.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.materialCard36.Controls.Add(this.materialLabel35);
             this.materialCard36.Controls.Add(this.textBoxLogFilePath);
+            this.materialCard36.Controls.Add(this.buttonChangeLogReload);
             this.materialCard36.Depth = 0;
             this.materialCard36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.materialCard36.Location = new System.Drawing.Point(10, 14);
@@ -4405,7 +4663,7 @@ namespace TraXile
             this.materialCard36.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard36.Name = "materialCard36";
             this.materialCard36.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard36.Size = new System.Drawing.Size(1014, 90);
+            this.materialCard36.Size = new System.Drawing.Size(1013, 90);
             this.materialCard36.TabIndex = 0;
             // 
             // materialLabel35
@@ -4432,11 +4690,33 @@ namespace TraXile
             this.textBoxLogFilePath.MouseState = MaterialSkin.MouseState.OUT;
             this.textBoxLogFilePath.Multiline = false;
             this.textBoxLogFilePath.Name = "textBoxLogFilePath";
-            this.textBoxLogFilePath.Size = new System.Drawing.Size(762, 36);
+            this.textBoxLogFilePath.Size = new System.Drawing.Size(570, 36);
             this.textBoxLogFilePath.TabIndex = 2;
             this.textBoxLogFilePath.Text = "";
             this.textBoxLogFilePath.TrailingIcon = null;
             this.textBoxLogFilePath.UseTallSize = false;
+            // 
+            // buttonChangeLogReload
+            // 
+            this.buttonChangeLogReload.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonChangeLogReload.BackColor = System.Drawing.Color.White;
+            this.buttonChangeLogReload.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            this.buttonChangeLogReload.Depth = 0;
+            this.buttonChangeLogReload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonChangeLogReload.HighEmphasis = true;
+            this.buttonChangeLogReload.Icon = null;
+            this.buttonChangeLogReload.Location = new System.Drawing.Point(598, 40);
+            this.buttonChangeLogReload.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.buttonChangeLogReload.MouseState = MaterialSkin.MouseState.HOVER;
+            this.buttonChangeLogReload.Name = "buttonChangeLogReload";
+            this.buttonChangeLogReload.NoAccentTextColor = System.Drawing.Color.Empty;
+            this.buttonChangeLogReload.Size = new System.Drawing.Size(234, 36);
+            this.buttonChangeLogReload.TabIndex = 6;
+            this.buttonChangeLogReload.Text = "Change logfile and reload";
+            this.buttonChangeLogReload.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            this.buttonChangeLogReload.UseAccentColor = false;
+            this.buttonChangeLogReload.UseVisualStyleBackColor = false;
+            this.buttonChangeLogReload.Click += new System.EventHandler(this.button6_Click);
             // 
             // tabPage12
             // 
@@ -4445,7 +4725,7 @@ namespace TraXile
             this.tabPage12.Location = new System.Drawing.Point(4, 22);
             this.tabPage12.Name = "tabPage12";
             this.tabPage12.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage12.Size = new System.Drawing.Size(2576, 1465);
+            this.tabPage12.Size = new System.Drawing.Size(2756, 1852);
             this.tabPage12.TabIndex = 3;
             this.tabPage12.Text = "Backup & Restore";
             this.tabPage12.UseVisualStyleBackColor = true;
@@ -4619,7 +4899,7 @@ namespace TraXile
             this.tabPage8.Location = new System.Drawing.Point(4, 22);
             this.tabPage8.Name = "tabPage8";
             this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(2576, 1465);
+            this.tabPage8.Size = new System.Drawing.Size(2756, 1852);
             this.tabPage8.TabIndex = 1;
             this.tabPage8.Text = "Tags";
             this.tabPage8.UseVisualStyleBackColor = true;
@@ -4638,7 +4918,7 @@ namespace TraXile
             this.tableLayoutPanel19.RowCount = 2;
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 89F));
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel19.Size = new System.Drawing.Size(2570, 1459);
+            this.tableLayoutPanel19.Size = new System.Drawing.Size(2750, 1846);
             this.tableLayoutPanel19.TabIndex = 0;
             // 
             // materialCard42
@@ -4657,7 +4937,7 @@ namespace TraXile
             this.materialCard42.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard42.Name = "materialCard42";
             this.materialCard42.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard42.Size = new System.Drawing.Size(2542, 61);
+            this.materialCard42.Size = new System.Drawing.Size(2722, 61);
             this.materialCard42.TabIndex = 0;
             // 
             // materialLabel45
@@ -4753,14 +5033,14 @@ namespace TraXile
             this.tableLayoutPanel20.Name = "tableLayoutPanel20";
             this.tableLayoutPanel20.RowCount = 1;
             this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1364F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1364F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1364F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1364F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1364F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1364F));
-            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1364F));
-            this.tableLayoutPanel20.Size = new System.Drawing.Size(2564, 1364);
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1751F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1751F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1751F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1751F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1751F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1751F));
+            this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 1751F));
+            this.tableLayoutPanel20.Size = new System.Drawing.Size(2744, 1751);
             this.tableLayoutPanel20.TabIndex = 1;
             // 
             // groupBox3
@@ -4775,7 +5055,7 @@ namespace TraXile
             this.groupBox3.MouseState = MaterialSkin.MouseState.HOVER;
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(14);
-            this.groupBox3.Size = new System.Drawing.Size(1116, 1336);
+            this.groupBox3.Size = new System.Drawing.Size(1196, 1723);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.Text = "Tags (click to edit)";
             // 
@@ -4804,12 +5084,12 @@ namespace TraXile
             this.materialCard43.Depth = 0;
             this.materialCard43.Dock = System.Windows.Forms.DockStyle.Top;
             this.materialCard43.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialCard43.Location = new System.Drawing.Point(1158, 14);
+            this.materialCard43.Location = new System.Drawing.Point(1238, 14);
             this.materialCard43.Margin = new System.Windows.Forms.Padding(14);
             this.materialCard43.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard43.Name = "materialCard43";
             this.materialCard43.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard43.Size = new System.Drawing.Size(1392, 479);
+            this.materialCard43.Size = new System.Drawing.Size(1492, 479);
             this.materialCard43.TabIndex = 2;
             // 
             // materialButton6
@@ -5149,7 +5429,7 @@ namespace TraXile
             this.tabPage11.Location = new System.Drawing.Point(4, 22);
             this.tabPage11.Name = "tabPage11";
             this.tabPage11.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage11.Size = new System.Drawing.Size(2576, 1465);
+            this.tabPage11.Size = new System.Drawing.Size(2756, 1852);
             this.tabPage11.TabIndex = 2;
             this.tabPage11.Text = "Overlay";
             this.tabPage11.UseVisualStyleBackColor = true;
@@ -5523,7 +5803,7 @@ namespace TraXile
             this.materialTabSelector3.Location = new System.Drawing.Point(3, 3);
             this.materialTabSelector3.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialTabSelector3.Name = "materialTabSelector3";
-            this.materialTabSelector3.Size = new System.Drawing.Size(2578, 30);
+            this.materialTabSelector3.Size = new System.Drawing.Size(2778, 30);
             this.materialTabSelector3.TabIndex = 1;
             this.materialTabSelector3.Text = "materialTabSelector3";
             // 
@@ -5562,7 +5842,7 @@ namespace TraXile
             this.materialCard4.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialCard4.Name = "materialCard4";
             this.materialCard4.Padding = new System.Windows.Forms.Padding(14);
-            this.materialCard4.Size = new System.Drawing.Size(2602, 161);
+            this.materialCard4.Size = new System.Drawing.Size(2802, 161);
             this.materialCard4.TabIndex = 1;
             // 
             // materialLabel9
@@ -5785,7 +6065,7 @@ namespace TraXile
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(2624, 1926);
+            this.ClientSize = new System.Drawing.Size(2824, 2356);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tableLayoutPanel_L0);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -5922,10 +6202,17 @@ namespace TraXile
             ((System.ComponentModel.ISupportInitialize)(this.chartLeagueMapT16)).EndInit();
             this.materialCard34.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chartLeagueDeath)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.materialCard48.ResumeLayout(false);
+            this.materialCard49.ResumeLayout(false);
+            this.materialCard49.PerformLayout();
             this.tabPage18.ResumeLayout(false);
             this.tableLayoutPanel18.ResumeLayout(false);
             this.materialTabControl1.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            this.materialCard47.ResumeLayout(false);
+            this.materialCard47.PerformLayout();
             this.materialCard39.ResumeLayout(false);
             this.materialCard39.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -6328,5 +6615,23 @@ namespace TraXile
         private MaterialLabel materialLabel57;
         private MaterialButton materialButton7;
         private MaterialLabel materialLabel58;
+        private MaterialCard materialCard47;
+        private MaterialCheckbox materialCheckbox2;
+        private TabPage tabPage4;
+        private TableLayoutPanel tableLayoutPanel3;
+        private MaterialCard materialCard48;
+        private MaterialListView listViewDivCards;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader6;
+        private ColumnHeader columnHeader25;
+        private ColumnHeader columnHeader26;
+        private MaterialCard materialCard49;
+        private MaterialLabel materialLabel59;
+        private MaterialTextBox materialTextBoxSeachDivCard;
+        private MaterialButton materialButton8;
+        private MaterialButton materialButton9;
+        private MaterialButton materialButton10;
+        private MaterialLabel materialLabel60;
+        private MaterialLabel materialLabel61;
     }
 }

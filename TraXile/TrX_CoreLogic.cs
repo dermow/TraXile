@@ -49,6 +49,9 @@ namespace TraXile
         // Event: initialization of history is finished
         public event Trx_GenericEventHandler OnHistoryInitialized;
 
+        // Event: DivCardDrawn
+        public event Trx_GenericEventHandler OnDivCardDrawn;
+
         // Event: called when an activity is finished
         public event TrX_ActivityEventHandler OnActivityFinished;
 
@@ -234,6 +237,17 @@ namespace TraXile
             set { _timeCapMin = value; }
         }
 
+        // HOTFIX: Mirage
+        private bool _IsMirageLeague = false;
+        private bool _nextAreaIsMirage;
+        private bool _inMirage;
+
+        public bool IsMirageLeague
+        {
+            get { return _IsMirageLeague; }
+            set { _IsMirageLeague = value; }
+        }
+
         /// <summary>
         /// Main Window Constructor
         /// </summary>
@@ -242,6 +256,8 @@ namespace TraXile
             _timeCapMin = minTimeCap;
             Init();
         }
+
+       
 
         /// <summary>
         /// Do main initialization
@@ -1221,6 +1237,24 @@ namespace TraXile
 
             // Sanctum runs after sanctum league are tracked differently -> not started from inside map.
             bool isOutSideSanctumLeague = (ev.EventTime > new DateTime(2023, 4, 5));
+
+            // Mirage hotfix
+            if(_nextAreaIsMirage)
+            {
+                _nextAreaIsMirage = false;
+                _inMirage = true;
+                return;
+            }
+
+            if(_inMirage)
+            {
+               _inMirage = false;
+               
+                if(sSourceArea == sTargetArea)
+                {
+                    return;
+                }
+            }
 
             IncrementStat("AreaChanges", ev.EventTime, 1);
 
@@ -3026,6 +3060,12 @@ namespace TraXile
                             _currentActivity.AddTag("t16.5");
                         }
                         break;
+                    case EVENT_TYPES.DIV_CARD_DRAWN:
+                        _HandleDivCardDraw(ev);
+                        break;
+                    case EVENT_TYPES.ENTER_MIRAGE_AREA:
+                        _nextAreaIsMirage = true;
+                        break;
                 }
 
                 if (_eventQueueInitizalized)
@@ -3038,6 +3078,26 @@ namespace TraXile
                 _log.Error($"Error handling event: {ex.Message}.");
                 _log.Debug(ex.ToString());
             }
+        }
+
+        private void _HandleDivCardDraw(TrX_TrackingEvent ev)
+        {
+            try
+            {
+                string sDivCard = ev.LogLine.Split(new string[] { "{" }, StringSplitOptions.None)[1].Replace("}", "");
+                
+                _dataBackend.AddDivCardEntry(sDivCard, ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds());
+                _log.Debug($"drawn divination card: {sDivCard}");
+
+                OnDivCardDrawn(new TrX_CoreLogicGenericEventArgs(this));
+
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"Error handling div card draw event: {ex.Message}.");
+                _log.Debug(ex.ToString());
+            }
+
         }
 
         /// <summary>
