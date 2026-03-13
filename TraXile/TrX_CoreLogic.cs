@@ -237,6 +237,17 @@ namespace TraXile
             set { _timeCapMin = value; }
         }
 
+        // HOTFIX: Mirage
+        private bool _IsMirageLeague = false;
+        private bool _nextAreaIsMirage;
+        private bool _inMirage;
+
+        public bool IsMirageLeague
+        {
+            get { return _IsMirageLeague; }
+            set { _IsMirageLeague = value; }
+        }
+
         /// <summary>
         /// Main Window Constructor
         /// </summary>
@@ -245,6 +256,8 @@ namespace TraXile
             _timeCapMin = minTimeCap;
             Init();
         }
+
+       
 
         /// <summary>
         /// Do main initialization
@@ -1224,6 +1237,24 @@ namespace TraXile
 
             // Sanctum runs after sanctum league are tracked differently -> not started from inside map.
             bool isOutSideSanctumLeague = (ev.EventTime > new DateTime(2023, 4, 5));
+
+            // Mirage hotfix
+            if(_nextAreaIsMirage)
+            {
+                _nextAreaIsMirage = false;
+                _inMirage = true;
+                return;
+            }
+
+            if(_inMirage)
+            {
+               _inMirage = false;
+               
+                if(sSourceArea == sTargetArea)
+                {
+                    return;
+                }
+            }
 
             IncrementStat("AreaChanges", ev.EventTime, 1);
 
@@ -3031,6 +3062,9 @@ namespace TraXile
                         break;
                     case EVENT_TYPES.DIV_CARD_DRAWN:
                         _HandleDivCardDraw(ev);
+                        break;
+                    case EVENT_TYPES.ENTER_MIRAGE_AREA:
+                        _nextAreaIsMirage = true;
                         break;
                 }
 

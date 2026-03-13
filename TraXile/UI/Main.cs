@@ -185,6 +185,9 @@ namespace TraXile
         // List of League Info objects
         private List<TrX_LeagueInfo> _leagues;
 
+        // Current League
+        private TrX_LeagueInfo _currentLeague;
+
         // Logger
         private ILog _log;
 
@@ -1151,6 +1154,12 @@ namespace TraXile
 
             InitLeagueInfo();
 
+            // HOTFIX: Mirage
+            if(_currentLeague != null && _currentLeague.Name == "Mirage")
+            {
+                _logic.IsMirageLeague = true;
+            }
+
             // Request initial Dashboard update
             _uiFlagLabDashboard = true;
             _uiFlagMapDashboard = true;
@@ -1360,6 +1369,11 @@ namespace TraXile
             List<TrX_LeagueInfo> litmp = new List<TrX_LeagueInfo>();
             litmp.AddRange(_leagues);
             litmp.Reverse();
+
+            if (currentLeague != null)
+            {
+                _currentLeague = currentLeague;
+            }
 
             foreach (TrX_LeagueInfo li in litmp)
             {

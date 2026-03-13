@@ -64,7 +64,8 @@ namespace TraXile
         TRIALMASTER_PLAYER_LOSS,
         ZANA_ORIGINATOR_SPEAK,
         HEIST_MEMBER_INTRODUCED,
-        DIV_CARD_DRAWN
+        DIV_CARD_DRAWN,
+        ENTER_MIRAGE_AREA
     }
 
     public class TrX_EventMapping
@@ -328,6 +329,9 @@ namespace TraXile
 
                 // DivCards
                 {"Card drawn from the deck:", EVENT_TYPES.DIV_CARD_DRAWN },
+
+                // HOTFIX Mirage:
+                { "] [Faridun] Blocking terrain outside mirage area", EVENT_TYPES.ENTER_MIRAGE_AREA },
 
 
                 // Encounters
