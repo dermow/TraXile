@@ -487,7 +487,8 @@ namespace TraXile
                 new TrX_ActivityTag("ultimatum-took-reward") { BackColor = Color.MediumVioletRed, ForeColor = Color.White },
                 new TrX_ActivityTag("black-knight") { BackColor = Color.DarkBlue, ForeColor = Color.White },
                 new TrX_ActivityTag("t16.5") { DisplayName = "T16.5", BackColor = Color.DeepSkyBlue, ForeColor = Color.White },
-                new TrX_ActivityTag("side-area") { BackColor = Color.Blue, ForeColor = Color.White }
+                new TrX_ActivityTag("side-area") { BackColor = Color.Blue, ForeColor = Color.White },
+                new TrX_ActivityTag("mirage") { BackColor = Color.LightGoldenrodYellow, ForeColor = Color.Black }
             };
 
             foreach (TrX_ActivityTag tag in tmpTags)
@@ -1243,6 +1244,12 @@ namespace TraXile
             {
                 _nextAreaIsMirage = false;
                 _inMirage = true;
+                
+                if(_currentActivity != null)
+                {
+                    _currentActivity.AddTag("mirage");
+                }
+
                 return;
             }
 
