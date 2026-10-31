@@ -1232,7 +1232,8 @@ namespace TraXile
             bTargetAreaIsValerius = _defaultMappings.AdmiralValeriusAreas.Contains(sTargetArea),
             bTargetAreaIsOshabi = _defaultMappings.OshabiAreas.Contains(sTargetArea),
             bTargetAreaIsReliqKey = _defaultMappings.ReliqKeyAreas.Contains(sTargetArea),
-            bTargetAreaIsSasan = _defaultMappings.SasanAreas.Contains(sTargetArea);
+            bTargetAreaIsSasan = _defaultMappings.SasanAreas.Contains(sTargetArea),
+            bTargetAreaIsAnomaly = _defaultMappings.AnomalyAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1553,11 +1554,14 @@ namespace TraXile
             {
                 actType = ACTIVITY_TYPES.RELIQUARY_KEY;
             }
+            else if (bTargetAreaIsAnomaly)
+            {
+                actType = ACTIVITY_TYPES.ANOMALY;
+            }
             else
             {
                 actType = ACTIVITY_TYPES.OTHER;
             }
-
 
             // Special handling for logbook cemetery + vaal temple
             if (bTargetAreaIsLogbook && bTargetAreaIsMap)
@@ -2077,7 +2081,8 @@ namespace TraXile
                     || _defaultMappings.AdmiralValeriusAreas.Contains(sSourceArea)
                     || _defaultMappings.OshabiAreas.Contains(sSourceArea)
                     || _defaultMappings.ReliqKeyAreas.Contains(sSourceArea)
-                    || _defaultMappings.SasanAreas.Contains(sSourceArea);
+                    || _defaultMappings.SasanAreas.Contains(sSourceArea)
+                    || _defaultMappings.AnomalyAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
                 if (!_StartedFlag && !bFromActivity)
@@ -2163,7 +2168,7 @@ namespace TraXile
                 bTargetAreaIsMavenFight ||
                 bTargetAreaIsSirusFight ||
                 bTargetAreaIsLogbook ||
-                (bTargetAreaIsSafehouse && !_isMapSafeHouseSide)||
+                (bTargetAreaIsSafehouse && !_isMapSafeHouseSide) ||
                 bTargetAreaIsCata ||
                 bTargetAreaIsExarch ||
                 bTargetAreaIsBreachStone ||
@@ -2184,7 +2189,8 @@ namespace TraXile
                 bTargetAreaIsValerius ||
                 bTargetAreaIsOshabi ||
                 bTargetAreaIsReliqKey ||
-                bTargetAreaIsMists;
+                bTargetAreaIsMists ||
+                bTargetAreaIsAnomaly;
 
             // Check if opened activity needs to be opened on Mapdevice
             bool isMapDeviceActivity =
@@ -2194,7 +2200,7 @@ namespace TraXile
                 bTargetAreaIsElder ||
                 bTargetAreaIsShaper ||
                 bTargetAreaIsSimu ||
-                (bTargetAreaIsSafehouse && ! _isMapSafeHouseSide) ||
+                (bTargetAreaIsSafehouse && !_isMapSafeHouseSide) ||
                 bTargetAreaIsSirusFight ||
                 bTargetAreaTemple ||
                 bTargetAreaIsMI ||
@@ -2219,7 +2225,8 @@ namespace TraXile
                 bTargetAreaIsValerius ||
                 bTargetAreaIsOshabi ||
                 bTargetAreaIsReliqKey ||
-                bTargetAreaIsMists;
+                bTargetAreaIsMists ||
+                bTargetAreaIsAnomaly;
 
             if (enteringDefaultTrackableActivity)
             {
@@ -3092,7 +3099,8 @@ namespace TraXile
             try
             {
                 string sDivCard = ev.LogLine.Split(new string[] { "{" }, StringSplitOptions.None)[1].Replace("}", "");
-                
+                sDivCard = sDivCard.Replace("'", "");
+
                 _dataBackend.AddDivCardEntry(sDivCard, ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds());
                 _log.Debug($"drawn divination card: {sDivCard}");
 
@@ -3186,6 +3194,7 @@ namespace TraXile
                 TimeSpan tsLogbookSide = new TimeSpan();
                 TimeSpan tsSanctum = new TimeSpan();
                 TimeSpan tsSafeHouse = new TimeSpan();
+
                 int totalSecondsMainActivity;
                 int totalSecondsZanaMap = 0;
                 int totalSecondsVallSideArea = 0;

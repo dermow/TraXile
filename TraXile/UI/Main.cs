@@ -71,7 +71,8 @@ namespace TraXile
         ADMIRAL_VALERIUS_FIGHT,
         SASAN_FIGHT,
         OSHABI_FIGHT,
-        RELIQUARY_KEY
+        RELIQUARY_KEY,
+        ANOMALY
     }
 
     /// <summary>
@@ -2685,6 +2686,7 @@ namespace TraXile
                 { ACTIVITY_TYPES.SASAN_FIGHT, 0 },
                 { ACTIVITY_TYPES.OSHABI_FIGHT, 0 },
                 { ACTIVITY_TYPES.RELIQUARY_KEY, 0 },
+                { ACTIVITY_TYPES.ANOMALY, 0 },
             };
 
             Dictionary<ACTIVITY_TYPES, int> typeListCount = new Dictionary<ACTIVITY_TYPES, int>
@@ -2735,7 +2737,8 @@ namespace TraXile
                 { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, 0 },
                 { ACTIVITY_TYPES.SASAN_FIGHT, 0 },
                 { ACTIVITY_TYPES.OSHABI_FIGHT, 0 },
-                { ACTIVITY_TYPES.RELIQUARY_KEY, 0 }
+                { ACTIVITY_TYPES.RELIQUARY_KEY, 0 },
+                { ACTIVITY_TYPES.ANOMALY, 0 }
             };
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
@@ -2786,6 +2789,7 @@ namespace TraXile
                 { ACTIVITY_TYPES.SASAN_FIGHT, Color.Aqua },
                 { ACTIVITY_TYPES.OSHABI_FIGHT, Color.CadetBlue },
                 { ACTIVITY_TYPES.RELIQUARY_KEY, Color.Orange },
+                { ACTIVITY_TYPES.ANOMALY, Color.DarkOrange },
 
             };
             double hideOutTime = 0;
