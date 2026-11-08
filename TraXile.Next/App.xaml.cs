@@ -91,15 +91,33 @@ namespace TraXile.Next
             }
         }
 
+        private static ResourceDictionary _tokens;
+
+        /// <summary>
+        /// Switches between the dark and light variant of the design system (docs/design.md).
+        /// WPF-UI's own theme is applied first; the token dictionary is then (re-)added as the last merged
+        /// dictionary, so its values win over the library defaults.
+        /// </summary>
         public static void ApplyTheme(bool dark)
         {
             IsDark = dark;
-            ApplicationThemeManager.Apply(dark ? ApplicationTheme.Dark : ApplicationTheme.Light);
+            ApplicationThemeManager.Apply(dark ? ApplicationTheme.Dark : ApplicationTheme.Light,
+                Wpf.Ui.Controls.WindowBackdropType.None, updateAccent: false);
 
-            // Gold brand accent for Fluent controls (selection, toggles, primary buttons)
+            var merged = Current.Resources.MergedDictionaries;
+            if (_tokens != null) merged.Remove(_tokens);
+            _tokens = DesignTokens.CreateDictionary(dark);
+            merged.Add(_tokens);
+
+            // Coral accent for WPF-UI's accent brushes (selection pills, focus, toggles)
             ApplicationAccentColorManager.Apply(
-                (System.Windows.Media.Color)Current.Resources["BrandAccentColor"],
-                dark ? ApplicationTheme.Dark : ApplicationTheme.Light);
+                DesignTokens.Get("Accent").For(dark),
+                DesignTokens.Get("BtnPrimaryBg").For(dark),
+                DesignTokens.Get("BtnPrimaryBg").For(dark),
+                DesignTokens.Get("BtnPrimaryHover").For(dark));
+
+            // Solid warm background instead of Mica
+            Current.MainWindow?.SetResourceReference(Window.BackgroundProperty, "BgBrush");
 
             LiveCharts.Configure(c =>
             {

@@ -29,6 +29,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Design system fonts (SIL OFL 1.1), see docs/design.md -->
+    <Resource Include="Fonts\*.ttf" />
+    <None Include="Fonts\OFL-*.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Reuse the existing, battle-tested tracking core (log parsing, DB, stats) -->
     <ProjectReference Include="..\TraXile\TraXile.csproj" />
   </ItemGroup>

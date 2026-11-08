@@ -1,0 +1,194 @@
+<Page
+    x:Class="TraXile.Next.Views.StyleGalleryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Style gallery">
+    <!-- Every base style of docs/design.md on one page, for visual review: start TraXile.Next.exe with the options screenshot and page gallery -->
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="{StaticResource PagePadding}">
+            <TextBlock Text="Style gallery" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Meta}" Margin="0,4,0,24">
+                exile-tools.com design system · <Run x:Name="SnapshotRun" />
+            </TextBlock>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ============ left column ============ -->
+                <StackPanel>
+                    <TextBlock Text="TYPOGRAPHY" Style="{StaticResource Label}" Margin="0,0,0,8" />
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,24">
+                        <StackPanel>
+                            <TextBlock Text="Page title · Orbitron" Style="{StaticResource PageTitle}" />
+                            <TextBlock Text="SMALL LABEL · ORBITRON 12" Style="{StaticResource Label}" Margin="0,8,0,12" />
+                            <TextBlock Text="Heading 2 · Familjen Grotesk" Style="{StaticResource H2}" />
+                            <TextBlock Text="Heading 3 · Familjen Grotesk" Style="{StaticResource H3}" Margin="0,4,0,0" />
+                            <TextBlock Text="Heading 4 / card title" Style="{StaticResource H4}" Margin="0,4,0,8" />
+                            <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
+                                Body text in Instrument Sans. TraXile tracks every Activity you do in Path of Exile,
+                                <Italic>such as a map or a heist</Italic>, and turns it into <Bold>history and statistics</Bold>.
+                            </TextBlock>
+                            <TextBlock Text="Meta text · 13 px muted" Style="{StaticResource Meta}" Margin="0,8,0,0" />
+                            <TextBlock Text="Caption · 12 px muted" Style="{StaticResource Caption}" Margin="0,2,0,12" />
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Margin="0,0,32,0">
+                                    <TextBlock Text="TODAY" Style="{StaticResource Label}" />
+                                    <TextBlock Text="4:12:09" Style="{StaticResource Metric}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Text="ACTIVITIES" Style="{StaticResource Label}" />
+                                    <TextBlock Text="1,118" Style="{StaticResource Metric}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="BUTTONS" Style="{StaticResource Label}" Margin="0,0,0,8" />
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,24">
+                        <StackPanel>
+                            <WrapPanel>
+                                <ui:Button Content="Primary" Appearance="Primary" Margin="0,0,8,8" />
+                                <ui:Button Content="Secondary" Appearance="Secondary" Margin="0,0,8,8" />
+                                <ui:Button Content="Text button" Appearance="Transparent" Margin="0,0,8,8" />
+                                <ui:Button Content="Delete" Appearance="Danger" Margin="0,0,8,8">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="Delete20" /></ui:Button.Icon>
+                                </ui:Button>
+                            </WrapPanel>
+                            <WrapPanel>
+                                <ui:Button Content="With icon" Appearance="Primary" Margin="0,0,8,8">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowDownload20" /></ui:Button.Icon>
+                                </ui:Button>
+                                <ui:Button Content="Small" Style="{StaticResource SmallButton}" Margin="0,0,8,8" />
+                                <ui:Button Content="Disabled" Appearance="Primary" IsEnabled="False" Margin="0,0,8,8" />
+                                <ui:Button Content="Disabled" IsEnabled="False" Margin="0,0,8,8" />
+                                <ui:Button Appearance="Transparent" ToolTip="Icon only" Margin="0,0,8,8">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="FilterDismiss20" /></ui:Button.Icon>
+                                </ui:Button>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="INPUTS" Style="{StaticResource Label}" Margin="0,0,0,8" />
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,24">
+                        <StackPanel>
+                            <TextBlock Text="Search" Style="{StaticResource Body}" FontWeight="SemiBold" Margin="0,0,0,6" />
+                            <ui:TextBox PlaceholderText="Search area, type, tier or tag…" Margin="0,0,0,12">
+                                <ui:TextBox.Icon><ui:SymbolIcon Symbol="Search20" /></ui:TextBox.Icon>
+                            </ui:TextBox>
+                            <ui:TextBox Text="C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt" Margin="0,0,0,12" />
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ComboBox SelectedIndex="0">
+                                    <ComboBoxItem Content="All types" />
+                                    <ComboBoxItem Content="Map" />
+                                    <ComboBoxItem Content="Heist" />
+                                </ComboBox>
+                                <Border Grid.Column="2" Style="{StaticResource SegmentedGroup}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton Style="{StaticResource Segment}" GroupName="GalleryRange" Content="Today" />
+                                        <RadioButton Style="{StaticResource Segment}" GroupName="GalleryRange" Content="7 days" IsChecked="True" />
+                                        <RadioButton Style="{StaticResource Segment}" GroupName="GalleryRange" Content="All" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <WrapPanel>
+                                <ui:ToggleSwitch Content="Minimize to tray" IsChecked="True" Margin="0,0,24,0" />
+                                <ui:ToggleSwitch Content="Off" Margin="0,0,24,0" />
+                                <CheckBox Content="Checked" IsChecked="True" Margin="0,0,16,0" />
+                                <CheckBox Content="Unchecked" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ============ right column ============ -->
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="SURFACES" Style="{StaticResource Label}" Margin="0,0,0,8" />
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,24">
+                        <StackPanel>
+                            <TextBlock Text="Card (--surface)" Style="{StaticResource CardTitle}" Margin="0,0,0,12" />
+                            <Border Style="{StaticResource RowCard}">
+                                <TextBlock Text="Row card (--surface-row)" Style="{StaticResource Body}" />
+                            </Border>
+                            <Border Style="{StaticResource LiveRowCard}" Background="{DynamicResource SurfaceRowHoverBrush}">
+                                <TextBlock Text="Row card under the pointer (--surface-row-hover)" Style="{StaticResource Body}" />
+                            </Border>
+                            <Border Style="{StaticResource Notice}" Margin="0,4,0,0">
+                                <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap"
+                                           Text="Notice: the classic TraXile is running. Close it to enable live tracking." />
+                            </Border>
+                            <WrapPanel Margin="0,14,0,0">
+                                <Border Style="{StaticResource Chip}" Background="{DynamicResource SurfaceRaisedBrush}">
+                                    <TextBlock Text="Expedition" Style="{StaticResource Caption}" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" />
+                                </Border>
+                                <Border Style="{StaticResource Chip}" Background="{DynamicResource AccentSurfaceBrush}">
+                                    <TextBlock Text="Juiced" Style="{StaticResource Caption}" FontWeight="SemiBold" Foreground="{DynamicResource AccentTextBrush}" />
+                                </Border>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="DATA GRID" Style="{StaticResource Label}" Margin="0,0,0,8" />
+                    <DataGrid x:Name="SampleGrid" AutoGenerateColumns="False" IsReadOnly="True" Height="196" Margin="0,0,0,24"
+                              CanUserResizeRows="False" HorizontalScrollBarVisibility="Disabled">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Activity" Binding="{Binding Area}" Width="*" />
+                            <DataGridTextColumn Header="Level" Binding="{Binding Level}" Width="70" />
+                            <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="90" SortDirection="Descending" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <TextBlock Text="DIALOG" Style="{StaticResource Label}" Margin="0,0,0,8" />
+                    <!-- Same brushes as ui:MessageBox (MessageBoxTopOverlay / MessageBoxBackground) -->
+                    <Border CornerRadius="{StaticResource SurfaceRadius}" Background="{DynamicResource MessageBoxBackground}"
+                            Effect="{StaticResource RowShadow}" Margin="0,0,0,24" MaxWidth="460" HorizontalAlignment="Left">
+                        <StackPanel>
+                            <Border Background="{DynamicResource MessageBoxTopOverlay}" CornerRadius="4,4,0,0" Padding="24,20">
+                                <StackPanel>
+                                    <TextBlock Text="Delete 3 activities?" Style="{StaticResource H3}" Margin="0,0,0,8" />
+                                    <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap"
+                                               Text="3 activities will be removed from your history and statistics. This cannot be undone." />
+                                </StackPanel>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="24,16">
+                                <ui:Button Content="Delete" Appearance="Primary" Margin="0,0,8,0" />
+                                <ui:Button Content="Cancel" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="INFO BAR" Style="{StaticResource Label}" Margin="0,0,0,8" />
+                    <ui:InfoBar Title="Demo mode" Message="You are looking at generated sample data." IsOpen="True"
+                                Severity="Informational" IsClosable="False" Margin="0,0,0,24" />
+                </StackPanel>
+            </Grid>
+
+            <TextBlock Text="COLOR TOKENS" Style="{StaticResource Label}" Margin="0,0,0,8" />
+            <ItemsControl x:Name="Swatches">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Width="132" Margin="0,0,8,12">
+                            <Border Height="36" CornerRadius="{StaticResource SurfaceRadius}" Background="{Binding Brush}"
+                                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" />
+                            <TextBlock Text="{Binding Key}" Style="{StaticResource Caption}" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            <TextBlock Text="{Binding Css}" Style="{StaticResource Caption}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

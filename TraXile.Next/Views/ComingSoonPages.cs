@@ -22,7 +22,7 @@ namespace TraXile.Next.Views
                 Symbol = icon,
                 FontSize = 28,
                 Margin = new Thickness(0, 0, 12, 0),
-                Foreground = (Brush)Application.Current.FindResource("BrandAccentBrush")
+                Foreground = (Brush)Application.Current.FindResource("AccentTextBrush")
             });
             var titleText = new TextBlock
             {
@@ -53,7 +53,7 @@ namespace TraXile.Next.Views
                     Text = "Migration in progress",
                     FontSize = 12,
                     FontWeight = FontWeights.SemiBold,
-                    Foreground = (Brush)Application.Current.FindResource("BrandAccentBrush")
+                    Foreground = (Brush)Application.Current.FindResource("AccentTextBrush")
                 }
             };
             list.Children.Add(pill);

@@ -1,4 +1,4 @@
-<Page
+﻿<Page
     x:Class="TraXile.Next.Views.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -13,11 +13,11 @@
             <Setter Property="CornerRadius" Value="999" />
             <Setter Property="Padding" Value="7,1" />
             <Setter Property="Background" Value="#2234D399" />
-            <Setter Property="TextElement.Foreground" Value="{StaticResource PositiveBrush}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource StatusSuccessBrush}" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding DeltaPositive}" Value="False">
                     <Setter Property="Background" Value="#22FB7185" />
-                    <Setter Property="TextElement.Foreground" Value="{StaticResource NegativeBrush}" />
+                    <Setter Property="TextElement.Foreground" Value="{DynamicResource StatusDangerBrush}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding HasDelta}" Value="False">
                     <Setter Property="Visibility" Value="Collapsed" />
