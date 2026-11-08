@@ -23,6 +23,25 @@ namespace TraXile.Next.Services
         public double PausedSeconds { get; set; }
         public IReadOnlyList<TagInfo> Tags { get; set; } = Array.Empty<TagInfo>();
 
+        private string _areaRaw;
+        /// <summary>Area name as the core stores it (the core's Area strips apostrophes). Defaults to <see cref="Area"/>.</summary>
+        public string AreaRaw
+        {
+            get => _areaRaw ?? Area;
+            set => _areaRaw = value;
+        }
+
+        private IReadOnlyList<string> _tagIds;
+        /// <summary>
+        /// All tag IDs stored with the activity, also those of deleted tags (which <see cref="Tags"/> leaves out).
+        /// Defaults to the IDs of <see cref="Tags"/>.
+        /// </summary>
+        public IReadOnlyList<string> TagIds
+        {
+            get => _tagIds ?? Tags.Select(t => t.Id).ToList();
+            set => _tagIds = value;
+        }
+
         /// <summary>Side areas visited during this activity (Zana, Vaal, Abyss, Sanctum, ...).</summary>
         public IReadOnlyList<ActivityInfo> SubActivities { get; set; } = Array.Empty<ActivityInfo>();
 

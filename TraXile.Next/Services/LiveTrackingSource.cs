@@ -315,18 +315,22 @@ namespace TraXile.Next.Services
 
         private ActivityInfo ToInfo(TrX_TrackedActivity a) => ToInfo(a, includeSubs: true);
 
-        private ActivityInfo ToInfo(TrX_TrackedActivity a, bool includeSubs)
+        private ActivityInfo ToInfo(TrX_TrackedActivity a, bool includeSubs) => Convert(a, _logic.GetTagByID, includeSubs);
+
+        /// <summary>Snapshot of a core activity; tags unknown to <paramref name="tagById"/> are only kept in <see cref="ActivityInfo.TagIds"/>.</summary>
+        public static ActivityInfo Convert(TrX_TrackedActivity a, Func<string, TrX_ActivityTag> tagById, bool includeSubs = true)
         {
             var tags = new List<TagInfo>();
-            foreach (string id in a.Tags.ToArray())
+            string[] tagIds = a.Tags.ToArray();
+            foreach (string id in tagIds)
             {
-                TrX_ActivityTag tag = _logic.GetTagByID(id);
+                TrX_ActivityTag tag = tagById(id);
                 if (tag == null) continue;
                 tags.Add(ToTagInfo(tag));
             }
 
             IReadOnlyList<ActivityInfo> subs = includeSubs
-                ? a.GetSubActivities().Where(s => s != null).Select(s => ToInfo(s, includeSubs: false)).ToList()
+                ? a.GetSubActivities().Where(s => s != null).Select(s => Convert(s, tagById, includeSubs: false)).ToList()
                 : (IReadOnlyList<ActivityInfo>)Array.Empty<ActivityInfo>();
 
             return new ActivityInfo
@@ -334,6 +338,7 @@ namespace TraXile.Next.Services
                 Id = a.UniqueID,
                 Type = a.Type,
                 Area = a.Area,
+                AreaRaw = a.AreaRaw,
                 AreaLevel = a.AreaLevel,
                 MapTier = a.MapTier,
                 Started = a.Started,
@@ -342,6 +347,7 @@ namespace TraXile.Next.Services
                 Portals = a.PortalsUsed,
                 PausedSeconds = a.PausedTime,
                 Tags = tags,
+                TagIds = tagIds,
                 SubActivities = subs
             };
         }
