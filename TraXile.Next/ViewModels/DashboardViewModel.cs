@@ -128,7 +128,7 @@ namespace TraXile.Next.ViewModels
         public void SetTheme(bool dark)
         {
             _isDark = dark;
-            ChartTextPaint = new SolidColorPaint(dark ? new SKColor(255, 255, 255, 200) : new SKColor(0, 0, 0, 200));
+            ChartTextPaint = new SolidColorPaint(Token("Text"));
             Refresh();
         }
 
@@ -148,7 +148,7 @@ namespace TraXile.Next.ViewModels
         private string _liveSubtitle = "Enter a map, heist or boss fight to start tracking";
         public string LiveSubtitle { get => _liveSubtitle; private set => SetProperty(ref _liveSubtitle, value); }
 
-        private Brush _liveBrush = ActivityPalette.BrushOf(ActivityPalette.Slate);
+        private Brush _liveBrush = ActivityPalette.BrushOf(ActivityPalette.Other);
         public Brush LiveBrush { get => _liveBrush; private set => SetProperty(ref _liveBrush, value); }
 
         private double _liveProgress;
@@ -194,7 +194,7 @@ namespace TraXile.Next.ViewModels
                 ElapsedText = "00:00";
                 LiveTitle = "Waiting for activity";
                 LiveSubtitle = s.CurrentArea != "—" ? $"Currently in {s.CurrentArea}" : "Enter a map, heist or boss fight to start tracking";
-                LiveBrush = ActivityPalette.BrushOf(ActivityPalette.Slate);
+                LiveBrush = ActivityPalette.BrushOf(ActivityPalette.Other);
                 LiveProgress = 0;
                 LiveCompare = "";
             }
@@ -225,11 +225,13 @@ namespace TraXile.Next.ViewModels
 
         public string DailyTitle => Range == TimeRange.Today ? "Activity by hour" : "Activity by day";
 
-        private SolidColorPaint _chartTextPaint = new SolidColorPaint(new SKColor(255, 255, 255, 200));
+        private SolidColorPaint _chartTextPaint = new SolidColorPaint(ActivityPalette.Sk(DesignTokens.Get("Text").Dark));
         public SolidColorPaint ChartTextPaint { get => _chartTextPaint; private set => SetProperty(ref _chartTextPaint, value); }
 
-        private SKColor TextMuted => _isDark ? new SKColor(255, 255, 255, 140) : new SKColor(0, 0, 0, 140);
-        private SKColor GridColor => _isDark ? new SKColor(255, 255, 255, 22) : new SKColor(0, 0, 0, 18);
+        /// <summary>Chart colors come from the design tokens of the current theme.</summary>
+        private SKColor Token(string key) => ActivityPalette.Sk(DesignTokens.Get(key).For(_isDark));
+        private SKColor TextMuted => Token("TextMuted");
+        private SKColor GridColor => Token("Border");
 
         private (DateTime from, DateTime to) GetRange(TimeRange r)
         {
@@ -287,23 +289,23 @@ namespace TraXile.Next.ViewModels
             int prevDeaths = prev.Sum(a => a.Deaths);
 
             Kpis.Add(Kpi("Activities", cur.Count.ToString("N0"), "",
-                Delta(cur.Count, prev.Count, higherIsBetter: true), ActivityPalette.Accent,
+                Delta(cur.Count, prev.Count, higherIsBetter: true), DesignTokens.Get("Accent").For(_isDark),
                 Daily(a => 1)));
 
             Kpis.Add(Kpi("Maps completed", maps.Count.ToString("N0"), "",
-                Delta(maps.Count, prevMaps.Count, higherIsBetter: true), ActivityPalette.Emerald,
+                Delta(maps.Count, prevMaps.Count, higherIsBetter: true), ActivityPalette.ColorOf(ActivityPalette.Green),
                 Daily(a => a.Type == ACTIVITY_TYPES.MAP ? 1 : 0)));
 
             Kpis.Add(Kpi("Avg. map time", avgMap > 0 ? ActivityInfo.FormatDuration((int)avgMap) : "—", "",
-                Delta(avgMap, prevAvgMap, higherIsBetter: false), ActivityPalette.Sky,
+                Delta(avgMap, prevAvgMap, higherIsBetter: false), ActivityPalette.ColorOf(ActivityPalette.Green),
                 Daily(a => a.Type == ACTIVITY_TYPES.MAP ? a.TotalSeconds / 60.0 : double.NaN, average: true)));
 
             Kpis.Add(Kpi("Time played", hours.ToString("0.0"), "h",
-                Delta(hours, prevHours, higherIsBetter: true), ActivityPalette.Violet,
+                Delta(hours, prevHours, higherIsBetter: true), ActivityPalette.ColorOf(ActivityPalette.Blue),
                 Daily(a => Capped(a) / 3600.0)));
 
             Kpis.Add(Kpi("Deaths", deaths.ToString("N0"), "",
-                Delta(deaths, prevDeaths, higherIsBetter: false), ActivityPalette.Rose,
+                Delta(deaths, prevDeaths, higherIsBetter: false), DesignTokens.Get("Brass").For(_isDark),
                 Daily(a => a.Deaths)));
         }
 
@@ -380,8 +382,8 @@ namespace TraXile.Next.ViewModels
                 if (total > 0 && t.Seconds / total >= 0.04) slices.Add((ActivityPalette.DisplayName(t.Type), ActivityPalette.ColorOf(t.Type), t.Seconds));
                 else other += t.Seconds;
             }
-            if (other > 0) slices.Add(("Other", ActivityPalette.Other, other));
-            if (hideout > 0) slices.Add(("Hideout", ActivityPalette.Hideout, hideout));
+            if (other > 0) slices.Add(("Other", ActivityPalette.ColorOf(ActivityPalette.Other), other));
+            if (hideout > 0) slices.Add(("Hideout", ActivityPalette.ColorOf(ActivityPalette.Hideout), hideout));
 
             TotalHours = (total / 3600.0).ToString(total >= 36000 ? "0" : "0.0");
 
@@ -444,7 +446,9 @@ namespace TraXile.Next.ViewModels
             int Bucket(DateTime t) => hourly ? t.Hour : (int)(t.Date - bucketStarts[0]).TotalDays;
 
             // Top 4 types are stacked individually, the rest is "Other"
-            var top = cur.GroupBy(a => a.Type).OrderByDescending(g => g.Sum(Capped)).Take(4).Select(g => g.Key).ToList();
+            var top = cur.GroupBy(a => a.Type).OrderByDescending(g => g.Sum(Capped)).Take(4).Select(g => g.Key)
+                // stack in palette slot order: neighbouring slots are validated to stay distinct
+                .OrderBy(t => ActivityPalette.SlotOf(t).Index).ToList();
 
             var series = new List<ISeries>();
             foreach (ACTIVITY_TYPES type in top)
@@ -455,7 +459,7 @@ namespace TraXile.Next.ViewModels
             var rest = cur.Where(a => !top.Contains(a.Type)).ToList();
             if (rest.Count > 0)
             {
-                series.Add(Stacked("Other", ActivityPalette.Other, Values(rest, bucketStarts.Count, Bucket)));
+                series.Add(Stacked("Other", ActivityPalette.ColorOf(ActivityPalette.Other), Values(rest, bucketStarts.Count, Bucket)));
             }
 
             DailySeries = series.ToArray();
