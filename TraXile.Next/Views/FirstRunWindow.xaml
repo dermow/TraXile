@@ -1,0 +1,86 @@
+<ui:FluentWindow
+    x:Class="TraXile.Next.Views.FirstRunWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
+    Title="Welcome to TraXile"
+    Width="720"
+    Height="640"
+    ResizeMode="NoResize"
+    ExtendsContentIntoTitleBar="True"
+    WindowBackdropType="None"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    Background="{DynamicResource BgBrush}"
+    Foreground="{DynamicResource TextBrush}"
+    FontFamily="{StaticResource UiFont}">
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Background="{DynamicResource BgBrush}" ShowMaximize="False" ShowMinimize="False">
+            <ui:TitleBar.Header>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                    <ui:SymbolIcon Symbol="Timer24" FontSize="18" Foreground="{DynamicResource AccentBrush}" Margin="0,0,10,0" />
+                    <TextBlock Text="TraXile" FontFamily="{StaticResource DisplayFont}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
+                </StackPanel>
+            </ui:TitleBar.Header>
+        </ui:TitleBar>
+
+        <StackPanel Grid.Row="1" Margin="40,16,40,0">
+            <TextBlock Text="Welcome" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap" Margin="0,10,0,24" Foreground="{DynamicResource TextMutedBrush}"
+                       Text="TraXile tracks your activities by reading the log file of Path of Exile (Client.txt). Pick the log of the installation you play with." />
+
+            <TextBlock Text="FOUND ON THIS PC" Style="{StaticResource Label}" Margin="0,0,0,10"
+                       Visibility="{Binding HasCandidates, Converter={StaticResource BoolToVis}}" />
+
+            <ScrollViewer MaxHeight="230" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Candidates}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:ClientTxtCandidate}">
+                            <RadioButton Style="{StaticResource ChoiceRow}" GroupName="ClientTxt"
+                                         IsChecked="{Binding IsSelected, Mode=TwoWay}">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Path}" Style="{StaticResource Body}" FontWeight="SemiBold"
+                                               TextTrimming="CharacterEllipsis" ToolTip="{Binding Path}" />
+                                    <TextBlock Text="{Binding Source}" Style="{StaticResource Caption}" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </RadioButton>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- nothing detected -->
+            <Border Style="{StaticResource Notice}" BorderBrush="{DynamicResource BorderStrongBrush}"
+                    Visibility="{Binding HasCandidates, Converter={StaticResource InvBoolToVis}}">
+                <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
+                    <Run Text="No installation found automatically." FontWeight="SemiBold" />
+                    <Run Text="Select Client.txt by hand: it is in the logs folder of your Path of Exile installation." />
+                </TextBlock>
+            </Border>
+
+            <ui:Button Content="Browse for Client.txt…" Margin="0,12,0,0" HorizontalAlignment="Left" Click="Browse_Click">
+                <ui:Button.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></ui:Button.Icon>
+            </ui:Button>
+
+            <TextBlock Text="{Binding Error}" Style="{StaticResource Meta}" Foreground="{DynamicResource StatusDangerBrush}"
+                       TextWrapping="Wrap" Margin="0,10,0,0" Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}" />
+        </StackPanel>
+
+        <!-- footer -->
+        <Border Grid.Row="2" Background="{DynamicResource SurfaceBrush}" Padding="40,16">
+            <Grid>
+                <ui:Button Content="Look around with demo data" Appearance="Transparent" HorizontalAlignment="Left" Click="Demo_Click" />
+                <ui:Button Content="Start tracking" Appearance="Primary" HorizontalAlignment="Right" IsDefault="True"
+                           IsEnabled="{Binding CanStart}" Click="Start_Click" />
+            </Grid>
+        </Border>
+    </Grid>
+</ui:FluentWindow>

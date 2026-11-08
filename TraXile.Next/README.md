@@ -37,6 +37,8 @@ TraXile.Next.exe --demo                  # sample data
 TraXile.Next.exe --light                 # light theme
 TraXile.Next.exe --screenshot out.png    # render off-screen to PNG and exit (demo data)
 TraXile.Next.exe --screenshot out.png --page log --select 0,2   # screenshot of the activity log with rows selected
+TraXile.Next.exe --screenshot out.png --page gallery           # all base styles of the design system
+TraXile.Next.exe --screenshot out.png --page firstrun          # first-run screen (also: firstrun-empty)
 ```
 
 ## Tests
@@ -48,7 +50,9 @@ dotnet test TraXile.Next.Tests
 `TraXile.Next.Tests` (xUnit, net472) checks the view models against `DemoTrackingSource` without
 any UI, including time budgets for a 20k activity history.
 
-Live mode needs an existing TraXile setup (config.xml with the Client.txt path and data.db).
+Live mode uses the same data folder as the classic app (`%APPDATA%\TraXile`: config.xml, data.db).
+Without a configured Client.txt a first-run screen offers the detected Steam / standalone installations
+and a file picker; the choice is written to config.xml, so the classic app reads it too.
 It **refuses to run live while the classic TraXile is open**, because both would parse
 Client.txt and write the same database. In that case it shows demo data and a notice.
 

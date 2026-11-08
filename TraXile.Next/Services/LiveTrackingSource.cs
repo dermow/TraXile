@@ -35,27 +35,18 @@ namespace TraXile.Next.Services
         /// <summary>
         /// Try to create a live source. Returns null and a reason if live tracking is not possible.
         /// </summary>
-        public static LiveTrackingSource TryCreate(out string reason)
+        public static LiveTrackingSource TryCreate(AppSetup setup, out string reason)
         {
             reason = null;
 
-            if (!File.Exists(TrX_Static.CONFIG_PATH) || !File.Exists(TrX_Static.DB_PATH))
+            if (!setup.HasValidClientTxt)
             {
-                reason = "No TraXile data found yet. Run the classic TraXile once to select your Client.txt — showing demo data.";
+                reason = "No Path of Exile Client.txt selected — showing demo data.";
                 return null;
             }
 
-            var settings = new TrX_SettingsManager(TrX_Static.CONFIG_PATH);
-            settings.LoadFromXml();
-
-            string logPath = settings.ReadSetting("poe_logfile_path");
-            if (string.IsNullOrEmpty(logPath) || !File.Exists(logPath))
-            {
-                reason = "Path of Exile Client.txt is not configured. Set it in the classic TraXile — showing demo data.";
-                return null;
-            }
-
-            return new LiveTrackingSource(settings);
+            // The core creates data.db on its first start
+            return new LiveTrackingSource(setup.LoadSettings());
         }
 
         public void Start()
