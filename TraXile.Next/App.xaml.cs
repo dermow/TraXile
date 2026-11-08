@@ -25,6 +25,13 @@ namespace TraXile.Next
         public static DashboardViewModel Dashboard { get; private set; }
         public static ActivityLogViewModel ActivityLog { get; private set; }
         public static LoadingViewModel Loading { get; private set; }
+        public static SettingsViewModel Settings { get; private set; }
+
+        /// <summary>Settings may be written (live data of this app, not forced demo / classic app running).</summary>
+        public static bool CanWriteSettings { get; private set; }
+
+        /// <summary>Raised after the theme changed (title bar button or settings page).</summary>
+        public static event EventHandler ThemeChanged;
         public static AppInstance Instance { get; private set; }
         public static Shell.TrayIcon Tray { get; private set; }
 
@@ -60,7 +67,9 @@ namespace TraXile.Next
             }
 
             bool demo = ScreenshotPath != null || args.Any(a => a.Equals("--demo", StringComparison.OrdinalIgnoreCase));
-            IsDark = !args.Any(a => a.Equals("--light", StringComparison.OrdinalIgnoreCase));
+            bool forcedLight = args.Any(a => a.Equals("--light", StringComparison.OrdinalIgnoreCase));
+            bool forcedDark = args.Any(a => a.Equals("--dark", StringComparison.OrdinalIgnoreCase));
+            IsDark = forcedLight ? false : forcedDark ? true : demo || SettingsViewModel.ReadIsDark(AppSetup.Default);
 
             ApplyTheme(IsDark);
 
@@ -102,6 +111,8 @@ namespace TraXile.Next
             Dashboard = new DashboardViewModel(Source);
             Dashboard.SetTheme(IsDark);
             ActivityLog = new ActivityLogViewModel(Source);
+            CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
+            Settings = new SettingsViewModel(AppSetup.Default, Source, CanWriteSettings, IsDark, d => SetTheme(d, persist: false), Restart);
 
             if (restore.HasRestored && !restore.HasFailed)
             {
@@ -242,6 +253,15 @@ namespace TraXile.Next
 
             Dashboard?.SetTheme(dark);
             ActivityLog?.Refresh(); // re-reads the activity colors of the new theme
+            Settings?.SyncTheme(dark);
+            ThemeChanged?.Invoke(null, EventArgs.Empty);
+        }
+
+        /// <summary>Switches the theme and (unless told otherwise) stores it in config.xml like the classic app.</summary>
+        public static void SetTheme(bool dark, bool persist = true)
+        {
+            ApplyTheme(dark);
+            if (persist && CanWriteSettings) AppSetup.Default.WriteSetting(SettingsViewModel.ThemeKey, dark ? "Dark" : "Light");
         }
 
         protected override void OnExit(ExitEventArgs e)

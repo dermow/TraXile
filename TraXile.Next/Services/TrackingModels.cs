@@ -72,6 +72,16 @@ namespace TraXile.Next.Services
         public IReadOnlyList<TagInfo> ActiveTags { get; set; } = Array.Empty<TagInfo>();
     }
 
+    /// <summary>Operations on the real core that settings and maintenance need (not available with demo data).</summary>
+    public interface ICoreMaintenance
+    {
+        /// <summary>Changes a time cap for the running session (the setting itself is written separately).</summary>
+        void SetTimeCap(ACTIVITY_TYPES type, int seconds);
+
+        /// <summary>Stops the core and clears the parsed history; Client.txt is read again on the next start.</summary>
+        void StopAndClearHistory();
+    }
+
     /// <summary>
     /// Data source for the UI: either the real TraXile core or demo data.
     /// </summary>

@@ -1,0 +1,102 @@
+<Page
+    x:Class="TraXile.Next.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
+    Title="Settings">
+
+    <Page.Resources>
+        <!-- One setting: name and help on the left, the control on the right -->
+        <Style x:Key="SettingName" TargetType="TextBlock" BasedOn="{StaticResource Body}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style x:Key="SettingHelp" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,2,24,0" />
+        </Style>
+        <Style x:Key="SectionLabel" TargetType="TextBlock" BasedOn="{StaticResource Label}">
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="{StaticResource PagePadding}" MaxWidth="980" HorizontalAlignment="Left">
+            <TextBlock Text="Settings" Style="{StaticResource PageTitle}" />
+            <TextBlock Text="Stored in the same config.xml as the classic TraXile, so both apps use the same settings."
+                       Style="{StaticResource Meta}" Margin="0,4,0,24" />
+
+            <Border Style="{StaticResource Notice}" Margin="0,0,0,24" BorderBrush="{DynamicResource StatusWarningBrush}"
+                    Visibility="{Binding IsReadOnly, Converter={StaticResource BoolToVis}}">
+                <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
+                    <Run Text="Read only" FontWeight="SemiBold" />
+                    <Run Text="  Settings can be changed while TraXile.Next tracks live (the classic TraXile must be closed)." Foreground="{DynamicResource TextMutedBrush}" />
+                </TextBlock>
+            </Border>
+
+            <!-- ============ General ============ -->
+            <TextBlock Text="GENERAL" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,28">
+                <StackPanel>
+                    <!-- Client.txt -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Path of Exile log (Client.txt)" Style="{StaticResource SettingName}" />
+                            <TextBlock Text="{Binding ClientTxtText}" Style="{StaticResource Meta}" Margin="0,4,24,0"
+                                       TextTrimming="CharacterEllipsis" ToolTip="{Binding ClientTxtPath}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Changing it restarts TraXile and reads the new log from the start." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Change…" VerticalAlignment="Center" Click="ChangeClientTxt_Click"
+                                   IsEnabled="{Binding CanWrite}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Theme -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Theme" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}" Text="Also switchable with the button in the title bar." />
+                        </StackPanel>
+                        <Border Grid.Column="1" Style="{StaticResource SegmentedGroup}">
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Style="{StaticResource Segment}" GroupName="Theme" Content="Dark" IsChecked="{Binding IsDark}" />
+                                <RadioButton Style="{StaticResource Segment}" GroupName="Theme" Content="Light" IsChecked="{Binding IsLight}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Minimize to tray -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Minimize to tray" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="When minimized, TraXile hides from the taskbar and keeps tracking in the notification area. Double-click the icon to open it again." />
+                        </StackPanel>
+                        <ui:ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding MinimizeToTray}" IsEnabled="{Binding CanWrite}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- further sections are added below -->
+            <StackPanel x:Name="MoreSections" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>
