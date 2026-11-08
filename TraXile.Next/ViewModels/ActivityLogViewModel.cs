@@ -257,8 +257,9 @@ namespace TraXile.Next.ViewModels
         public bool HasMultiSelection => SelectedCount > 1;
         public string SelectionText => $"{SelectedCount:N0} activities selected";
 
-        public string SelectionDuration =>
-            ActivityInfo.FormatDuration(Items.Where(a => _selectedIds.Contains(a.Id)).Sum(a => a.TotalSeconds));
+        private SelectionSummary _selectionSummary = SelectionSummary.Empty;
+        /// <summary>Count, times, types and tags of the selected activities (classic SummaryForm).</summary>
+        public SelectionSummary SelectionSummary { get => _selectionSummary; private set => SetProperty(ref _selectionSummary, value); }
 
         private IReadOnlyList<TagInfo> _availableTags = Array.Empty<TagInfo>();
         /// <summary>Custom tags that can still be added to the selection.</summary>
@@ -270,6 +271,7 @@ namespace TraXile.Next.ViewModels
         {
             ActivityInfo[] selected = Items.Where(a => _selectedIds.Contains(a.Id)).ToArray();
             SelectedActivity = selected.Length == 1 ? selected[0] : null;
+            SelectionSummary = selected.Length > 1 ? SelectionSummary.Create(selected, _source.GetTimeCap) : SelectionSummary.Empty;
 
             // A tag is offered as long as at least one selected activity does not have it yet
             AvailableTags = _allTags
@@ -282,7 +284,6 @@ namespace TraXile.Next.ViewModels
             OnPropertyChanged(nameof(HasSingleSelection));
             OnPropertyChanged(nameof(HasMultiSelection));
             OnPropertyChanged(nameof(SelectionText));
-            OnPropertyChanged(nameof(SelectionDuration));
             OnPropertyChanged(nameof(HasAvailableTags));
         }
 
