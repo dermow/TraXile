@@ -32,6 +32,9 @@ namespace TraXile.Next.Tests
         public void TogglePause() { }
         public void StopCurrentActivity() { }
         public void ToggleCurrentActivityTag(string tagId) { }
+        public void CreateTag(string id, string displayName) { }
+        public void UpdateTag(TagInfo changed) { }
+        public void DeleteTag(string id) { }
         public IReadOnlyList<TagInfo> GetTags() => _demo.GetTags();
         public void AddTag(string activityId, string tagId) { }
         public void RemoveTag(string activityId, string tagId) { }

@@ -58,6 +58,9 @@ namespace TraXile.Next.Services
         /// <summary>Default tags are set automatically by the tracker and cannot be added/removed manually.</summary>
         public bool IsDefault { get; set; }
 
+        /// <summary>Classic setting "show in history": the tag gets its own column in the activity history.</summary>
+        public bool ShowInHistory { get; set; }
+
         /// <summary>Play <see cref="SoundId"/> when the tag becomes active on the current activity.</summary>
         public bool SoundEnabled { get; set; }
 
@@ -129,6 +132,15 @@ namespace TraXile.Next.Services
 
         /// <summary>All known tags (default and custom).</summary>
         IReadOnlyList<TagInfo> GetTags();
+
+        /// <summary>Creates a custom tag (core default colors: black on white). Ignored if the ID exists.</summary>
+        void CreateTag(string id, string displayName);
+
+        /// <summary>Stores display name, "show in history" and sound of the tag with <see cref="TagInfo.Id"/>.</summary>
+        void UpdateTag(TagInfo changed);
+
+        /// <summary>Deletes a custom tag. Activities keep the ID in the database, it is just not shown any more.</summary>
+        void DeleteTag(string id);
 
         /// <summary>Attach a (non-default) tag to an activity and persist it.</summary>
         void AddTag(string activityId, string tagId);

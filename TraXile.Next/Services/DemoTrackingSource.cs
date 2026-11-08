@@ -45,6 +45,9 @@ namespace TraXile.Next.Services
             var rnd = new Random(42);
             DateTime now = DateTime.Now;
 
+            // The custom tags exist even if no activity uses them yet
+            _ = Juiced; _ = Party; _ = Bricked;
+
             if (activityCount > 0)
             {
                 DateTime t = now.AddMinutes(-6);
@@ -90,7 +93,7 @@ namespace TraXile.Next.Services
             };
         }
 
-        private static ActivityInfo RandomActivity(Random rnd, DateTime start)
+        private ActivityInfo RandomActivity(Random rnd, DateTime start)
         {
             double r = rnd.NextDouble();
             ACTIVITY_TYPES type =
@@ -177,12 +180,12 @@ namespace TraXile.Next.Services
             };
         }
 
-        // One shared instance per tag, like the core's tag list
-        private static readonly Dictionary<string, TagInfo> TagCatalog = new Dictionary<string, TagInfo>();
+        // One shared instance per tag, like the core's tag list (per source: the tags can be edited)
+        private readonly Dictionary<string, TagInfo> _tagCatalog = new Dictionary<string, TagInfo>();
 
-        private static TagInfo Tag(string id, string name, int back, int fore, bool isDefault = true)
+        private TagInfo Tag(string id, string name, int back, int fore, bool isDefault = true)
         {
-            if (!TagCatalog.TryGetValue(id, out TagInfo tag))
+            if (!_tagCatalog.TryGetValue(id, out TagInfo tag))
             {
                 tag = new TagInfo
                 {
@@ -192,15 +195,15 @@ namespace TraXile.Next.Services
                     Foreground = ActivityPalette.BrushOf(Hex(fore)),
                     IsDefault = isDefault
                 };
-                TagCatalog[id] = tag;
+                _tagCatalog[id] = tag;
             }
             return tag;
         }
 
         // Custom (user) tags can be added/removed manually
-        private static TagInfo Juiced => Tag("juiced", "Juiced", 0xF5B942, 0x1F1300, isDefault: false);
-        private static TagInfo Party => Tag("party", "Party", 0x60A5FA, 0x0B1A33, isDefault: false);
-        private static TagInfo Bricked => Tag("bricked", "Bricked", 0xFB7185, 0x3B0712, isDefault: false);
+        private TagInfo Juiced => Tag("juiced", "Juiced", 0xF5B942, 0x1F1300, isDefault: false);
+        private TagInfo Party => Tag("party", "Party", 0x60A5FA, 0x0B1A33, isDefault: false);
+        private TagInfo Bricked => Tag("bricked", "Bricked", 0xFB7185, 0x3B0712, isDefault: false);
 
         private static Color Hex(int rgb) =>
             Color.FromRgb((byte)((rgb >> 16) & 0xFF), (byte)((rgb >> 8) & 0xFF), (byte)(rgb & 0xFF));
@@ -259,7 +262,7 @@ namespace TraXile.Next.Services
 
         public void ToggleCurrentActivityTag(string tagId)
         {
-            if (_currentActivity == null || !TagCatalog.TryGetValue(tagId, out TagInfo tag) || tag.IsDefault) return;
+            if (_currentActivity == null || !_tagCatalog.TryGetValue(tagId, out TagInfo tag) || tag.IsDefault) return;
 
             _currentActivity.Tags = _currentActivity.Tags.Any(t => t.Id == tagId)
                 ? _currentActivity.Tags.Where(t => t.Id != tagId).ToList()
@@ -273,17 +276,54 @@ namespace TraXile.Next.Services
             if (_paused) _current.Stop(); else _current.Start();
         }
 
-        public IReadOnlyList<TagInfo> GetTags()
+        // Sorted by display name like the core (SELECT ... ORDER BY tag_display)
+        public IReadOnlyList<TagInfo> GetTags() =>
+            _tagCatalog.Values.OrderBy(t => t.Name, StringComparer.OrdinalIgnoreCase).ToList();
+
+        public void CreateTag(string id, string displayName)
         {
-            // make sure the custom tags exist even if no activity uses them yet
-            _ = Juiced; _ = Party; _ = Bricked;
-            return TagCatalog.Values.ToList();
+            if (_tagCatalog.ContainsKey(id)) return;
+            _tagCatalog[id] = new TagInfo
+            {
+                Id = id,
+                Name = displayName,
+                Background = ActivityPalette.BrushOf(Colors.White), // core default colors of new tags
+                Foreground = ActivityPalette.BrushOf(Colors.Black),
+                IsDefault = false
+            };
+            HistoryChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void UpdateTag(TagInfo changed)
+        {
+            if (changed == null || !_tagCatalog.TryGetValue(changed.Id, out TagInfo tag)) return;
+
+            // The catalog instance is shared by all activities, so they show the new name right away
+            tag.Name = changed.Name;
+            tag.ShowInHistory = changed.ShowInHistory;
+            tag.SoundEnabled = changed.SoundEnabled;
+            tag.SoundId = changed.SoundId;
+            HistoryChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void DeleteTag(string id)
+        {
+            if (!_tagCatalog.TryGetValue(id, out TagInfo tag) || tag.IsDefault) return;
+
+            _tagCatalog.Remove(id);
+            // Like the core: activities keep the ID, but unknown tags are not shown any more
+            foreach (ActivityInfo a in _history.Where(a => a.Tags.Any(t => t.Id == id)))
+            {
+                a.Tags = a.Tags.Where(t => t.Id != id).ToList();
+            }
+            if (_currentActivity != null) _currentActivity.Tags = _currentActivity.Tags.Where(t => t.Id != id).ToList();
+            HistoryChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public void AddTag(string activityId, string tagId)
         {
             ActivityInfo act = _history.FirstOrDefault(a => a.Id == activityId);
-            if (act == null || !TagCatalog.TryGetValue(tagId, out TagInfo tag) || tag.IsDefault) return;
+            if (act == null || !_tagCatalog.TryGetValue(tagId, out TagInfo tag) || tag.IsDefault) return;
             if (act.Tags.Any(t => t.Id == tagId)) return;
 
             act.Tags = act.Tags.Concat(new[] { tag }).ToList();
@@ -293,7 +333,7 @@ namespace TraXile.Next.Services
         public void RemoveTag(string activityId, string tagId)
         {
             ActivityInfo act = _history.FirstOrDefault(a => a.Id == activityId);
-            if (act == null || !TagCatalog.TryGetValue(tagId, out TagInfo tag) || tag.IsDefault) return;
+            if (act == null || !_tagCatalog.TryGetValue(tagId, out TagInfo tag) || tag.IsDefault) return;
 
             act.Tags = act.Tags.Where(t => t.Id != tagId).ToList();
             HistoryChanged?.Invoke(this, EventArgs.Empty);

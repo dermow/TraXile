@@ -105,12 +105,4 @@ namespace TraXile.Next.Views
             "Cards found per league",
             "Where each card dropped") { }
     }
-    public sealed class TagsPage : ComingSoonPage
-    {
-        public TagsPage() : base("Tags", SymbolRegular.TagMultiple24,
-            "Create and edit tags, colors and sound notifications.",
-            "Color picker with live chip preview",
-            "Sound notification per tag",
-            "Overlay tag selection") { }
-    }
 }
