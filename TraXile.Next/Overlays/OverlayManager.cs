@@ -10,7 +10,7 @@ namespace TraXile.Next.Overlays
     /// Owns the overlay windows: opens and hides them (tray menu, title bar), places them at their saved
     /// position and feeds them the live state.
     /// </summary>
-    public sealed class OverlayManager : IDisposable
+    public sealed class OverlayManager : IOverlayHost, IDisposable
     {
         private readonly AppSetup _setup;
         private readonly ITrackingSource _source;
@@ -86,6 +86,13 @@ namespace TraXile.Next.Overlays
             return overlay;
         }
 
+        /// <summary>Opens the overlays that are set to "show by default" (on start, like the classic app).</summary>
+        public void ShowDefaults()
+        {
+            if (OverlaySettings.ReadShowDefault(_setup, OverlaySettings.Stopwatch)) ShowStopwatch();
+            if (OverlaySettings.ReadShowDefault(_setup, OverlaySettings.Tags)) ShowTags();
+        }
+
         /// <summary>Feeds the latest live state (once per second, from the dashboard).</summary>
         public void Update(LiveState live)
         {
@@ -113,8 +120,11 @@ namespace TraXile.Next.Overlays
         /// <summary>Moves all overlays back to their default place next to the main window and saves it.</summary>
         public void ResetPositions()
         {
-            _stopwatch?.ResetPosition(DefaultPosition(DefaultOffset(OverlaySettings.Stopwatch)));
-            _tags?.ResetPosition(DefaultPosition(DefaultOffset(OverlaySettings.Tags)));
+            // Overlays that were not opened yet are created (hidden), so their saved position is replaced too
+            if (_stopwatch == null) _stopwatch = Init(new StopwatchOverlay(_setup, _canWrite), DefaultOffset(OverlaySettings.Stopwatch));
+            if (_tags == null) _tags = Init(new TagsOverlay(_setup, _canWrite), DefaultOffset(OverlaySettings.Tags));
+            _stopwatch.ResetPosition(DefaultPosition(DefaultOffset(OverlaySettings.Stopwatch)));
+            _tags.ResetPosition(DefaultPosition(DefaultOffset(OverlaySettings.Tags)));
         }
 
         /// <summary>Classic defaults: the stopwatch at the main window's corner, the tags overlay 200 to the right.</summary>

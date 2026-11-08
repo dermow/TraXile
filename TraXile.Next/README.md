@@ -42,6 +42,7 @@ TraXile.Next.exe --screenshot out.png --page firstrun          # first-run scree
 TraXile.Next.exe --screenshot out.png --page overlay-stopwatch # stopwatch overlay (also: overlay-stopwatch-move)
 TraXile.Next.exe --screenshot out.png --page overlay-tags      # tags overlay (also: overlay-tags-move)
 TraXile.Next.exe --screenshot out.png --page tags --select 0   # Tags page with the first tag selected
+TraXile.Next.exe --screenshot out.png --page settings --scroll 1500 # lower part of a long page
 ```
 
 ## Tests

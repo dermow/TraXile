@@ -159,6 +159,95 @@
                     </Grid>
                 </StackPanel>
             </Border>
+
+            <!-- ============ Overlays ============ -->
+            <TextBlock Text="OVERLAYS" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,28">
+                <StackPanel>
+                    <!-- Opacity -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="260" />
+                            <ColumnDefinition Width="52" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Opacity" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}" Text="How solid the overlays are drawn over the game." />
+                        </StackPanel>
+                        <Slider Grid.Column="1" VerticalAlignment="Center" Minimum="{Binding MinOverlayOpacity, Mode=OneTime}" Maximum="100"
+                                TickFrequency="5" IsSnapToTickEnabled="True" Value="{Binding OverlayOpacity}" IsEnabled="{Binding CanWrite}" />
+                        <TextBlock Grid.Column="2" Text="{Binding OverlayOpacity, StringFormat={}{0} %}" Style="{StaticResource Num}"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Show by default -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Open with TraXile" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="These overlays open when TraXile starts. Open or close them any time with the overlay button in the title bar or the tray menu." />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <CheckBox Content="Stopwatch" IsChecked="{Binding StopwatchShowDefault}" IsEnabled="{Binding CanWrite}" Margin="0,0,0,6" />
+                            <CheckBox Content="Tags" IsChecked="{Binding TagsShowDefault}" IsEnabled="{Binding CanWrite}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Tag slots -->
+                    <Grid Margin="24,20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Tags overlay" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}" Text="The three tags the overlay shows; each lights up while the current activity has it." />
+                        </StackPanel>
+                        <UniformGrid Grid.Row="1" Columns="3" Margin="0,12,0,0">
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Text="Slot 1" Style="{StaticResource Caption}" FontWeight="SemiBold" Margin="0,0,0,6" />
+                                <ComboBox ItemsSource="{Binding TagSlotOptions}" SelectedItem="{Binding TagSlot1}" IsEnabled="{Binding CanWrite}" />
+                            </StackPanel>
+                            <StackPanel Margin="4,0,4,0">
+                                <TextBlock Text="Slot 2" Style="{StaticResource Caption}" FontWeight="SemiBold" Margin="0,0,0,6" />
+                                <ComboBox ItemsSource="{Binding TagSlotOptions}" SelectedItem="{Binding TagSlot2}" IsEnabled="{Binding CanWrite}" />
+                            </StackPanel>
+                            <StackPanel Margin="8,0,0,0">
+                                <TextBlock Text="Slot 3" Style="{StaticResource Caption}" FontWeight="SemiBold" Margin="0,0,0,6" />
+                                <ComboBox ItemsSource="{Binding TagSlotOptions}" SelectedItem="{Binding TagSlot3}" IsEnabled="{Binding CanWrite}" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Reset positions -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Reset positions" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Moves both overlays back next to the TraXile window, e.g. when one is lost on a disconnected monitor." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Reset positions" VerticalAlignment="Center" Command="{Binding ResetOverlayPositionsCommand}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowReset20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
             <!-- ============ Maintenance ============ -->
             <TextBlock Text="MAINTENANCE" Style="{StaticResource SectionLabel}" />
             <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,28">
