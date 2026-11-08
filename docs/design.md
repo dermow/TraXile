@@ -88,6 +88,55 @@ Use the WPF resource, never a literal color. `Brush` resources: `{DynamicResourc
 | `PressVeil` | derived | text 4 % | text 3 % |
 | `TextDisabled` | derived | text-muted 50 % | text-muted 50 % |
 
+## Activity colors
+
+Each activity type has one color, the same in every chart, list dot and chip (`Theme/ActivityPalette.cs`).
+The ten slots are derived from the website's data colors (rust, green, blue, ochre) plus matching warm tones.
+**Coral is never an activity color** (reserved for UI accents); brass is reserved for chart markers (deaths)
+because it is too close to ochre and too gray to carry identity.
+
+| Slot | Name | Dark | Light | Activity types |
+|---|---|---|---|---|
+| 0 | Forest | `#1C7B5A` | `#00603C` | Other league content: Campaign, Temple, Legion, Lake of Kalandra, Tane's Laboratory, Ancestor trial, Inscribed Ultimatum, Kingsmarch, Reliquary key, Anomaly |
+| 1 | Mauve | `#E197BC` | `#B765A1` | Simulacrum |
+| 2 | Olive | `#82862F` | `#6A6700` | Side areas: Vaal side area, Abyssal depths |
+| 3 | Violet | `#916CB9` | `#744399` | Sanctum |
+| 4 | Green | `#79B76F` | `#44873A` | Map |
+| 5 | Sky | `#77C9F3` | `#438DC3` | Expedition logbook (and its side areas) |
+| 6 | Rust | `#CE8545` | `#B55B11` | Heist |
+| 7 | Blue | `#6D92D6` | `#3860AC` | Boss fights (every `*_FIGHT`), Maven invitation, Atziri, Uber Atziri, Breachstone |
+| 8 | Ochre | `#D7B355` | `#AC8909` | Delve |
+| 9 | Teal | `#41B2B2` | `#067971` | Labyrinth, Lab trial |
+| - | Other | `#6E6669` | `#9C9295` | The "Other" bucket and unmapped types (neutral on purpose) |
+| - | Hideout | `#ADA5A1` | `#5E5557` | Hideout time (not an activity, neutral) |
+
+Rules:
+
+* **Color follows the activity type, never its rank.** A filter never repaints a type.
+* **Slot order is fixed.** Neighbouring slots are validated to stay distinct, so charts stack their series
+  in slot order (`PaletteSlot.Index`), not by size. Never reorder without re-validating.
+* At most the top four types get their own series in a chart; the rest folds into "Other".
+* An activity color always comes with the type name (legend, list, tool tip): with ten colors not every pair
+  can be told apart by color alone, so the name is the secondary encoding.
+* Text never wears an activity color; it stays in `Text` / `TextMuted`.
+
+Validation (`ActivityPaletteTests`, checks of the dataviz palette method, ported to C#; values per theme):
+
+| Check | Threshold | Dark | Light |
+|---|---|---|---|
+| Neighbouring slots, protanopia/deuteranopia (Machado 2009), OKLab dE x100 | >= 8 | 13.8 | 14.7 |
+| Neighbouring slots, normal vision | >= 15 | 17.7 | 19.6 |
+| Any two slots, normal vision | >= 9 | 10.3 | 9.4 |
+| Distance to the coral accent tokens | >= 9 | 9.3 | 9.0 |
+| Contrast on `Surface` (cards) | >= 3:1 | 3.4+ | 3.2+ |
+| OKLCH lightness band | dark 0.50-0.82, light 0.42-0.66 | | |
+| OKLCH chroma | >= 0.085 | | |
+
+The lightness band is wider than the generic default (dark 0.48-0.67) because the website's own data colors
+sit at L 0.65-0.75 in dark; the chroma floor is 0.085 instead of 0.10 because teal and forest cannot reach
+0.10 at the lightness that gives them contrast in light mode. All chart axes, grid lines and chart text use
+the `Text`, `TextMuted` and `Border` tokens of the current theme.
+
 ## Typography
 
 Three families, bundled as TTF in `TraXile.Next/Fonts` (SIL OFL 1.1, licence files next to them and copied to

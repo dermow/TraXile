@@ -101,6 +101,7 @@ namespace TraXile.Next
         public static void ApplyTheme(bool dark)
         {
             IsDark = dark;
+            ActivityPalette.IsDark = dark;
             ApplicationThemeManager.Apply(dark ? ApplicationTheme.Dark : ApplicationTheme.Light,
                 Wpf.Ui.Controls.WindowBackdropType.None, updateAccent: false);
 
@@ -125,6 +126,7 @@ namespace TraXile.Next
             });
 
             Dashboard?.SetTheme(dark);
+            ActivityLog?.Refresh(); // re-reads the activity colors of the new theme
         }
 
         protected override void OnExit(ExitEventArgs e)
