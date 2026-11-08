@@ -95,9 +95,70 @@
                 </StackPanel>
             </Border>
 
-            <!-- further sections are added below -->
-            <StackPanel x:Name="MoreSections" />
+            <!-- ============ Time caps ============ -->
+            <TextBlock Text="TIME CAPS" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="24,20" Margin="0,0,0,28">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SettingHelp}" Margin="0,0,0,16"
+                               Text="Activities that run longer than their cap (e.g. you went AFK) count with the cap in statistics. Values in seconds." />
 
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Minimum time" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}" Text="Shorter activities are not tracked. Applies after a restart." />
+                        </StackPanel>
+                        <ui:TextBox Grid.Column="1" Width="110" VerticalAlignment="Center" TextAlignment="Right"
+                                    Text="{Binding MinimumText, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding CanWrite}" />
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding TimeCaps}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><UniformGrid Columns="3" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:TimeCapRow}">
+                                <Border x:Name="Row" Background="{DynamicResource SurfaceRowBrush}" CornerRadius="{StaticResource SurfaceRadius}"
+                                        Margin="0,0,8,4" Padding="12,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Rectangle Width="8" Height="8" RadiusX="2" RadiusY="2" Fill="{Binding Brush}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,8,0">
+                                            <TextBlock Text="{Binding Name}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" />
+                                            <TextBlock x:Name="Duration" Text="{Binding DurationText}" Style="{StaticResource Caption}" Typography.NumeralAlignment="Tabular" />
+                                        </StackPanel>
+                                        <ui:TextBox Grid.Column="2" Width="86" MinHeight="32" FontSize="13" TextAlignment="Right" VerticalAlignment="Center"
+                                                    Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                                                    IsEnabled="{Binding DataContext.CanWrite, RelativeSource={RelativeSource AncestorType=Page}}" />
+                                    </Grid>
+                                </Border>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsValid}" Value="False">
+                                        <Setter TargetName="Duration" Property="Foreground" Value="{DynamicResource StatusDangerBrush}" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Grid Margin="0,16,0,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding TimeCapStatus}" Style="{StaticResource Meta}" VerticalAlignment="Center" />
+                            <ui:Button Content="Restart now" Appearance="Transparent" Margin="8,0,0,0" Click="RestartNow_Click"
+                                       Visibility="{Binding NeedsRestart, Converter={StaticResource BoolToVis}}" />
+                        </StackPanel>
+                        <ui:Button Content="Save time caps" Appearance="Primary" HorizontalAlignment="Right" Click="SaveTimeCaps_Click"
+                                   IsEnabled="{Binding CanWrite}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
             <!-- ============ Maintenance ============ -->
             <TextBlock Text="MAINTENANCE" Style="{StaticResource SectionLabel}" />
             <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,28">

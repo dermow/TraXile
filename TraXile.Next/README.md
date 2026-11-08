@@ -70,7 +70,6 @@ the footer. Pages that are not migrated yet show a placeholder.
 
 ## Known gaps / notes
 
-* Settings are read-only for now; configure TraXile in the classic app.
 * Deleting activities removes them from the database immediately but only hides them in the running
   core (its history list is not thread-safe); they are fully gone after the next start.
 * JSON export of the classic app is not ported yet (CSV only).
