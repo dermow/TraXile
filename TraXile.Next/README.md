@@ -54,21 +54,15 @@ Client.txt and write the same database. In that case it shows demo data and a no
 
 ## Migration status
 
-| Classic tab / window       | New page        | Status |
-|----------------------------|-----------------|--------|
-| Tracking + global dashboard| Dashboard       | ✅ prototype (live card, KPIs, charts, recent runs) |
-| Activity log + filters     | Activity log    | ✅ search, type/tag/time filters, sortable virtualized grid, tagging (single + bulk), CSV export, delete |
-| All stats                  | Statistics      | ⏳ placeholder |
-| Mapping dashboard          | Mapping         | ⏳ placeholder |
-| Bossing dashboard          | Bossing         | ⏳ placeholder |
-| Labs / Heist / Profit      | Labs & Heist    | ⏳ placeholder |
-| Tag config                 | Tags            | ⏳ placeholder |
-| Settings, backups, updates | Settings        | ⏳ placeholder |
-| Overlays (stopwatch, tags) | —               | ⏳ to do (WPF transparent windows) |
-| Activity details window    | Side panel      | ✅ facts, tags, side areas (in the activity log) |
+The plan and its status live in the GitHub issues with the label `ui-rework`, grouped by milestone:
 
-Suggested order: Settings (so the new app can run standalone, including the
-first-run Client.txt picker) → Overlays → remaining dashboards → installer switch.
+1. [3.0 - Phase 1: Standalone](https://github.com/dermow/TraXile/milestone/10) - design system, navigation, settings, first run
+2. [3.0 - Phase 2: Daily tracking](https://github.com/dermow/TraXile/milestone/11) - tags, overlays, live card actions, global filter
+3. [3.0 - Phase 3: Analytics](https://github.com/dermow/TraXile/milestone/12) - Statistics, Mapping, Lab, Heist, Leagues, Div Cards
+4. [3.0 - Phase 4: Switch](https://github.com/dermow/TraXile/milestone/13) - updater, installer, removal of the WinForms UI
+
+Navigation: Dashboard, Activity log, Statistics, Mapping, Lab, Heist, Leagues, Div Cards, Tags, and Settings in
+the footer. Pages that are not migrated yet show a placeholder.
 
 ## Known gaps / notes
 
