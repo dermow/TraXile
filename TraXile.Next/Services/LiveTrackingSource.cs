@@ -134,7 +134,7 @@ namespace TraXile.Next.Services
             tag.DisplayName = changed.Name;
             tag.ShowInListView = changed.ShowInHistory;
             tag.SoundEnabled = changed.SoundEnabled;
-            tag.SoundID = changed.SoundId ?? "";
+            tag.SoundID = TagSoundLibrary.IsSet(changed.SoundId) ? changed.SoundId : TagSoundLibrary.NoSound;
             _logic.Database.DoNonQuery($"UPDATE tx_tags SET tag_display = '{Sql(tag.DisplayName)}', " +
                 $"tag_show_in_lv = {(tag.ShowInListView ? 1 : 0)}, audio_on = {(tag.SoundEnabled ? 1 : 0)}, " +
                 $"audio_file_name = '{Sql(tag.SoundID)}' WHERE tag_id = '{Sql(tag.ID)}'");

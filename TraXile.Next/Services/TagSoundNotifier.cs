@@ -71,7 +71,7 @@ namespace TraXile.Next.Services
             foreach (TagInfo tag in state.ActiveTags)
             {
                 bool activated = !known || !before.Contains(tag.Id);
-                if (activated && tag.SoundEnabled && !string.IsNullOrEmpty(tag.SoundId))
+                if (activated && tag.SoundEnabled && TagSoundLibrary.IsSet(tag.SoundId))
                 {
                     _player.Play(tag.SoundId);
                 }

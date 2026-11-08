@@ -46,6 +46,20 @@ namespace TraXile.Next.Views
             e.Handled = true;
         }
 
+        private void OpenAudioFolder_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.IO.Directory.CreateDirectory(_vm.Sounds.Folder);
+                System.Diagnostics.Process.Start(_vm.Sounds.Folder);
+            }
+            catch (System.Exception ex)
+            {
+                _ = new MessageBox { Title = "Could not open the audio folder", Content = ex.Message, CloseButtonText = "OK", Owner = Window.GetWindow(this) }
+                    .ShowDialogAsync();
+            }
+        }
+
         private async void Delete_Click(object sender, RoutedEventArgs e)
         {
             TagRow tag = _vm.Selected;

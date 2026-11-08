@@ -47,6 +47,8 @@ namespace TraXile.Next.Services
 
             // The custom tags exist even if no activity uses them yet
             _ = Juiced; _ = Party; _ = Bricked;
+            Bricked.SoundEnabled = true;
+            Bricked.SoundId = "default_3.mp3";
 
             if (activityCount > 0)
             {

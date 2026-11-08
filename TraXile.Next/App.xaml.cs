@@ -117,7 +117,7 @@ namespace TraXile.Next
                 Dashboard.LiveUpdated += (s, live) => tagSounds.Observe(live);
             }
             ActivityLog = new ActivityLogViewModel(Source);
-            Tags = new TagsViewModel(Source);
+            Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
             CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
             Settings = new SettingsViewModel(AppSetup.Default, Source, CanWriteSettings, IsDark, d => SetTheme(d, persist: false), Restart);
 

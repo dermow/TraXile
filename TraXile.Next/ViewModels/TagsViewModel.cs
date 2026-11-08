@@ -29,16 +29,21 @@ namespace TraXile.Next.ViewModels
     /// Tags page: list all tags, add custom tags, rename, "show in history" and delete
     /// (classic: Settings → Tags, Main.cs AddTag / UpdateTag / DeleteTag).
     /// </summary>
-    public sealed class TagsViewModel : ObservableObject
+    public sealed partial class TagsViewModel : ObservableObject
     {
         /// <summary>Characters the classic app rejects in IDs, plus ' (SQL) and | (separator in the activity log).</summary>
         private static readonly char[] InvalidIdChars = { '=', ',', ';', ' ', '\'', '|' };
 
         private readonly ITrackingSource _source;
 
-        public TagsViewModel(ITrackingSource source)
+        /// <param name="player">Plays the preview of a sound (null: silent, e.g. in tests).</param>
+        /// <param name="sounds">Sound files to choose from (default: the audio folder next to the exe).</param>
+        public TagsViewModel(ITrackingSource source, ITagSoundPlayer player = null, TagSoundLibrary sounds = null)
         {
             _source = source;
+            _player = player;
+            Sounds = sounds ?? TagSoundLibrary.NextToExe();
+            InitSound();
             AddCommand = new RelayCommand(() => Add(out _));
             SaveCommand = new RelayCommand(() => Save(out _), () => HasChanges);
             RevertCommand = new RelayCommand(LoadEditor, () => HasChanges);
@@ -202,12 +207,13 @@ namespace TraXile.Next.ViewModels
         public string EditError =>
             Selected == null ? null :
             string.IsNullOrWhiteSpace(EditName) ? "Enter a display name." :
-            NameTaken(EditName, Selected.Id) ? $"A tag named \"{EditName.Trim()}\" already exists." : null;
+            NameTaken(EditName, Selected.Id) ? $"A tag named \"{EditName.Trim()}\" already exists." :
+            SoundError;
 
         public bool HasEditError => EditError != null;
 
         public bool HasChanges => Selected != null &&
-            (EditName.Trim() != Selected.Name || EditShowInHistory != Selected.ShowInHistory);
+            (EditName.Trim() != Selected.Name || EditShowInHistory != Selected.ShowInHistory || SoundChanged);
 
         /// <summary>Applies the selected tag to the editor (also discards unsaved input).</summary>
         private void LoadEditor()
@@ -216,6 +222,7 @@ namespace TraXile.Next.ViewModels
             _editShowInHistory = Selected?.ShowInHistory ?? false;
             OnPropertyChanged(nameof(EditName));
             OnPropertyChanged(nameof(EditShowInHistory));
+            LoadSoundEditor();
             NotifyEditor();
         }
 
@@ -240,8 +247,8 @@ namespace TraXile.Next.ViewModels
                 Id = t.Id,
                 Name = EditName.Trim(),
                 ShowInHistory = EditShowInHistory,
-                SoundEnabled = t.SoundEnabled,
-                SoundId = t.SoundId,
+                SoundEnabled = EditSoundEnabled,
+                SoundId = StoredSoundId,
             });
             Refresh();
             LoadEditor();
