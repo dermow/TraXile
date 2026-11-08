@@ -74,23 +74,37 @@ namespace TraXile.Next.Views
             "Mechanic (tag) share over time") { }
     }
 
-    public sealed class BossingPage : ComingSoonPage
+    public sealed class LabPage : ComingSoonPage
     {
-        public BossingPage() : base("Bossing", SymbolRegular.Trophy24,
-            "Kill counts, tries and kill times for every pinnacle boss.",
-            "Boss cards with kills / tries / best time",
-            "Uber vs. normal comparison") { }
+        public LabPage() : base("Lab", SymbolRegular.Shield24,
+            "Labyrinth runs and enchant profit tracking.",
+            "Labs per difficulty and average time",
+            "Profit tracking table") { }
     }
 
-    public sealed class LabHeistPage : ComingSoonPage
+    public sealed class HeistPage : ComingSoonPage
     {
-        public LabHeistPage() : base("Labs & Heist", SymbolRegular.Shield24,
-            "Labyrinth runs, enchant profit tracking and heist statistics.",
-            "Labs per difficulty, average time",
-            "Profit tracking table",
-            "Heists by area level") { }
+        public HeistPage() : base("Heist", SymbolRegular.LockClosed24,
+            "Heist statistics by area and area level.",
+            "Heists by area level",
+            "Average time per heist") { }
     }
 
+    public sealed class LeaguesPage : ComingSoonPage
+    {
+        public LeaguesPage() : base("Leagues", SymbolRegular.Trophy24,
+            "Your activities and statistics per league.",
+            "League overview with play time",
+            "Compare two leagues") { }
+    }
+
+    public sealed class DivCardsPage : ComingSoonPage
+    {
+        public DivCardsPage() : base("Div Cards", SymbolRegular.Collections24,
+            "Divination cards you found while playing.",
+            "Cards found per league",
+            "Where each card dropped") { }
+    }
     public sealed class TagsPage : ComingSoonPage
     {
         public TagsPage() : base("Tags", SymbolRegular.TagMultiple24,

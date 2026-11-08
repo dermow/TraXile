@@ -1,4 +1,4 @@
-﻿<ui:FluentWindow
+<ui:FluentWindow
     x:Class="TraXile.Next.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -71,11 +71,17 @@
                 <ui:NavigationViewItem Content="Mapping" TargetPageType="{x:Type pages:MappingPage}">
                     <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Map24" /></ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItem Content="Bossing" TargetPageType="{x:Type pages:BossingPage}">
+                <ui:NavigationViewItem Content="Lab" TargetPageType="{x:Type pages:LabPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Shield24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Heist" TargetPageType="{x:Type pages:HeistPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="LockClosed24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Leagues" TargetPageType="{x:Type pages:LeaguesPage}">
                     <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Trophy24" /></ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItem Content="Labs &amp; Heist" TargetPageType="{x:Type pages:LabHeistPage}">
-                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Shield24" /></ui:NavigationViewItem.Icon>
+                <ui:NavigationViewItem Content="Div Cards" TargetPageType="{x:Type pages:DivCardsPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Collections24" /></ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
                 <ui:NavigationViewItem Content="Tags" TargetPageType="{x:Type pages:TagsPage}">
                     <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="TagMultiple24" /></ui:NavigationViewItem.Icon>
