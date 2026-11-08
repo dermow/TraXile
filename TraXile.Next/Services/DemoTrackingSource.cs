@@ -18,6 +18,11 @@ namespace TraXile.Next.Services
             "Toxic Sewer", "Jungle Valley", "City Square", "Glacier", "Burial Chambers", "Lava Lake"
         };
 
+        private static readonly string[] HeistAreas =
+        {
+            "Bunker", "Laboratory", "Records Office", "Mansion", "Smuggler's Den", "Underbelly", "Prohibited Library", "Tunnels", "Repository"
+        };
+
         private readonly List<ActivityInfo> _history = new List<ActivityInfo>();
         private readonly Stopwatch _current = Stopwatch.StartNew();
         private readonly TimeSpan _currentOffset = TimeSpan.FromSeconds(274);
@@ -146,7 +151,11 @@ namespace TraXile.Next.Services
                     }
                     break;
                 case ACTIVITY_TYPES.HEIST:
-                    area = "Bunker"; level = 83; seconds = rnd.Next(200, 600); break;
+                    // area and level derived from the duration: no extra random numbers, the rest of the demo data stays the same
+                    seconds = rnd.Next(200, 600);
+                    area = HeistAreas[seconds % HeistAreas.Length];
+                    level = new[] { 72, 75, 78, 81, 83, 83, 83 }[seconds % 7];
+                    break;
                 case ACTIVITY_TYPES.DELVE:
                     area = "Azurite Mine"; level = 83; seconds = rnd.Next(300, 900); break;
                 case ACTIVITY_TYPES.SANCTUM:

@@ -65,13 +65,6 @@ namespace TraXile.Next.Views
             "Profit tracking table") { }
     }
 
-    public sealed class HeistPage : ComingSoonPage
-    {
-        public HeistPage() : base("Heist", SymbolRegular.LockClosed24,
-            "Heist statistics by area and area level.",
-            "Heists by area level",
-            "Average time per heist") { }
-    }
 
     public sealed class LeaguesPage : ComingSoonPage
     {
