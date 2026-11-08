@@ -336,23 +336,95 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <StackPanel Margin="22,22,22,12">
-                            <TextBlock Text="SELECTION" Style="{StaticResource Label}" Foreground="{DynamicResource AccentTextBrush}" Margin="0,0,0,10" />
-                            <TextBlock Text="{Binding SelectionText}" Style="{StaticResource H2}" TextWrapping="Wrap" />
-                            <TextBlock Style="{StaticResource Meta}" Margin="0,4,0,20">
-                                <Run Text="Total time " /><Run Text="{Binding SelectionDuration, Mode=OneWay}" FontWeight="SemiBold" />
-                            </TextBlock>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="22,22,22,12" DataContext="{Binding SelectionSummary}">
+                                <TextBlock Text="SELECTION" Style="{StaticResource Label}" Foreground="{DynamicResource AccentTextBrush}" Margin="0,0,0,10" />
+                                <TextBlock Text="{Binding DataContext.SelectionText, RelativeSource={RelativeSource AncestorType=Page}}"
+                                           Style="{StaticResource H2}" TextWrapping="Wrap" Margin="0,0,0,20" />
 
+                                <!-- key facts (classic SummaryForm) -->
+                                <UniformGrid Columns="3" Margin="0,0,0,20">
+                                    <StackPanel>
+                                        <TextBlock Text="Activities" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding Count, StringFormat=N0}" Style="{StaticResource DetailValue}" FontSize="18" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Total time" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding Total}" Style="{StaticResource DetailValue}" FontSize="18" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Average" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding Average}" Style="{StaticResource DetailValue}" FontSize="18" />
+                                    </StackPanel>
+                                </UniformGrid>
+
+                                <!-- per activity type -->
+                                <TextBlock Text="By type" Style="{StaticResource CardTitle}" Margin="0,0,0,6" />
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="44" />
+                                        <ColumnDefinition Width="72" />
+                                        <ColumnDefinition Width="56" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Type" Style="{StaticResource Caption}" />
+                                    <TextBlock Grid.Column="1" Text="Count" Style="{StaticResource Caption}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="2" Text="Total" Style="{StaticResource Caption}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="3" Text="Avg." Style="{StaticResource Caption}" HorizontalAlignment="Right" />
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding Types}" Margin="0,0,0,18">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type vm:SummaryTypeRow}">
+                                            <Grid Margin="0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="44" />
+                                                    <ColumnDefinition Width="72" />
+                                                    <ColumnDefinition Width="56" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Rectangle Width="8" Height="8" RadiusX="2" RadiusY="2" Fill="{Binding Brush}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Name}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Text="{Binding Count, StringFormat=N0}" Style="{StaticResource RightCell}" FontSize="13" />
+                                                <TextBlock Grid.Column="2" Text="{Binding Total}" Style="{StaticResource RightCell}" FontSize="13" FontWeight="SemiBold" />
+                                                <TextBlock Grid.Column="3" Text="{Binding Average}" Style="{StaticResource RightCell}" FontSize="13" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- tags: count and share of the selection -->
+                                <StackPanel Visibility="{Binding HasTags, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="Tags" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
+                                    <ItemsControl ItemsSource="{Binding Tags}" ItemsPanel="{StaticResource WrapPanelTemplate}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type vm:SummaryTagRow}">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,12,6">
+                                                    <Border Style="{StaticResource Chip}" Background="{Binding Background}" Padding="8,1" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Name}" Foreground="{Binding Foreground}" FontSize="11" FontWeight="SemiBold" />
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Text}" Style="{StaticResource Caption}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <StackPanel Grid.Row="1" Margin="22,0,22,22">
                             <ui:Button Content="Add tag to all" HorizontalAlignment="Stretch" Appearance="Secondary" Margin="0,0,0,8"
                                        Click="AddTag_Click" IsEnabled="{Binding HasAvailableTags}">
                                 <ui:Button.Icon><ui:SymbolIcon Symbol="TagMultiple20" /></ui:Button.Icon>
                             </ui:Button>
-                            <ui:Button Content="Export selected" HorizontalAlignment="Stretch" Appearance="Secondary" Click="ExportSelected_Click">
+                            <ui:Button Content="Export selected" HorizontalAlignment="Stretch" Appearance="Secondary" Margin="0,0,0,8"
+                                       Click="ExportSelected_Click">
                                 <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowDownload20" /></ui:Button.Icon>
                             </ui:Button>
                         </StackPanel>
-                        <Border Grid.Row="1" Padding="22,0,22,22">
+                        <Border Grid.Row="2" Padding="22,0,22,22">
                             <ui:Button Appearance="Danger" HorizontalAlignment="Stretch" Click="Delete_Click">
                                 <ui:Button.Icon><ui:SymbolIcon Symbol="Delete20" /></ui:Button.Icon>
                                 <ui:Button.Content>
