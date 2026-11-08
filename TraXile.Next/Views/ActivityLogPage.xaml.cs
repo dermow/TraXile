@@ -32,7 +32,6 @@ namespace TraXile.Next.Views
 
             Loaded += (s, e) =>
             {
-                DisableHostScrollViewer();
                 _vm.ItemsRefreshed += OnItemsRefreshed;
                 RestoreGridState();
 
@@ -44,24 +43,6 @@ namespace TraXile.Next.Views
             Unloaded += (s, e) => _vm.ItemsRefreshed -= OnItemsRefreshed;
 
             PreviewKeyDown += Page_PreviewKeyDown;
-        }
-
-        /// <summary>
-        /// The NavigationView wraps pages in a ScrollViewer by default. The grid must get a fixed
-        /// height instead, otherwise it measures all rows and row virtualization is lost.
-        /// (All other pages bring their own ScrollViewer, so this is safe to leave switched off.)
-        /// </summary>
-        private void DisableHostScrollViewer()
-        {
-            DependencyObject p = this;
-            while (p != null && !(p is Wpf.Ui.Controls.NavigationViewContentPresenter))
-            {
-                p = System.Windows.Media.VisualTreeHelper.GetParent(p);
-            }
-            if (p is Wpf.Ui.Controls.NavigationViewContentPresenter presenter && presenter.IsDynamicScrollViewerEnabled)
-            {
-                presenter.SetCurrentValue(Wpf.Ui.Controls.NavigationViewContentPresenter.IsDynamicScrollViewerEnabledProperty, false);
-            }
         }
 
         // ------------------------------------------------------------------
