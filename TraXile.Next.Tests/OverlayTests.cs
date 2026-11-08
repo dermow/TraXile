@@ -94,6 +94,59 @@ namespace TraXile.Next.Tests
         }
 
         [Fact]
+        public void Tag_slots_default_to_the_classic_values()
+        {
+            Assert.Equal(new[] { "blight", "expedition", null }, OverlaySettings.ReadTagSlots(_setup));
+
+            _setup.WriteSetting("overlay.tags.tag3", "Juiced");
+            _setup.WriteSetting("overlay.tags.tag1", "");
+            _setup.WriteSetting("overlay.tags.tag2", "None"); // classic picker for an empty slot
+            Assert.Equal(new[] { null, null, "Juiced" }, OverlaySettings.ReadTagSlots(_setup));
+        }
+
+        [Fact]
+        public void Tag_slots_resolve_display_names_like_the_classic_app_then_ids()
+        {
+            var tags = new[]
+            {
+                new TagInfo { Id = "t16.5", Name = "T16.5" },
+                new TagInfo { Id = "juiced", Name = "Very juicy" },
+            };
+
+            Assert.Equal("t16.5", OverlaySettings.ResolveTag("T16.5", tags).Id);
+            Assert.Equal("juiced", OverlaySettings.ResolveTag("Very juicy", tags).Id);
+            Assert.Equal("juiced", OverlaySettings.ResolveTag("juiced", tags).Id); // ID as fallback
+            Assert.Null(OverlaySettings.ResolveTag("deleted-tag", tags));
+            Assert.Null(OverlaySettings.ResolveTag(null, tags));
+        }
+
+        [Fact]
+        public void Tag_slots_are_active_while_the_current_activity_has_the_tag()
+        {
+            var blight = new TagInfo { Id = "blight", Name = "Blight" };
+            var juiced = new TagInfo { Id = "juiced", Name = "Juiced" };
+            var live = new LiveState { IsTracking = true, ActiveTags = new[] { juiced } };
+
+            TagSlotState[] slots = TagsOverlay.SlotsFor(live, new[] { blight, null, juiced });
+
+            Assert.False(slots[0].IsActive);
+            Assert.Equal("—", slots[1].Text);
+            Assert.True(slots[2].IsActive);
+            Assert.All(TagsOverlay.SlotsFor(new LiveState(), new[] { blight, null, juiced }), s => Assert.False(s.IsActive));
+        }
+
+        [Fact]
+        public void Previous_activity_is_the_last_one_of_the_same_type()
+        {
+            var source = new DemoTrackingSource();
+            LiveState live = source.GetLiveState();
+
+            Assert.NotNull(live.PreviousActivity);
+            Assert.Equal(live.Activity.Type, live.PreviousActivity.Type);
+            Assert.Same(source.GetHistory().First(a => a.Type == live.Activity.Type).Id, live.PreviousActivity.Id);
+        }
+
+        [Fact]
         public void Stopwatch_shows_the_elapsed_time_or_zero_while_idle()
         {
             var live = new LiveState { IsTracking = true, Elapsed = TimeSpan.FromSeconds(3725) };

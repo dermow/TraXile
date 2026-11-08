@@ -17,7 +17,7 @@ namespace TraXile.Next
     ///   --light / --dark       start with the given theme (default: dark)
     ///   --screenshot file.png  render the main window off-screen to a PNG and exit (implies --demo)
     ///   --page log             open the given page first (dashboard, log, settings, ..., gallery, firstrun, firstrun-empty,
-    ///                          overlay-stopwatch[-move])
+    ///                          overlay-stopwatch[-move], overlay-tags[-move])
     ///   --select 0,2           preselect activity log rows (for screenshots)
     ///   --loading              show the loading state (demo, for screenshots)
     /// </summary>
@@ -133,7 +133,10 @@ namespace TraXile.Next
                 Dashboard.AddNotice("Restore failed", restore.Error, isError: true);
             }
 
-            Overlays = new OverlayManager(AppSetup.Default, CanWriteSettings && ScreenshotPath == null, () => MainWindow);
+            // Screenshots use the default overlay settings, not the ones of this machine
+            AppSetup overlaySetup = ScreenshotPath == null ? AppSetup.Default
+                : new AppSetup(System.IO.Path.Combine(System.IO.Path.GetTempPath(), "traxile-screenshot-" + Guid.NewGuid().ToString("N")));
+            Overlays = new OverlayManager(overlaySetup, Source, CanWriteSettings && ScreenshotPath == null, () => MainWindow);
             Dashboard.LiveUpdated += (s, live) => Overlays.Update(live);
 
             if (ScreenshotPath != null && StartPage != null && StartPage.StartsWith("overlay", StringComparison.OrdinalIgnoreCase))
@@ -183,12 +186,13 @@ namespace TraXile.Next
         }
 
         /// <summary>
-        /// --screenshot x.png --page overlay-stopwatch[-move]: render an overlay with the demo live state
+        /// --screenshot x.png --page overlay-stopwatch[-move] | overlay-tags[-move]: render an overlay with the demo live state
         /// (transparent around the overlay, like over the game).
         /// </summary>
         private void ScreenshotOverlay(string page)
         {
-            OverlayWindow overlay = Overlays.ShowStopwatch();
+            OverlayWindow overlay = page.StartsWith("overlay-tags", StringComparison.OrdinalIgnoreCase)
+                ? (OverlayWindow)Overlays.ShowTags() : Overlays.ShowStopwatch();
             overlay.IsMovable = page.EndsWith("-move", StringComparison.OrdinalIgnoreCase);
             Overlays.Update(Source.GetLiveState());
             overlay.Left = -30000;

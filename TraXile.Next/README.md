@@ -40,6 +40,7 @@ TraXile.Next.exe --screenshot out.png --page log --select 0,2   # screenshot of 
 TraXile.Next.exe --screenshot out.png --page gallery           # all base styles of the design system
 TraXile.Next.exe --screenshot out.png --page firstrun          # first-run screen (also: firstrun-empty)
 TraXile.Next.exe --screenshot out.png --page overlay-stopwatch # stopwatch overlay (also: overlay-stopwatch-move)
+TraXile.Next.exe --screenshot out.png --page overlay-tags      # tags overlay (also: overlay-tags-move)
 TraXile.Next.exe --screenshot out.png --page tags --select 0   # Tags page with the first tag selected
 ```
 

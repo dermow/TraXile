@@ -19,6 +19,7 @@ namespace TraXile.Next.Shell
         private readonly ContextMenu _menu;
         private readonly Overlays.OverlayManager _overlays;
         private MenuItem _stopwatchItem;
+        private MenuItem _tagsItem;
 
         public TrayIcon(Window owner, Overlays.OverlayManager overlays)
         {
@@ -73,8 +74,14 @@ namespace TraXile.Next.Shell
             _stopwatchItem = new MenuItem { Header = "Stopwatch", IsCheckable = true };
             _stopwatchItem.Click += (s, e) => _overlays.ToggleStopwatch();
             overlays.Items.Add(_stopwatchItem);
-            overlays.Items.Add(new MenuItem { Header = "Tags (coming soon)", IsEnabled = false });
-            overlays.SubmenuOpened += (s, e) => _stopwatchItem.IsChecked = _overlays.IsStopwatchOpen;
+            _tagsItem = new MenuItem { Header = "Tags", IsCheckable = true };
+            _tagsItem.Click += (s, e) => _overlays.ToggleTags();
+            overlays.Items.Add(_tagsItem);
+            overlays.SubmenuOpened += (s, e) =>
+            {
+                _stopwatchItem.IsChecked = _overlays.IsStopwatchOpen;
+                _tagsItem.IsChecked = _overlays.IsTagsOpen;
+            };
             menu.Items.Add(overlays);
 
             menu.Items.Add(new Separator());
