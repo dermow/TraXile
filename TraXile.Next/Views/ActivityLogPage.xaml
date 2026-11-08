@@ -7,9 +7,10 @@
     xmlns:svc="clr-namespace:TraXile.Next.Services"
     xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
     Title="Activity log"
-    ScrollViewer.CanContentScroll="True">
-    <!-- CanContentScroll=True tells the NavigationView not to wrap the page in its own
-         ScrollViewer, so the DataGrid gets a fixed height and can virtualize its rows. -->
+    ScrollViewer.CanContentScroll="False">
+    <!-- WPF-UI: NavigationViewContentPresenter.IsDynamicScrollViewerEnabled = page's CanContentScroll.
+         Must be False here: inside the host ScrollViewer the DataGrid gets infinite height and
+         realizes every row (UI freeze with large histories) instead of virtualizing. -->
 
     <Page.Resources>
         <local:EnumEqualsConverter x:Key="EnumEq" />
