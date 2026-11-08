@@ -321,6 +321,7 @@
     <Compile Include="TrX_TrackingEvent.cs" />
     <Compile Include="TrX_TrackedActivity.cs" />
     <Compile Include="TrX_SettingsManager.cs" />
+    <Compile Include="UI\TrX_ModernTheme.cs" />
     <Compile Include="UI\TrX_Theme.cs" />
     <Compile Include="UI\TrX_ThemeDefinitions.cs" />
     <Compile Include="UI\UpdateCheckForm.cs">

@@ -40,8 +40,8 @@ namespace TraXile.UI
         {
             _customSize = new Size(295, 28);
             this.Load += OverlayAdvancedStopwatch_Load;
-            this.BackColor = Color.Black;
-            this.ForeColor = Color.PeachPuff;
+            this.BackColor = TrX_ModernTheme.OverlayBack;
+            this.ForeColor = TrX_ModernTheme.OverlayFore;
             InitializeComponent();
 
             label1.AutoSize = false;
@@ -77,14 +77,14 @@ namespace TraXile.UI
 
         private void SetLabelInactive(Label lbl)
         {
-            lbl.BackColor = Color.Gray;
-            lbl.ForeColor = Color.LightGray;
+            lbl.BackColor = TrX_ModernTheme.OverlayChipInactiveBack;
+            lbl.ForeColor = TrX_ModernTheme.OverlayChipInactiveFore;
         }
 
         private void SetLableActive(Label lbl, TrX_ActivityTag tag)
         {
-            lbl.ForeColor = _mainWindow.msm.ColorScheme.TextColor;
-            lbl.BackColor = _mainWindow.msm.ColorScheme.AccentColor;
+            lbl.ForeColor = TrX_ModernTheme.OnLightFill;
+            lbl.BackColor = TrX_ModernTheme.DarkAccent;
             lbl.Text = tag.DisplayName;
         }
 
