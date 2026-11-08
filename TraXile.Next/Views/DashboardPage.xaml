@@ -147,24 +147,33 @@
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="320" Margin="24,0,0,0">
                             <Grid>
                                 <TextBlock Text="{Binding ElapsedText}" Style="{StaticResource Metric}" FontSize="60" HorizontalAlignment="Left" />
-                                <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Appearance="Secondary"
-                                           Padding="10,0" MinHeight="40" Command="{Binding TogglePauseCommand}"
-                                           IsEnabled="{Binding Live.IsTracking}" ToolTip="Pause or resume the stopwatch">
-                                    <ui:Button.Icon>
-                                        <ui:SymbolIcon>
-                                            <ui:SymbolIcon.Style>
-                                                <Style TargetType="ui:SymbolIcon">
-                                                    <Setter Property="Symbol" Value="Pause24" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Live.IsPaused}" Value="True">
-                                                            <Setter Property="Symbol" Value="Play24" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ui:SymbolIcon.Style>
-                                        </ui:SymbolIcon>
-                                    </ui:Button.Icon>
-                                </ui:Button>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <ui:Button VerticalAlignment="Center" Appearance="Secondary"
+                                               Padding="10,0" MinHeight="40" Command="{Binding TogglePauseCommand}"
+                                               IsEnabled="{Binding Live.IsTracking}" ToolTip="Pause or resume the stopwatch">
+                                        <ui:Button.Icon>
+                                            <ui:SymbolIcon>
+                                                <ui:SymbolIcon.Style>
+                                                    <Style TargetType="ui:SymbolIcon">
+                                                        <Setter Property="Symbol" Value="Pause24" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Live.IsPaused}" Value="True">
+                                                                <Setter Property="Symbol" Value="Play24" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ui:SymbolIcon.Style>
+                                            </ui:SymbolIcon>
+                                        </ui:Button.Icon>
+                                    </ui:Button>
+                                    <ui:Button VerticalAlignment="Center" Appearance="Secondary" Margin="8,0,0,0"
+                                               Padding="10,0" MinHeight="40" Command="{Binding StopCommand}"
+                                               ToolTip="Finish the current activity">
+                                        <ui:Button.Icon>
+                                            <ui:SymbolIcon Symbol="Stop24" />
+                                        </ui:Button.Icon>
+                                    </ui:Button>
+                                </StackPanel>
                             </Grid>
                             <ProgressBar Style="{StaticResource SlimProgress}" Value="{Binding LiveProgress, Mode=OneWay}"
                                          Foreground="{Binding LiveBrush}" Margin="0,8,0,8" />

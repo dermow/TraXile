@@ -65,6 +65,7 @@ public sealed class NoticeItem
             _source = source;
 
             TogglePauseCommand = new RelayCommand(() => { _source.TogglePause(); UpdateLive(); });
+            StopCommand = new RelayCommand(StopCurrentActivity, () => Live.IsTracking);
             SetRangeCommand = new RelayCommand<string>(r =>
             {
                 if (Enum.TryParse(r, out TimeRange tr)) Range = tr;
@@ -100,6 +101,16 @@ public sealed class NoticeItem
 
         public IRelayCommand TogglePauseCommand { get; }
         public IRelayCommand<string> SetRangeCommand { get; }
+
+        /// <summary>Finishes the current activity (classic: Stop button on the tracking panel).</summary>
+        public IRelayCommand StopCommand { get; }
+
+        private void StopCurrentActivity()
+        {
+            _source.StopCurrentActivity();
+            UpdateLive();
+            Refresh(); // the finished activity shows up in the history right away
+        }
 
         public bool IsDemo => _source.IsDemo;
         /// <summary>Messages shown above the live card (demo mode, restored backup, ...).</summary>
@@ -148,7 +159,15 @@ public sealed class NoticeItem
         // ------------------------------------------------------------------
 
         private LiveState _live = new LiveState();
-        public LiveState Live { get => _live; private set => SetProperty(ref _live, value); }
+        public LiveState Live
+        {
+            get => _live;
+            private set
+            {
+                bool wasTracking = _live.IsTracking;
+                if (SetProperty(ref _live, value) && wasTracking != value.IsTracking) StopCommand?.NotifyCanExecuteChanged();
+            }
+        }
 
         private string _elapsedText = "00:00";
         public string ElapsedText { get => _elapsedText; private set => SetProperty(ref _elapsedText, value); }
