@@ -39,9 +39,35 @@ namespace TraXile.Next
                 {
                     RootNavigation.Navigate(StartPageType(App.StartPage));
                 }
+                if (App.ScreenshotPath != null && App.ScrollOffset > 0)
+                {
+                    // once the page has navigated in: scroll its outer scroll viewer (screenshots of lower sections)
+                    var scroll = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(1.5) };
+                    scroll.Tick += (_, __) =>
+                    {
+                        scroll.Stop();
+                        FindScrollViewer(RootNavigation)?.ScrollToVerticalOffset(App.ScrollOffset);
+                    };
+                    scroll.Start();
+                }
                 // give charts time to finish their intro animations
                 if (App.ScreenshotPath != null) Screenshot.Schedule(this, App.ScreenshotPath, TimeSpan.FromSeconds(3));
             };
+        }
+
+        /// <summary>The scroll viewer that scrolls the page (the one with the most to scroll).</summary>
+        private static System.Windows.Controls.ScrollViewer FindScrollViewer(DependencyObject root) =>
+            Descendants(root).OfType<System.Windows.Controls.ScrollViewer>()
+                .OrderByDescending(s => s.ScrollableHeight).FirstOrDefault(s => s.ScrollableHeight > 0);
+
+        private static System.Collections.Generic.IEnumerable<DependencyObject> Descendants(DependencyObject parent)
+        {
+            for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                DependencyObject child = System.Windows.Media.VisualTreeHelper.GetChild(parent, i);
+                yield return child;
+                foreach (DependencyObject d in Descendants(child)) yield return d;
+            }
         }
 
         /// <summary>

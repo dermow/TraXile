@@ -16,6 +16,7 @@ namespace TraXile.Next.Views
             InitializeComponent();
             _vm = App.Settings;
             DataContext = _vm;
+            Loaded += (s, e) => _vm.LoadTagSlotOptions(); // tags may have been added or renamed meanwhile
         }
 
         /// <summary>Asks before an action that restarts TraXile; true if confirmed.</summary>

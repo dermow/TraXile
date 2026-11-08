@@ -19,6 +19,7 @@ namespace TraXile.Next
     ///   --page log             open the given page first (dashboard, log, settings, ..., gallery, firstrun, firstrun-empty,
     ///                          overlay-stopwatch[-move], overlay-tags[-move])
     ///   --select 0,2           preselect activity log rows (for screenshots)
+    ///   --scroll 1600          scroll the page down before the screenshot
     ///   --loading              show the loading state (demo, for screenshots)
     /// </summary>
     public partial class App : Application
@@ -53,6 +54,9 @@ namespace TraXile.Next
         /// <summary>Rows to preselect in the activity log (--select 0,2), for screenshots.</summary>
         public static int[] SelectRows { get; private set; } = Array.Empty<int>();
 
+        /// <summary>Scroll the page down by this many units before the screenshot (--scroll 1600).</summary>
+        public static double ScrollOffset { get; private set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -69,6 +73,8 @@ namespace TraXile.Next
             {
                 SelectRows = args[selIdx + 1].Split(',').Select(s => int.TryParse(s, out int i) ? i : -1).Where(i => i >= 0).ToArray();
             }
+            int scrollIdx = Array.FindIndex(args, a => a.Equals("--scroll", StringComparison.OrdinalIgnoreCase));
+            if (scrollIdx >= 0 && scrollIdx + 1 < args.Length && double.TryParse(args[scrollIdx + 1], out double scroll)) ScrollOffset = scroll;
 
             bool demo = ScreenshotPath != null || args.Any(a => a.Equals("--demo", StringComparison.OrdinalIgnoreCase));
             bool forcedLight = args.Any(a => a.Equals("--light", StringComparison.OrdinalIgnoreCase));
@@ -122,7 +128,14 @@ namespace TraXile.Next
             ActivityLog = new ActivityLogViewModel(Source);
             Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
             CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
-            Settings = new SettingsViewModel(AppSetup.Default, Source, CanWriteSettings, IsDark, d => SetTheme(d, persist: false), Restart);
+
+            // Screenshots use the default overlay settings, not the ones of this machine
+            AppSetup overlaySetup = ScreenshotPath == null ? AppSetup.Default
+                : new AppSetup(System.IO.Path.Combine(System.IO.Path.GetTempPath(), "traxile-screenshot-" + Guid.NewGuid().ToString("N")));
+            Overlays = new OverlayManager(overlaySetup, Source, CanWriteSettings && ScreenshotPath == null, () => MainWindow);
+            Dashboard.LiveUpdated += (s, live) => Overlays.Update(live);
+
+            Settings = new SettingsViewModel(AppSetup.Default, Source, CanWriteSettings, IsDark, d => SetTheme(d, persist: false), Restart, Overlays);
 
             if (restore.HasRestored && !restore.HasFailed)
             {
@@ -132,12 +145,6 @@ namespace TraXile.Next
             {
                 Dashboard.AddNotice("Restore failed", restore.Error, isError: true);
             }
-
-            // Screenshots use the default overlay settings, not the ones of this machine
-            AppSetup overlaySetup = ScreenshotPath == null ? AppSetup.Default
-                : new AppSetup(System.IO.Path.Combine(System.IO.Path.GetTempPath(), "traxile-screenshot-" + Guid.NewGuid().ToString("N")));
-            Overlays = new OverlayManager(overlaySetup, Source, CanWriteSettings && ScreenshotPath == null, () => MainWindow);
-            Dashboard.LiveUpdated += (s, live) => Overlays.Update(live);
 
             if (ScreenshotPath != null && StartPage != null && StartPage.StartsWith("overlay", StringComparison.OrdinalIgnoreCase))
             {
@@ -154,6 +161,7 @@ namespace TraXile.Next
             {
                 Tray = new Shell.TrayIcon(window, Overlays);
                 Tray.ExitRequested += (s, a) => Shutdown();
+                Overlays.ShowDefaults(); // "show by default" overlays open with the app, like the classic one
             }
         }
 

@@ -5,6 +5,16 @@ using System.Linq;
 
 namespace TraXile.Next.Services
 {
+    /// <summary>What the overlay settings need from the running overlays.</summary>
+    public interface IOverlayHost
+    {
+        /// <summary>Re-reads opacity and tag slots.</summary>
+        void ReloadSettings();
+
+        /// <summary>Moves all overlays to their default place and saves it.</summary>
+        void ResetPositions();
+    }
+
     /// <summary>
     /// Overlay settings in config.xml under the keys the classic app reads (Main.cs ReadSettings and
     /// BaseOverlay): positions are screen pixels of the top-left corner, opacity is a percentage.
@@ -18,6 +28,15 @@ namespace TraXile.Next.Services
 
         /// <summary>Lowest opacity TraXile.Next applies, so an overlay never becomes invisible (the classic slider allowed 0).</summary>
         public const int MinOpacity = 10;
+
+        /// <summary>Open the overlay when TraXile starts ("True"/"False"; classic bug wrote overlay.stopwatch.default instead).</summary>
+        public static string ShowDefaultKey(string id) => $"overlay.{id}.showDefault";
+
+        public static bool ReadShowDefault(AppSetup setup, string id) =>
+            bool.TryParse(setup.ReadSetting(ShowDefaultKey(id), "False"), out bool b) && b;
+
+        /// <summary>Value of an empty tag slot, as the classic slot picker stores it.</summary>
+        public const string EmptySlot = "None";
 
         public static string XKey(string id) => $"overlay.{id}.x";
         public static string YKey(string id) => $"overlay.{id}.y";
@@ -54,7 +73,7 @@ namespace TraXile.Next.Services
             {
                 string v = setup.ReadSetting(TagSlotKey(i), DefaultTagSlots[i - 1]);
                 // the classic slot picker stores "None" for an empty slot
-                return string.IsNullOrWhiteSpace(v) || v.Equals("None", StringComparison.OrdinalIgnoreCase) ? null : v;
+                return string.IsNullOrWhiteSpace(v) || v.Equals(EmptySlot, StringComparison.OrdinalIgnoreCase) ? null : v;
             }).ToArray();
 
         /// <summary>Finds the tag of a slot: by display name (what the classic app stores), then by ID.</summary>

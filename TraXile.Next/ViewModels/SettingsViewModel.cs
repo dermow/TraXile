@@ -21,8 +21,9 @@ namespace TraXile.Next.ViewModels
         /// <param name="canWrite">False while the classic app owns the data (or in forced demo mode): read only.</param>
         /// <param name="applyTheme">Switches the running UI to dark (true) or light.</param>
         /// <param name="restart">Restarts the app (after a change that needs the core to start again).</param>
+        /// <param name="overlays">Running overlays, told about changed overlay settings (null in tests).</param>
         public SettingsViewModel(AppSetup setup, ITrackingSource source, bool canWrite, bool isDark,
-            Action<bool> applyTheme, Action restart)
+            Action<bool> applyTheme, Action restart, IOverlayHost overlays = null)
         {
             _setup = setup;
             _source = source;
@@ -32,6 +33,8 @@ namespace TraXile.Next.ViewModels
             _restart = restart;
             bool.TryParse(setup.ReadSetting(MinimizeToTrayKey, "false"), out _minimizeToTray);
             InitTimeCaps();
+            _overlays = overlays;
+            InitOverlays();
         }
 
         /// <summary>Settings can be changed (the classic TraXile is not running, no forced demo).</summary>
@@ -105,5 +108,6 @@ namespace TraXile.Next.ViewModels
             !string.Equals(setup.ReadSetting(ThemeKey, "Dark"), "Light", StringComparison.OrdinalIgnoreCase);
 
         partial void InitTimeCaps();
+        partial void InitOverlays();
     }
 }
