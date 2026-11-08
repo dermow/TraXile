@@ -39,6 +39,11 @@ namespace TraXile.Next
         /// <summary>State of the filter bar, shared by all filtered pages.</summary>
         public static FilterBarViewModel FilterBar { get; private set; }
 
+        public static StatisticsViewModel Statistics { get; private set; }
+
+        /// <summary>The analytics pages (on the global filter), for theme switches and shutdown.</summary>
+        private static AnalyticsViewModel[] AnalyticsPages => new AnalyticsViewModel[] { Statistics };
+
         /// <summary>Settings may be written (live data of this app, not forced demo / classic app running).</summary>
         public static bool CanWriteSettings { get; private set; }
 
@@ -142,6 +147,8 @@ namespace TraXile.Next
             ApplyFilterArg(args);
             ActivityLog = new ActivityLogViewModel(Source, Filter, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);
             Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
+            Statistics = new StatisticsViewModel(Source, Filter);
+            foreach (AnalyticsViewModel page in AnalyticsPages) page.SetTheme(IsDark);
 
             // Screenshots use the default overlay settings, not the ones of this machine
             AppSetup overlaySetup = ScreenshotPath == null ? AppSetup.Default
@@ -358,6 +365,7 @@ namespace TraXile.Next
             Dashboard?.SetTheme(dark);
             ActivityLog?.Refresh(); // re-reads the activity colors of the new theme
             FilterBar?.RefreshOptions();
+            if (Statistics != null) foreach (AnalyticsViewModel page in AnalyticsPages) page.SetTheme(dark);
             Settings?.SyncTheme(dark);
             ThemeChanged?.Invoke(null, EventArgs.Empty);
         }
@@ -374,6 +382,7 @@ namespace TraXile.Next
             Dashboard?.Dispose();
             ActivityLog?.Dispose();
             FilterBar?.Dispose();
+            if (Statistics != null) foreach (AnalyticsViewModel page in AnalyticsPages) page?.Dispose();
             Source?.Dispose();
             Loading?.Dispose();
             Tray?.Dispose();

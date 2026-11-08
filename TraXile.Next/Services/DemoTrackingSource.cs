@@ -10,7 +10,7 @@ namespace TraXile.Next.Services
     /// Deterministic sample data so the UI can be explored (and screenshotted)
     /// without Path of Exile or an existing TraXile database.
     /// </summary>
-    public sealed class DemoTrackingSource : ITrackingSource
+    public sealed class DemoTrackingSource : ITrackingSource, IStatsSource
     {
         private static readonly string[] MapNames =
         {
@@ -350,6 +350,83 @@ namespace TraXile.Next.Services
                 HistoryChanged?.Invoke(this, EventArgs.Empty);
             }
         }
+
+        // ------------------------------------------------------------------
+        // Stat counters: derived from the demo history, cumulative like tx_stats
+        // ------------------------------------------------------------------
+
+        private static readonly Dictionary<string, string> DemoStatNames = new Dictionary<string, string>
+        {
+            { "TotalMapsDone", "Total maps done" },
+            { "TotalHeistsDone", "Total heists done" },
+            { "TotalKilledCount", "Death count" },
+            { "LevelUps", "Level Ups" },
+            { "SimulacrumStarted", "Simulacrum started" },
+            { "LabsStarted", "Labs started" },
+            { "LabsFinished", "Finished labs" },
+            { "ExpeditionEncounters", "Expedition encounters" },
+            { "HideoutTimeSec", "Hideout time" },
+            { "AreaChanges", "AreaChanges" },
+            { "Suicides", "Suicides" },
+        };
+
+        private List<(string key, StatEntry entry)> _stats;
+
+        private List<(string key, StatEntry entry)> Stats
+        {
+            get
+            {
+                if (_stats != null) return _stats;
+                var values = DemoStatNames.Keys.ToDictionary(k => k, k => 0);
+                var list = new List<(string, StatEntry)>();
+                void Inc(string key, DateTime t, int by = 1)
+                {
+                    values[key] += by;
+                    list.Add((key, new StatEntry(t, values[key])));
+                }
+
+                int n = 0;
+                foreach (ActivityInfo a in _history.OrderBy(a => a.Started))
+                {
+                    DateTime end = a.Started.AddSeconds(a.TotalSeconds);
+                    Inc("AreaChanges", a.Started, 2);
+                    if (a.Type == ACTIVITY_TYPES.MAP) Inc("TotalMapsDone", end);
+                    if (a.Type == ACTIVITY_TYPES.HEIST) Inc("TotalHeistsDone", end);
+                    if (a.Type == ACTIVITY_TYPES.SIMULACRUM) Inc("SimulacrumStarted", a.Started);
+                    if (a.Type == ACTIVITY_TYPES.LABYRINTH) { Inc("LabsStarted", a.Started); Inc("LabsFinished", end); }
+                    if (a.Deaths > 0) Inc("TotalKilledCount", end, a.Deaths);
+                    if (a.Tags.Any(t => t.Id == "expedition")) Inc("ExpeditionEncounters", end);
+                    Inc("HideoutTimeSec", end.AddSeconds(30), (int)(a.TotalSeconds * 0.12));
+                    if (++n % 40 == 0) Inc("LevelUps", end);
+                }
+                return _stats = list;
+            }
+        }
+
+        public IReadOnlyList<StatInfo> GetStats(DateTime from, DateTime to)
+        {
+            return DemoStatNames.Select(kv =>
+            {
+                int[] inWindow = Stats.Where(s => s.key == kv.Key && s.entry.Time >= from && s.entry.Time <= to)
+                                      .Select(s => s.entry.Value).ToArray();
+                return new StatInfo
+                {
+                    Key = kv.Key,
+                    Name = kv.Value,
+                    Value = inWindow.Length == 0 ? 0 : StatMath.Increase(inWindow.Min(), inWindow.Max())
+                };
+            }).ToList();
+        }
+
+        public IReadOnlyList<StatEntry> GetStatSeries(string key, DateTime from, DateTime to)
+        {
+            var ofKey = Stats.Where(s => s.key == key).Select(s => s.entry).ToList();
+            var result = ofKey.Where(e => e.Time < from).OrderBy(e => e.Time).Skip(Math.Max(0, ofKey.Count(e => e.Time < from) - 1)).ToList();
+            result.AddRange(ofKey.Where(e => e.Time >= from && e.Time <= to).OrderBy(e => e.Time));
+            return result;
+        }
+
+        public DateTime? OldestStatTime => Stats.Count > 0 ? Stats.Min(s => s.entry.Time) : (DateTime?)null;
 
         public void Dispose() { }
     }
