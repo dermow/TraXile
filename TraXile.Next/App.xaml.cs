@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using TraXile.Next.Overlays;
 using TraXile.Next.Services;
 using TraXile.Next.ViewModels;
 using Wpf.Ui.Appearance;
@@ -15,7 +16,8 @@ namespace TraXile.Next
     ///   --demo                 use sample data instead of the real tracker
     ///   --light / --dark       start with the given theme (default: dark)
     ///   --screenshot file.png  render the main window off-screen to a PNG and exit (implies --demo)
-    ///   --page log             open the given page first (dashboard, log, settings, ..., gallery, firstrun, firstrun-empty)
+    ///   --page log             open the given page first (dashboard, log, settings, ..., gallery, firstrun, firstrun-empty,
+    ///                          overlay-stopwatch[-move])
     ///   --select 0,2           preselect activity log rows (for screenshots)
     ///   --loading              show the loading state (demo, for screenshots)
     /// </summary>
@@ -35,6 +37,7 @@ namespace TraXile.Next
         public static event EventHandler ThemeChanged;
         public static AppInstance Instance { get; private set; }
         public static Shell.TrayIcon Tray { get; private set; }
+        public static OverlayManager Overlays { get; private set; }
 
         /// <summary>Setting MinimizeToTray (shared with the classic app): minimizing hides the window in the tray.</summary>
         public static bool MinimizeToTray { get; set; }
@@ -130,6 +133,15 @@ namespace TraXile.Next
                 Dashboard.AddNotice("Restore failed", restore.Error, isError: true);
             }
 
+            Overlays = new OverlayManager(AppSetup.Default, CanWriteSettings && ScreenshotPath == null, () => MainWindow);
+            Dashboard.LiveUpdated += (s, live) => Overlays.Update(live);
+
+            if (ScreenshotPath != null && StartPage != null && StartPage.StartsWith("overlay", StringComparison.OrdinalIgnoreCase))
+            {
+                ScreenshotOverlay(StartPage);
+                return;
+            }
+
             var window = new MainWindow();
             MainWindow = window;
             ShutdownMode = ShutdownMode.OnMainWindowClose;
@@ -137,7 +149,7 @@ namespace TraXile.Next
 
             if (ScreenshotPath == null)
             {
-                Tray = new Shell.TrayIcon(window);
+                Tray = new Shell.TrayIcon(window, Overlays);
                 Tray.ExitRequested += (s, a) => Shutdown();
             }
         }
@@ -168,6 +180,20 @@ namespace TraXile.Next
             Screenshot.PrepareOffscreen(window, 0, window.ContentRoot);
             window.Show();
             Screenshot.Schedule(window, ScreenshotPath, TimeSpan.FromSeconds(1));
+        }
+
+        /// <summary>
+        /// --screenshot x.png --page overlay-stopwatch[-move]: render an overlay with the demo live state
+        /// (transparent around the overlay, like over the game).
+        /// </summary>
+        private void ScreenshotOverlay(string page)
+        {
+            OverlayWindow overlay = Overlays.ShowStopwatch();
+            overlay.IsMovable = page.EndsWith("-move", StringComparison.OrdinalIgnoreCase);
+            Overlays.Update(Source.GetLiveState());
+            overlay.Left = -30000;
+            overlay.Top = -30000;
+            Screenshot.Schedule(overlay, ScreenshotPath, TimeSpan.FromSeconds(1));
         }
 
         private static ITrackingSource CreateSource(bool demo, out RestoreResult restore)
@@ -278,6 +304,7 @@ namespace TraXile.Next
             Source?.Dispose();
             Loading?.Dispose();
             Tray?.Dispose();
+            Overlays?.Dispose();
             Instance?.Dispose(); // last: the core is stopped, a restarted process may take over
             base.OnExit(e);
         }

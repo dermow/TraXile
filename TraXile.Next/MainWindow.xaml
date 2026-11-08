@@ -38,6 +38,18 @@
                             Background="{DynamicResource SurfaceBrush}" VerticalAlignment="Center">
                         <TextBlock x:Name="ModeText" Text="LIVE" Style="{StaticResource Label}" FontSize="11" />
                     </Border>
+                    <ui:Button x:Name="OverlayButton" Appearance="Transparent" Padding="8" Margin="0,0,4,0"
+                               ToolTip="Overlays" Click="OverlayButton_Click">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="PictureInPicture24" />
+                        </ui:Button.Icon>
+                        <ui:Button.ContextMenu>
+                            <ContextMenu x:Name="OverlayMenu">
+                                <MenuItem x:Name="StopwatchOverlayItem" Header="Stopwatch overlay" IsCheckable="True" Click="StopwatchOverlay_Click" />
+                                <MenuItem Header="Tags overlay (coming soon)" IsEnabled="False" />
+                            </ContextMenu>
+                        </ui:Button.ContextMenu>
+                    </ui:Button>
                     <ui:Button x:Name="ThemeButton" Appearance="Transparent" Padding="8" Margin="0,0,8,0"
                                ToolTip="Toggle light / dark theme" Click="ThemeButton_Click">
                         <ui:Button.Icon>

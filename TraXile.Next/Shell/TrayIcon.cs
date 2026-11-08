@@ -17,10 +17,13 @@ namespace TraXile.Next.Shell
         private readonly Window _owner;
         private readonly Forms.NotifyIcon _icon;
         private readonly ContextMenu _menu;
+        private readonly Overlays.OverlayManager _overlays;
+        private MenuItem _stopwatchItem;
 
-        public TrayIcon(Window owner)
+        public TrayIcon(Window owner, Overlays.OverlayManager overlays)
         {
             _owner = owner;
+            _overlays = overlays;
             _icon = new Forms.NotifyIcon
             {
                 Text = "TraXile",
@@ -65,10 +68,13 @@ namespace TraXile.Next.Shell
             about.Click += (s, e) => { ShowWindow(); Dialogs.ShowAbout(_owner); };
             menu.Items.Add(about);
 
-            // Overlays move over in phase 2 (tickets "Stopwatch overlay", "Tags overlay")
+            // Classic: Overlays submenu with the overlays as check items
             var overlays = new MenuItem { Header = "Overlays" };
-            overlays.Items.Add(new MenuItem { Header = "Stopwatch (coming soon)", IsEnabled = false });
+            _stopwatchItem = new MenuItem { Header = "Stopwatch", IsCheckable = true };
+            _stopwatchItem.Click += (s, e) => _overlays.ToggleStopwatch();
+            overlays.Items.Add(_stopwatchItem);
             overlays.Items.Add(new MenuItem { Header = "Tags (coming soon)", IsEnabled = false });
+            overlays.SubmenuOpened += (s, e) => _stopwatchItem.IsChecked = _overlays.IsStopwatchOpen;
             menu.Items.Add(overlays);
 
             menu.Items.Add(new Separator());
