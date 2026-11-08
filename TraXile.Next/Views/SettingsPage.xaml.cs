@@ -92,5 +92,12 @@ namespace TraXile.Next.Views
             bool backup = choice == MessageBoxResult.Primary;
             if (!_vm.FullReset(backup, System.DateTime.Now, out _, out string error)) ShowError("Reset failed", error);
         }
+
+        private void SaveTimeCaps_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_vm.SaveTimeCaps(out string error)) ShowError("Time caps not saved", error);
+        }
+
+        private void RestartNow_Click(object sender, RoutedEventArgs e) => _vm.RestartNow();
     }
 }
