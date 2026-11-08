@@ -263,7 +263,9 @@ namespace TraXile.Next.Services
             Name = tag.DisplayName,
             Background = ToBrush(tag.BackColor),
             Foreground = ToBrush(tag.ForeColor),
-            IsDefault = tag.IsDefault
+            IsDefault = tag.IsDefault,
+            SoundEnabled = tag.SoundEnabled,
+            SoundId = tag.SoundID
         };
 
         private ActivityInfo ToInfo(TrX_TrackedActivity a) => ToInfo(a, includeSubs: true);

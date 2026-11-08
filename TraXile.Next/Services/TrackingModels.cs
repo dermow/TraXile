@@ -57,6 +57,12 @@ namespace TraXile.Next.Services
 
         /// <summary>Default tags are set automatically by the tracker and cannot be added/removed manually.</summary>
         public bool IsDefault { get; set; }
+
+        /// <summary>Play <see cref="SoundId"/> when the tag becomes active on the current activity.</summary>
+        public bool SoundEnabled { get; set; }
+
+        /// <summary>File name in the audio folder next to the exe (e.g. "default_1.mp3").</summary>
+        public string SoundId { get; set; }
     }
 
     /// <summary>
