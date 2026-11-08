@@ -21,7 +21,7 @@ namespace TraXile.Next.Services
         private readonly List<ActivityInfo> _history = new List<ActivityInfo>();
         private readonly Stopwatch _current = Stopwatch.StartNew();
         private readonly TimeSpan _currentOffset = TimeSpan.FromSeconds(274);
-        private readonly ActivityInfo _currentActivity;
+        private ActivityInfo _currentActivity;
         private bool _paused;
 
         public bool IsDemo => true;
@@ -218,6 +218,8 @@ namespace TraXile.Next.Services
 
         public LiveState GetLiveState()
         {
+            if (_currentActivity == null) return new LiveState();
+
             TimeSpan elapsed = _currentOffset + _current.Elapsed;
             _currentActivity.TotalSeconds = (int)elapsed.TotalSeconds;
             _currentActivity.Deaths = 0;
@@ -241,8 +243,23 @@ namespace TraXile.Next.Services
 
         public int GetTimeCap(ACTIVITY_TYPES type) => 3600;
 
+        public void StopCurrentActivity()
+        {
+            if (_currentActivity == null) return;
+
+            ActivityInfo finished = _currentActivity;
+            finished.TotalSeconds = (int)(_currentOffset + _current.Elapsed).TotalSeconds;
+            _current.Stop();
+            _paused = false;
+            _currentActivity = null;
+
+            _history.Insert(0, finished); // newest first
+            HistoryChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         public void TogglePause()
         {
+            if (_currentActivity == null) return;
             _paused = !_paused;
             if (_paused) _current.Stop(); else _current.Start();
         }

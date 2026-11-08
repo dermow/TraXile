@@ -227,6 +227,21 @@ namespace TraXile.Next.Services
             else _logic.PauseCurrentActivityOrSide();
         }
 
+        public void StopCurrentActivity()
+        {
+            // While the log is read for the first time, the "current" activity is a historic one
+            if (_logic == null || IsLoading) return;
+
+            TrX_TrackedActivity act = _logic.CurrentActivity;
+            if (act == null) return;
+
+            // Same call as the classic Stop button: no next activity, side areas are finished with it
+            _logic.FinishActivity(act, null, ACTIVITY_TYPES.MAP, new DateTime());
+
+            // Activities below the minimum time raise no event, but the live state changed anyway
+            RaiseHistoryChanged();
+        }
+
         private static TagInfo ToTagInfo(TrX_ActivityTag tag) => new TagInfo
         {
             Id = tag.ID,

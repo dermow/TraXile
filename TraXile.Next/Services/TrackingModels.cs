@@ -109,6 +109,12 @@ namespace TraXile.Next.Services
         int GetTimeCap(ACTIVITY_TYPES type);
         void TogglePause();
 
+        /// <summary>
+        /// Finishes the current activity (including its side areas) like the classic Stop button;
+        /// it is added to the history if it is longer than the minimum time.
+        /// </summary>
+        void StopCurrentActivity();
+
         /// <summary>All known tags (default and custom).</summary>
         IReadOnlyList<TagInfo> GetTags();
 
