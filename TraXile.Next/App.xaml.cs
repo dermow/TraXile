@@ -26,6 +26,7 @@ namespace TraXile.Next
         public static ActivityLogViewModel ActivityLog { get; private set; }
         public static LoadingViewModel Loading { get; private set; }
         public static SettingsViewModel Settings { get; private set; }
+        public static TagsViewModel Tags { get; private set; }
 
         /// <summary>Settings may be written (live data of this app, not forced demo / classic app running).</summary>
         public static bool CanWriteSettings { get; private set; }
@@ -116,6 +117,7 @@ namespace TraXile.Next
                 Dashboard.LiveUpdated += (s, live) => tagSounds.Observe(live);
             }
             ActivityLog = new ActivityLogViewModel(Source);
+            Tags = new TagsViewModel(Source);
             CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
             Settings = new SettingsViewModel(AppSetup.Default, Source, CanWriteSettings, IsDark, d => SetTheme(d, persist: false), Restart);
 

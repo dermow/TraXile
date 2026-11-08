@@ -110,6 +110,47 @@ namespace TraXile.Next.Services
             return _logic.Tags.ToArray().Where(t => t != null).Select(ToTagInfo).ToList();
         }
 
+        /// <summary>SQL string literal content (the classic app did not escape, so names with ' broke it).</summary>
+        private static string Sql(string s) => (s ?? "").Replace("'", "''");
+
+        // The core keeps its tag list in memory and in tx_tags; same statements as the classic Main.AddTag/UpdateTag/DeleteTag.
+
+        public void CreateTag(string id, string displayName)
+        {
+            if (_logic == null || string.IsNullOrEmpty(id) || _logic.GetTagByID(id) != null) return;
+
+            var tag = new TrX_ActivityTag(id, false) { DisplayName = displayName };
+            _logic.Database.DoNonQuery("INSERT INTO tx_tags (tag_id, tag_display, tag_bgcolor, tag_forecolor, tag_type, tag_show_in_lv) VALUES "
+                + $"('{Sql(tag.ID)}', '{Sql(tag.DisplayName)}', '{tag.BackColor.ToArgb()}', '{tag.ForeColor.ToArgb()}', 'custom', {(tag.ShowInListView ? 1 : 0)})");
+            _logic.Tags.Add(tag);
+            RaiseHistoryChanged();
+        }
+
+        public void UpdateTag(TagInfo changed)
+        {
+            TrX_ActivityTag tag = changed == null ? null : _logic?.GetTagByID(changed.Id);
+            if (tag == null) return;
+
+            tag.DisplayName = changed.Name;
+            tag.ShowInListView = changed.ShowInHistory;
+            tag.SoundEnabled = changed.SoundEnabled;
+            tag.SoundID = changed.SoundId ?? "";
+            _logic.Database.DoNonQuery($"UPDATE tx_tags SET tag_display = '{Sql(tag.DisplayName)}', " +
+                $"tag_show_in_lv = {(tag.ShowInListView ? 1 : 0)}, audio_on = {(tag.SoundEnabled ? 1 : 0)}, " +
+                $"audio_file_name = '{Sql(tag.SoundID)}' WHERE tag_id = '{Sql(tag.ID)}'");
+            RaiseHistoryChanged();
+        }
+
+        public void DeleteTag(string id)
+        {
+            TrX_ActivityTag tag = _logic?.GetTagByID(id);
+            if (tag == null || tag.IsDefault) return;
+
+            _logic.Tags.Remove(tag);
+            _logic.Database.DoNonQuery($"DELETE FROM tx_tags WHERE tag_id = '{Sql(id)}' AND tag_type != 'default'");
+            RaiseHistoryChanged();
+        }
+
         public void AddTag(string activityId, string tagId)
         {
             TrX_TrackedActivity act = FindActivity(activityId);
@@ -264,6 +305,7 @@ namespace TraXile.Next.Services
             Background = ToBrush(tag.BackColor),
             Foreground = ToBrush(tag.ForeColor),
             IsDefault = tag.IsDefault,
+            ShowInHistory = tag.ShowInListView,
             SoundEnabled = tag.SoundEnabled,
             SoundId = tag.SoundID
         };
