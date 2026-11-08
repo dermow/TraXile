@@ -31,6 +31,7 @@ namespace TraXile.Next.Tests
         public int GetTimeCap(ACTIVITY_TYPES type) => Caps.TryGetValue(type, out int c) ? c : 3600;
         public void TogglePause() { }
         public void StopCurrentActivity() { }
+        public void ToggleCurrentActivityTag(string tagId) { }
         public IReadOnlyList<TagInfo> GetTags() => _demo.GetTags();
         public void AddTag(string activityId, string tagId) { }
         public void RemoveTag(string activityId, string tagId) { }

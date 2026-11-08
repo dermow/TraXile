@@ -41,6 +41,51 @@ namespace TraXile.Next.Tests
         }
 
         [Fact]
+        public void Live_card_shows_active_default_tags_read_only_and_all_custom_tags_as_toggles()
+        {
+            Assert.All(_vm.LiveTags.Where(c => c.Tag.IsDefault), c => Assert.True(c.IsActive));
+            Assert.Contains(_vm.LiveTags, c => c.Tag.Id == "delirium" && !c.CanToggle);
+
+            string[] custom = _source.GetTags().Where(t => !t.IsDefault).Select(t => t.Id).ToArray();
+            Assert.Equal(custom.OrderBy(x => x), _vm.LiveTags.Where(c => c.CanToggle).Select(c => c.Tag.Id).OrderBy(x => x));
+            Assert.True(_vm.LiveTags.Single(c => c.Tag.Id == "juiced").IsActive);
+            Assert.False(_vm.LiveTags.Single(c => c.Tag.Id == "party").IsActive);
+        }
+
+        [Fact]
+        public void Toggling_custom_tags_changes_the_current_activity()
+        {
+            _vm.ToggleTagCommand.Execute(_vm.LiveTags.Single(c => c.Tag.Id == "party"));
+            _vm.ToggleTagCommand.Execute(_vm.LiveTags.Single(c => c.Tag.Id == "juiced"));
+
+            Assert.True(_vm.LiveTags.Single(c => c.Tag.Id == "party").IsActive);
+            Assert.False(_vm.LiveTags.Single(c => c.Tag.Id == "juiced").IsActive);
+            Assert.Contains(_source.GetLiveState().ActiveTags, t => t.Id == "party");
+        }
+
+        [Fact]
+        public void Default_tags_cannot_be_toggled()
+        {
+            _vm.ToggleTagCommand.Execute(_vm.LiveTags.Single(c => c.Tag.Id == "delirium"));
+            _source.ToggleCurrentActivityTag("expedition");
+
+            Assert.Contains(_source.GetLiveState().ActiveTags, t => t.Id == "delirium");
+            Assert.Contains(_source.GetLiveState().ActiveTags, t => t.Id == "expedition");
+        }
+
+        [Fact]
+        public void Toggled_tags_are_kept_when_the_activity_finishes()
+        {
+            _vm.ToggleTagCommand.Execute(_vm.LiveTags.Single(c => c.Tag.Id == "bricked"));
+
+            _vm.StopCommand.Execute(null);
+
+            ActivityInfo finished = _source.GetHistory().First();
+            Assert.Contains(finished.Tags, t => t.Id == "bricked");
+            Assert.Empty(_vm.LiveTags); // idle: nothing to tag
+        }
+
+        [Fact]
         public void Stop_is_disabled_without_a_current_activity()
         {
             _vm.StopCommand.Execute(null);

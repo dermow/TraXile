@@ -34,7 +34,21 @@ namespace TraXile.Next.ViewModels
         public Margin SparkMargin { get; } = new Margin(0);
     }
 
-public sealed class NoticeItem
+    /// <summary>A tag on the live card: custom tags can be toggled, default tags are only shown while active.</summary>
+    public sealed class LiveTagChip
+    {
+        public TagInfo Tag { get; set; }
+        public bool IsActive { get; set; }
+        public bool CanToggle => !Tag.IsDefault;
+        public string Name => Tag.Name;
+        public Brush Background => Tag.Background;
+        public Brush Foreground => Tag.Foreground;
+        public string ToolTip => CanToggle
+            ? (IsActive ? $"Remove \"{Tag.Name}\" from the current activity" : $"Add \"{Tag.Name}\" to the current activity")
+            : "Set automatically";
+    }
+
+    public sealed class NoticeItem
     {
         public string Title { get; set; }
         public string Text { get; set; }
@@ -66,6 +80,7 @@ public sealed class NoticeItem
 
             TogglePauseCommand = new RelayCommand(() => { _source.TogglePause(); UpdateLive(); });
             StopCommand = new RelayCommand(StopCurrentActivity, () => Live.IsTracking);
+            ToggleTagCommand = new RelayCommand<LiveTagChip>(ToggleTag);
             SetRangeCommand = new RelayCommand<string>(r =>
             {
                 if (Enum.TryParse(r, out TimeRange tr)) Range = tr;
@@ -110,6 +125,16 @@ public sealed class NoticeItem
             _source.StopCurrentActivity();
             UpdateLive();
             Refresh(); // the finished activity shows up in the history right away
+        }
+
+        /// <summary>Adds or removes a custom tag on the current activity (classic: tag labels on the tracking panel).</summary>
+        public IRelayCommand<LiveTagChip> ToggleTagCommand { get; }
+
+        private void ToggleTag(LiveTagChip chip)
+        {
+            if (chip == null || !chip.CanToggle || !Live.IsTracking) return;
+            _source.ToggleCurrentActivityTag(chip.Tag.Id);
+            UpdateLive();
         }
 
         public bool IsDemo => _source.IsDemo;
@@ -188,10 +213,36 @@ public sealed class NoticeItem
         private string _liveCompare = "";
         public string LiveCompare { get => _liveCompare; private set => SetProperty(ref _liveCompare, value); }
 
+        /// <summary>Active default tags (read only) followed by all custom tags (toggles).</summary>
+        public ObservableCollection<LiveTagChip> LiveTags { get; } = new ObservableCollection<LiveTagChip>();
+
+        private string _liveTagsKey = "";
+
+        private void UpdateLiveTags(LiveState s)
+        {
+            var active = new HashSet<string>(s.ActiveTags.Select(t => t.Id));
+            var chips = new List<LiveTagChip>();
+            if (s.IsTracking)
+            {
+                chips.AddRange(s.ActiveTags.Where(t => t.IsDefault).Select(t => new LiveTagChip { Tag = t, IsActive = true }));
+                chips.AddRange(_source.GetTags().Where(t => !t.IsDefault)
+                    .Select(t => new LiveTagChip { Tag = t, IsActive = active.Contains(t.Id) }));
+            }
+
+            // Polled every second: only rebuild when something changed (keeps hover and focus)
+            string key = string.Join("|", chips.Select(c => $"{c.Tag.Id}:{c.Name}:{c.IsActive}"));
+            if (key == _liveTagsKey) return;
+            _liveTagsKey = key;
+
+            LiveTags.Clear();
+            foreach (LiveTagChip c in chips) LiveTags.Add(c);
+        }
+
         private void UpdateLive()
         {
             LiveState s = _source.GetLiveState();
             Live = s;
+            UpdateLiveTags(s);
 
             if (s.IsTracking && s.Activity != null)
             {
