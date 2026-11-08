@@ -1,0 +1,82 @@
+<Page
+    x:Class="TraXile.Next.Views.HeistPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:views="clr-namespace:TraXile.Next.Views"
+    Title="Heist">
+
+    <StackPanel Margin="{StaticResource PagePadding}">
+        <!-- ============ Header ============ -->
+        <TextBlock Text="Heist" Style="{StaticResource PageTitle}" />
+        <TextBlock Text="{Binding Summary}" Style="{StaticResource Meta}" Margin="0,4,0,24" />
+
+        <views:GlobalFilterBar Margin="0,0,0,16" />
+
+        <!-- ============ Tier charts ============ -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Heists by area level" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="How many heists you ran per area level" Style="{StaticResource CardSubtitle}" />
+                    <lvc:CartesianChart Height="260" Series="{Binding CountSeries}" XAxes="{Binding CountXAxes}" YAxes="{Binding CountYAxes}"
+                                        TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Average time by area level" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="Minutes per heist, capped at the heist time cap" Style="{StaticResource CardSubtitle}" />
+                    <lvc:CartesianChart Height="260" Series="{Binding TimeSeries}" XAxes="{Binding TimeXAxes}" YAxes="{Binding TimeYAxes}"
+                                        TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ============ Count by area / by tag ============ -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource Card}" VerticalAlignment="Top">
+                <StackPanel>
+                    <TextBlock Text="Count by area" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="Heist areas you ran most, with their average time" Style="{StaticResource CardSubtitle}" />
+                    <ItemsControl ItemsSource="{Binding ByArea}" />
+                    <TextBlock Text="No heists in the filtered activities." Style="{StaticResource Meta}"
+                               Visibility="{Binding HasData, Converter={StaticResource InvBoolToVis}}" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource Card}" VerticalAlignment="Top">
+                <StackPanel>
+                    <TextBlock Text="Count by tag" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="Tags on your heists" Style="{StaticResource CardSubtitle}" />
+                    <ItemsControl ItemsSource="{Binding ByTag}" />
+                    <TextBlock Text="None of these heists has a tag.">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource Meta}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ByTag.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </StackPanel>
+</Page>
