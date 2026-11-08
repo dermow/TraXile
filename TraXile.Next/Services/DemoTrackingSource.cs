@@ -236,7 +236,8 @@ namespace TraXile.Next.Services
                 CurrentArea = _currentActivity.Area,
                 Activity = _currentActivity,
                 Elapsed = elapsed,
-                ActiveTags = _currentActivity.Tags
+                ActiveTags = _currentActivity.Tags,
+                PreviousActivity = _history.FirstOrDefault(a => a.Type == _currentActivity.Type)
             };
         }
 

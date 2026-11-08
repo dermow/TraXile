@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace TraXile.Next.Services
 {
@@ -38,6 +40,30 @@ namespace TraXile.Next.Services
                 return (px, py);
             }
             return null;
+        }
+
+        /// <summary>Key of a tag slot of the tags overlay (1..3).</summary>
+        public static string TagSlotKey(int slot) => $"overlay.tags.tag{slot}";
+
+        /// <summary>Classic defaults of the three tag slots (Main.cs ReadSettings).</summary>
+        public static readonly string[] DefaultTagSlots = { "blight", "expedition", null };
+
+        /// <summary>The stored tag of each slot (display name like the classic app, or an ID); null = empty slot ("None" in the classic app).</summary>
+        public static string[] ReadTagSlots(AppSetup setup) =>
+            Enumerable.Range(1, 3).Select(i =>
+            {
+                string v = setup.ReadSetting(TagSlotKey(i), DefaultTagSlots[i - 1]);
+                // the classic slot picker stores "None" for an empty slot
+                return string.IsNullOrWhiteSpace(v) || v.Equals("None", StringComparison.OrdinalIgnoreCase) ? null : v;
+            }).ToArray();
+
+        /// <summary>Finds the tag of a slot: by display name (what the classic app stores), then by ID.</summary>
+        public static TagInfo ResolveTag(string stored, IEnumerable<TagInfo> tags)
+        {
+            if (string.IsNullOrWhiteSpace(stored)) return null;
+            List<TagInfo> list = tags.ToList();
+            return list.FirstOrDefault(t => string.Equals(t.Name, stored, StringComparison.OrdinalIgnoreCase))
+                ?? list.FirstOrDefault(t => string.Equals(t.Id, stored, StringComparison.OrdinalIgnoreCase));
         }
 
         public static void WritePosition(AppSetup setup, string id, int x, int y)

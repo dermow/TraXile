@@ -73,12 +73,15 @@ protected override void OnStateChanged(EventArgs e)
         private void OverlayButton_Click(object sender, RoutedEventArgs e)
         {
             StopwatchOverlayItem.IsChecked = App.Overlays.IsStopwatchOpen;
+            TagsOverlayItem.IsChecked = App.Overlays.IsTagsOpen;
             OverlayMenu.PlacementTarget = OverlayButton;
             OverlayMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
             OverlayMenu.IsOpen = true;
         }
 
         private void StopwatchOverlay_Click(object sender, RoutedEventArgs e) => App.Overlays.ToggleStopwatch();
+
+        private void TagsOverlay_Click(object sender, RoutedEventArgs e) => App.Overlays.ToggleTags();
 
         private void ThemeButton_Click(object sender, RoutedEventArgs e)
         {

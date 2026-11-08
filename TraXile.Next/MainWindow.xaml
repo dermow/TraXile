@@ -46,7 +46,7 @@
                         <ui:Button.ContextMenu>
                             <ContextMenu x:Name="OverlayMenu">
                                 <MenuItem x:Name="StopwatchOverlayItem" Header="Stopwatch overlay" IsCheckable="True" Click="StopwatchOverlay_Click" />
-                                <MenuItem Header="Tags overlay (coming soon)" IsEnabled="False" />
+                                <MenuItem x:Name="TagsOverlayItem" Header="Tags overlay" IsCheckable="True" Click="TagsOverlay_Click" />
                             </ContextMenu>
                         </ui:Button.ContextMenu>
                     </ui:Button>

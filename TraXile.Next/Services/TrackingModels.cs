@@ -79,6 +79,9 @@ namespace TraXile.Next.Services
         public ActivityInfo Activity { get; set; }
         public TimeSpan Elapsed { get; set; }
         public IReadOnlyList<TagInfo> ActiveTags { get; set; } = Array.Empty<TagInfo>();
+
+        /// <summary>Last finished activity of the same type as the current one (classic: OverlayPrevActivity), or null.</summary>
+        public ActivityInfo PreviousActivity { get; set; }
     }
 
     /// <summary>Operations on the real core that settings and maintenance need (not available with demo data).</summary>

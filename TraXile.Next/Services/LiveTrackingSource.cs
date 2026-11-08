@@ -206,6 +206,9 @@ namespace TraXile.Next.Services
                 state.Activity = ToInfo(act);
                 state.Elapsed = act.StopWatchTimeSpan;
                 state.ActiveTags = state.Activity.Tags;
+
+                TrX_TrackedActivity prev = _logic.OverlayPrevActivity;
+                if (prev != null) state.PreviousActivity = ToInfo(prev, includeSubs: false);
             }
             return state;
         }

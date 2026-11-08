@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using TraXile.Next.Services;
 
@@ -11,24 +13,32 @@ namespace TraXile.Next.Overlays
     public sealed class OverlayManager : IDisposable
     {
         private readonly AppSetup _setup;
+        private readonly ITrackingSource _source;
         private readonly bool _canWrite;
         private readonly Func<Window> _mainWindow;
         private StopwatchOverlay _stopwatch;
+        private TagsOverlay _tags;
         private LiveState _live = new LiveState();
+        private string[] _tagSlots;
 
         /// <param name="canWrite">Positions may be saved (same rule as the settings).</param>
         /// <param name="mainWindow">Overlays without a saved position open next to it.</param>
-        public OverlayManager(AppSetup setup, bool canWrite, Func<Window> mainWindow)
+        public OverlayManager(AppSetup setup, ITrackingSource source, bool canWrite, Func<Window> mainWindow)
         {
             _setup = setup;
+            _source = source;
             _canWrite = canWrite;
             _mainWindow = mainWindow;
+            _tagSlots = OverlaySettings.ReadTagSlots(setup);
         }
 
         /// <summary>Raised when an overlay was opened or hidden (menus update their check marks).</summary>
         public event EventHandler Changed;
 
         public bool IsStopwatchOpen => _stopwatch != null && _stopwatch.IsVisible;
+        public bool IsTagsOpen => _tags != null && _tags.IsVisible;
+
+        private IEnumerable<OverlayWindow> Windows => new OverlayWindow[] { _stopwatch, _tags }.Where(w => w != null);
 
         public void ToggleStopwatch()
         {
@@ -36,18 +46,44 @@ namespace TraXile.Next.Overlays
             else ShowStopwatch();
         }
 
+        public void ToggleTags()
+        {
+            if (IsTagsOpen) _tags.Hide();
+            else ShowTags();
+        }
+
         public StopwatchOverlay ShowStopwatch()
         {
             if (_stopwatch == null)
             {
-                _stopwatch = new StopwatchOverlay(_setup, _canWrite);
-                _stopwatch.IsVisibleChanged += (s, e) => Changed?.Invoke(this, EventArgs.Empty);
-                _stopwatch.Place(DefaultPosition(0)); // classic: at the main window's corner
+                _stopwatch = Init(new StopwatchOverlay(_setup, _canWrite), DefaultOffset(OverlaySettings.Stopwatch));
             }
-            _stopwatch.ApplyOpacity(OverlaySettings.ReadOpacity(_setup));
             _stopwatch.Update(_live);
-            _stopwatch.Show();
-            return _stopwatch;
+            return Open(_stopwatch);
+        }
+
+        public TagsOverlay ShowTags()
+        {
+            if (_tags == null)
+            {
+                _tags = Init(new TagsOverlay(_setup, _canWrite), DefaultOffset(OverlaySettings.Tags));
+            }
+            UpdateTags();
+            return Open(_tags);
+        }
+
+        private T Init<T>(T overlay, double offsetX) where T : OverlayWindow
+        {
+            overlay.IsVisibleChanged += (s, e) => Changed?.Invoke(this, EventArgs.Empty);
+            overlay.Place(DefaultPosition(offsetX));
+            return overlay;
+        }
+
+        private T Open<T>(T overlay) where T : OverlayWindow
+        {
+            overlay.ApplyOpacity(OverlaySettings.ReadOpacity(_setup));
+            overlay.Show();
+            return overlay;
         }
 
         /// <summary>Feeds the latest live state (once per second, from the dashboard).</summary>
@@ -55,9 +91,35 @@ namespace TraXile.Next.Overlays
         {
             _live = live ?? new LiveState();
             if (IsStopwatchOpen) _stopwatch.Update(_live);
+            if (IsTagsOpen) UpdateTags();
         }
 
-        /// <summary>Default place of an overlay: top-left of the main window, the tags overlay 200 to the right.</summary>
+        private void UpdateTags()
+        {
+            IReadOnlyList<TagInfo> all = _source.GetTags();
+            TagInfo[] slotTags = _tagSlots.Select(s => OverlaySettings.ResolveTag(s, all)).ToArray();
+            _tags.Update(_live, TagsOverlay.SlotsFor(_live, slotTags));
+        }
+
+        /// <summary>Re-reads opacity and tag slots after the overlay settings changed.</summary>
+        public void ReloadSettings()
+        {
+            _tagSlots = OverlaySettings.ReadTagSlots(_setup);
+            int opacity = OverlaySettings.ReadOpacity(_setup);
+            foreach (OverlayWindow w in Windows) w.ApplyOpacity(opacity);
+            if (IsTagsOpen) UpdateTags();
+        }
+
+        /// <summary>Moves all overlays back to their default place next to the main window and saves it.</summary>
+        public void ResetPositions()
+        {
+            _stopwatch?.ResetPosition(DefaultPosition(DefaultOffset(OverlaySettings.Stopwatch)));
+            _tags?.ResetPosition(DefaultPosition(DefaultOffset(OverlaySettings.Tags)));
+        }
+
+        /// <summary>Classic defaults: the stopwatch at the main window's corner, the tags overlay 200 to the right.</summary>
+        private static double DefaultOffset(string id) => id == OverlaySettings.Tags ? 200 : 0;
+
         private Point DefaultPosition(double offsetX)
         {
             Window main = _mainWindow?.Invoke();
@@ -70,8 +132,9 @@ namespace TraXile.Next.Overlays
 
         public void Dispose()
         {
-            _stopwatch?.CloseForGood();
+            foreach (OverlayWindow w in Windows.ToList()) w.CloseForGood();
             _stopwatch = null;
+            _tags = null;
         }
     }
 }
