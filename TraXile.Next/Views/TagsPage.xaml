@@ -213,6 +213,52 @@
 
                             <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
 
+                            <!-- Sound notification -->
+                            <StackPanel Margin="24,16">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Sound" Style="{StaticResource SettingName}" />
+                                        <TextBlock Style="{StaticResource SettingHelp}" Text="Played when the tag becomes active on the current activity." />
+                                    </StackPanel>
+                                    <ui:ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding EditSoundEnabled}" />
+                                </Grid>
+
+                                <Grid Margin="0,12,0,0" Visibility="{Binding EditSoundEnabled, Converter={StaticResource BoolToVis}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox ItemsSource="{Binding SoundFiles}" SelectedItem="{Binding EditSoundId}" ToolTip="Sound file" />
+                                    <ui:Button Grid.Column="1" Margin="8,0,0,0" Padding="10,0" MinHeight="36" Command="{Binding PlaySoundCommand}"
+                                               ToolTip="Play the sound">
+                                        <ui:Button.Icon><ui:SymbolIcon Symbol="Play20" /></ui:Button.Icon>
+                                    </ui:Button>
+                                </Grid>
+                                <TextBlock Style="{StaticResource SettingHelp}" Margin="0,8,0,0"
+                                           Visibility="{Binding HasSoundFiles, Converter={StaticResource InvBoolToVis}}"
+                                           Text="No sound files found. Put .mp3 or .wav files into the audio folder and reload." />
+
+                                <WrapPanel Margin="-8,10,0,0">
+                                    <ui:Button Content="Open audio folder" Style="{StaticResource SmallButton}" Appearance="Transparent" Margin="0,0,4,0" Click="OpenAudioFolder_Click"
+                                               ToolTip="Add your own .mp3 or .wav files here">
+                                        <ui:Button.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></ui:Button.Icon>
+                                    </ui:Button>
+                                    <ui:Button Content="Reload sounds" Style="{StaticResource SmallButton}" Appearance="Transparent" Margin="0,0,4,0" Command="{Binding ReloadSoundsCommand}">
+                                        <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowClockwise20" /></ui:Button.Icon>
+                                    </ui:Button>
+                                    <ui:Button Content="Reset to default" Style="{StaticResource SmallButton}" Appearance="Transparent" Margin="0,0,4,0" Command="{Binding ResetSoundCommand}"
+                                               ToolTip="No sound, like a new tag">
+                                        <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowUndo20" /></ui:Button.Icon>
+                                    </ui:Button>
+                                </WrapPanel>
+                            </StackPanel>
+
+                            <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
                             <Grid Margin="24,16,24,20">
                                 <StackPanel Orientation="Horizontal">
                                     <ui:Button Content="Save" Appearance="Primary" Command="{Binding SaveCommand}" Margin="0,0,8,0" />
