@@ -6,6 +6,7 @@
     xmlns:local="clr-namespace:TraXile.Next"
     xmlns:svc="clr-namespace:TraXile.Next.Services"
     xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
+    xmlns:views="clr-namespace:TraXile.Next.Views"
     Title="Activity log"
     ScrollViewer.CanContentScroll="False">
     <!-- WPF-UI: NavigationViewContentPresenter.IsDynamicScrollViewerEnabled = page's CanContentScroll.
@@ -13,7 +14,6 @@
          realizes every row (UI freeze with large histories) instead of virtualizing. -->
 
     <Page.Resources>
-        <local:EnumEqualsConverter x:Key="EnumEq" />
         <local:InverseBoolToVisibilityConverter x:Key="InvBoolToVis" />
 
         <ItemsPanelTemplate x:Key="WrapPanelTemplate">
@@ -57,25 +57,6 @@
             </DataTemplate.Triggers>
         </DataTemplate>
 
-        <!-- Combo box entry with color dot and count -->
-        <DataTemplate x:Key="FilterOptionTemplate" DataType="{x:Type vm:FilterOption}">
-            <Grid MinWidth="150">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Ellipse x:Name="Dot" Width="8" Height="8" Fill="{Binding Brush}" Margin="0,0,8,0" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="1" Text="{Binding Label}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                <TextBlock Grid.Column="2" Text="{Binding CountText}" Style="{StaticResource Caption}" Margin="12,0,0,0" VerticalAlignment="Center" />
-            </Grid>
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding Brush}" Value="{x:Null}">
-                    <Setter TargetName="Dot" Property="Visibility" Value="Collapsed" />
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
-
         <Style x:Key="DetailLabel" TargetType="TextBlock" BasedOn="{StaticResource Overline}">
             <Setter Property="Margin" Value="0,0,0,2" />
         </Style>
@@ -105,56 +86,19 @@
                 <TextBlock Text="{Binding Summary}" Style="{StaticResource Meta}" Margin="0,4,0,0" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <ui:Button Content="Export CSV" Appearance="Secondary" Click="Export_Click"
+                <ui:TextBox x:Name="SearchBox" Width="340" PlaceholderText="Search area, type, tier or tag…  (Ctrl+F)"
+                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ClearButtonEnabled="True">
+                    <ui:TextBox.Icon><ui:SymbolIcon Symbol="Search20" /></ui:TextBox.Icon>
+                </ui:TextBox>
+                <ui:Button Content="Export CSV" Appearance="Secondary" Click="Export_Click" Margin="10,0,0,0"
                            ToolTip="Export the filtered list as CSV">
                     <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowDownload20" /></ui:Button.Icon>
                 </ui:Button>
             </StackPanel>
         </Grid>
 
-        <!-- ============ Filter bar ============ -->
-        <Border Grid.Row="1" Style="{StaticResource Card}" Padding="12" Margin="0,0,0,16">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" MinWidth="220" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <ui:TextBox x:Name="SearchBox" PlaceholderText="Search area, type, tier or tag…  (Ctrl+F)"
-                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ClearButtonEnabled="True">
-                    <ui:TextBox.Icon><ui:SymbolIcon Symbol="Search20" /></ui:TextBox.Icon>
-                </ui:TextBox>
-
-                <ComboBox Grid.Column="1" Margin="10,0,0,0" MinWidth="190" ToolTip="Activity type"
-                          ItemsSource="{Binding TypeOptions}" SelectedItem="{Binding SelectedType}"
-                          ItemTemplate="{StaticResource FilterOptionTemplate}" />
-
-                <ComboBox Grid.Column="2" Margin="10,0,0,0" MinWidth="170" ToolTip="Tag"
-                          ItemsSource="{Binding TagOptions}" SelectedItem="{Binding SelectedTag}"
-                          ItemTemplate="{StaticResource FilterOptionTemplate}" />
-
-                <Border Grid.Column="3" Margin="10,0,0,0" Style="{StaticResource SegmentedGroup}">
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton Style="{StaticResource Segment}" GroupName="LogRange" Content="Today"
-                                     IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Today}" />
-                        <RadioButton Style="{StaticResource Segment}" GroupName="LogRange" Content="7 days"
-                                     IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Week}" />
-                        <RadioButton Style="{StaticResource Segment}" GroupName="LogRange" Content="30 days"
-                                     IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Month}" />
-                        <RadioButton Style="{StaticResource Segment}" GroupName="LogRange" Content="All"
-                                     IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=All}" />
-                    </StackPanel>
-                </Border>
-
-                <ui:Button Grid.Column="4" Margin="8,0,0,0" Appearance="Transparent" ToolTip="Clear all filters"
-                           Command="{Binding ClearFiltersCommand}" IsEnabled="{Binding HasActiveFilters}">
-                    <ui:Button.Icon><ui:SymbolIcon Symbol="FilterDismiss20" /></ui:Button.Icon>
-                </ui:Button>
-            </Grid>
-        </Border>
+        <!-- ============ Global filter ============ -->
+        <views:GlobalFilterBar Grid.Row="1" Margin="0,0,0,16" />
 
         <!-- ============ Grid + details ============ -->
         <Grid Grid.Row="2">
