@@ -97,6 +97,60 @@
 
             <!-- further sections are added below -->
             <StackPanel x:Name="MoreSections" />
-        </StackPanel>
+
+            <!-- ============ Maintenance ============ -->
+            <TextBlock Text="MAINTENANCE" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,28">
+                <StackPanel>
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Reload log" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Reads Client.txt again from the start and rebuilds all activities. Tags and pauses you added by hand are lost." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Reload…" VerticalAlignment="Center" Click="Reload_Click" IsEnabled="{Binding CanMaintain}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowClockwise20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Shrink log" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Keeps a copy of Client.txt next to it and empties the original, so TraXile starts fast again. Your history stays." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Shrink…" VerticalAlignment="Center" Click="Shrink_Click" IsEnabled="{Binding CanMaintain}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowMinimize20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Full reset" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Deletes all activities and statistics and empties Client.txt. You can create a backup first." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Reset…" Appearance="Danger" VerticalAlignment="Center" Click="Reset_Click" IsEnabled="{Binding CanMaintain}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="Delete20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+                </StackPanel>
+            </Border>        </StackPanel>
     </ScrollViewer>
 </Page>

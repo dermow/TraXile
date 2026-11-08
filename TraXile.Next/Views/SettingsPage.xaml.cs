@@ -54,5 +54,43 @@ namespace TraXile.Next.Views
 
             if (!_vm.ChangeClientTxt(dlg.FileName, out string error)) ShowError("Could not change the log", error);
         }
+
+        private async void Reload_Click(object sender, RoutedEventArgs e)
+        {
+            if (!await ConfirmAsync("Reload the log?",
+                "TraXile restarts and reads Client.txt again from the start. All activities are rebuilt; " +
+                "tags and pauses you added by hand are lost.", "Restart and reload")) return;
+
+            if (!_vm.ReloadLogfile(out string error)) ShowError("Reload failed", error);
+        }
+
+        private async void Shrink_Click(object sender, RoutedEventArgs e)
+        {
+            if (!await ConfirmAsync("Shrink the log?",
+                "A copy of Client.txt is kept next to it (Client.<date>.txt) and the original is emptied. " +
+                "Your history stays. TraXile restarts afterwards.", "Shrink and restart")) return;
+
+            if (!_vm.ShrinkLogfile(System.DateTime.Now, out _, out string error)) ShowError("Shrinking failed", error);
+        }
+
+        private async void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            var box = new MessageBox
+            {
+                Title = "Reset everything?",
+                Content = "All activities and statistics are deleted and Client.txt is emptied. This cannot be undone.\n\n" +
+                          "It is recommended to create a backup first.",
+                PrimaryButtonText = "Back up and reset",
+                SecondaryButtonText = "Reset without backup",
+                CloseButtonText = "Cancel",
+                PrimaryButtonAppearance = Wpf.Ui.Controls.ControlAppearance.Danger,
+                Owner = Window.GetWindow(this)
+            };
+            MessageBoxResult choice = await box.ShowDialogAsync();
+            if (choice == MessageBoxResult.None) return;
+
+            bool backup = choice == MessageBoxResult.Primary;
+            if (!_vm.FullReset(backup, System.DateTime.Now, out _, out string error)) ShowError("Reset failed", error);
+        }
     }
 }
