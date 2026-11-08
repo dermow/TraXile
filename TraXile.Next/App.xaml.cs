@@ -139,9 +139,9 @@ namespace TraXile.Next
             Filter = new GlobalFilter(leagues);
             FilterBar = new FilterBarViewModel(Filter, Source);
             ApplyFilterArg(args);
-            ActivityLog = new ActivityLogViewModel(Source, Filter);
-            Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
             CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
+            ActivityLog = new ActivityLogViewModel(Source, Filter, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);
+            Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
 
             // Screenshots use the default overlay settings, not the ones of this machine
             AppSetup overlaySetup = ScreenshotPath == null ? AppSetup.Default

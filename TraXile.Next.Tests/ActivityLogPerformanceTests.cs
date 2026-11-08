@@ -26,6 +26,7 @@ namespace TraXile.Next.Tests
         {
             _output = output;
             _vm = new ActivityLogViewModel(_source); // warm-up (JIT, brush cache)
+            _vm.MaxItems = ActivityLogViewModel.AllItems; // measure the full list
         }
 
         public void Dispose()
