@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Controls;
 
 namespace TraXile.Next.Views
@@ -8,6 +9,11 @@ namespace TraXile.Next.Views
         {
             InitializeComponent();
             DataContext = App.Dashboard;
+        }
+
+        private void ViewAll_Click(object sender, RoutedEventArgs e)
+        {
+            (Window.GetWindow(this) as MainWindow)?.RootNavigation.Navigate(typeof(ActivityLogPage));
         }
     }
 }

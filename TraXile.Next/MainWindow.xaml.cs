@@ -29,7 +29,8 @@ namespace TraXile.Next
 
             Loaded += (s, e) =>
             {
-                RootNavigation.Navigate(typeof(DashboardPage));
+                bool log = string.Equals(App.StartPage, "log", StringComparison.OrdinalIgnoreCase);
+                RootNavigation.Navigate(log ? typeof(ActivityLogPage) : typeof(DashboardPage));
                 if (App.ScreenshotPath != null) ScheduleScreenshot();
             };
         }

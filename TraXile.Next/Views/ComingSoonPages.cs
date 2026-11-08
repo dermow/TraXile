@@ -73,15 +73,6 @@ namespace TraXile.Next.Views
         }
     }
 
-    public sealed class ActivityLogPage : ComingSoonPage
-    {
-        public ActivityLogPage() : base("Activity log", SymbolRegular.History24,
-            "Every tracked run in a fast, virtualized data grid with instant search and filter chips.",
-            "Full-text search and filters (type, area, tags, time range)",
-            "Activity details side panel with timeline of side areas",
-            "Bulk tagging, CSV export, delete") { }
-    }
-
     public sealed class StatisticsPage : ComingSoonPage
     {
         public StatisticsPage() : base("Statistics", SymbolRegular.DataTrending24,

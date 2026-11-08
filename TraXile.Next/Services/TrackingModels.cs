@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
 
 namespace TraXile.Next.Services
@@ -18,12 +19,21 @@ namespace TraXile.Next.Services
         public DateTime Started { get; set; }
         public int TotalSeconds { get; set; }
         public int Deaths { get; set; }
+        public int Portals { get; set; }
+        public double PausedSeconds { get; set; }
         public IReadOnlyList<TagInfo> Tags { get; set; } = Array.Empty<TagInfo>();
+
+        /// <summary>Side areas visited during this activity (Zana, Vaal, Abyss, Sanctum, ...).</summary>
+        public IReadOnlyList<ActivityInfo> SubActivities { get; set; } = Array.Empty<ActivityInfo>();
 
         public string TypeName => ActivityPalette.DisplayName(Type);
         public Brush TypeBrush => ActivityPalette.Brush(Type);
         public string Duration => FormatDuration(TotalSeconds);
         public string StartedText => Started.ToString("ddd HH:mm");
+        public string StartedFull => Started.ToString("yyyy-MM-dd HH:mm");
+        public string PausedText => PausedSeconds >= 1 ? FormatDuration((int)PausedSeconds) : "—";
+        public string TagNames => string.Join(", ", Tags.Select(t => t.Name));
+        public bool HasSubActivities => SubActivities.Count > 0;
 
         public string LevelText =>
             MapTier > 0 ? $"T{MapTier}" :
@@ -44,6 +54,9 @@ namespace TraXile.Next.Services
         public string Name { get; set; }
         public Brush Background { get; set; }
         public Brush Foreground { get; set; }
+
+        /// <summary>Default tags are set automatically by the tracker and cannot be added/removed manually.</summary>
+        public bool IsDefault { get; set; }
     }
 
     /// <summary>
@@ -78,5 +91,17 @@ namespace TraXile.Next.Services
         double GetHideoutSeconds(DateTime from, DateTime to);
         int GetTimeCap(ACTIVITY_TYPES type);
         void TogglePause();
+
+        /// <summary>All known tags (default and custom).</summary>
+        IReadOnlyList<TagInfo> GetTags();
+
+        /// <summary>Attach a (non-default) tag to an activity and persist it.</summary>
+        void AddTag(string activityId, string tagId);
+
+        /// <summary>Remove a (non-default) tag from an activity and persist it.</summary>
+        void RemoveTag(string activityId, string tagId);
+
+        /// <summary>Delete activities from the history and the database.</summary>
+        void DeleteActivities(IReadOnlyCollection<string> activityIds);
     }
 }
