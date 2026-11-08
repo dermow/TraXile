@@ -183,24 +183,53 @@ namespace TraXile.Next.Views
             if (menu.Items.Count > 0) menu.IsOpen = true;
         }
 
-        private void Export_Click(object sender, RoutedEventArgs e) => Export(_vm.MatchingItems, "TraXile_Activities");
+        // Classic export sources: all entries, filtered entries, selected entries; formats CSV and JSON
+        private void Export_Click(object sender, RoutedEventArgs e)
+        {
+            var menu = new ContextMenu { PlacementTarget = (UIElement)sender, Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom };
+            string filtered = _vm.HasActiveFilters ? "Filtered activities" : "Shown activities";
+            AddExportItems(menu, $"{filtered} ({_vm.MatchingItems.Count:N0})", () => _vm.MatchingItems, "TraXile_Activities");
+            menu.Items.Add(new Separator());
+            AddExportItems(menu, $"All activities ({_vm.AllActivities.Count:N0})", () => _vm.AllActivities, "TraXile_Activities_All");
+            menu.IsOpen = true;
+        }
 
-        private void ExportSelected_Click(object sender, RoutedEventArgs e) => Export(_vm.SelectedItems.ToList(), "TraXile_Activities_Selected");
+        private void ExportSelected_Click(object sender, RoutedEventArgs e)
+        {
+            var menu = new ContextMenu { PlacementTarget = (UIElement)sender, Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom };
+            AddExportItems(menu, $"{_vm.SelectedCount:N0} selected activities", () => _vm.SelectedItems.ToList(), "TraXile_Activities_Selected");
+            menu.IsOpen = true;
+        }
 
-        private void Export(IReadOnlyCollection<ActivityInfo> activities, string baseName)
+        private void AddExportItems(ContextMenu menu, string label, Func<IReadOnlyCollection<ActivityInfo>> activities, string baseName)
+        {
+            menu.Items.Add(new MenuItem { Header = label.ToUpperInvariant(), Style = (Style)FindResource("MenuSectionHeader") });
+            foreach (ExportFormat format in new[] { ExportFormat.Csv, ExportFormat.Json })
+            {
+                var item = new MenuItem { Header = format == ExportFormat.Csv ? "Export as CSV" : "Export as JSON" };
+                item.Click += (s, a) => Export(activities(), baseName, format);
+                menu.Items.Add(item);
+            }
+        }
+
+        private enum ExportFormat { Csv, Json }
+
+        private void Export(IReadOnlyCollection<ActivityInfo> activities, string baseName, ExportFormat format)
         {
             if (activities.Count == 0) return;
 
+            string ext = format == ExportFormat.Csv ? "csv" : "json";
             var dlg = new SaveFileDialog
             {
-                Filter = "CSV files (*.csv)|*.csv",
-                FileName = $"{baseName}_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.csv"
+                Filter = format == ExportFormat.Csv ? "CSV files (*.csv)|*.csv" : "JSON files (*.json)|*.json",
+                FileName = $"{baseName}_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.{ext}"
             };
             if (dlg.ShowDialog(Window.GetWindow(this)) != true) return;
 
             try
             {
-                ActivityLogViewModel.ExportCsv(dlg.FileName, activities);
+                if (format == ExportFormat.Csv) ActivityLogViewModel.ExportCsv(dlg.FileName, activities);
+                else ActivityLogViewModel.ExportJson(dlg.FileName, activities);
             }
             catch (Exception ex)
             {

@@ -334,6 +334,33 @@ namespace TraXile.Next.ViewModels
             File.WriteAllText(path, sb.ToString(), new UTF8Encoding(true));
         }
 
+        /// <summary>
+        /// Export activities as JSON exactly like the classic TraXile (Main.WriteActivitiesToJSON): the core's
+        /// <see cref="TrX_BackendSync_ActivityDocument"/> per activity, indented by Newtonsoft.Json, UTF-8 without BOM.
+        /// </summary>
+        public static void ExportJson(string path, IEnumerable<ActivityInfo> activities)
+        {
+            List<TrX_BackendSync_ActivityDocument> docs = activities.Select(a => new TrX_BackendSync_ActivityDocument
+            {
+                AreaName = a.AreaRaw,
+                AreaLevel = a.AreaLevel,
+                DurationSec = a.TotalSeconds,
+                Tags = a.TagIds.ToList(),
+                ActivityType = a.Type.ToString(),
+                Identifier = a.Id,
+                DeathCounter = a.Deaths,
+                StartTime = a.Started
+            }).ToList();
+
+            using (var writer = new StreamWriter(path))
+            {
+                writer.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(docs, Newtonsoft.Json.Formatting.Indented));
+            }
+        }
+
+        /// <summary>The whole history (classic export "All entries").</summary>
+        public IReadOnlyList<ActivityInfo> AllActivities => _all;
+
         public IEnumerable<ActivityInfo> SelectedItems => Items.Where(a => _selectedIds.Contains(a.Id));
 
         public void Dispose()
