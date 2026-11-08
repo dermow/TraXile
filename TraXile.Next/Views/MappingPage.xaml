@@ -1,0 +1,82 @@
+<Page
+    x:Class="TraXile.Next.Views.MappingPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:views="clr-namespace:TraXile.Next.Views"
+    Title="Mapping">
+
+    <StackPanel Margin="{StaticResource PagePadding}">
+        <!-- ============ Header ============ -->
+        <TextBlock Text="Mapping" Style="{StaticResource PageTitle}" />
+        <TextBlock Text="{Binding Summary}" Style="{StaticResource Meta}" Margin="0,4,0,24" />
+
+        <views:GlobalFilterBar Margin="0,0,0,16" />
+
+        <!-- ============ Tier charts ============ -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Maps per tier" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="How many maps of each tier you ran" Style="{StaticResource CardSubtitle}" />
+                    <lvc:CartesianChart Height="260" Series="{Binding TierCountSeries}" XAxes="{Binding TierXAxes}" YAxes="{Binding CountYAxes}"
+                                        TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Average time per tier" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="Minutes per map, capped at the map time cap" Style="{StaticResource CardSubtitle}" />
+                    <lvc:CartesianChart Height="260" Series="{Binding TierTimeSeries}" XAxes="{Binding TierXAxes2}" YAxes="{Binding TimeYAxes}"
+                                        TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ============ Count by map / by tag ============ -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource Card}" VerticalAlignment="Top">
+                <StackPanel>
+                    <TextBlock Text="Count by map" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="Maps you ran most, with their average time" Style="{StaticResource CardSubtitle}" />
+                    <ItemsControl ItemsSource="{Binding ByMap}" />
+                    <TextBlock Text="No maps in the filtered activities." Style="{StaticResource Meta}"
+                               Visibility="{Binding HasData, Converter={StaticResource InvBoolToVis}}" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource Card}" VerticalAlignment="Top">
+                <StackPanel>
+                    <TextBlock Text="Count by tag" Style="{StaticResource CardTitle}" />
+                    <TextBlock Text="Tags on your maps" Style="{StaticResource CardSubtitle}" />
+                    <ItemsControl ItemsSource="{Binding ByTag}" />
+                    <TextBlock Text="None of these maps has a tag.">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource Meta}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ByTag.Count}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </StackPanel>
+</Page>

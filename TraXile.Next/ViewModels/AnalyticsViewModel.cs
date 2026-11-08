@@ -11,6 +11,39 @@ using TraXile.Next.Services;
 
 namespace TraXile.Next.ViewModels
 {
+    /// <summary>A row of a "count by ..." list (maps, areas, tags): label or tag chip, count and a bar relative to the top row.</summary>
+    public sealed class CountRow
+    {
+        public string Label { get; set; }
+        /// <summary>Shown as chip instead of <see cref="Label"/> when set.</summary>
+        public TagInfo Tag { get; set; }
+        public int Count { get; set; }
+        /// <summary>Count relative to the largest row, 0..1 (bar length).</summary>
+        public double Fraction { get; set; }
+        /// <summary>Optional second value, e.g. the average time.</summary>
+        public string Detail { get; set; }
+
+        public bool HasTag => Tag != null;
+        public string CountText => Count.ToString("N0");
+
+        /// <summary>Rows sorted by count (then label), with bars relative to the largest count; zero counts are left out.</summary>
+        public static List<CountRow> Build(IEnumerable<CountRow> rows)
+        {
+            List<CountRow> list = rows.Where(r => r.Count > 0)
+                .OrderByDescending(r => r.Count).ThenBy(r => r.Label, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            int max = list.Count > 0 ? list[0].Count : 0;
+            foreach (CountRow r in list) r.Fraction = max > 0 ? (double)r.Count / max : 0;
+            return list;
+        }
+
+        /// <summary>How often each known tag occurs on the activities (classic "count by tag").</summary>
+        public static List<CountRow> ByTag(IEnumerable<ActivityInfo> activities) =>
+            Build(activities.SelectMany(a => a.Tags.GroupBy(t => t.Id).Select(g => g.First()))
+                .GroupBy(t => t.Id)
+                .Select(g => new CountRow { Label = g.First().Name, Tag = g.First(), Count = g.Count() }));
+    }
+
     /// <summary>
     /// Base of the analytics pages (statistics, mapping, lab, heist, div cards): rebuilds when the history or the
     /// global filter changes and provides chart colors from the design tokens of the current theme.

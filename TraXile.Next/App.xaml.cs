@@ -40,9 +40,10 @@ namespace TraXile.Next
         public static FilterBarViewModel FilterBar { get; private set; }
 
         public static StatisticsViewModel Statistics { get; private set; }
+        public static MappingViewModel Mapping { get; private set; }
 
         /// <summary>The analytics pages (on the global filter), for theme switches and shutdown.</summary>
-        private static AnalyticsViewModel[] AnalyticsPages => new AnalyticsViewModel[] { Statistics };
+        private static AnalyticsViewModel[] AnalyticsPages => new AnalyticsViewModel[] { Statistics, Mapping };
 
         /// <summary>Settings may be written (live data of this app, not forced demo / classic app running).</summary>
         public static bool CanWriteSettings { get; private set; }
@@ -148,6 +149,7 @@ namespace TraXile.Next
             ActivityLog = new ActivityLogViewModel(Source, Filter, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);
             Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
             Statistics = new StatisticsViewModel(Source, Filter);
+            Mapping = new MappingViewModel(Source, Filter);
             foreach (AnalyticsViewModel page in AnalyticsPages) page.SetTheme(IsDark);
 
             // Screenshots use the default overlay settings, not the ones of this machine
