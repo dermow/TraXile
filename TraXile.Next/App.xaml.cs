@@ -15,7 +15,7 @@ namespace TraXile.Next
     ///   --demo                 use sample data instead of the real tracker
     ///   --light / --dark       start with the given theme (default: dark)
     ///   --screenshot file.png  render the main window off-screen to a PNG and exit (implies --demo)
-    ///   --page log             open the given page first (dashboard, log)
+    ///   --page log             open the given page first (dashboard, log, settings, ..., gallery, firstrun, firstrun-empty)
     ///   --select 0,2           preselect activity log rows (for screenshots)
     /// </summary>
     public partial class App : Application
@@ -52,6 +52,14 @@ namespace TraXile.Next
 
             ApplyTheme(IsDark);
 
+            if (ScreenshotPath != null && StartPage != null && StartPage.StartsWith("firstrun", StringComparison.OrdinalIgnoreCase))
+            {
+                ScreenshotFirstRun(withCandidates: !StartPage.EndsWith("-empty", StringComparison.OrdinalIgnoreCase));
+                return;
+            }
+
+            // Dialogs may open before the main window exists; don't let closing them end the app
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
             Source = CreateSource(demo);
             Source.Start();
 
@@ -66,7 +74,26 @@ namespace TraXile.Next
 
             var window = new MainWindow();
             MainWindow = window;
+            ShutdownMode = ShutdownMode.OnMainWindowClose;
             window.Show();
+        }
+
+        /// <summary>--screenshot x.png --page firstrun[-empty]: render the first-run window with sample paths.</summary>
+        private void ScreenshotFirstRun(bool withCandidates)
+        {
+            string[] samples = withCandidates
+                ? new[]
+                {
+                    @"C:\Program Files (x86)\Steam\steamapps\common\Path of Exile\logs\Client.txt",
+                    @"D:\Games\Grinding Gear Games\Path of Exile\logs\Client.txt",
+                }
+                : new string[0];
+            var vm = new FirstRunViewModel(new AppSetup(System.IO.Path.GetTempPath()), samples);
+            var window = new Views.FirstRunWindow(vm);
+            MainWindow = window;
+            Screenshot.PrepareOffscreen(window, 0, window.ContentRoot);
+            window.Show();
+            Screenshot.Schedule(window, ScreenshotPath, TimeSpan.FromSeconds(1));
         }
 
         private static ITrackingSource CreateSource(bool demo)
@@ -80,9 +107,20 @@ namespace TraXile.Next
                     "The classic TraXile is running. Close it to enable live tracking here — showing demo data meanwhile.");
             }
 
+            AppSetup setup = AppSetup.Default;
+            if (!setup.HasValidClientTxt)
+            {
+                // First start (or the configured Client.txt is gone): let the user pick it
+                var firstRun = new Views.FirstRunWindow(new FirstRunViewModel(setup, AppSetup.DetectClientTxt()));
+                if (firstRun.ShowDialog() != true)
+                {
+                    return new DemoTrackingSource("No Client.txt selected yet — showing demo data. Restart TraXile to choose it.");
+                }
+            }
+
             try
             {
-                LiveTrackingSource live = LiveTrackingSource.TryCreate(out string reason);
+                LiveTrackingSource live = LiveTrackingSource.TryCreate(setup, out string reason);
                 return (ITrackingSource)live ?? new DemoTrackingSource(reason);
             }
             catch (Exception ex)
