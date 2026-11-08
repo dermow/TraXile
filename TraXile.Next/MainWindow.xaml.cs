@@ -18,7 +18,7 @@ namespace TraXile.Next
             ModeText.Text = App.Source.IsDemo ? "DEMO" : "● LIVE";
             if (!App.Source.IsDemo)
             {
-                ModeText.Foreground = (Brush)FindResource("PositiveBrush");
+                ModeText.SetResourceReference(System.Windows.Controls.TextBlock.ForegroundProperty, "StatusSuccessBrush");
             }
             UpdateThemeIcon();
 
@@ -29,8 +29,17 @@ namespace TraXile.Next
 
             Loaded += (s, e) =>
             {
-                bool log = string.Equals(App.StartPage, "log", StringComparison.OrdinalIgnoreCase);
-                RootNavigation.Navigate(log ? typeof(ActivityLogPage) : typeof(DashboardPage));
+                if (string.Equals(App.StartPage, "gallery", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Not part of the navigation: show it in place of the page content
+                    RootNavigation.Navigate(typeof(DashboardPage));
+                    RootNavigation.ReplaceContent(new StyleGalleryPage());
+                }
+                else
+                {
+                    bool log = string.Equals(App.StartPage, "log", StringComparison.OrdinalIgnoreCase);
+                    RootNavigation.Navigate(log ? typeof(ActivityLogPage) : typeof(DashboardPage));
+                }
                 if (App.ScreenshotPath != null) ScheduleScreenshot();
             };
         }
@@ -59,9 +68,8 @@ namespace TraXile.Next
             ShowInTaskbar = false;
             Height = 1620; // capture the whole dashboard without scrolling
 
-            // Mica is composed by DWM and not captured by RenderTargetBitmap -> use a solid backdrop
-            WindowBackdropType = WindowBackdropType.None;
-            RootGrid.Background = new SolidColorBrush(App.IsDark ? Color.FromRgb(0x20, 0x20, 0x20) : Color.FromRgb(0xF3, 0xF3, 0xF3));
+            // RenderTargetBitmap only captures the content, not the window background
+            RootGrid.SetResourceReference(System.Windows.Controls.Panel.BackgroundProperty, "BgBrush");
         }
 
         private void ScheduleScreenshot()

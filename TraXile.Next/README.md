@@ -1,14 +1,14 @@
 # TraXile.Next — modern UI (preview)
 
-A from-scratch WPF user interface for TraXile with a Windows 11 Fluent look
-(Mica, sidebar navigation, cards) and modern animated charts.
+A from-scratch WPF user interface for TraXile in the design system of exile-tools.com
+(see [docs/design.md](../docs/design.md)), with sidebar navigation and modern animated charts.
 The classic WinForms app keeps working unchanged; screens are migrated one by one.
 
 ## Stack
 
 | Concern  | Choice | Why |
 |----------|--------|-----|
-| UI       | WPF + [WPF-UI](https://github.com/lepoco/wpfui) 4.3 | Native Fluent controls, Mica, NavigationView |
+| UI       | WPF + [WPF-UI](https://github.com/lepoco/wpfui) 4.3 | Controls and NavigationView, restyled with the design tokens |
 | Charts   | [LiveCharts2](https://livecharts.dev) 2.0.5 (SkiaSharp) | Animated, rounded, tooltips, theming |
 | MVVM     | CommunityToolkit.Mvvm | Observable objects and commands |
 | Core     | Existing `TraXile` project (referenced directly) | Log parsing, SQLite, stats stay battle-tested |
