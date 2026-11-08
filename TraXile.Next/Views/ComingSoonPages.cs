@@ -56,15 +56,6 @@ namespace TraXile.Next.Views
             Content = new ScrollViewer { Content = stack, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
         }
     }
-    public sealed class StatisticsPage : ComingSoonPage
-    {
-        public StatisticsPage() : base("Statistics", SymbolRegular.DataTrending24,
-            "All counters (kills, deaths, cards, bosses, ...) with interactive trend charts.",
-            "Searchable stat list with sparklines",
-            "Zoomable time-series chart per stat",
-            "League comparison") { }
-    }
-
     public sealed class MappingPage : ComingSoonPage
     {
         public MappingPage() : base("Mapping", SymbolRegular.Map24,

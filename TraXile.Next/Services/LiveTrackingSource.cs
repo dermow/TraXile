@@ -11,7 +11,7 @@ namespace TraXile.Next.Services
     /// The core parses Client.txt on worker threads and owns the SQLite database;
     /// this class only converts its state into immutable snapshots for the UI.
     /// </summary>
-    public sealed class LiveTrackingSource : ITrackingSource, ICoreMaintenance
+    public sealed class LiveTrackingSource : ITrackingSource, ICoreMaintenance, IStatsSource
     {
         private readonly TrX_SettingsManager _settings;
         private readonly Dictionary<ACTIVITY_TYPES, int> _timeCaps = new Dictionary<ACTIVITY_TYPES, int>();
@@ -237,6 +237,76 @@ namespace TraXile.Next.Services
             long ts1 = ((DateTimeOffset)from).ToUnixTimeSeconds();
             long ts2 = ((DateTimeOffset)to).ToUnixTimeSeconds();
             return _logic.Stats.GetIncrementValue("HideoutTimeSec", ts1, ts2);
+        }
+
+        // ------------------------------------------------------------------
+        // Stat counters (tx_stats)
+        // ------------------------------------------------------------------
+
+        private static long Unix(DateTime t) => ((DateTimeOffset)t).ToUnixTimeSeconds();
+
+        public IReadOnlyList<StatInfo> GetStats(DateTime from, DateTime to)
+        {
+            if (_logic == null) return Array.Empty<StatInfo>();
+
+            // One query for all stats; same min/max rule as TrX_StatsManager.GetIncrementValue
+            var increase = new Dictionary<string, int>();
+            Query($"SELECT stat_name, min(stat_value), max(stat_value) FROM tx_stats WHERE timestamp BETWEEN {Unix(from)} AND {Unix(to)} GROUP BY stat_name",
+                r =>
+                {
+                    if (r.IsDBNull(0) || r.IsDBNull(1) || r.IsDBNull(2)) return;
+                    increase[r.GetString(0)] = StatMath.Increase(r.GetInt32(1), r.GetInt32(2));
+                });
+
+            string[] keys;
+            try { keys = _logic.Stats.NumericStats.Keys.ToArray(); }
+            catch (InvalidOperationException) { keys = increase.Keys.ToArray(); } // changed by the parser meanwhile
+
+            Dictionary<string, string> names = _logic.StatNamesLong;
+            return keys.Union(increase.Keys)
+                .Select(k => new StatInfo
+                {
+                    Key = k,
+                    Name = names != null && names.TryGetValue(k, out string n) ? n : k,
+                    Value = increase.TryGetValue(k, out int v) ? v : 0
+                })
+                .ToList();
+        }
+
+        public IReadOnlyList<StatEntry> GetStatSeries(string key, DateTime from, DateTime to)
+        {
+            var result = new List<StatEntry>();
+            if (_logic == null || string.IsNullOrEmpty(key)) return result;
+
+            string name = Sql(key);
+            Query($"SELECT timestamp, stat_value FROM tx_stats WHERE stat_name = '{name}' AND timestamp < {Unix(from)} ORDER BY timestamp DESC LIMIT 1",
+                r => result.Add(Entry(r.GetInt64(0), r.GetInt32(1))));
+            Query($"SELECT timestamp, stat_value FROM tx_stats WHERE stat_name = '{name}' AND timestamp BETWEEN {Unix(from)} AND {Unix(to)} ORDER BY timestamp ASC",
+                r => result.Add(Entry(r.GetInt64(0), r.GetInt32(1))));
+            return result;
+        }
+
+        /// <summary>Runs a query on the core's connection; the core logs errors and returns no reader then.</summary>
+        private void Query(string sql, Action<Microsoft.Data.Sqlite.SqliteDataReader> row)
+        {
+            using (var reader = _logic?.Database.GetSQLReader(sql))
+            {
+                if (reader == null) return;
+                while (reader.Read()) row(reader);
+            }
+        }
+
+        private static StatEntry Entry(long unix, int value) =>
+            new StatEntry(DateTimeOffset.FromUnixTimeSeconds(unix).LocalDateTime, value);
+
+        public DateTime? OldestStatTime
+        {
+            get
+            {
+                if (_logic == null) return null;
+                long ts = _logic.Stats.GetOldestTimeStamp();
+                return ts > 0 ? DateTimeOffset.FromUnixTimeSeconds(ts).LocalDateTime : (DateTime?)null;
+            }
         }
 
         public int GetTimeCap(ACTIVITY_TYPES type) => _timeCaps.TryGetValue(type, out int c) ? c : 3600;
