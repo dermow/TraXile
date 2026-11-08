@@ -183,7 +183,7 @@ namespace TraXile.Next.Views
             if (menu.Items.Count > 0) menu.IsOpen = true;
         }
 
-        private void Export_Click(object sender, RoutedEventArgs e) => Export(_vm.Items, "TraXile_Activities");
+        private void Export_Click(object sender, RoutedEventArgs e) => Export(_vm.MatchingItems, "TraXile_Activities");
 
         private void ExportSelected_Click(object sender, RoutedEventArgs e) => Export(_vm.SelectedItems.ToList(), "TraXile_Activities_Selected");
 

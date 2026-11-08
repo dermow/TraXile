@@ -86,12 +86,15 @@
                 <TextBlock Text="{Binding Summary}" Style="{StaticResource Meta}" Margin="0,4,0,0" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <ComboBox Width="150" Margin="0,0,10,0" ItemsSource="{Binding MaxItemsOptions}" SelectedItem="{Binding SelectedMaxItems}"
+                          DisplayMemberPath="Label"
+                          ToolTip="How many of the newest activities the list shows. A search always looks at all of them." />
                 <ui:TextBox x:Name="SearchBox" Width="340" PlaceholderText="Search area, type, tier or tag…  (Ctrl+F)"
                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ClearButtonEnabled="True">
                     <ui:TextBox.Icon><ui:SymbolIcon Symbol="Search20" /></ui:TextBox.Icon>
                 </ui:TextBox>
                 <ui:Button Content="Export CSV" Appearance="Secondary" Click="Export_Click" Margin="10,0,0,0"
-                           ToolTip="Export the filtered list as CSV">
+                           ToolTip="Export all activities that match the filter and search as CSV">
                     <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowDownload20" /></ui:Button.Icon>
                 </ui:Button>
             </StackPanel>

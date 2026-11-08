@@ -17,6 +17,7 @@ namespace TraXile.Next.Tests
         public ActivityLogViewModelTests()
         {
             _vm = new ActivityLogViewModel(_source);
+            _vm.MaxItems = ActivityLogViewModel.AllItems; // most tests look at the whole history
         }
 
         public void Dispose()

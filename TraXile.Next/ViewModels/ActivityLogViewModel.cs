@@ -36,12 +36,31 @@ namespace TraXile.Next.ViewModels
         private IReadOnlyList<TagInfo> _allTags = Array.Empty<TagInfo>();
         private HashSet<string> _selectedIds = new HashSet<string>();
 
+        /// <summary>Classic setting: how many of the newest activities the list shows without a search.</summary>
+        public const string MaxItemsKey = "actlog.maxitems";
+
+        /// <summary>Stored for "all" (a number, so the classic app can still read it).</summary>
+        public const int AllItems = 1000000;
+
+        private readonly AppSetup _settings;
+        private readonly bool _canWriteSettings;
+
         /// <param name="filter">The global filter; a private, empty one if null (tests).</param>
-        public ActivityLogViewModel(ITrackingSource source, GlobalFilter filter = null)
+        /// <param name="settings">config.xml for <see cref="MaxItemsKey"/>; classic default (500) if null.</param>
+        /// <param name="canWriteSettings">False while the classic app owns the data: the choice is not stored.</param>
+        public ActivityLogViewModel(ITrackingSource source, GlobalFilter filter = null, AppSetup settings = null, bool canWriteSettings = false)
         {
             _source = source;
+            _settings = settings;
+            _canWriteSettings = canWriteSettings;
             Filter = filter ?? new GlobalFilter();
             Filter.Changed += OnFilterChanged;
+
+            MaxItemsOptions = new[] { 50, 100, 500, 1000, 1500, AllItems }
+                .Select(n => new NamedOption<int> { Label = n == AllItems ? "All" : $"Newest {n:N0}", Value = n })
+                .ToList();
+            int stored = int.TryParse(settings?.ReadSetting(MaxItemsKey, "500"), out int m) && m > 0 ? m : 500;
+            _maxItems = stored >= AllItems ? AllItems : stored;
 
             ClearFiltersCommand = new RelayCommand(ClearFilters);
             AddTagCommand = new RelayCommand<TagInfo>(AddTagToSelection);
@@ -99,6 +118,33 @@ namespace TraXile.Next.ViewModels
 
         public bool HasActiveFilters => !string.IsNullOrWhiteSpace(SearchText) || Filter.IsActive;
 
+        public IReadOnlyList<NamedOption<int>> MaxItemsOptions { get; }
+
+        private int _maxItems;
+        /// <summary>
+        /// Without a search the list shows only the newest <see cref="MaxItems"/> matches; a search looks at all
+        /// of them (classic DoSearch).
+        /// </summary>
+        public int MaxItems
+        {
+            get => _maxItems;
+            set
+            {
+                if (value <= 0 || !SetProperty(ref _maxItems, value)) return;
+                OnPropertyChanged(nameof(SelectedMaxItems));
+                if (_canWriteSettings) _settings?.WriteSetting(MaxItemsKey, value.ToString(CultureInfo.InvariantCulture));
+                ApplyFilter();
+            }
+        }
+
+        /// <summary>The option of <see cref="MaxItems"/>; a stored value that is not in the list shows as custom entry.</summary>
+        public NamedOption<int> SelectedMaxItems
+        {
+            get => MaxItemsOptions.FirstOrDefault(o => o.Value == MaxItems)
+                   ?? new NamedOption<int> { Label = $"Newest {MaxItems:N0}", Value = MaxItems };
+            set { if (value != null) MaxItems = value.Value; }
+        }
+
         /// <summary>Clears the search and resets the global filter.</summary>
         private void ClearFilters()
         {
@@ -118,6 +164,13 @@ namespace TraXile.Next.ViewModels
 
         private string _summary = "";
         public string Summary { get => _summary; private set => SetProperty(ref _summary, value); }
+
+        /// <summary>All activities that match filter and search, also those beyond <see cref="MaxItems"/>.</summary>
+        public IReadOnlyList<ActivityInfo> MatchingItems { get; private set; } = Array.Empty<ActivityInfo>();
+
+        private bool _isLimited;
+        /// <summary>More activities match than <see cref="MaxItems"/> allows (only without a search).</summary>
+        public bool IsLimited { get => _isLimited; private set => SetProperty(ref _isLimited, value); }
 
         public bool IsEmpty => Items.Count == 0;
         public string EmptyText => _all.Count == 0
@@ -141,13 +194,27 @@ namespace TraXile.Next.ViewModels
             string[] terms = SearchText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (terms.Length > 0) q = q.Where(a => terms.All(term => Matches(a, term)));
 
-            List<ActivityInfo> list = q.ToList();
+            List<ActivityInfo> matched = q.ToList();
+            bool limited = terms.Length == 0 && matched.Count > MaxItems;
+            List<ActivityInfo> list = limited ? matched.Take(MaxItems).ToList() : matched; // newest first
+            MatchingItems = matched;
             Items = list;
 
-            int totalSec = list.Sum(a => a.TotalSeconds);
-            Summary = list.Count == _all.Count
-                ? $"{list.Count:N0} activities · {totalSec / 3600.0:N1} h tracked"
-                : $"{list.Count:N0} of {_all.Count:N0} activities · {totalSec / 3600.0:N1} h";
+            int totalSec = matched.Sum(a => a.TotalSeconds);
+            string hours = $"{totalSec / 3600.0:N1} h";
+            if (limited)
+            {
+                Summary = matched.Count == _all.Count
+                    ? $"Newest {list.Count:N0} of {matched.Count:N0} activities · {hours} tracked"
+                    : $"Newest {list.Count:N0} of {matched.Count:N0} matching activities · {hours}";
+            }
+            else
+            {
+                Summary = matched.Count == _all.Count
+                    ? $"{matched.Count:N0} activities · {hours} tracked"
+                    : $"{matched.Count:N0} of {_all.Count:N0} activities · {hours}";
+            }
+            IsLimited = limited;
 
             OnPropertyChanged(nameof(IsEmpty));
             OnPropertyChanged(nameof(EmptyText));
