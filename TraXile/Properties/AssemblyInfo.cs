@@ -35,3 +35,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("2.2.6")]
 
 [assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config")]
+
+// The new WPF UI (TraXile.Next) reuses the core logic and internal helpers (settings, paths)
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TraXile.Next")]
