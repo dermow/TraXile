@@ -113,13 +113,4 @@ namespace TraXile.Next.Views
             "Sound notification per tag",
             "Overlay tag selection") { }
     }
-
-    public sealed class SettingsPage : ComingSoonPage
-    {
-        public SettingsPage() : base("Settings", SymbolRegular.Settings24,
-            "Client.txt location, time caps, overlays, backups and updates.",
-            "Theme (light / dark / system) and accent color",
-            "Time caps per activity type",
-            "Overlay configuration, backups & restore") { }
-    }
 }

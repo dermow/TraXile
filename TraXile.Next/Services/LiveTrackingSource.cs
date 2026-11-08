@@ -11,7 +11,7 @@ namespace TraXile.Next.Services
     /// The core parses Client.txt on worker threads and owns the SQLite database;
     /// this class only converts its state into immutable snapshots for the UI.
     /// </summary>
-    public sealed class LiveTrackingSource : ITrackingSource
+    public sealed class LiveTrackingSource : ITrackingSource, ICoreMaintenance
     {
         private readonly TrX_SettingsManager _settings;
         private readonly Dictionary<ACTIVITY_TYPES, int> _timeCaps = new Dictionary<ACTIVITY_TYPES, int>();
@@ -196,6 +196,27 @@ namespace TraXile.Next.Services
         }
 
         public int GetTimeCap(ACTIVITY_TYPES type) => _timeCaps.TryGetValue(type, out int c) ? c : 3600;
+
+        public void SetTimeCap(ACTIVITY_TYPES type, int seconds)
+        {
+            _timeCaps[type] = seconds;
+            RaiseHistoryChanged(); // statistics use the caps
+        }
+
+        /// <summary>
+        /// Stops the core and empties the parsed history, so the next start reads Client.txt from the beginning
+        /// (classic: InitLogFileReload). Tags and pause times stored with activities are lost.
+        /// </summary>
+        public void StopAndClearHistory()
+        {
+            if (_logic == null) return;
+            _logic.Stop();
+            _logic.Database.DoNonQuery("DELETE FROM tx_activity_log");
+            _logic.Database.DoNonQuery("DELETE FROM tx_stats");
+            _logic.Database.DoNonQuery("UPDATE tx_kvstore SET value = '0' WHERE key = 'last_hash'");
+            _logic.Database.Close();
+            _logic = null;
+        }
 
         public void TogglePause()
         {

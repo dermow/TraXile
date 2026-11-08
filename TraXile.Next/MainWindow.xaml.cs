@@ -20,6 +20,7 @@ namespace TraXile.Next
                 ModeText.SetResourceReference(System.Windows.Controls.TextBlock.ForegroundProperty, "StatusSuccessBrush");
             }
             UpdateThemeIcon();
+            App.ThemeChanged += (s, e) => UpdateThemeIcon();
 
             if (App.ScreenshotPath != null)
             {
@@ -71,8 +72,7 @@ protected override void OnStateChanged(EventArgs e)
 
         private void ThemeButton_Click(object sender, RoutedEventArgs e)
         {
-            App.ApplyTheme(!App.IsDark);
-            UpdateThemeIcon();
+            App.SetTheme(!App.IsDark);
         }
 
         private void UpdateThemeIcon()
