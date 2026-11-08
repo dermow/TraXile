@@ -25,6 +25,14 @@ namespace TraXile.Next
         public static DashboardViewModel Dashboard { get; private set; }
         public static ActivityLogViewModel ActivityLog { get; private set; }
         public static LoadingViewModel Loading { get; private set; }
+        public static AppInstance Instance { get; private set; }
+        public static Shell.TrayIcon Tray { get; private set; }
+
+        /// <summary>Setting MinimizeToTray (shared with the classic app): minimizing hides the window in the tray.</summary>
+        public static bool MinimizeToTray { get; set; }
+
+        private static string[] _args = Array.Empty<string>();
+        private static bool _restarted;
         public static bool IsDark { get; private set; } = true;
         public static string ScreenshotPath { get; private set; }
 
@@ -39,6 +47,8 @@ namespace TraXile.Next
             base.OnStartup(e);
 
             string[] args = e.Args;
+            _args = args;
+            _restarted = args.Any(a => a.Equals(AppInstance.RestartedArg, StringComparison.OrdinalIgnoreCase));
             int shotIdx = Array.FindIndex(args, a => a.Equals("--screenshot", StringComparison.OrdinalIgnoreCase));
             if (shotIdx >= 0 && shotIdx + 1 < args.Length) ScreenshotPath = args[shotIdx + 1];
             int pageIdx = Array.FindIndex(args, a => a.Equals("--page", StringComparison.OrdinalIgnoreCase));
@@ -58,6 +68,20 @@ namespace TraXile.Next
             {
                 ScreenshotFirstRun(withCandidates: !StartPage.EndsWith("-empty", StringComparison.OrdinalIgnoreCase));
                 return;
+            }
+
+            // Only one TraXile.Next: a second start brings the running one to the front
+            if (ScreenshotPath == null)
+            {
+                Instance = new AppInstance();
+                if (!Instance.TryClaimInstance(_restarted ? TimeSpan.FromSeconds(15) : TimeSpan.Zero))
+                {
+                    Shutdown();
+                    return;
+                }
+                Instance.ShowRequested += (s, a) => Dispatcher.BeginInvoke(new Action(() => Tray?.ShowWindow()));
+                bool.TryParse(AppSetup.Default.ReadSetting("MinimizeToTray", "false"), out bool toTray);
+                MinimizeToTray = toTray;
             }
 
             // Dialogs may open before the main window exists; don't let closing them end the app
@@ -92,6 +116,22 @@ namespace TraXile.Next
             MainWindow = window;
             ShutdownMode = ShutdownMode.OnMainWindowClose;
             window.Show();
+
+            if (ScreenshotPath == null)
+            {
+                Tray = new Shell.TrayIcon(window);
+                Tray.ExitRequested += (s, a) => Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// Restarts TraXile.Next (after reload, reset or restore): the new process waits until this one has
+        /// stopped the core and released its locks.
+        /// </summary>
+        public static void Restart()
+        {
+            AppInstance.StartNewProcess(_args);
+            Current.Shutdown();
         }
 
         /// <summary>--screenshot x.png --page firstrun[-empty]: render the first-run window with sample paths.</summary>
@@ -117,8 +157,8 @@ namespace TraXile.Next
             restore = RestoreResult.Nothing;
             if (demo) return new DemoTrackingSource();
 
-            // Both UIs would parse Client.txt and write the same SQLite database
-            if (Process.GetProcessesByName("TraXile").Length > 0)
+            // Both UIs would parse Client.txt and write the same SQLite database: hold the classic app's lock
+            if (Instance == null || !Instance.TryClaimClassicLock(_restarted ? TimeSpan.FromSeconds(15) : TimeSpan.Zero))
             {
                 return new DemoTrackingSource(
                     "The classic TraXile is running. Close it to enable live tracking here — showing demo data meanwhile.");
@@ -209,6 +249,9 @@ namespace TraXile.Next
             Dashboard?.Dispose();
             ActivityLog?.Dispose();
             Source?.Dispose();
+            Loading?.Dispose();
+            Tray?.Dispose();
+            Instance?.Dispose(); // last: the core is stopped, a restarted process may take over
             base.OnExit(e);
         }
     }
