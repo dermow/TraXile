@@ -56,14 +56,6 @@ namespace TraXile.Next.Views
             Content = new ScrollViewer { Content = stack, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
         }
     }
-    public sealed class MappingPage : ComingSoonPage
-    {
-        public MappingPage() : base("Mapping", SymbolRegular.Map24,
-            "Map tier distribution, average times and your fastest maps.",
-            "Maps per tier and avg. time per tier",
-            "Per-area statistics and personal bests",
-            "Mechanic (tag) share over time") { }
-    }
 
     public sealed class LabPage : ComingSoonPage
     {
