@@ -58,6 +58,17 @@ namespace TraXile.Next
                    ?? typeof(DashboardPage);
         }
 
+protected override void OnStateChanged(EventArgs e)
+        {
+            base.OnStateChanged(e);
+            // Like the classic app: minimized to the notification area instead of the taskbar
+            if (WindowState == WindowState.Minimized && App.MinimizeToTray && App.Tray != null)
+            {
+                Hide();
+                ShowInTaskbar = false;
+            }
+        }
+
         private void ThemeButton_Click(object sender, RoutedEventArgs e)
         {
             App.ApplyTheme(!App.IsDark);
