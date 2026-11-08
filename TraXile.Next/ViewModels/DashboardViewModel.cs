@@ -34,6 +34,13 @@ namespace TraXile.Next.ViewModels
         public Margin SparkMargin { get; } = new Margin(0);
     }
 
+public sealed class NoticeItem
+    {
+        public string Title { get; set; }
+        public string Text { get; set; }
+        public bool IsError { get; set; }
+    }
+
     public sealed class LegendItem
     {
         public string Name { get; set; }
@@ -72,6 +79,7 @@ namespace TraXile.Next.ViewModels
             _refreshDebounce.Tick += (s, e) => { _refreshDebounce.Stop(); Refresh(); };
 
             _source.HistoryChanged += OnHistoryChanged;
+            if (!string.IsNullOrEmpty(_source.Notice)) AddNotice(_source.IsDemo ? "Demo mode" : "Note", _source.Notice);
 
             Refresh();
             UpdateLive();
@@ -94,8 +102,11 @@ namespace TraXile.Next.ViewModels
         public IRelayCommand<string> SetRangeCommand { get; }
 
         public bool IsDemo => _source.IsDemo;
-        public string Notice => _source.Notice;
-        public bool HasNotice => !string.IsNullOrEmpty(_source.Notice);
+        /// <summary>Messages shown above the live card (demo mode, restored backup, ...).</summary>
+        public ObservableCollection<NoticeItem> Notices { get; } = new ObservableCollection<NoticeItem>();
+
+        public void AddNotice(string title, string text, bool isError = false) =>
+            Notices.Add(new NoticeItem { Title = title, Text = text, IsError = isError });
 
         private TimeRange _range = TimeRange.Week;
         public TimeRange Range

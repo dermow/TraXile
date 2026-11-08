@@ -207,6 +207,13 @@ namespace TraXile.Next.Services
 
         public void Start() { }
 
+        /// <summary>Pretend the log is still being read (for screenshots of the loading state).</summary>
+        public bool SimulateLoading { get; set; }
+
+        public bool IsLoading => SimulateLoading;
+
+        public double LoadProgress => SimulateLoading ? 0.42 : 1.0;
+
         public IReadOnlyList<ActivityInfo> GetHistory() => _history.ToList(); // snapshot, the list can be edited
 
         public LiveState GetLiveState()

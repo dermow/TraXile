@@ -94,5 +94,18 @@
                 </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>
         </ui:NavigationView>
-    </Grid>
+
+        <!-- Loading state while Client.txt is read after start -->
+        <Border x:Name="LoadingOverlay" Grid.Row="1" Background="{DynamicResource BgBrush}"
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="420">
+                <TextBlock Text="LOADING" Style="{StaticResource Label}" Foreground="{DynamicResource AccentTextBrush}" />
+                <TextBlock Text="Reading your Path of Exile log" Style="{StaticResource H2}" Margin="0,8,0,4" />
+                <TextBlock Text="This can take a while the first time. Your activities show up as soon as it is done."
+                           Style="{StaticResource Meta}" TextWrapping="Wrap" Margin="0,0,0,20" />
+                <ProgressBar Style="{StaticResource SlimProgress}" Value="{Binding Progress, Mode=OneWay}"
+                             Foreground="{DynamicResource AccentBrush}" />
+                <TextBlock Text="{Binding PercentText}" Style="{StaticResource Num}" FontWeight="SemiBold" Margin="0,8,0,0" />
+            </StackPanel>
+        </Border>    </Grid>
 </ui:FluentWindow>

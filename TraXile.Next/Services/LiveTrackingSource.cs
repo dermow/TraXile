@@ -70,6 +70,11 @@ namespace TraXile.Next.Services
 
         private void RaiseHistoryChanged() => HistoryChanged?.Invoke(this, EventArgs.Empty);
 
+        public bool IsLoading => _logic != null && !_logic.EventQueueInitialized;
+
+        public double LoadProgress =>
+            _logic == null || _logic.LogLinesTotal <= 0 ? 0 : Math.Min(1.0, _logic.LogLinesRead / _logic.LogLinesTotal);
+
         public IReadOnlyList<ActivityInfo> GetHistory()
         {
             if (_logic == null) return Array.Empty<ActivityInfo>();

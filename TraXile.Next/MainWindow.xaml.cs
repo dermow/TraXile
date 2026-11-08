@@ -12,6 +12,7 @@ namespace TraXile.Next
         public MainWindow()
         {
             InitializeComponent();
+            LoadingOverlay.DataContext = App.Loading;
 
             ModeText.Text = App.Source.IsDemo ? "DEMO" : "● LIVE";
             if (!App.Source.IsDemo)
