@@ -148,6 +148,7 @@ namespace TraXile.Next.Views
                     ? $"\"{_vm.SelectedActivity?.Area}\" will be removed from your history and statistics. This cannot be undone."
                     : $"{count:N0} activities will be removed from your history and statistics. This cannot be undone.",
                 PrimaryButtonText = "Delete",
+                PrimaryButtonAppearance = Wpf.Ui.Controls.ControlAppearance.Danger,
                 CloseButtonText = "Cancel",
                 Owner = Window.GetWindow(this)
             };

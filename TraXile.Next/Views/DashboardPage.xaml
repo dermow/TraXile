@@ -8,15 +8,14 @@
     Title="Dashboard">
 
     <Page.Resources>
-        <!-- KPI delta pill: green when good, red when bad -->
+        <!-- KPI delta: success or danger text on a quiet veil -->
         <Style x:Key="DeltaPill" TargetType="Border">
-            <Setter Property="CornerRadius" Value="999" />
-            <Setter Property="Padding" Value="7,1" />
-            <Setter Property="Background" Value="#2234D399" />
+            <Setter Property="CornerRadius" Value="{StaticResource ControlRadius}" />
+            <Setter Property="Padding" Value="6,1" />
+            <Setter Property="Background" Value="{DynamicResource HoverVeilBrush}" />
             <Setter Property="TextElement.Foreground" Value="{DynamicResource StatusSuccessBrush}" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding DeltaPositive}" Value="False">
-                    <Setter Property="Background" Value="#22FB7185" />
                     <Setter Property="TextElement.Foreground" Value="{DynamicResource StatusDangerBrush}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding HasDelta}" Value="False">
@@ -35,6 +34,12 @@
             <WrapPanel />
         </ItemsPanelTemplate>
 
+        <!-- Small legend key of the trend chart -->
+        <Style x:Key="LegendText" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6,0,16,0" />
+        </Style>
+
         <!-- Charts blend into the cards; legend/tooltip text follows the theme -->
         <Style TargetType="lvc:CartesianChart">
             <Setter Property="Background" Value="Transparent" />
@@ -49,23 +54,20 @@
     </Page.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="36,20,36,36">
+        <StackPanel Margin="{StaticResource PagePadding}">
 
             <!-- ============ Header ============ -->
-            <Grid Margin="0,0,0,20">
+            <Grid Margin="0,0,0,24">
                 <StackPanel>
-                    <TextBlock Text="Dashboard" FontFamily="{StaticResource UiFont}" FontSize="30" FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                    <TextBlock Style="{StaticResource Caption}" FontSize="13" Margin="0,2,0,0">
+                    <TextBlock Text="Dashboard" Style="{StaticResource PageTitle}" />
+                    <TextBlock Style="{StaticResource Meta}" Margin="0,4,0,0">
                         <Run Text="Your Path of Exile sessions at a glance" />
                         <Run Text=" · " />
                         <Run Text="{Binding RangeLabel, Mode=OneWay}" />
                     </TextBlock>
                 </StackPanel>
 
-                <Border HorizontalAlignment="Right" VerticalAlignment="Center" Padding="3" CornerRadius="8"
-                        Background="{DynamicResource SubtleFillColorSecondaryBrush}"
-                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <Border Style="{StaticResource SegmentedGroup}" HorizontalAlignment="Right">
                     <StackPanel Orientation="Horizontal">
                         <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="Today"
                                      Command="{Binding SetRangeCommand}" CommandParameter="Today" />
@@ -79,23 +81,23 @@
                 </Border>
             </Grid>
 
-            <ui:InfoBar Title="Demo mode" Message="{Binding Notice}" IsOpen="{Binding HasNotice, Mode=OneWay}"
-                        Severity="Informational" IsClosable="True" Margin="0,0,0,16" />
+            <!-- Notice (e.g. demo mode) -->
+            <Border Style="{StaticResource Notice}" Margin="0,0,0,16"
+                    Visibility="{Binding HasNotice, Converter={StaticResource BoolToVis}}">
+                <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
+                    <Run Text="Demo mode" FontWeight="SemiBold" /><Run Text="  " /><Run Text="{Binding Notice, Mode=OneWay}" Foreground="{DynamicResource TextMutedBrush}" />
+                </TextBlock>
+            </Border>
 
-            <!-- ============ Live tracking hero ============ -->
-            <Border Style="{StaticResource DashCard}" Padding="0" Margin="0,0,0,16" ClipToBounds="True">
+            <!-- ============ Live card ============ -->
+            <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,16" ClipToBounds="True">
                 <Grid>
-                    <!-- soft color glow of the current activity type -->
-                    <Border CornerRadius="10" Opacity="0.16">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Offset="0" Color="{Binding LiveBrush.Color}" />
-                                <GradientStop Offset="0.6" Color="Transparent" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                    </Border>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                    <Grid Margin="28,24">
+                    <Grid Margin="28,24,28,8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
@@ -103,45 +105,41 @@
 
                         <StackPanel VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <Border CornerRadius="999" Padding="9,2" Background="{Binding LiveBrush}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Ellipse x:Name="LiveDot" Width="7" Height="7" Fill="#18181B" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                        <TextBlock FontSize="11" FontWeight="Bold" Foreground="#18181B">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Text" Value="NOW TRACKING" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Live.IsPaused}" Value="True">
-                                                            <Setter Property="Text" Value="PAUSED" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Live.IsTracking}" Value="False">
-                                                            <Setter Property="Text" Value="IDLE" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Border>
+                                <Rectangle Width="7" Height="7" Fill="{Binding LiveBrush}" Margin="0,0,8,0" VerticalAlignment="Center">
+                                    <Rectangle.RenderTransform>
+                                        <RotateTransform Angle="45" CenterX="3.5" CenterY="3.5" />
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
+                                <TextBlock Foreground="{DynamicResource AccentTextBrush}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock" BasedOn="{StaticResource Label}">
+                                            <Setter Property="Text" Value="NOW TRACKING" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Live.IsPaused}" Value="True">
+                                                    <Setter Property="Text" Value="PAUSED" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Live.IsTracking}" Value="False">
+                                                    <Setter Property="Text" Value="IDLE" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
                             </StackPanel>
 
-                            <TextBlock Text="{Binding LiveTitle}" FontFamily="{StaticResource UiFont}" FontSize="32" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextTrimming="CharacterEllipsis" />
-                            <TextBlock Text="{Binding LiveSubtitle}" Style="{StaticResource Body}" Margin="0,2,0,12"
-                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="{Binding LiveTitle}" Style="{StaticResource H2}" FontSize="30" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{Binding LiveSubtitle}" Style="{StaticResource Meta}" FontSize="14" Margin="0,4,0,12" />
 
                             <ItemsControl ItemsSource="{Binding Live.ActiveTags}" ItemTemplate="{StaticResource TagChip}"
                                           ItemsPanel="{StaticResource WrapPanelTemplate}" />
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="340" Margin="24,0,0,0">
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="320" Margin="24,0,0,0">
                             <Grid>
-                                <TextBlock Text="{Binding ElapsedText}" FontFamily="{StaticResource UiFont}" FontSize="64" FontWeight="SemiBold"
-                                           Typography.NumeralAlignment="Tabular" HorizontalAlignment="Left"
-                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <TextBlock Text="{Binding ElapsedText}" Style="{StaticResource Metric}" FontSize="60" HorizontalAlignment="Left" />
                                 <ui:Button HorizontalAlignment="Right" VerticalAlignment="Center" Appearance="Secondary"
-                                           Padding="14,10" Command="{Binding TogglePauseCommand}"
-                                           IsEnabled="{Binding Live.IsTracking}">
+                                           Padding="10,0" MinHeight="40" Command="{Binding TogglePauseCommand}"
+                                           IsEnabled="{Binding Live.IsTracking}" ToolTip="Pause or resume the stopwatch">
                                     <ui:Button.Icon>
                                         <ui:SymbolIcon>
                                             <ui:SymbolIcon.Style>
@@ -163,11 +161,35 @@
                             <TextBlock Text="{Binding LiveCompare}" Style="{StaticResource Caption}" />
                         </StackPanel>
                     </Grid>
+
+                    <!-- Trend: coral curve, dashed previous period, brass death markers -->
+                    <Grid Grid.Row="1" Margin="28,8,28,16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding TrendTitle}" Style="{StaticResource Caption}" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" Margin="0,0,20,0" />
+                            <Rectangle Width="14" Height="2.5" Fill="{DynamicResource AccentBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="this period" Style="{StaticResource LegendText}" />
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding HasPreviousTrend, Converter={StaticResource BoolToVis}}">
+                                <Line X1="0" X2="14" Y1="1" Y2="1" Stroke="{DynamicResource TextMutedBrush}" StrokeThickness="1.5"
+                                      StrokeDashArray="2.5 2.5" VerticalAlignment="Center" />
+                                <TextBlock Text="previous period" Style="{StaticResource LegendText}" />
+                            </StackPanel>
+                            <Ellipse Width="8" Height="8" Fill="{DynamicResource BrassBrush}" VerticalAlignment="Center" />
+                            <TextBlock Text="death" Style="{StaticResource LegendText}" />
+                        </StackPanel>
+                        <lvc:CartesianChart Grid.Row="1" Height="120" Margin="-6,4,-6,0"
+                                            Series="{Binding TrendSeries}" XAxes="{Binding TrendXAxes}" YAxes="{Binding TrendYAxes}"
+                                            DrawMargin="{Binding TrendMargin}" LegendPosition="Hidden" TooltipPosition="Top" />
+                    </Grid>
                 </Grid>
             </Border>
 
-            <!-- ============ KPI cards ============ -->
-            <ItemsControl ItemsSource="{Binding Kpis}" Margin="-6,0,-6,10">
+            <!-- ============ KPI tiles ============ -->
+            <ItemsControl ItemsSource="{Binding Kpis}" Margin="-8,0,-8,8">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Rows="1" />
@@ -175,19 +197,19 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:KpiViewModel}">
-                        <Border Style="{StaticResource DashCard}" Margin="6" Padding="18,16,18,10">
+                        <Border Style="{StaticResource Card}" Margin="8" Padding="20,16,20,10">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="8" Height="8" Fill="{Binding AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding Title}" Style="{StaticResource Caption}" FontSize="13" />
+                                    <Rectangle Width="7" Height="7" Fill="{Binding AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Title}" Style="{StaticResource Label}" />
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                                     <TextBlock Text="{Binding Value}" Style="{StaticResource Metric}" />
-                                    <TextBlock Text="{Binding Unit}" Style="{StaticResource Caption}" FontSize="16"
+                                    <TextBlock Text="{Binding Unit}" Style="{StaticResource Meta}" FontSize="16"
                                                VerticalAlignment="Bottom" Margin="3,0,0,5" />
                                 </StackPanel>
                                 <Border Style="{StaticResource DeltaPill}" HorizontalAlignment="Left" Margin="0,4,0,0">
-                                    <TextBlock FontSize="11" FontWeight="SemiBold">
+                                    <TextBlock FontSize="12" FontWeight="SemiBold" Typography.NumeralAlignment="Tabular">
                                         <Run Text="{Binding Delta, Mode=OneWay}" /><Run Text="  vs. prev." FontWeight="Normal" />
                                     </TextBlock>
                                 </Border>
@@ -203,14 +225,14 @@
             </ItemsControl>
 
             <!-- ============ Charts ============ -->
-            <Grid Margin="0,0,0,16">
+            <Grid Margin="0,0,0,24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1.7*" />
                     <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="*" MinWidth="380" />
                 </Grid.ColumnDefinitions>
 
-                <Border Style="{StaticResource DashCard}">
+                <Border Style="{StaticResource Card}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -229,7 +251,7 @@
                     </Grid>
                 </Border>
 
-                <Border Grid.Column="2" Style="{StaticResource DashCard}">
+                <Border Grid.Column="2" Style="{StaticResource Card}">
                     <StackPanel>
                         <TextBlock Text="Time distribution" Style="{StaticResource CardTitle}" />
                         <TextBlock Text="Where your time went" Style="{StaticResource Caption}" Margin="0,2,0,0" />
@@ -252,10 +274,11 @@
                                             <ColumnDefinition Width="64" />
                                             <ColumnDefinition Width="44" />
                                         </Grid.ColumnDefinitions>
-                                        <Border Width="10" Height="10" CornerRadius="3" Background="{Binding Brush}" Margin="0,0,10,0" />
+                                        <Border Width="10" Height="10" CornerRadius="2" Background="{Binding Brush}" Margin="0,0,10,0" />
                                         <TextBlock Grid.Column="1" Text="{Binding Name}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Grid.Column="2" Text="{Binding Hours}" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Right" />
-                                        <TextBlock Grid.Column="3" Text="{Binding Percent}" Style="{StaticResource Body}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Column="2" Text="{Binding Hours}" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Right"
+                                                   Typography.NumeralAlignment="Tabular" />
+                                        <TextBlock Grid.Column="3" Text="{Binding Percent}" Style="{StaticResource Num}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Right" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
@@ -264,82 +287,72 @@
                 </Border>
             </Grid>
 
-            <!-- ============ Recent activities ============ -->
-            <Border Style="{StaticResource DashCard}" Padding="0">
+            <!-- ============ Recent activities: row cards on the page ============ -->
+            <Grid Margin="0,0,0,12">
                 <StackPanel>
-                    <Grid Margin="20,18,20,10">
-                        <StackPanel>
-                            <TextBlock Text="Recent activities" Style="{StaticResource CardTitle}" />
-                            <TextBlock Text="Your latest runs" Style="{StaticResource Caption}" Margin="0,2,0,0" />
-                        </StackPanel>
-                        <ui:Button Content="View all" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="10,5"
-                                   Appearance="Transparent" Click="ViewAll_Click" />
-                    </Grid>
-
-                    <!-- column header -->
-                    <Grid Margin="20,4,20,6">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2.2*" />
-                            <ColumnDefinition Width="70" />
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="90" />
-                            <ColumnDefinition Width="90" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Activity" Style="{StaticResource Overline}" />
-                        <TextBlock Grid.Column="1" Text="Level" Style="{StaticResource Overline}" />
-                        <TextBlock Grid.Column="2" Text="Tags" Style="{StaticResource Overline}" />
-                        <TextBlock Grid.Column="3" Text="Started" Style="{StaticResource Overline}" HorizontalAlignment="Right" />
-                        <TextBlock Grid.Column="4" Text="Duration" Style="{StaticResource Overline}" HorizontalAlignment="Right" />
-                    </Grid>
-                    <Border Height="1" Background="{DynamicResource DividerStrokeColorDefaultBrush}" />
-
-                    <ItemsControl ItemsSource="{Binding Recent}" Margin="0,0,0,8">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border x:Name="Row" Padding="20,10" Background="Transparent">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="2.2*" />
-                                            <ColumnDefinition Width="70" />
-                                            <ColumnDefinition Width="2*" />
-                                            <ColumnDefinition Width="90" />
-                                            <ColumnDefinition Width="90" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <StackPanel Orientation="Horizontal">
-                                            <Border Width="34" Height="34" CornerRadius="8" Margin="0,0,12,0">
-                                                <Border.Background>
-                                                    <SolidColorBrush Color="{Binding TypeBrush.Color}" Opacity="0.18" />
-                                                </Border.Background>
-                                                <Ellipse Width="10" Height="10" Fill="{Binding TypeBrush}" />
-                                            </Border>
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Area}" Style="{StaticResource Body}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                                                <TextBlock Text="{Binding TypeName}" Style="{StaticResource Caption}" />
-                                            </StackPanel>
-                                        </StackPanel>
-
-                                        <TextBlock Grid.Column="1" Text="{Binding LevelText}" Style="{StaticResource Body}" VerticalAlignment="Center" />
-
-                                        <ItemsControl Grid.Column="2" ItemsSource="{Binding Tags}" ItemTemplate="{StaticResource TagChip}"
-                                                      ItemsPanel="{StaticResource WrapPanelTemplate}" VerticalAlignment="Center" Margin="0,6,0,0" />
-
-                                        <TextBlock Grid.Column="3" Text="{Binding StartedText}" Style="{StaticResource Caption}" FontSize="13"
-                                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
-                                        <TextBlock Grid.Column="4" Text="{Binding Duration}" Style="{StaticResource Body}" FontWeight="SemiBold"
-                                                   Typography.NumeralAlignment="Tabular" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                                    </Grid>
-                                </Border>
-                                <DataTemplate.Triggers>
-                                    <Trigger SourceName="Row" Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Row" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
-                                    </Trigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                    <TextBlock Text="Recent activities" Style="{StaticResource H3}" />
+                    <TextBlock Text="Your latest activities" Style="{StaticResource Caption}" Margin="0,2,0,0" />
                 </StackPanel>
-            </Border>
+                <ui:Button Content="View all" HorizontalAlignment="Right" VerticalAlignment="Center"
+                           Appearance="Transparent" Click="ViewAll_Click" />
+            </Grid>
+
+            <!-- column header -->
+            <Grid Margin="19,0,16,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.2*" />
+                    <ColumnDefinition Width="70" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="90" />
+                    <ColumnDefinition Width="90" />
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                    </Style>
+                </Grid.Resources>
+                <TextBlock Text="Activity" />
+                <TextBlock Grid.Column="1" Text="Level" />
+                <TextBlock Grid.Column="2" Text="Tags" />
+                <TextBlock Grid.Column="3" Text="Started" HorizontalAlignment="Right" />
+                <TextBlock Grid.Column="4" Text="Duration" HorizontalAlignment="Right" />
+            </Grid>
+
+            <ItemsControl ItemsSource="{Binding Recent}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource LiveRowCard}" Margin="0,0,0,4" Padding="16,8" BorderThickness="3,0,0,0">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="{Binding TypeBrush.Color}" Opacity="0.82" />
+                            </Border.BorderBrush>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.2*" />
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="90" />
+                                    <ColumnDefinition Width="90" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Area}" Style="{StaticResource Body}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding TypeName}" Style="{StaticResource Caption}" />
+                                </StackPanel>
+
+                                <TextBlock Grid.Column="1" Text="{Binding LevelText}" Style="{StaticResource Num}" VerticalAlignment="Center" />
+
+                                <ItemsControl Grid.Column="2" ItemsSource="{Binding Tags}" ItemTemplate="{StaticResource TagChip}"
+                                              ItemsPanel="{StaticResource WrapPanelTemplate}" VerticalAlignment="Center" Margin="0,6,0,0" />
+
+                                <TextBlock Grid.Column="3" Text="{Binding StartedText}" Style="{StaticResource Meta}"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="4" Text="{Binding Duration}" Style="{StaticResource Num}" FontWeight="SemiBold"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
     </ScrollViewer>
 </Page>

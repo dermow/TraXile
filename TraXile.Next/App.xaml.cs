@@ -93,6 +93,20 @@ namespace TraXile.Next
 
         private static ResourceDictionary _tokens;
 
+        private static SkiaSharp.SKTypeface _chartTypeface;
+        private static SkiaSharp.SKTypeface ChartTypeface
+        {
+            get
+            {
+                if (_chartTypeface == null)
+                {
+                    var info = GetResourceStream(new Uri("pack://application:,,,/TraXile.Next;component/Fonts/InstrumentSans-Regular.ttf"));
+                    if (info != null) _chartTypeface = SkiaSharp.SKTypeface.FromStream(info.Stream);
+                }
+                return _chartTypeface;
+            }
+        }
+
         /// <summary>
         /// Switches between the dark and light variant of the design system (docs/design.md).
         /// WPF-UI's own theme is applied first; the token dictionary is then (re-)added as the last merged
@@ -123,6 +137,8 @@ namespace TraXile.Next
             LiveCharts.Configure(c =>
             {
                 if (dark) c.AddDarkTheme(); else c.AddLightTheme();
+                // Chart labels, legends and tool tips in Instrument Sans like the rest of the UI
+                if (ChartTypeface != null) c.HasGlobalSKTypeface(ChartTypeface);
             });
 
             Dashboard?.SetTheme(dark);
