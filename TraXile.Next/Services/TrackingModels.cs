@@ -86,6 +86,13 @@ namespace TraXile.Next.Services
         event EventHandler HistoryChanged;
 
         void Start();
+
+        /// <summary>True while the log is read for the first time after start (history not complete yet).</summary>
+        bool IsLoading { get; }
+
+        /// <summary>Progress of the initial log parsing, 0..1.</summary>
+        double LoadProgress { get; }
+
         IReadOnlyList<ActivityInfo> GetHistory();
         LiveState GetLiveState();
         double GetHideoutSeconds(DateTime from, DateTime to);

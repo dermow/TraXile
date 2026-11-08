@@ -17,12 +17,14 @@ namespace TraXile.Next
     ///   --screenshot file.png  render the main window off-screen to a PNG and exit (implies --demo)
     ///   --page log             open the given page first (dashboard, log, settings, ..., gallery, firstrun, firstrun-empty)
     ///   --select 0,2           preselect activity log rows (for screenshots)
+    ///   --loading              show the loading state (demo, for screenshots)
     /// </summary>
     public partial class App : Application
     {
         public static ITrackingSource Source { get; private set; }
         public static DashboardViewModel Dashboard { get; private set; }
         public static ActivityLogViewModel ActivityLog { get; private set; }
+        public static LoadingViewModel Loading { get; private set; }
         public static bool IsDark { get; private set; } = true;
         public static string ScreenshotPath { get; private set; }
 
@@ -60,8 +62,13 @@ namespace TraXile.Next
 
             // Dialogs may open before the main window exists; don't let closing them end the app
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            Source = CreateSource(demo);
+            Source = CreateSource(demo, out RestoreResult restore);
+            if (Source is DemoTrackingSource demoSource && args.Any(a => a.Equals("--loading", StringComparison.OrdinalIgnoreCase)))
+            {
+                demoSource.SimulateLoading = true; // screenshot of the loading state
+            }
             Source.Start();
+            Loading = new LoadingViewModel(Source);
 
             // The UI is English -> format numbers/dates accordingly. Only done for the UI thread and
             // only after the core has loaded its data, so the core's parsing behaviour is unchanged.
@@ -71,6 +78,15 @@ namespace TraXile.Next
             Dashboard = new DashboardViewModel(Source);
             Dashboard.SetTheme(IsDark);
             ActivityLog = new ActivityLogViewModel(Source);
+
+            if (restore.HasRestored && !restore.HasFailed)
+            {
+                Dashboard.AddNotice("Backup restored", $"Your backup was applied ({restore.RestoredFiles.Count} files).");
+            }
+            else if (restore.HasFailed)
+            {
+                Dashboard.AddNotice("Restore failed", restore.Error, isError: true);
+            }
 
             var window = new MainWindow();
             MainWindow = window;
@@ -96,8 +112,9 @@ namespace TraXile.Next
             Screenshot.Schedule(window, ScreenshotPath, TimeSpan.FromSeconds(1));
         }
 
-        private static ITrackingSource CreateSource(bool demo)
+        private static ITrackingSource CreateSource(bool demo, out RestoreResult restore)
         {
+            restore = RestoreResult.Nothing;
             if (demo) return new DemoTrackingSource();
 
             // Both UIs would parse Client.txt and write the same SQLite database
@@ -108,6 +125,10 @@ namespace TraXile.Next
             }
 
             AppSetup setup = AppSetup.Default;
+
+            // A backup restore prepared by this or the classic app is applied before the core opens the database
+            restore = BackupRestore.ApplyIfPrepared(setup);
+
             if (!setup.HasValidClientTxt)
             {
                 // First start (or the configured Client.txt is gone): let the user pick it
