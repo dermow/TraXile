@@ -15,13 +15,22 @@ namespace TraXile.Next
     ///   --demo                 use sample data instead of the real tracker
     ///   --light / --dark       start with the given theme (default: dark)
     ///   --screenshot file.png  render the main window off-screen to a PNG and exit (implies --demo)
+    ///   --page log             open the given page first (dashboard, log)
+    ///   --select 0,2           preselect activity log rows (for screenshots)
     /// </summary>
     public partial class App : Application
     {
         public static ITrackingSource Source { get; private set; }
         public static DashboardViewModel Dashboard { get; private set; }
+        public static ActivityLogViewModel ActivityLog { get; private set; }
         public static bool IsDark { get; private set; } = true;
         public static string ScreenshotPath { get; private set; }
+
+        /// <summary>Page to open first (--page dashboard|log), mainly for screenshots.</summary>
+        public static string StartPage { get; private set; }
+
+        /// <summary>Rows to preselect in the activity log (--select 0,2), for screenshots.</summary>
+        public static int[] SelectRows { get; private set; } = Array.Empty<int>();
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -30,6 +39,13 @@ namespace TraXile.Next
             string[] args = e.Args;
             int shotIdx = Array.FindIndex(args, a => a.Equals("--screenshot", StringComparison.OrdinalIgnoreCase));
             if (shotIdx >= 0 && shotIdx + 1 < args.Length) ScreenshotPath = args[shotIdx + 1];
+            int pageIdx = Array.FindIndex(args, a => a.Equals("--page", StringComparison.OrdinalIgnoreCase));
+            if (pageIdx >= 0 && pageIdx + 1 < args.Length) StartPage = args[pageIdx + 1];
+            int selIdx = Array.FindIndex(args, a => a.Equals("--select", StringComparison.OrdinalIgnoreCase));
+            if (selIdx >= 0 && selIdx + 1 < args.Length)
+            {
+                SelectRows = args[selIdx + 1].Split(',').Select(s => int.TryParse(s, out int i) ? i : -1).Where(i => i >= 0).ToArray();
+            }
 
             bool demo = ScreenshotPath != null || args.Any(a => a.Equals("--demo", StringComparison.OrdinalIgnoreCase));
             IsDark = !args.Any(a => a.Equals("--light", StringComparison.OrdinalIgnoreCase));
@@ -46,6 +62,7 @@ namespace TraXile.Next
             System.Threading.Thread.CurrentThread.CurrentUICulture = en;
             Dashboard = new DashboardViewModel(Source);
             Dashboard.SetTheme(IsDark);
+            ActivityLog = new ActivityLogViewModel(Source);
 
             var window = new MainWindow();
             MainWindow = window;
@@ -95,6 +112,7 @@ namespace TraXile.Next
         protected override void OnExit(ExitEventArgs e)
         {
             Dashboard?.Dispose();
+            ActivityLog?.Dispose();
             Source?.Dispose();
             base.OnExit(e);
         }

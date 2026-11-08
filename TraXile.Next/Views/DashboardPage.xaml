@@ -272,7 +272,8 @@
                             <TextBlock Text="Recent activities" Style="{StaticResource CardTitle}" />
                             <TextBlock Text="Your latest runs" Style="{StaticResource Caption}" Margin="0,2,0,0" />
                         </StackPanel>
-                        <ui:HyperlinkButton Content="View all" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="8,4" />
+                        <ui:Button Content="View all" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="10,5"
+                                   Appearance="Transparent" Click="ViewAll_Click" />
                     </Grid>
 
                     <!-- column header -->

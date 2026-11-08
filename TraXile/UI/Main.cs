@@ -3836,8 +3836,9 @@ namespace TraXile
                     sTags += act.Tags[i];
                     if (i < (act.Tags.Count - 1))
                         sTags += "|";
-                    _logic.Database.DoNonQuery($"UPDATE tx_activity_log SET act_tags = '{sTags}' WHERE timestamp = {act.TimeStamp}");
                 }
+                // Outside the loop, so removing the last tag is persisted as well
+                _logic.Database.DoNonQuery($"UPDATE tx_activity_log SET act_tags = '{sTags}' WHERE timestamp = {act.TimeStamp}");
             }
         }
 

@@ -87,7 +87,70 @@ namespace TraXile.Next.Services
             // List<T>.ToArray() never throws on concurrent writes; worst case we miss the newest entry
             // until the next refresh.
             TrX_TrackedActivity[] copy = _logic.ActivityHistory.ToArray();
-            return copy.Where(a => a != null).Select(ToInfo).ToList();
+            lock (_deletedIds)
+            {
+                return copy.Where(a => a != null && !_deletedIds.Contains(a.UniqueID)).Select(ToInfo).ToList();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // Editing (tags, delete)
+        // ------------------------------------------------------------------
+
+        // Deleted activities are removed from the DB right away, but only hidden from the core's
+        // in-memory list: that list is written by the parser thread without locking, so removing
+        // entries from the UI thread could corrupt it. After a restart they are gone for good.
+        private readonly HashSet<string> _deletedIds = new HashSet<string>();
+
+        private TrX_TrackedActivity FindActivity(string id)
+        {
+            if (_logic == null || id == null) return null;
+            return _logic.ActivityHistory.ToArray().FirstOrDefault(a => a != null && a.UniqueID == id);
+        }
+
+        public IReadOnlyList<TagInfo> GetTags()
+        {
+            if (_logic == null) return Array.Empty<TagInfo>();
+            return _logic.Tags.ToArray().Where(t => t != null).Select(ToTagInfo).ToList();
+        }
+
+        public void AddTag(string activityId, string tagId)
+        {
+            TrX_TrackedActivity act = FindActivity(activityId);
+            TrX_ActivityTag tag = _logic?.GetTagByID(tagId);
+            if (act == null || tag == null || tag.IsDefault || act.HasTag(tagId)) return;
+
+            _logic.AddTagAutoCreate(tagId, act);
+            RaiseHistoryChanged();
+        }
+
+        public void RemoveTag(string activityId, string tagId)
+        {
+            TrX_TrackedActivity act = FindActivity(activityId);
+            if (act == null) return;
+
+            _logic.RemoveTagFromActivity(tagId, act);
+            RaiseHistoryChanged();
+        }
+
+        public void DeleteActivities(IReadOnlyCollection<string> activityIds)
+        {
+            if (_logic == null || activityIds == null || activityIds.Count == 0) return;
+
+            var ids = new HashSet<string>(activityIds);
+            TrX_TrackedActivity[] victims = _logic.ActivityHistory.ToArray()
+                .Where(a => a != null && ids.Contains(a.UniqueID)).ToArray();
+
+            foreach (TrX_TrackedActivity act in victims)
+            {
+                _logic.Database.DoNonQuery($"DELETE FROM tx_activity_log WHERE timestamp = {act.TimeStamp}");
+            }
+
+            lock (_deletedIds)
+            {
+                foreach (TrX_TrackedActivity act in victims) _deletedIds.Add(act.UniqueID);
+            }
+            RaiseHistoryChanged();
         }
 
         public LiveState GetLiveState()
@@ -147,21 +210,30 @@ namespace TraXile.Next.Services
             else _logic.PauseCurrentActivityOrSide();
         }
 
-        private ActivityInfo ToInfo(TrX_TrackedActivity a)
+        private static TagInfo ToTagInfo(TrX_ActivityTag tag) => new TagInfo
+        {
+            Id = tag.ID,
+            Name = tag.DisplayName,
+            Background = ToBrush(tag.BackColor),
+            Foreground = ToBrush(tag.ForeColor),
+            IsDefault = tag.IsDefault
+        };
+
+        private ActivityInfo ToInfo(TrX_TrackedActivity a) => ToInfo(a, includeSubs: true);
+
+        private ActivityInfo ToInfo(TrX_TrackedActivity a, bool includeSubs)
         {
             var tags = new List<TagInfo>();
             foreach (string id in a.Tags.ToArray())
             {
                 TrX_ActivityTag tag = _logic.GetTagByID(id);
                 if (tag == null) continue;
-                tags.Add(new TagInfo
-                {
-                    Id = tag.ID,
-                    Name = tag.DisplayName,
-                    Background = ToBrush(tag.BackColor),
-                    Foreground = ToBrush(tag.ForeColor)
-                });
+                tags.Add(ToTagInfo(tag));
             }
+
+            IReadOnlyList<ActivityInfo> subs = includeSubs
+                ? a.GetSubActivities().Where(s => s != null).Select(s => ToInfo(s, includeSubs: false)).ToList()
+                : (IReadOnlyList<ActivityInfo>)Array.Empty<ActivityInfo>();
 
             return new ActivityInfo
             {
@@ -173,7 +245,10 @@ namespace TraXile.Next.Services
                 Started = a.Started,
                 TotalSeconds = a.TotalSeconds,
                 Deaths = a.DeathCounter,
-                Tags = tags
+                Portals = a.PortalsUsed,
+                PausedSeconds = a.PausedTime,
+                Tags = tags,
+                SubActivities = subs
             };
         }
 

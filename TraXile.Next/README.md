@@ -36,6 +36,7 @@ TraXile.Next.exe                         # live mode (falls back to demo, see be
 TraXile.Next.exe --demo                  # sample data
 TraXile.Next.exe --light                 # light theme
 TraXile.Next.exe --screenshot out.png    # render off-screen to PNG and exit (demo data)
+TraXile.Next.exe --screenshot out.png --page log --select 0,2   # screenshot of the activity log with rows selected
 ```
 
 Live mode needs an existing TraXile setup (config.xml with the Client.txt path and data.db).
@@ -47,7 +48,7 @@ Client.txt and write the same database. In that case it shows demo data and a no
 | Classic tab / window       | New page        | Status |
 |----------------------------|-----------------|--------|
 | Tracking + global dashboard| Dashboard       | ✅ prototype (live card, KPIs, charts, recent runs) |
-| Activity log + filters     | Activity log    | ⏳ placeholder |
+| Activity log + filters     | Activity log    | ✅ search, type/tag/time filters, sortable virtualized grid, tagging (single + bulk), CSV export, delete |
 | All stats                  | Statistics      | ⏳ placeholder |
 | Mapping dashboard          | Mapping         | ⏳ placeholder |
 | Bossing dashboard          | Bossing         | ⏳ placeholder |
@@ -55,14 +56,17 @@ Client.txt and write the same database. In that case it shows demo data and a no
 | Tag config                 | Tags            | ⏳ placeholder |
 | Settings, backups, updates | Settings        | ⏳ placeholder |
 | Overlays (stopwatch, tags) | —               | ⏳ to do (WPF transparent windows) |
-| Activity details window    | Side panel      | ⏳ to do |
+| Activity details window    | Side panel      | ✅ facts, tags, side areas (in the activity log) |
 
-Suggested order: Activity log → Settings (so the new app can run standalone, including the
+Suggested order: Settings (so the new app can run standalone, including the
 first-run Client.txt picker) → Overlays → remaining dashboards → installer switch.
 
 ## Known gaps / notes
 
 * Settings are read-only for now; configure TraXile in the classic app.
+* Deleting activities removes them from the database immediately but only hides them in the running
+  core (its history list is not thread-safe); they are fully gone after the next start.
+* JSON export of the classic app is not ported yet (CSV only).
 * log4net 3.1.0 is pinned to match the core; it has a moderate advisory
   (GHSA-4f7c-pmjv-c25w). Upgrade both projects together.
 * The core logs through log4net; without a `log4net.config` next to the exe, logging is off.

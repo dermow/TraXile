@@ -26,7 +26,7 @@ namespace TraXile.Next.Services
 
         public bool IsDemo => true;
         public string Notice { get; }
-        public event EventHandler HistoryChanged { add { } remove { } }
+        public event EventHandler HistoryChanged;
 
         public DemoTrackingSource(string notice = null)
         {
@@ -86,6 +86,7 @@ namespace TraXile.Next.Services
             string area;
             int tier = 0, level = 0;
             var tags = new List<TagInfo>();
+            var subs = new List<ActivityInfo>();
 
             switch (type)
             {
@@ -98,6 +99,24 @@ namespace TraXile.Next.Services
                     if (rnd.NextDouble() < 0.20) tags.Add(Tag("blight", "Blight", 0x86EFAC, 0x052E16));
                     if (rnd.NextDouble() < 0.15) tags.Add(Tag("harvest", "Harvest", 0x818CF8, 0x1E1B4B));
                     if (rnd.NextDouble() < 0.10) tags.Add(Tag("syndicate", "Syndicate", 0xFBBF24, 0x422006));
+                    if (rnd.NextDouble() < 0.12) tags.Add(Juiced);
+                    if (rnd.NextDouble() < 0.04) tags.Add(Party);
+                    if (rnd.NextDouble() < 0.06)
+                    {
+                        subs.Add(new ActivityInfo
+                        {
+                            Id = Guid.NewGuid().ToString(), Type = ACTIVITY_TYPES.VAAL_SIDEAREA, Area = "Vaal Temple",
+                            AreaLevel = level, Started = start.AddSeconds(90), TotalSeconds = rnd.Next(40, 120)
+                        });
+                    }
+                    if (rnd.NextDouble() < 0.05)
+                    {
+                        subs.Add(new ActivityInfo
+                        {
+                            Id = Guid.NewGuid().ToString(), Type = ACTIVITY_TYPES.ABYSSAL_DEPTHS, Area = "Abyssal Depths",
+                            AreaLevel = level, Started = start.AddSeconds(150), TotalSeconds = rnd.Next(60, 150)
+                        });
+                    }
                     break;
                 case ACTIVITY_TYPES.HEIST:
                     area = "Bunker"; level = 83; seconds = rnd.Next(200, 600); break;
@@ -129,24 +148,44 @@ namespace TraXile.Next.Services
                 Started = start,
                 TotalSeconds = seconds,
                 Deaths = rnd.NextDouble() < 0.08 ? rnd.Next(1, 3) : 0,
-                Tags = tags
+                Portals = rnd.Next(1, 4),
+                PausedSeconds = rnd.NextDouble() < 0.05 ? rnd.Next(30, 300) : 0,
+                Tags = tags,
+                SubActivities = subs
             };
         }
 
-        private static TagInfo Tag(string id, string name, int back, int fore) => new TagInfo
+        // One shared instance per tag, like the core's tag list
+        private static readonly Dictionary<string, TagInfo> TagCatalog = new Dictionary<string, TagInfo>();
+
+        private static TagInfo Tag(string id, string name, int back, int fore, bool isDefault = true)
         {
-            Id = id,
-            Name = name,
-            Background = ActivityPalette.BrushOf(Hex(back)),
-            Foreground = ActivityPalette.BrushOf(Hex(fore))
-        };
+            if (!TagCatalog.TryGetValue(id, out TagInfo tag))
+            {
+                tag = new TagInfo
+                {
+                    Id = id,
+                    Name = name,
+                    Background = ActivityPalette.BrushOf(Hex(back)),
+                    Foreground = ActivityPalette.BrushOf(Hex(fore)),
+                    IsDefault = isDefault
+                };
+                TagCatalog[id] = tag;
+            }
+            return tag;
+        }
+
+        // Custom (user) tags can be added/removed manually
+        private static TagInfo Juiced => Tag("juiced", "Juiced", 0xF5B942, 0x1F1300, isDefault: false);
+        private static TagInfo Party => Tag("party", "Party", 0x60A5FA, 0x0B1A33, isDefault: false);
+        private static TagInfo Bricked => Tag("bricked", "Bricked", 0xFB7185, 0x3B0712, isDefault: false);
 
         private static Color Hex(int rgb) =>
             Color.FromRgb((byte)((rgb >> 16) & 0xFF), (byte)((rgb >> 8) & 0xFF), (byte)(rgb & 0xFF));
 
         public void Start() { }
 
-        public IReadOnlyList<ActivityInfo> GetHistory() => _history;
+        public IReadOnlyList<ActivityInfo> GetHistory() => _history.ToList(); // snapshot, the list can be edited
 
         public LiveState GetLiveState()
         {
@@ -177,6 +216,41 @@ namespace TraXile.Next.Services
         {
             _paused = !_paused;
             if (_paused) _current.Stop(); else _current.Start();
+        }
+
+        public IReadOnlyList<TagInfo> GetTags()
+        {
+            // make sure the custom tags exist even if no activity uses them yet
+            _ = Juiced; _ = Party; _ = Bricked;
+            return TagCatalog.Values.ToList();
+        }
+
+        public void AddTag(string activityId, string tagId)
+        {
+            ActivityInfo act = _history.FirstOrDefault(a => a.Id == activityId);
+            if (act == null || !TagCatalog.TryGetValue(tagId, out TagInfo tag) || tag.IsDefault) return;
+            if (act.Tags.Any(t => t.Id == tagId)) return;
+
+            act.Tags = act.Tags.Concat(new[] { tag }).ToList();
+            HistoryChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void RemoveTag(string activityId, string tagId)
+        {
+            ActivityInfo act = _history.FirstOrDefault(a => a.Id == activityId);
+            if (act == null || !TagCatalog.TryGetValue(tagId, out TagInfo tag) || tag.IsDefault) return;
+
+            act.Tags = act.Tags.Where(t => t.Id != tagId).ToList();
+            HistoryChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void DeleteActivities(IReadOnlyCollection<string> activityIds)
+        {
+            var ids = new HashSet<string>(activityIds);
+            if (_history.RemoveAll(a => ids.Contains(a.Id)) > 0)
+            {
+                HistoryChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void Dispose() { }
