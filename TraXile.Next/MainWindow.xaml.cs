@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -37,11 +38,25 @@ namespace TraXile.Next
                 }
                 else
                 {
-                    bool log = string.Equals(App.StartPage, "log", StringComparison.OrdinalIgnoreCase);
-                    RootNavigation.Navigate(log ? typeof(ActivityLogPage) : typeof(DashboardPage));
+                    RootNavigation.Navigate(StartPageType(App.StartPage));
                 }
                 if (App.ScreenshotPath != null) ScheduleScreenshot();
             };
+        }
+
+        /// <summary>
+        /// Page for --page: "log" or the start of a page name ("settings", "tags", "lab", ...); dashboard otherwise.
+        /// </summary>
+        private Type StartPageType(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return typeof(DashboardPage);
+            if (name.Equals("log", StringComparison.OrdinalIgnoreCase)) return typeof(ActivityLogPage);
+
+            var items = RootNavigation.MenuItems.OfType<NavigationViewItem>()
+                .Concat(RootNavigation.FooterMenuItems.OfType<NavigationViewItem>());
+            return items.Select(i => i.TargetPageType)
+                       .FirstOrDefault(t => t != null && t.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase))
+                   ?? typeof(DashboardPage);
         }
 
         private void ThemeButton_Click(object sender, RoutedEventArgs e)

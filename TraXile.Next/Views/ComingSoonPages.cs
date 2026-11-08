@@ -14,56 +14,40 @@ namespace TraXile.Next.Views
     {
         protected ComingSoonPage(string title, SymbolRegular icon, string description, params string[] features)
         {
-            var stack = new StackPanel { Margin = new Thickness(36, 28, 36, 28), MaxWidth = 720, HorizontalAlignment = HorizontalAlignment.Left };
+            var app = Application.Current;
+            var stack = new StackPanel { Margin = (Thickness)app.FindResource("PagePadding"), MaxWidth = 760, HorizontalAlignment = HorizontalAlignment.Left };
 
-            var header = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 6) };
-            header.Children.Add(new SymbolIcon
+            stack.Children.Add(new TextBlock { Text = title, Style = (Style)app.FindResource("PageTitle") });
+            stack.Children.Add(new TextBlock
             {
-                Symbol = icon,
-                FontSize = 28,
-                Margin = new Thickness(0, 0, 12, 0),
-                Foreground = (Brush)Application.Current.FindResource("AccentTextBrush")
+                Text = description,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 4, 0, 24),
+                Style = (Style)app.FindResource("Meta")
             });
-            var titleText = new TextBlock
-            {
-                Text = title,
-                FontSize = 30,
-                FontWeight = FontWeights.SemiBold,
-                FontFamily = (FontFamily)Application.Current.FindResource("UiFont")
-            };
-            titleText.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
-            header.Children.Add(titleText);
-            stack.Children.Add(header);
 
-            var desc = new TextBlock { Text = description, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 24) };
-            desc.Style = (Style)Application.Current.FindResource("Body");
-            desc.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
-            stack.Children.Add(desc);
-
-            var card = new Border { Style = (Style)Application.Current.FindResource("DashCard") };
+            // Empty state: icon, what will move here, nothing to click yet
+            var card = new Border { Style = (Style)app.FindResource("Card"), Padding = new Thickness(24) };
             var list = new StackPanel();
-            var pill = new Border
-            {
-                Style = (Style)Application.Current.FindResource("Chip"),
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Margin = new Thickness(0, 0, 0, 14),
-                Background = new SolidColorBrush(Color.FromArgb(40, 0xF5, 0xB9, 0x42)),
-                Child = new TextBlock
-                {
-                    Text = "Migration in progress",
-                    FontSize = 12,
-                    FontWeight = FontWeights.SemiBold,
-                    Foreground = (Brush)Application.Current.FindResource("AccentTextBrush")
-                }
-            };
-            list.Children.Add(pill);
+
+            var header = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 16) };
+            var mark = new SymbolIcon { Symbol = icon, FontSize = 20, Margin = new Thickness(0, 0, 10, 0), VerticalAlignment = VerticalAlignment.Center };
+            mark.SetResourceReference(SymbolIcon.ForegroundProperty, "AccentTextBrush");
+            header.Children.Add(mark);
+            var label = new TextBlock { Text = "MIGRATION IN PROGRESS", Style = (Style)app.FindResource("Label"), VerticalAlignment = VerticalAlignment.Center };
+            label.SetResourceReference(TextBlock.ForegroundProperty, "AccentTextBrush");
+            header.Children.Add(label);
+            list.Children.Add(header);
 
             foreach (string f in features)
             {
-                var row = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 4, 0, 4) };
-                row.Children.Add(new SymbolIcon { Symbol = SymbolRegular.CheckmarkCircle24, FontSize = 16, Margin = new Thickness(0, 0, 10, 0), Opacity = 0.6 });
-                var t = new TextBlock { Text = f, Style = (Style)Application.Current.FindResource("Body") };
-                row.Children.Add(t);
+                var row = new Border { Style = (Style)app.FindResource("RowCard"), Margin = new Thickness(0, 0, 0, 4), Padding = new Thickness(16, 10, 16, 10) };
+                var content = new StackPanel { Orientation = Orientation.Horizontal };
+                var check = new SymbolIcon { Symbol = SymbolRegular.Circle20, FontSize = 14, Margin = new Thickness(0, 0, 12, 0), VerticalAlignment = VerticalAlignment.Center };
+                check.SetResourceReference(SymbolIcon.ForegroundProperty, "TextMutedBrush");
+                content.Children.Add(check);
+                content.Children.Add(new TextBlock { Text = f, Style = (Style)app.FindResource("Body"), VerticalAlignment = VerticalAlignment.Center });
+                row.Child = content;
                 list.Children.Add(row);
             }
             card.Child = list;
@@ -72,7 +56,6 @@ namespace TraXile.Next.Views
             Content = new ScrollViewer { Content = stack, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
         }
     }
-
     public sealed class StatisticsPage : ComingSoonPage
     {
         public StatisticsPage() : base("Statistics", SymbolRegular.DataTrending24,

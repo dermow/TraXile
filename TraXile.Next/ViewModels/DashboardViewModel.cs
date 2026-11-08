@@ -263,6 +263,7 @@ namespace TraXile.Next.ViewModels
             BuildKpis(inRange, prev);
             BuildTimeDistribution(inRange, from, to);
             BuildDaily(inRange, from, to);
+            BuildTrend(from, to);
 
             Recent.Clear();
             foreach (ActivityInfo a in _history.Take(12)) Recent.Add(a);
@@ -399,9 +400,9 @@ namespace TraXile.Next.ViewModels
                     Name = s.name,
                     Values = new[] { Math.Round(hours, 2) },
                     InnerRadius = 78,
-                    CornerRadius = 4,
+                    CornerRadius = 2,
                     Fill = new SolidColorPaint(ActivityPalette.Sk(s.color)),
-                    Stroke = null,
+                    Stroke = new SolidColorPaint(Token("Surface"), 2), // surface ring between slices
                     HoverPushout = 6,
                     ToolTipLabelFormatter = p => $"{p.Coordinate.PrimaryValue:0.0} h ({frac:P0})",
                 });
@@ -501,17 +502,143 @@ namespace TraXile.Next.ViewModels
             }
         }
 
-        private static ISeries Stacked(string name, Color color, double[] values) => new StackedColumnSeries<double>
+        private ISeries Stacked(string name, Color color, double[] values) => new StackedColumnSeries<double>
         {
             Name = name,
             Values = values,
             Fill = new SolidColorPaint(ActivityPalette.Sk(color)),
-            Stroke = null,
-            Rx = 3,
-            Ry = 3,
+            // 2 px surface gap between stacked segments
+            Stroke = new SolidColorPaint(Token("Surface"), 2),
+            Rx = 2,
+            Ry = 2,
             MaxBarWidth = 26,
             Padding = 3,
         };
+
+        // ------------------------------------------------------------------
+        // Trend (live card): cumulative activities in the range vs. the previous period,
+        // drawn like the TraXile chart on exile-tools.com
+        // ------------------------------------------------------------------
+
+        private ISeries[] _trendSeries = Array.Empty<ISeries>();
+        public ISeries[] TrendSeries { get => _trendSeries; private set => SetProperty(ref _trendSeries, value); }
+
+        private Axis[] _trendXAxes = { new Axis { IsVisible = false } };
+        public Axis[] TrendXAxes { get => _trendXAxes; private set => SetProperty(ref _trendXAxes, value); }
+
+        private Axis[] _trendYAxes = { new Axis { IsVisible = false } };
+        public Axis[] TrendYAxes { get => _trendYAxes; private set => SetProperty(ref _trendYAxes, value); }
+
+        public Margin TrendMargin { get; } = new Margin(6, 12, 6, 6);
+
+        private string _trendTitle = "";
+        public string TrendTitle { get => _trendTitle; private set => SetProperty(ref _trendTitle, value); }
+
+        private bool _hasPreviousTrend;
+        public bool HasPreviousTrend { get => _hasPreviousTrend; private set => SetProperty(ref _hasPreviousTrend, value); }
+
+        /// <summary>Cumulative activity count per bucket for a period, and the deaths in each bucket.</summary>
+        internal static (double[] cumulative, int[] deaths) Cumulate(IEnumerable<ActivityInfo> items, DateTime start, TimeSpan bucket, int count)
+        {
+            var perBucket = new double[count];
+            var deaths = new int[count];
+            foreach (ActivityInfo a in items)
+            {
+                int i = (int)((a.Started - start).Ticks / bucket.Ticks);
+                if (i < 0 || i >= count) continue;
+                perBucket[i]++;
+                deaths[i] += a.Deaths;
+            }
+            var cumulative = new double[count];
+            double sum = 0;
+            for (int i = 0; i < count; i++) { sum += perBucket[i]; cumulative[i] = sum; }
+            return (cumulative, deaths);
+        }
+
+        private void BuildTrend(DateTime from, DateTime to)
+        {
+            // Fine buckets, so play sessions show up as steps of the curve
+            bool hourly = Range == TimeRange.Today;
+            TimeSpan bucket;
+            DateTime start;
+            int count;
+            switch (Range)
+            {
+                case TimeRange.Today: bucket = TimeSpan.FromHours(1); start = from.Date; count = 24; break;
+                case TimeRange.Week: bucket = TimeSpan.FromHours(2); start = from.Date; count = 7 * 12; break;
+                case TimeRange.Month: bucket = TimeSpan.FromHours(6); start = from.Date; count = 30 * 4; break;
+                default: bucket = TimeSpan.FromDays(1); count = 60; start = to.Date.AddDays(-(count - 1)); break;
+            }
+            int elapsed = Math.Min(count, (int)((to - start).Ticks / bucket.Ticks) + 1);
+
+            (double[] cur, int[] deaths) = Cumulate(_history, start, bucket, count);
+            double[] current = cur.Take(elapsed).ToArray(); // the curve stops at "now"
+
+            TimeSpan length = TimeSpan.FromTicks(bucket.Ticks * count);
+            double[] previous = Range == TimeRange.All
+                ? Array.Empty<double>()
+                : Cumulate(_history, start - length, bucket, count).cumulative;
+            HasPreviousTrend = previous.Length > 0;
+
+            SKColor curve = Token("Accent");
+            var series = new List<ISeries>();
+
+            if (previous.Length > 0)
+            {
+                series.Add(new LineSeries<double>
+                {
+                    Name = "Previous period",
+                    Values = previous,
+                    GeometrySize = 0,
+                    LineSmoothness = 0.35,
+                    Fill = null,
+                    Stroke = new SolidColorPaint(Token("TextMuted").WithAlpha(150), 1.5f)
+                    {
+                        PathEffect = new LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect(new float[] { 5, 5 })
+                    },
+                    IsHoverable = false,
+                });
+            }
+
+            series.Add(new LineSeries<double>
+            {
+                Name = "This period",
+                Values = current,
+                GeometrySize = 0,
+                LineSmoothness = 0.35,
+                Stroke = new SolidColorPaint(curve, 2.5f),
+                Fill = new LinearGradientPaint(
+                    new[] { curve.WithAlpha(66), curve.WithAlpha(18), curve.WithAlpha(0) },
+                    new SKPoint(0.5f, 0), new SKPoint(0.5f, 1)),
+                YToolTipLabelFormatter = p => $"{p.Coordinate.PrimaryValue:N0} activities",
+            });
+
+            // Brass markers where deaths happened, sitting on the curve
+            var markers = Enumerable.Range(0, current.Length)
+                .Where(i => deaths[i] > 0)
+                .Select(i => new LiveChartsCore.Defaults.ObservablePoint(i, current[i]))
+                .ToArray();
+            if (markers.Length > 0)
+            {
+                series.Add(new ScatterSeries<LiveChartsCore.Defaults.ObservablePoint>
+                {
+                    Name = "Deaths",
+                    Values = markers,
+                    GeometrySize = 9,
+                    Fill = new SolidColorPaint(Token("Brass")),
+                    Stroke = new SolidColorPaint(Token("Surface"), 2),
+                    YToolTipLabelFormatter = p => $"{deaths[(int)p.Coordinate.SecondaryValue]} deaths",
+                });
+            }
+
+            TrendSeries = series.ToArray();
+            double max = Math.Max(current.DefaultIfEmpty(0).Max(), previous.DefaultIfEmpty(0).Max());
+            TrendXAxes = new[] { new Axis { IsVisible = false, MinLimit = 0, MaxLimit = count - 1 } };
+            TrendYAxes = new[] { new Axis { IsVisible = false, MinLimit = 0, MaxLimit = Math.Max(1, max * 1.15) } };
+
+            TrendTitle = (hourly ? "Activities today" : Range == TimeRange.All ? "Activities, last 60 days" : $"Activities, {RangeLabel.ToLowerInvariant()}")
+                + $" · {current.LastOrDefault():N0}";
+        }
 
         public void Dispose()
         {
