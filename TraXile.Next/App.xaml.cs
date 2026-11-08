@@ -126,7 +126,8 @@ namespace TraXile.Next
             var en = System.Globalization.CultureInfo.GetCultureInfo("en-US");
             System.Threading.Thread.CurrentThread.CurrentCulture = en;
             System.Threading.Thread.CurrentThread.CurrentUICulture = en;
-            Dashboard = new DashboardViewModel(Source);
+            CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
+            Dashboard = new DashboardViewModel(Source, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);
             Dashboard.SetTheme(IsDark);
             if (ScreenshotPath == null)
             {
@@ -139,7 +140,6 @@ namespace TraXile.Next
             Filter = new GlobalFilter(leagues);
             FilterBar = new FilterBarViewModel(Filter, Source);
             ApplyFilterArg(args);
-            CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
             ActivityLog = new ActivityLogViewModel(Source, Filter, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);
             Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
 

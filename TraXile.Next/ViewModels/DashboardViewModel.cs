@@ -55,13 +55,24 @@ namespace TraXile.Next.ViewModels
         public bool IsError { get; set; }
     }
 
-    public sealed class LegendItem
+    /// <summary>
+    /// Row of the overview table under the time distribution (classic Statistics > Overview): one per activity type
+    /// in the range, plus hideout time. Types that the donut folds into "Other" carry the "Other" color.
+    /// </summary>
+    public sealed class OverviewRow
     {
         public string Name { get; set; }
+        public ACTIVITY_TYPES? Type { get; set; }
         public Brush Brush { get; set; }
-        public string Hours { get; set; }
-        public string Percent { get; set; }
+        public int Count { get; set; }
+        /// <summary>"–" for hideout time (no activities).</summary>
+        public string CountText => Type.HasValue ? Count.ToString("N0") : "–";
+        public double Seconds { get; set; }
+        public string Hours => $"{Seconds / 3600.0:0.0} h";
+        /// <summary>Share of the total time (activities plus, if shown, hideout), 0..1.</summary>
         public double Fraction { get; set; }
+        public string Percent => $"{Fraction * 100:0.#} %";
+        public bool IsHideout => !Type.HasValue;
     }
 
     public sealed class DashboardViewModel : ObservableObject, IDisposable
@@ -74,9 +85,20 @@ namespace TraXile.Next.ViewModels
         // Axis / grid paints depend on the theme
         private bool _isDark = true;
 
-        public DashboardViewModel(ITrackingSource source)
+        /// <summary>Classic setting: count hideout time in the time distribution and the overview.</summary>
+        public const string ShowHideoutKey = "pie_chart_show_hideout";
+
+        private readonly AppSetup _settings;
+        private readonly bool _canWriteSettings;
+
+        /// <param name="settings">config.xml for <see cref="ShowHideoutKey"/>; classic default (true) if null.</param>
+        /// <param name="canWriteSettings">False while the classic app owns the data: changes are not stored.</param>
+        public DashboardViewModel(ITrackingSource source, AppSetup settings = null, bool canWriteSettings = false)
         {
             _source = source;
+            _settings = settings;
+            _canWriteSettings = canWriteSettings;
+            _showHideout = !bool.TryParse(settings?.ReadSetting(ShowHideoutKey, "true"), out bool show) || show;
 
             TogglePauseCommand = new RelayCommand(() => { _source.TogglePause(); UpdateLive(); });
             StopCommand = new RelayCommand(StopCurrentActivity, () => Live.IsTracking);
@@ -290,7 +312,21 @@ namespace TraXile.Next.ViewModels
         // ------------------------------------------------------------------
 
         public ObservableCollection<KpiViewModel> Kpis { get; } = new ObservableCollection<KpiViewModel>();
-        public ObservableCollection<LegendItem> TimeLegend { get; } = new ObservableCollection<LegendItem>();
+        /// <summary>Overview table under the donut (classic Statistics > Overview), most time first, hideout last.</summary>
+        public ObservableCollection<OverviewRow> Overview { get; } = new ObservableCollection<OverviewRow>();
+
+        private bool _showHideout;
+        /// <summary>Count hideout time in the time distribution (classic "show hideout time in pie chart").</summary>
+        public bool ShowHideout
+        {
+            get => _showHideout;
+            set
+            {
+                if (!SetProperty(ref _showHideout, value)) return;
+                if (_canWriteSettings) _settings?.WriteSetting(ShowHideoutKey, value.ToString()); // "True"/"False" like the classic app
+                Refresh();
+            }
+        }
         public ObservableCollection<ActivityInfo> Recent { get; } = new ObservableCollection<ActivityInfo>();
 
         private ISeries[] _timeSeries = Array.Empty<ISeries>();
@@ -454,26 +490,47 @@ namespace TraXile.Next.ViewModels
         private void BuildTimeDistribution(List<ActivityInfo> cur, DateTime from, DateTime to)
         {
             var byType = cur.GroupBy(a => a.Type)
-                            .Select(g => new { Type = g.Key, Seconds = (double)g.Sum(Capped) })
+                            .Select(g => new { Type = g.Key, Count = g.Count(), Seconds = (double)g.Sum(Capped) })
                             .OrderByDescending(x => x.Seconds)
                             .ToList();
 
-            double hideout = _source.GetHideoutSeconds(from, to);
+            double hideout = ShowHideout ? _source.GetHideoutSeconds(from, to) : 0;
             double total = byType.Sum(x => x.Seconds) + hideout;
 
             var slices = new List<(string name, Color color, double seconds)>();
+            Overview.Clear();
             double other = 0;
             foreach (var t in byType)
             {
-                if (total > 0 && t.Seconds / total >= 0.04) slices.Add((ActivityPalette.DisplayName(t.Type), ActivityPalette.ColorOf(t.Type), t.Seconds));
+                bool own = total > 0 && t.Seconds / total >= 0.04;
+                if (own) slices.Add((ActivityPalette.DisplayName(t.Type), ActivityPalette.ColorOf(t.Type), t.Seconds));
                 else other += t.Seconds;
+
+                Overview.Add(new OverviewRow
+                {
+                    Name = ActivityPalette.DisplayName(t.Type),
+                    Type = t.Type,
+                    Brush = own ? ActivityPalette.Brush(t.Type) : ActivityPalette.BrushOf(ActivityPalette.ColorOf(ActivityPalette.Other)),
+                    Count = t.Count,
+                    Seconds = t.Seconds,
+                    Fraction = total > 0 ? t.Seconds / total : 0
+                });
             }
             if (other > 0) slices.Add(("Other", ActivityPalette.ColorOf(ActivityPalette.Other), other));
-            if (hideout > 0) slices.Add(("Hideout", ActivityPalette.ColorOf(ActivityPalette.Hideout), hideout));
+            if (hideout > 0)
+            {
+                slices.Add(("Hideout", ActivityPalette.ColorOf(ActivityPalette.Hideout), hideout));
+                Overview.Add(new OverviewRow
+                {
+                    Name = "Hideout",
+                    Brush = ActivityPalette.BrushOf(ActivityPalette.ColorOf(ActivityPalette.Hideout)),
+                    Seconds = hideout,
+                    Fraction = hideout / total
+                });
+            }
 
             TotalHours = (total / 3600.0).ToString(total >= 36000 ? "0" : "0.0");
 
-            TimeLegend.Clear();
             var series = new List<ISeries>();
             foreach (var s in slices)
             {
@@ -490,15 +547,6 @@ namespace TraXile.Next.ViewModels
                     Stroke = new SolidColorPaint(Token("Surface"), 2), // surface ring between slices
                     HoverPushout = 6,
                     ToolTipLabelFormatter = p => $"{p.Coordinate.PrimaryValue:0.0} h ({frac:P0})",
-                });
-
-                TimeLegend.Add(new LegendItem
-                {
-                    Name = s.name,
-                    Brush = ActivityPalette.BrushOf(s.color),
-                    Hours = $"{hours:0.0} h",
-                    Percent = $"{frac:P0}",
-                    Fraction = frac
                 });
             }
             TimeSeries = series.ToArray();

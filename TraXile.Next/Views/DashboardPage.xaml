@@ -301,7 +301,7 @@
                             <TextBlock Text="{Binding DailyTitle}" Style="{StaticResource CardTitle}" />
                             <TextBlock Text="Hours spent per activity type" Style="{StaticResource Caption}" Margin="0,2,0,0" />
                         </StackPanel>
-                        <lvc:CartesianChart Grid.Row="1" Height="320" Margin="0,12,0,0"
+                        <lvc:CartesianChart Grid.Row="1" MinHeight="320" Margin="0,12,0,0"
                                             Series="{Binding DailySeries}"
                                             XAxes="{Binding DailyXAxes}"
                                             YAxes="{Binding DailyYAxes}"
@@ -312,8 +312,14 @@
 
                 <Border Grid.Column="2" Style="{StaticResource Card}">
                     <StackPanel>
-                        <TextBlock Text="Time distribution" Style="{StaticResource CardTitle}" />
-                        <TextBlock Text="Where your time went" Style="{StaticResource Caption}" Margin="0,2,0,0" />
+                        <Grid>
+                            <StackPanel>
+                                <TextBlock Text="Time distribution" Style="{StaticResource CardTitle}" />
+                                <TextBlock Text="Where your time went" Style="{StaticResource Caption}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <CheckBox HorizontalAlignment="Right" VerticalAlignment="Top" Content="Hideout"
+                                      IsChecked="{Binding ShowHideout}" ToolTip="Count the time spent in your hideout" />
+                        </Grid>
 
                         <Grid Height="220" Margin="0,8,0,8">
                             <lvc:PieChart Series="{Binding TimeSeries}" InitialRotation="-90" LegendPosition="Hidden" TooltipPosition="Center" />
@@ -323,25 +329,43 @@
                             </StackPanel>
                         </Grid>
 
-                        <ItemsControl ItemsSource="{Binding TimeLegend}">
+                        <!-- overview table (classic Statistics > Overview) -->
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="56" />
+                                <ColumnDefinition Width="68" />
+                                <ColumnDefinition Width="56" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Type" Style="{StaticResource Caption}" FontWeight="SemiBold" />
+                            <TextBlock Grid.Column="1" Text="Count" Style="{StaticResource Caption}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                            <TextBlock Grid.Column="2" Text="Time" Style="{StaticResource Caption}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                            <TextBlock Grid.Column="3" Text="%" Style="{StaticResource Caption}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Overview}">
                             <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type vm:LegendItem}">
+                                <DataTemplate DataType="{x:Type vm:OverviewRow}">
                                     <Grid Margin="0,4">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="64" />
-                                            <ColumnDefinition Width="44" />
+                                            <ColumnDefinition Width="56" />
+                                            <ColumnDefinition Width="68" />
+                                            <ColumnDefinition Width="56" />
                                         </Grid.ColumnDefinitions>
                                         <Border Width="10" Height="10" CornerRadius="2" Background="{Binding Brush}" Margin="0,0,10,0" />
                                         <TextBlock Grid.Column="1" Text="{Binding Name}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Grid.Column="2" Text="{Binding Hours}" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Right"
+                                        <TextBlock Grid.Column="2" Text="{Binding CountText}" Style="{StaticResource Num}" FontSize="13" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Column="3" Text="{Binding Hours}" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Right"
                                                    Typography.NumeralAlignment="Tabular" />
-                                        <TextBlock Grid.Column="3" Text="{Binding Percent}" Style="{StaticResource Num}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Column="4" Text="{Binding Percent}" Style="{StaticResource Num}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Right" />
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+                        <TextBlock Text="Types under 4 % share the &quot;Other&quot; slice of the chart." Style="{StaticResource Caption}"
+                                   Margin="0,8,0,0" TextWrapping="Wrap" />
+
                     </StackPanel>
                 </Border>
             </Grid>
