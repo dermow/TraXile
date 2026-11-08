@@ -57,10 +57,9 @@ namespace TraXile.Next.Tests
         [Fact]
         public void Type_filter_stays_within_budget()
         {
-            FilterOption map = _vm.TypeOptions.Single(o => Equals(o.Value, ACTIVITY_TYPES.MAP));
-            FilterOption all = _vm.TypeOptions[0];
+            GlobalFilter filter = _vm.Filter;
             // Setting the same value again is a no-op, so measure a filter/unfilter round trip
-            AssertFast("Type filter on and off", RefreshBudget, () => { _vm.SelectedType = map; _vm.SelectedType = all; });
+            AssertFast("Type filter on and off", RefreshBudget, () => { filter.Type = ACTIVITY_TYPES.MAP; filter.Type = null; });
         }
 
         [Fact]

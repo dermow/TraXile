@@ -43,6 +43,8 @@ TraXile.Next.exe --screenshot out.png --page overlay-stopwatch # stopwatch overl
 TraXile.Next.exe --screenshot out.png --page overlay-tags      # tags overlay (also: overlay-tags-move)
 TraXile.Next.exe --screenshot out.png --page tags --select 0   # Tags page with the first tag selected
 TraXile.Next.exe --screenshot out.png --page settings --scroll 1500 # lower part of a long page
+TraXile.Next.exe --screenshot out.png --page log --filter last7days,map,level>=83,tag:juiced # with the global filter set
+                                                               # (also: league, custom, area:<name>, and, not)
 ```
 
 ## Tests

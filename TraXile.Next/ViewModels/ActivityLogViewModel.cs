@@ -24,8 +24,8 @@ namespace TraXile.Next.ViewModels
     }
 
     /// <summary>
-    /// Activity log: full history with search, filters, details, tagging, export and delete.
-    /// Kept alive for the whole app session so filters survive page navigation.
+    /// Activity log: full history with search, the global filter, details, tagging, export and delete.
+    /// Kept alive for the whole app session so the search survives page navigation.
     /// </summary>
     public sealed class ActivityLogViewModel : ObservableObject, IDisposable
     {
@@ -36,14 +36,13 @@ namespace TraXile.Next.ViewModels
         private IReadOnlyList<TagInfo> _allTags = Array.Empty<TagInfo>();
         private HashSet<string> _selectedIds = new HashSet<string>();
 
-        private static readonly FilterOption AllTypes = new FilterOption { Label = "All types" };
-        private static readonly FilterOption AllTags = new FilterOption { Label = "All tags" };
-
-        public ActivityLogViewModel(ITrackingSource source)
+        /// <param name="filter">The global filter; a private, empty one if null (tests).</param>
+        public ActivityLogViewModel(ITrackingSource source, GlobalFilter filter = null)
         {
             _source = source;
+            Filter = filter ?? new GlobalFilter();
+            Filter.Changed += OnFilterChanged;
 
-            SetRangeCommand = new RelayCommand<string>(r => { if (Enum.TryParse(r, out TimeRange tr)) Range = tr; });
             ClearFiltersCommand = new RelayCommand(ClearFilters);
             AddTagCommand = new RelayCommand<TagInfo>(AddTagToSelection);
             RemoveTagCommand = new RelayCommand<TagInfo>(RemoveTagFromSelected);
@@ -71,7 +70,6 @@ namespace TraXile.Next.ViewModels
         // Commands
         // ------------------------------------------------------------------
 
-        public IRelayCommand<string> SetRangeCommand { get; }
         public IRelayCommand ClearFiltersCommand { get; }
         public IRelayCommand<TagInfo> AddTagCommand { get; }
         public IRelayCommand<TagInfo> RemoveTagCommand { get; }
@@ -94,48 +92,20 @@ namespace TraXile.Next.ViewModels
             }
         }
 
-        private TimeRange _range = TimeRange.All;
-        public TimeRange Range
-        {
-            get => _range;
-            set { if (SetProperty(ref _range, value)) ApplyFilter(); }
-        }
+        /// <summary>The global filter (time, type, area, level, tags) shared with the other analytics pages.</summary>
+        public GlobalFilter Filter { get; }
 
-        private IReadOnlyList<FilterOption> _typeOptions = new[] { AllTypes };
-        public IReadOnlyList<FilterOption> TypeOptions { get => _typeOptions; private set => SetProperty(ref _typeOptions, value); }
+        private void OnFilterChanged(object sender, EventArgs e) => ApplyFilter();
 
-        private FilterOption _selectedType = AllTypes;
-        public FilterOption SelectedType
-        {
-            get => _selectedType;
-            set { if (SetProperty(ref _selectedType, value ?? AllTypes)) ApplyFilter(); }
-        }
+        public bool HasActiveFilters => !string.IsNullOrWhiteSpace(SearchText) || Filter.IsActive;
 
-        private IReadOnlyList<FilterOption> _tagOptions = new[] { AllTags };
-        public IReadOnlyList<FilterOption> TagOptions { get => _tagOptions; private set => SetProperty(ref _tagOptions, value); }
-
-        private FilterOption _selectedTag = AllTags;
-        public FilterOption SelectedTag
-        {
-            get => _selectedTag;
-            set { if (SetProperty(ref _selectedTag, value ?? AllTags)) ApplyFilter(); }
-        }
-
-        public bool HasActiveFilters =>
-            !string.IsNullOrWhiteSpace(SearchText) || Range != TimeRange.All ||
-            SelectedType != AllTypes || SelectedTag != AllTags;
-
+        /// <summary>Clears the search and resets the global filter.</summary>
         private void ClearFilters()
         {
             _searchText = "";
-            _range = TimeRange.All;
-            _selectedType = AllTypes;
-            _selectedTag = AllTags;
             OnPropertyChanged(nameof(SearchText));
-            OnPropertyChanged(nameof(Range));
-            OnPropertyChanged(nameof(SelectedType));
-            OnPropertyChanged(nameof(SelectedTag));
-            ApplyFilter();
+            if (Filter.IsActive) Filter.Reset(); // applies via Changed
+            else ApplyFilter();
         }
 
         // ------------------------------------------------------------------
@@ -161,59 +131,12 @@ namespace TraXile.Next.ViewModels
         {
             _all = _source.GetHistory();
             _allTags = _source.GetTags();
-            RebuildFilterOptions();
             ApplyFilter();
-        }
-
-        private void RebuildFilterOptions()
-        {
-            // Types: only those that occur, most frequent first
-            var types = _all.GroupBy(a => a.Type)
-                .OrderByDescending(g => g.Count())
-                .Select(g => new FilterOption
-                {
-                    Label = ActivityPalette.DisplayName(g.Key),
-                    Value = g.Key,
-                    Brush = ActivityPalette.Brush(g.Key),
-                    Count = g.Count()
-                });
-            var typeList = new List<FilterOption> { AllTypes };
-            typeList.AddRange(types);
-
-            // Tags: all known tags, used ones first
-            var tagCounts = _all.SelectMany(a => a.Tags).GroupBy(t => t.Id).ToDictionary(g => g.Key, g => g.Count());
-            var tags = _allTags
-                .Select(t => new FilterOption
-                {
-                    Label = t.Name,
-                    Value = t.Id,
-                    Brush = t.Background,
-                    Count = tagCounts.TryGetValue(t.Id, out int c) ? c : 0
-                })
-                .OrderByDescending(o => o.Count).ThenBy(o => o.Label, StringComparer.OrdinalIgnoreCase);
-            var tagList = new List<FilterOption> { AllTags };
-            tagList.AddRange(tags);
-
-            // Keep the current selection (new option instances, same value)
-            FilterOption prevType = _selectedType, prevTag = _selectedTag;
-            TypeOptions = typeList;
-            TagOptions = tagList;
-            _selectedType = typeList.FirstOrDefault(o => o.Value != null && o.Value.Equals(prevType.Value)) ?? AllTypes;
-            _selectedTag = tagList.FirstOrDefault(o => o.Value != null && o.Value.Equals(prevTag.Value)) ?? AllTags;
-            OnPropertyChanged(nameof(SelectedType));
-            OnPropertyChanged(nameof(SelectedTag));
         }
 
         private void ApplyFilter()
         {
-            IEnumerable<ActivityInfo> q = _all;
-
-            DateTime? from = RangeStart(Range);
-            if (from.HasValue) q = q.Where(a => a.Started >= from.Value);
-
-            if (SelectedType.Value is ACTIVITY_TYPES type) q = q.Where(a => a.Type == type);
-
-            if (SelectedTag.Value is string tagId) q = q.Where(a => a.Tags.Any(t => t.Id == tagId));
+            IEnumerable<ActivityInfo> q = Filter.Apply(_all);
 
             string[] terms = SearchText.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (terms.Length > 0) q = q.Where(a => terms.All(term => Matches(a, term)));
@@ -236,18 +159,6 @@ namespace TraXile.Next.ViewModels
             UpdateSelectionState();
 
             ItemsRefreshed?.Invoke(this, EventArgs.Empty);
-        }
-
-        private static DateTime? RangeStart(TimeRange range)
-        {
-            DateTime today = DateTime.Today;
-            switch (range)
-            {
-                case TimeRange.Today: return today;
-                case TimeRange.Week: return today.AddDays(-6);
-                case TimeRange.Month: return today.AddDays(-29);
-                default: return null;
-            }
         }
 
         private static bool Matches(ActivityInfo a, string term)
@@ -360,6 +271,7 @@ namespace TraXile.Next.ViewModels
         public void Dispose()
         {
             _source.HistoryChanged -= OnHistoryChanged;
+            Filter.Changed -= OnFilterChanged;
             _refreshDebounce.Stop();
             _searchDebounce.Stop();
         }

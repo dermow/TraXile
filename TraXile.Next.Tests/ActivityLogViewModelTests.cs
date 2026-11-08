@@ -41,46 +41,44 @@ namespace TraXile.Next.Tests
         }
 
         [Fact]
-        public void Type_filter_keeps_only_that_type()
+        public void Global_type_filter_keeps_only_that_type()
         {
-            FilterOption heist = _vm.TypeOptions.Single(o => Equals(o.Value, ACTIVITY_TYPES.HEIST));
-
-            _vm.SelectedType = heist;
+            _vm.Filter.Type = ACTIVITY_TYPES.HEIST;
 
             Assert.NotEmpty(_vm.Items);
             Assert.All(_vm.Items, a => Assert.Equal(ACTIVITY_TYPES.HEIST, a.Type));
-            Assert.Equal(heist.Count, _vm.Items.Count);
+            Assert.Equal(_source.GetHistory().Count(a => a.Type == ACTIVITY_TYPES.HEIST), _vm.Items.Count);
             Assert.True(_vm.HasActiveFilters);
         }
 
         [Fact]
-        public void Type_options_are_ordered_by_frequency()
+        public void Global_tag_filter_keeps_only_tagged_activities()
         {
-            int[] counts = _vm.TypeOptions.Skip(1).Select(o => o.Count).ToArray();
-            Assert.Equal(counts.OrderByDescending(c => c), counts);
-        }
-
-        [Fact]
-        public void Tag_filter_keeps_only_tagged_activities()
-        {
-            _vm.SelectedTag = _vm.TagOptions.Single(o => Equals(o.Value, "expedition"));
+            _vm.Filter.SetTag("expedition", true);
 
             Assert.NotEmpty(_vm.Items);
             Assert.All(_vm.Items, a => Assert.Contains(a.Tags, t => t.Id == "expedition"));
         }
 
-        [Theory]
-        [InlineData(TimeRange.Today, 0)]
-        [InlineData(TimeRange.Week, 6)]
-        [InlineData(TimeRange.Month, 29)]
-        public void Time_range_filter_cuts_off_older_activities(TimeRange range, int days)
+        [Fact]
+        public void Global_time_filter_cuts_off_older_activities()
         {
-            _vm.Range = range;
+            _vm.Filter.Time = FilterTime.Last7Days;
 
-            DateTime from = DateTime.Today.AddDays(-days);
+            DateTime from = DateTime.Now.AddDays(-7).AddMinutes(-1);
             Assert.NotEmpty(_vm.Items);
             Assert.All(_vm.Items, a => Assert.True(a.Started >= from));
-            Assert.Equal(_source.GetHistory().Count(a => a.Started >= from), _vm.Items.Count);
+            Assert.True(_vm.Items.Count < _source.GetHistory().Count);
+        }
+
+        [Fact]
+        public void Search_applies_on_top_of_the_global_filter()
+        {
+            _vm.Filter.Type = ACTIVITY_TYPES.MAP;
+            Search("strand");
+
+            Assert.NotEmpty(_vm.Items);
+            Assert.All(_vm.Items, a => { Assert.Equal(ACTIVITY_TYPES.MAP, a.Type); Assert.Equal("Strand", a.Area); });
         }
 
         [Fact]
@@ -125,13 +123,14 @@ namespace TraXile.Next.Tests
         [Fact]
         public void Clear_filters_resets_everything()
         {
-            _vm.Range = TimeRange.Week;
-            _vm.SelectedType = _vm.TypeOptions[1];
+            _vm.Filter.Time = FilterTime.Last7Days;
+            _vm.Filter.Type = ACTIVITY_TYPES.MAP;
             Search("temple");
 
             _vm.ClearFiltersCommand.Execute(null);
 
             Assert.False(_vm.HasActiveFilters);
+            Assert.False(_vm.Filter.IsActive);
             Assert.Equal("", _vm.SearchText);
             Assert.Equal(_source.GetHistory().Count, _vm.Items.Count);
         }
@@ -139,11 +138,11 @@ namespace TraXile.Next.Tests
         [Fact]
         public void Filters_survive_a_refresh()
         {
-            _vm.SelectedType = _vm.TypeOptions.Single(o => Equals(o.Value, ACTIVITY_TYPES.MAP));
+            _vm.Filter.Type = ACTIVITY_TYPES.MAP;
 
             _vm.Refresh();
 
-            Assert.Equal(ACTIVITY_TYPES.MAP, _vm.SelectedType.Value);
+            Assert.Equal(ACTIVITY_TYPES.MAP, _vm.Filter.Type);
             Assert.All(_vm.Items, a => Assert.Equal(ACTIVITY_TYPES.MAP, a.Type));
         }
 
@@ -165,7 +164,7 @@ namespace TraXile.Next.Tests
             ActivityInfo map = _vm.Items.First(a => a.Type == ACTIVITY_TYPES.MAP);
             _vm.SetSelection(new[] { map });
 
-            _vm.SelectedType = _vm.TypeOptions.Single(o => Equals(o.Value, ACTIVITY_TYPES.HEIST));
+            _vm.Filter.Type = ACTIVITY_TYPES.HEIST;
 
             Assert.False(_vm.HasSelection);
         }

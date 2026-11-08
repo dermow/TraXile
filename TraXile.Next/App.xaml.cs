@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -21,6 +22,7 @@ namespace TraXile.Next
     ///   --select 0,2           preselect activity log rows (for screenshots)
     ///   --scroll 1600          scroll the page down before the screenshot
     ///   --loading              show the loading state (demo, for screenshots)
+    ///   --filter last7days,map set the global filter (for screenshots, see ApplyFilterArg)
     /// </summary>
     public partial class App : Application
     {
@@ -30,6 +32,12 @@ namespace TraXile.Next
         public static LoadingViewModel Loading { get; private set; }
         public static SettingsViewModel Settings { get; private set; }
         public static TagsViewModel Tags { get; private set; }
+
+        /// <summary>The global filter of all analytics pages (in memory only).</summary>
+        public static GlobalFilter Filter { get; private set; }
+
+        /// <summary>State of the filter bar, shared by all filtered pages.</summary>
+        public static FilterBarViewModel FilterBar { get; private set; }
 
         /// <summary>Settings may be written (live data of this app, not forced demo / classic app running).</summary>
         public static bool CanWriteSettings { get; private set; }
@@ -125,7 +133,13 @@ namespace TraXile.Next
                 var tagSounds = new TagSoundNotifier(Source, new CoreTagSoundPlayer());
                 Dashboard.LiveUpdated += (s, live) => tagSounds.Observe(live);
             }
-            ActivityLog = new ActivityLogViewModel(Source);
+            IReadOnlyList<LeagueInfo> leagues = Source.IsDemo
+                ? LeagueCatalog.Demo(DateTime.Now)
+                : LeagueCatalog.Load(TrX_Static.METADATA_XML_FULLPATH);
+            Filter = new GlobalFilter(leagues);
+            FilterBar = new FilterBarViewModel(Filter, Source);
+            ApplyFilterArg(args);
+            ActivityLog = new ActivityLogViewModel(Source, Filter);
             Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
             CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
 
@@ -163,6 +177,51 @@ namespace TraXile.Next
                 Tray.ExitRequested += (s, a) => Shutdown();
                 Overlays.ShowDefaults(); // "show by default" overlays open with the app, like the classic one
             }
+        }
+
+        /// <summary>
+        /// --filter last7days,map,tag:juiced,level>=83,league (for screenshots): comma-separated parts of the
+        /// global filter: a <see cref="FilterTime"/> name, an activity type, "tag:&lt;id&gt;", "level&lt;op&gt;&lt;n&gt;",
+        /// "area:&lt;name&gt;", "and" / "not" for the tag match, "league" = current league.
+        /// </summary>
+        private static void ApplyFilterArg(string[] args)
+        {
+            int idx = Array.FindIndex(args, a => a.Equals("--filter", StringComparison.OrdinalIgnoreCase));
+            if (idx < 0 || idx + 1 >= args.Length) return;
+
+            Filter.Batch(() =>
+            {
+                foreach (string raw in args[idx + 1].Split(','))
+                {
+                    string p = raw.Trim();
+                    if (p.Equals("league", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Filter.Time = FilterTime.League;
+                        Filter.League = LeagueCatalog.Current(Filter.Leagues);
+                    }
+                    else if (p.StartsWith("tag:", StringComparison.OrdinalIgnoreCase)) Filter.SetTag(p.Substring(4), true);
+                    else if (p.StartsWith("area:", StringComparison.OrdinalIgnoreCase)) Filter.Area = p.Substring(5);
+                    else if (p.Equals("and", StringComparison.OrdinalIgnoreCase)) Filter.TagMatch = TagMatch.All;
+                    else if (p.Equals("not", StringComparison.OrdinalIgnoreCase)) Filter.TagMatch = TagMatch.None;
+                    else if (p.StartsWith("level", StringComparison.OrdinalIgnoreCase))
+                    {
+                        string rest = p.Substring(5);
+                        string[] ops = { ">=", "<=", ">", "<", "=" };
+                        LevelOperator[] values = { LevelOperator.GreaterOrEqual, LevelOperator.LessOrEqual, LevelOperator.Greater, LevelOperator.Less, LevelOperator.Equal };
+                        for (int i = 0; i < ops.Length; i++)
+                        {
+                            if (rest.StartsWith(ops[i]) && int.TryParse(rest.Substring(ops[i].Length), out int lvl))
+                            {
+                                Filter.LevelOperator = values[i];
+                                Filter.AreaLevel = lvl;
+                                break;
+                            }
+                        }
+                    }
+                    else if (Enum.TryParse(p, true, out FilterTime time)) Filter.Time = time;
+                    else if (Enum.TryParse(p, true, out ACTIVITY_TYPES type)) Filter.Type = type;
+                }
+            });
         }
 
         /// <summary>
@@ -298,6 +357,7 @@ namespace TraXile.Next
 
             Dashboard?.SetTheme(dark);
             ActivityLog?.Refresh(); // re-reads the activity colors of the new theme
+            FilterBar?.RefreshOptions();
             Settings?.SyncTheme(dark);
             ThemeChanged?.Invoke(null, EventArgs.Empty);
         }
@@ -313,6 +373,7 @@ namespace TraXile.Next
         {
             Dashboard?.Dispose();
             ActivityLog?.Dispose();
+            FilterBar?.Dispose();
             Source?.Dispose();
             Loading?.Dispose();
             Tray?.Dispose();
