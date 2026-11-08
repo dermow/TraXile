@@ -242,6 +242,21 @@ namespace TraXile.Next.Services
             RaiseHistoryChanged();
         }
 
+        public void ToggleCurrentActivityTag(string tagId)
+        {
+            if (_logic == null || IsLoading) return;
+
+            // The activity shown on the live card, so a running side area (Vaal, Zana, ...) gets the tag.
+            // The classic app only tagged the main activity or the Zana map.
+            TrX_TrackedActivity act = GetEffectiveActivity();
+            TrX_ActivityTag tag = _logic.GetTagByID(tagId);
+            if (act == null || tag == null || tag.IsDefault) return;
+
+            // Not in the database yet: FinishActivity saves the activity with its tags
+            if (act.HasTag(tagId)) act.RemoveTag(tagId);
+            else act.AddTag(tagId);
+        }
+
         private static TagInfo ToTagInfo(TrX_ActivityTag tag) => new TagInfo
         {
             Id = tag.ID,

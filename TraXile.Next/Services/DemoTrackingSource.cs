@@ -86,7 +86,7 @@ namespace TraXile.Next.Services
                 MapTier = 16,
                 AreaLevel = 83,
                 Started = now - _currentOffset,
-                Tags = new[] { Tag("delirium", "Delirium", 0xE5E7EB, 0x111827), Tag("expedition", "Expedition", 0x2DD4BF, 0x042F2E) }
+                Tags = new[] { Tag("delirium", "Delirium", 0xE5E7EB, 0x111827), Tag("expedition", "Expedition", 0x2DD4BF, 0x042F2E), Juiced }
             };
         }
 
@@ -255,6 +255,15 @@ namespace TraXile.Next.Services
 
             _history.Insert(0, finished); // newest first
             HistoryChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void ToggleCurrentActivityTag(string tagId)
+        {
+            if (_currentActivity == null || !TagCatalog.TryGetValue(tagId, out TagInfo tag) || tag.IsDefault) return;
+
+            _currentActivity.Tags = _currentActivity.Tags.Any(t => t.Id == tagId)
+                ? _currentActivity.Tags.Where(t => t.Id != tagId).ToList()
+                : _currentActivity.Tags.Concat(new[] { tag }).ToList();
         }
 
         public void TogglePause()

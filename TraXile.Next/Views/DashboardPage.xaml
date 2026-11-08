@@ -30,6 +30,46 @@
             </Border>
         </DataTemplate>
 
+        <!-- Live card tag: custom tags toggle (active = tag colors, inactive = outlined),
+             default tags are shown read only while active -->
+        <DataTemplate x:Key="LiveTagChip" DataType="{x:Type vm:LiveTagChip}">
+            <Button x:Name="Btn" Cursor="Hand" Focusable="True" ToolTip="{Binding ToolTip}" Margin="0,0,6,6"
+                    Command="{Binding DataContext.ToggleTagCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                    CommandParameter="{Binding}">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border x:Name="Chip" CornerRadius="{StaticResource ControlRadius}" Padding="8,2"
+                                    BorderThickness="1" BorderBrush="{Binding Background}" Background="{Binding Background}">
+                                <TextBlock x:Name="Txt" Text="{Binding Name}" Foreground="{Binding Foreground}"
+                                           FontSize="12" FontWeight="SemiBold" />
+                            </Border>
+                            <Border x:Name="Veil" CornerRadius="{StaticResource ControlRadius}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                <Setter TargetName="Chip" Property="Background" Value="Transparent" />
+                                <Setter TargetName="Chip" Property="BorderBrush" Value="{DynamicResource BorderStrongBrush}" />
+                                <Setter TargetName="Txt" Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
+                                <Setter TargetName="Txt" Property="FontWeight" Value="Normal" />
+                            </DataTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Veil" Property="Background" Value="{DynamicResource HoverVeilBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Chip" Property="BorderBrush" Value="{DynamicResource FocusBrush}" />
+                            </Trigger>
+                            <DataTrigger Binding="{Binding CanToggle}" Value="False">
+                                <Setter Property="Cursor" Value="Arrow" />
+                                <Setter Property="Focusable" Value="False" />
+                                <Setter TargetName="Veil" Property="Background" Value="Transparent" />
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
+
         <ItemsPanelTemplate x:Key="WrapPanelTemplate">
             <WrapPanel />
         </ItemsPanelTemplate>
@@ -140,8 +180,8 @@
                             <TextBlock Text="{Binding LiveTitle}" Style="{StaticResource H2}" FontSize="30" TextTrimming="CharacterEllipsis" />
                             <TextBlock Text="{Binding LiveSubtitle}" Style="{StaticResource Meta}" FontSize="14" Margin="0,4,0,12" />
 
-                            <ItemsControl ItemsSource="{Binding Live.ActiveTags}" ItemTemplate="{StaticResource TagChip}"
-                                          ItemsPanel="{StaticResource WrapPanelTemplate}" />
+                            <ItemsControl ItemsSource="{Binding LiveTags}" ItemTemplate="{StaticResource LiveTagChip}"
+                                          ItemsPanel="{StaticResource WrapPanelTemplate}" Focusable="False" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" MinWidth="320" Margin="24,0,0,0">

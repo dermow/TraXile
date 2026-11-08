@@ -115,6 +115,12 @@ namespace TraXile.Next.Services
         /// </summary>
         void StopCurrentActivity();
 
+        /// <summary>
+        /// Adds or removes a custom tag on the current activity (the one shown on the live card).
+        /// Only kept in memory; the tags are saved when the activity finishes.
+        /// </summary>
+        void ToggleCurrentActivityTag(string tagId);
+
         /// <summary>All known tags (default and custom).</summary>
         IReadOnlyList<TagInfo> GetTags();
 
