@@ -281,12 +281,24 @@ namespace TraXile
 
             label3.BackColor = msm.ColorScheme.PrimaryColor;
             label3.ForeColor = msm.ColorScheme.TextColor;
-            label3.Font = new Font(labelRef.Font.FontFamily, 9, FontStyle.Regular);
+            label3.Font = new Font(labelRef.Font.FontFamily, 9, FontStyle.Bold);
 
             foreach (LinkLabel cnt in TrX_Helpers.GetAll(form, typeof(LinkLabel)))
             {
                 cnt.Font = labelRef.Font;
-                cnt.LinkColor = msm.ColorScheme.TextColor;
+                cnt.LinkBehavior = LinkBehavior.HoverUnderline;
+                cnt.LinkColor = TrX_ModernTheme.Link;
+                cnt.ActiveLinkColor = TrX_ModernTheme.Accent;
+                cnt.VisitedLinkColor = TrX_ModernTheme.Link;
+            }
+
+            // Re-color tag chips so a theme switch takes effect immediately
+            if (_tagLabelsConfig != null)
+            {
+                foreach (Label lbl in _tagLabelsConfig.Values)
+                {
+                    TrX_ModernTheme.StyleChip(lbl);
+                }
             }
 
             foreach (TableLayoutPanel cnt in TrX_Helpers.GetAll(form, typeof(TableLayoutPanel)))
@@ -325,46 +337,20 @@ namespace TraXile
 
             foreach (Chart cnt in TrX_Helpers.GetAll(form, typeof(Chart)))
             {
-                cnt.BackColor = msm.BackgroundColor;
-                cnt.BackGradientStyle = GradientStyle.None;
+                bool isDashboard = cnt.Name == "chartGlobalDashboard";
 
-                foreach (Legend l in cnt.Legends)
-                {
-
-                    if (cnt.Name == "chartGlobalDashboard")
-                    {
-                        l.BackColor = msm.BackgroundColor;
-                        l.ForeColor = msm.ColorScheme.TextColor;
-                    }
-                    else
-                    {
-                        l.Enabled = false;
-                    }
-
-                }
-
-                foreach (ChartArea chartArea in cnt.ChartAreas)
-                {
-                    chartArea.BackColor = msm.BackgroundColor;
-                    chartArea.AxisX.LabelStyle.ForeColor = msm.ColorScheme.TextColor;
-                    chartArea.AxisY.LabelStyle.ForeColor = msm.ColorScheme.TextColor;
-                    chartArea.AxisX.MajorGrid.LineColor = msm.ColorScheme.TextColor;
-                    chartArea.AxisY.MajorGrid.LineColor = msm.ColorScheme.TextColor;
-                    chartArea.AxisY.LineColor = Color.Black;
-                    chartArea.AxisX.LineColor = Color.Black;
-                    chartArea.BackColor = msm.BackgroundColor;
-                    chartArea.AxisX.MajorGrid.LineWidth = 0;
-                    chartArea.AxisY.MajorGrid.LineWidth = 0;
-                }
+                TrX_ModernTheme.StyleChart(cnt, msm.BackgroundColor, labelRef.Font, isDashboard);
 
                 foreach (Series series in cnt.Series)
                 {
-                    if (cnt.Name != "chartGlobalDashboard")
+                    if (isDashboard)
                     {
-                        series.Color = msm.ColorScheme.PrimaryColor;
+                        TrX_ModernTheme.StyleDoughnut(series, msm.BackgroundColor, labelRef.Font);
                     }
-                    series.IsValueShownAsLabel = true;
-                    series.LabelForeColor = msm.ColorScheme.TextColor;
+                    else
+                    {
+                        TrX_ModernTheme.StyleSeries(series, labelRef.Font);
+                    }
                 }
             }
 
@@ -420,26 +406,15 @@ namespace TraXile
 
             string theme = _mySettings.ReadSetting("theme", TrX_Static.DEFAULT_THEME_NAME);
 
-            if (theme == "Light")
-            {
-                msm.Theme = MaterialSkinManager.Themes.LIGHT;
-            }
-            else
-            {
-                msm.Theme = MaterialSkinManager.Themes.DARK;
-            }
-
             msm.AddFormToManage(this);
 
-            msm.ColorScheme = new ColorScheme(
-            Primary.BlueGrey900,    // Primary
-            Primary.BlueGrey900,    // Dark Primary
-            Primary.Blue50,    // Light Primary
-            Accent.Red200,    // Accent
-            TextShade.WHITE         // Textfarbe
-            );
+            TrX_ModernTheme.Apply(msm, theme == "Light"
+                ? MaterialSkinManager.Themes.LIGHT
+                : MaterialSkinManager.Themes.DARK);
 
             InitializeComponent();
+
+            TrX_ModernTheme.ApplyWindowChrome(this);
 
             tableLayoutPanel_L0.RowStyles[2].Height = 16;
             linkLabel5.Text = "show filters";
@@ -1493,10 +1468,9 @@ namespace TraXile
                     lbl.Text = tag.DisplayName;
                     lbl.Name = $"lbl_tag_{tag.ID}";
                     lbl.TextAlign = ContentAlignment.MiddleCenter;
-                    lbl.BackColor = msm.ColorScheme.PrimaryColor;
-                    lbl.ForeColor = msm.ColorScheme.TextColor;
+                    TrX_ModernTheme.StyleChip(lbl);
                     lbl.Font = materialButton1.Font;
-                    lbl.MouseHover += tagLabel_MouseOver;
+                    lbl.MouseEnter += tagLabel_MouseOver;
                     lbl.MouseLeave += tagLabel_MouseLeave;
                     lbl.MouseClick += Lbl_MouseClick1;
                     lbl.Location = new Point(iX, iY);
@@ -1545,7 +1519,18 @@ namespace TraXile
         /// <param name="e"></param>
         private void tagLabel_MouseLeave(object sender, EventArgs e)
         {
-            ((Label)sender).BorderStyle = BorderStyle.None;
+            Label lbl = (Label)sender;
+
+            // Restore the chip color based on its state
+            if (lbl.Tag is bool isActive)
+            {
+                if (isActive) TrX_ModernTheme.StyleChipActive(lbl);
+                else TrX_ModernTheme.StyleChipInactive(lbl);
+            }
+            else
+            {
+                TrX_ModernTheme.StyleChip(lbl);
+            }
         }
 
         /// <summary>
@@ -1555,7 +1540,9 @@ namespace TraXile
         /// <param name="e"></param>
         private void tagLabel_MouseOver(object sender, EventArgs e)
         {
-            ((Label)sender).BorderStyle = BorderStyle.Fixed3D;
+            Label lbl = (Label)sender;
+            lbl.Cursor = Cursors.Hand;
+            lbl.BackColor = TrX_ModernTheme.Hover(lbl.BackColor);
         }
 
         /// <summary>
@@ -1616,10 +1603,10 @@ namespace TraXile
                     lbl.Text = tag.DisplayName;
                     lbl.Name = $"lbl_tag_{tag.ID}";
                     lbl.TextAlign = ContentAlignment.MiddleCenter;
-                    lbl.BackColor = Color.Gray;
-                    lbl.ForeColor = Color.LightGray;
+                    lbl.Tag = false; // active state
+                    TrX_ModernTheme.StyleChipInactive(lbl);
                     lbl.Location = new Point(iX, iY);
-                    lbl.MouseHover += tagLabel_MouseOver;
+                    lbl.MouseEnter += tagLabel_MouseOver;
                     lbl.MouseLeave += tagLabel_MouseLeave;
                     lbl.MouseClick += Lbl_MouseClick;
                     lbl.MinimumSize = new Size(100, 18);
@@ -1661,8 +1648,8 @@ namespace TraXile
 
                         if (mapToCheck.Tags.Contains(tag.ID))
                         {
-                            // SOUND NOTIFY?
-                            if (_tagLabels[tag.ID].BackColor == Color.Gray)
+                            // SOUND NOTIFY? (only on transition inactive -> active)
+                            if (!(_tagLabels[tag.ID].Tag is bool wasActive && wasActive))
                             {
                                 if (tag.SoundEnabled)
                                 {
@@ -1670,19 +1657,19 @@ namespace TraXile
                                 }
                             }
 
-                            _tagLabels[tag.ID].BackColor = msm.ColorScheme.PrimaryColor;
-                            _tagLabels[tag.ID].ForeColor = msm.ColorScheme.TextColor;
+                            _tagLabels[tag.ID].Tag = true;
+                            TrX_ModernTheme.StyleChipActive(_tagLabels[tag.ID]);
                         }
                         else
                         {
-                            _tagLabels[tag.ID].BackColor = Color.Gray;
-                            _tagLabels[tag.ID].ForeColor = Color.LightGray;
+                            _tagLabels[tag.ID].Tag = false;
+                            TrX_ModernTheme.StyleChipInactive(_tagLabels[tag.ID]);
                         }
                     }
                     else
                     {
-                        _tagLabels[tag.ID].BackColor = Color.Gray;
-                        _tagLabels[tag.ID].ForeColor = Color.LightGray;
+                        _tagLabels[tag.ID].Tag = false;
+                        TrX_ModernTheme.StyleChipInactive(_tagLabels[tag.ID]);
                     }
                 }
 
@@ -1740,8 +1727,7 @@ namespace TraXile
                 lbl.Text = $"{tag.DisplayName}: {kvp.Value} ({percent}%)";
                 lbl.Name = $"lbl_tag_{tag.ID}";
                 lbl.TextAlign = ContentAlignment.MiddleCenter;
-                lbl.BackColor = msm.ColorScheme.PrimaryColor;
-                lbl.ForeColor = msm.ColorScheme.TextColor;
+                TrX_ModernTheme.StyleChip(lbl);
                 lbl.Location = new Point(iX, iY);
                 lbl.MinimumSize = new Size(100, 18);
                 lbl.Font = materialButton1.Font;
@@ -2743,53 +2729,53 @@ namespace TraXile
 
             Dictionary<ACTIVITY_TYPES, Color> colorList = new Dictionary<ACTIVITY_TYPES, Color>
             {
-                { ACTIVITY_TYPES.MAP, Color.Green },
-                { ACTIVITY_TYPES.HEIST, Color.Red },
-                { ACTIVITY_TYPES.DELVE, Color.Orange },
-                { ACTIVITY_TYPES.LABYRINTH, Color.DarkTurquoise },
-                { ACTIVITY_TYPES.SIMULACRUM, Color.Gray },
-                { ACTIVITY_TYPES.TEMPLE, Color.MediumSeaGreen },
-                { ACTIVITY_TYPES.MAVEN_INVITATION, Color.Violet },
-                { ACTIVITY_TYPES.ATZIRI, Color.OrangeRed },
-                { ACTIVITY_TYPES.UBER_ATZIRI, Color.OrangeRed },
-                { ACTIVITY_TYPES.ELDER_FIGHT, Color.Gray },
-                { ACTIVITY_TYPES.SHAPER_FIGHT, Color.MediumVioletRed },
-                { ACTIVITY_TYPES.MAVEN_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.SIRUS_FIGHT, Color.AntiqueWhite },
-                { ACTIVITY_TYPES.OTHER, Color.Gray },
-                { ACTIVITY_TYPES.CAMPAIGN, Color.Turquoise },
-                { ACTIVITY_TYPES.VAAL_SIDEAREA, Color.DarkRed },
-                { ACTIVITY_TYPES.ABYSSAL_DEPTHS, Color.LightGreen },
-                { ACTIVITY_TYPES.LAB_TRIAL, Color.DarkTurquoise },
-                { ACTIVITY_TYPES.LOGBOOK, Color.LightBlue },
-                { ACTIVITY_TYPES.LOGBOOK_SIDE, Color.LightBlue },
-                { ACTIVITY_TYPES.CATARINA_FIGHT, Color.Orange },
-                { ACTIVITY_TYPES.BREACHSTONE, Color.PaleVioletRed },
-                { ACTIVITY_TYPES.BLACK_STAR_FIGHT, Color.Red },
-                { ACTIVITY_TYPES.SEARING_EXARCH_FIGHT, Color.Red },
-                { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.TIMELESS_LEGION, Color.BlueViolet },
-                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, Color.Silver },
-                { ACTIVITY_TYPES.SANCTUM, Color.Purple },
-                { ACTIVITY_TYPES.TRIALMASTER_FIGHT, Color.Red },
-                { ACTIVITY_TYPES.TANES_LABORATORY, Color.LimeGreen },
-                { ACTIVITY_TYPES.ANCESTOR_TRIAL, Color.Turquoise},
-                { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, Color.MediumVioletRed},
-                { ACTIVITY_TYPES.KINGSMARCH, Color.SaddleBrown },
-                { ACTIVITY_TYPES.INCARNATION_OF_DREAD_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.INCARNATION_OF_FEAR_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, Color.Blue },
-                { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, Color.DarkViolet },
-                { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, Color.DarkRed },
-                { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, Color.Aqua },
-                { ACTIVITY_TYPES.SASAN_FIGHT, Color.Aqua },
-                { ACTIVITY_TYPES.OSHABI_FIGHT, Color.CadetBlue },
-                { ACTIVITY_TYPES.RELIQUARY_KEY, Color.Orange },
-                { ACTIVITY_TYPES.ANOMALY, Color.DarkOrange },
+                { ACTIVITY_TYPES.MAP, TrX_ModernTheme.Palette.Emerald },
+                { ACTIVITY_TYPES.HEIST, TrX_ModernTheme.Palette.Rose },
+                { ACTIVITY_TYPES.DELVE, TrX_ModernTheme.Palette.Amber },
+                { ACTIVITY_TYPES.LABYRINTH, TrX_ModernTheme.Palette.Cyan },
+                { ACTIVITY_TYPES.SIMULACRUM, TrX_ModernTheme.Palette.Slate },
+                { ACTIVITY_TYPES.TEMPLE, TrX_ModernTheme.Palette.Teal },
+                { ACTIVITY_TYPES.MAVEN_INVITATION, TrX_ModernTheme.Palette.Violet },
+                { ACTIVITY_TYPES.ATZIRI, TrX_ModernTheme.Palette.Orange },
+                { ACTIVITY_TYPES.UBER_ATZIRI, TrX_ModernTheme.Palette.Orange },
+                { ACTIVITY_TYPES.ELDER_FIGHT, TrX_ModernTheme.Palette.Slate },
+                { ACTIVITY_TYPES.SHAPER_FIGHT, TrX_ModernTheme.Palette.Fuchsia },
+                { ACTIVITY_TYPES.MAVEN_FIGHT, TrX_ModernTheme.Palette.Indigo },
+                { ACTIVITY_TYPES.SIRUS_FIGHT, TrX_ModernTheme.Palette.Stone },
+                { ACTIVITY_TYPES.OTHER, TrX_ModernTheme.Palette.Slate },
+                { ACTIVITY_TYPES.CAMPAIGN, TrX_ModernTheme.Palette.Teal },
+                { ACTIVITY_TYPES.VAAL_SIDEAREA, TrX_ModernTheme.Palette.Red },
+                { ACTIVITY_TYPES.ABYSSAL_DEPTHS, TrX_ModernTheme.Palette.Lime },
+                { ACTIVITY_TYPES.LAB_TRIAL, TrX_ModernTheme.Palette.Cyan },
+                { ACTIVITY_TYPES.LOGBOOK, TrX_ModernTheme.Palette.Sky },
+                { ACTIVITY_TYPES.LOGBOOK_SIDE, TrX_ModernTheme.Palette.Sky },
+                { ACTIVITY_TYPES.CATARINA_FIGHT, TrX_ModernTheme.Palette.Amber },
+                { ACTIVITY_TYPES.BREACHSTONE, TrX_ModernTheme.Palette.Pink },
+                { ACTIVITY_TYPES.BLACK_STAR_FIGHT, TrX_ModernTheme.Palette.Rose },
+                { ACTIVITY_TYPES.SEARING_EXARCH_FIGHT, TrX_ModernTheme.Palette.Rose },
+                { ACTIVITY_TYPES.INFINITE_HUNGER_FIGHT, TrX_ModernTheme.Palette.Indigo },
+                { ACTIVITY_TYPES.EATER_OF_WORLDS_FIGHT, TrX_ModernTheme.Palette.Indigo },
+                { ACTIVITY_TYPES.TIMELESS_LEGION, TrX_ModernTheme.Palette.Violet },
+                { ACTIVITY_TYPES.LAKE_OF_KALANDRA, TrX_ModernTheme.Palette.Stone },
+                { ACTIVITY_TYPES.SANCTUM, TrX_ModernTheme.Palette.Purple },
+                { ACTIVITY_TYPES.TRIALMASTER_FIGHT, TrX_ModernTheme.Palette.Rose },
+                { ACTIVITY_TYPES.TANES_LABORATORY, TrX_ModernTheme.Palette.Lime },
+                { ACTIVITY_TYPES.ANCESTOR_TRIAL, TrX_ModernTheme.Palette.Teal},
+                { ACTIVITY_TYPES.INSCRIBED_ULTIMATUM, TrX_ModernTheme.Palette.Fuchsia},
+                { ACTIVITY_TYPES.KINGSMARCH, TrX_ModernTheme.Palette.Bronze },
+                { ACTIVITY_TYPES.INCARNATION_OF_DREAD_FIGHT, TrX_ModernTheme.Palette.Indigo },
+                { ACTIVITY_TYPES.INCARNATION_OF_FEAR_FIGHT, TrX_ModernTheme.Palette.Indigo },
+                { ACTIVITY_TYPES.INCARNATION_OF_NEGLECT_FIGHT, TrX_ModernTheme.Palette.Indigo },
+                { ACTIVITY_TYPES.NEGLECTED_FLAME_FIGHT, TrX_ModernTheme.Palette.Indigo },
+                { ACTIVITY_TYPES.DECEITFUL_GOD_FIGHT, TrX_ModernTheme.Palette.Indigo },
+                { ACTIVITY_TYPES.CARDINAL_OF_FEAR_FIGHT, TrX_ModernTheme.Palette.Indigo },
+                { ACTIVITY_TYPES.KING_IN_THE_MISTS_FIGHT, TrX_ModernTheme.Palette.Purple },
+                { ACTIVITY_TYPES.BLACK_KNIGHT_FIGHT, TrX_ModernTheme.Palette.Red },
+                { ACTIVITY_TYPES.ADMIRAL_VALERIUS_FIGHT, TrX_ModernTheme.Palette.Cyan },
+                { ACTIVITY_TYPES.SASAN_FIGHT, TrX_ModernTheme.Palette.Cyan },
+                { ACTIVITY_TYPES.OSHABI_FIGHT, TrX_ModernTheme.Palette.Sky },
+                { ACTIVITY_TYPES.RELIQUARY_KEY, TrX_ModernTheme.Palette.Amber },
+                { ACTIVITY_TYPES.ANOMALY, TrX_ModernTheme.Palette.Orange },
 
             };
             double hideOutTime = 0;
@@ -2890,7 +2876,7 @@ namespace TraXile
                 percentValHO = Math.Round(percentValHO, 2);
                 TimeSpan tsDurationHO = TimeSpan.FromSeconds(hideOutTime);
                 chartGlobalDashboard.Series[0].Points.AddXY("Hideout", Math.Round(tsDurationHO.TotalSeconds / 60 / 60, 1));
-                chartGlobalDashboard.Series[0].Points.Last().Color = Color.Blue; ;
+                chartGlobalDashboard.Series[0].Points.Last().Color = TrX_ModernTheme.Palette.Blue;
                 chartGlobalDashboard.Series[0].Points.Last().Label = tsDurationHO.TotalSeconds > 0 ? string.Format("{0} h", Math.Round(tsDurationHO.TotalHours, 1)) : " ";
                 chartGlobalDashboard.Series[0].Points.Last().LegendText = $"Hideout ({percentValHO}%)";
 
@@ -2898,7 +2884,7 @@ namespace TraXile
                 lvi.SubItems.Add("-");
                 lvi.SubItems.Add(Math.Round(tsDurationHO.TotalSeconds / 60 / 60, 1).ToString() + " h");
                 lvi.SubItems.Add(percentValHO + "%");
-                lvi.BackColor = Color.Blue;
+                lvi.BackColor = TrX_ModernTheme.Palette.Blue;
 
                 listView1.Items.Add(lvi);
             }
@@ -3528,7 +3514,7 @@ namespace TraXile
                 msm.AddFormToManage((MaterialForm)form);
 
             DoManualThemeAdjustments(form);
-
+            TrX_ModernTheme.ApplyWindowChrome(form);
 
             form.Show();
         }
@@ -4019,15 +4005,11 @@ namespace TraXile
         /// <param name="theme"></param>
         private void ChangeTheme(string theme)
         {
-            if (theme == "Dark")
-            {
-                msm.Theme = MaterialSkinManager.Themes.DARK;
-            }
-            else
-            {
-                msm.Theme = MaterialSkinManager.Themes.LIGHT;
-            }
+            TrX_ModernTheme.Apply(msm, theme == "Dark"
+                ? MaterialSkinManager.Themes.DARK
+                : MaterialSkinManager.Themes.LIGHT);
 
+            TrX_ModernTheme.ApplyWindowChrome(this);
             DoManualThemeAdjustments(this);
             AddUpdateAppSettings("theme", theme);
         }

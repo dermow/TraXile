@@ -10,8 +10,8 @@ namespace TraXile.UI
         {
             _customSize = new Size(115, 28);
             this.Load += OverlaySimpleStopwatch_Load;
-            this.BackColor = Color.Black;
-            this.ForeColor = Color.PeachPuff;
+            this.BackColor = TrX_ModernTheme.OverlayBack;
+            this.ForeColor = TrX_ModernTheme.OverlayFore;
             InitializeComponent();
 
             // Interact with click on filling lable, same as click on base form

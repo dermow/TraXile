@@ -36,8 +36,8 @@ namespace TraXile.UI
 
         public BaseOverlay()
         {
-            _defaultBackColor = Color.Black;
-            _defaultForeColor = Color.PeachPuff;
+            _defaultBackColor = TrX_ModernTheme.OverlayBack;
+            _defaultForeColor = TrX_ModernTheme.OverlayFore;
             this.ForeColor = _defaultForeColor;
             this.BackColor = _defaultBackColor;
             this.StartPosition = FormStartPosition.Manual;
@@ -52,6 +52,8 @@ namespace TraXile.UI
 
             InitializeComponent();
             _initalPoint = new Point();
+
+            TrX_ModernTheme.ApplyWindowChrome(this, smallCorners: true);
         }
 
         internal void BaseOverlay_Load1(object sender, EventArgs e)
@@ -96,7 +98,7 @@ namespace TraXile.UI
         private void moveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _isMovable = !_isMovable;
-            BackColor = _isMovable ? Color.LightBlue : _defaultBackColor;
+            BackColor = _isMovable ? TrX_ModernTheme.OverlayMoveBack : _defaultBackColor;
             contextMenuStrip1.Items[0].Text = _isMovable ? "Fix Position" : "Move";
 
             if (!_isMovable)
