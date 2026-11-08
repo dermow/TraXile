@@ -16,7 +16,11 @@ namespace TraXile.Next.Views
             InitializeComponent();
             _vm = App.Settings;
             DataContext = _vm;
-            Loaded += (s, e) => _vm.LoadTagSlotOptions(); // tags may have been added or renamed meanwhile
+            Loaded += (s, e) =>
+            {
+                _vm.LoadTagSlotOptions(); // tags may have been added or renamed meanwhile
+                _vm.LoadBackups();        // the classic app may have created some
+            };
         }
 
         /// <summary>Asks before an action that restarts TraXile; true if confirmed.</summary>
@@ -97,6 +101,59 @@ namespace TraXile.Next.Views
         private void SaveTimeCaps_Click(object sender, RoutedEventArgs e)
         {
             if (!_vm.SaveTimeCaps(out string error)) ShowError("Time caps not saved", error);
+        }
+
+        // ------------------------------------------------------------------
+        // Backups
+        // ------------------------------------------------------------------
+
+        private void CreateBackup_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm.CreateBackup(System.DateTime.Now, out _, out string error)) return;
+            ShowError("Backup not created", error);
+        }
+
+        private void BackupName_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter) return;
+            BackupNameBox.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
+            CreateBackup_Click(sender, e);
+            e.Handled = true;
+        }
+
+        private async void RestoreBackup_Click(object sender, RoutedEventArgs e)
+        {
+            BackupRow row = _vm.SelectedBackup;
+            if (row == null) return;
+            if (!await ConfirmAsync($"Restore \"{row.Name}\" from {row.CreatedText}?",
+                "Your current activities, statistics and settings are replaced by the backup. TraXile restarts and applies it " +
+                "before tracking starts. Make sure Path of Exile is closed.\n\nTip: create a backup of the current state first.",
+                "Restore and restart", danger: true)) return;
+
+            if (!_vm.RestoreBackup(row, out string error)) ShowError("Restore not possible", error);
+        }
+
+        private async void DeleteBackup_Click(object sender, RoutedEventArgs e)
+        {
+            BackupRow row = _vm.SelectedBackup;
+            if (row == null) return;
+            if (!await ConfirmAsync($"Delete \"{row.Name}\" from {row.CreatedText}?", "The backup folder is deleted. This cannot be undone.",
+                "Delete backup", danger: true)) return;
+
+            if (!_vm.DeleteBackup(row, out string error)) ShowError("Backup not deleted", error);
+        }
+
+        private void OpenBackupFolder_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.IO.Directory.CreateDirectory(_vm.BackupFolder);
+                System.Diagnostics.Process.Start(_vm.BackupFolder);
+            }
+            catch (System.Exception ex)
+            {
+                ShowError("Could not open the backup folder", ex.Message);
+            }
         }
 
         private void RestartNow_Click(object sender, RoutedEventArgs e) => _vm.RestartNow();
