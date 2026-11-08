@@ -39,6 +39,15 @@ TraXile.Next.exe --screenshot out.png    # render off-screen to PNG and exit (de
 TraXile.Next.exe --screenshot out.png --page log --select 0,2   # screenshot of the activity log with rows selected
 ```
 
+## Tests
+
+```
+dotnet test TraXile.Next.Tests
+```
+
+`TraXile.Next.Tests` (xUnit, net472) checks the view models against `DemoTrackingSource` without
+any UI, including time budgets for a 20k activity history.
+
 Live mode needs an existing TraXile setup (config.xml with the Client.txt path and data.db).
 It **refuses to run live while the classic TraXile is open**, because both would parse
 Client.txt and write the same database. In that case it shows demo data and a notice.

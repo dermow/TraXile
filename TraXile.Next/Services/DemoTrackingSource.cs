@@ -28,14 +28,36 @@ namespace TraXile.Next.Services
         public string Notice { get; }
         public event EventHandler HistoryChanged;
 
-        public DemoTrackingSource(string notice = null)
+        public DemoTrackingSource(string notice = null) : this(notice, 0)
+        {
+        }
+
+        /// <summary>
+        /// Creates a demo source with exactly <paramref name="activityCount"/> activities going back from now
+        /// (one every ~8 minutes of play time). Used for performance tests with large histories.
+        /// </summary>
+        public static DemoTrackingSource WithActivityCount(int activityCount) => new DemoTrackingSource(null, activityCount);
+
+        private DemoTrackingSource(string notice, int activityCount)
         {
             Notice = notice ?? "You are looking at generated sample data — no Path of Exile log is being read.";
 
             var rnd = new Random(42);
             DateTime now = DateTime.Now;
 
-            for (int day = 29; day >= 0; day--)
+            if (activityCount > 0)
+            {
+                DateTime t = now.AddMinutes(-6);
+                for (int i = 0; i < activityCount; i++)
+                {
+                    ActivityInfo a = RandomActivity(rnd, t);
+                    a.Started = t.AddSeconds(-a.TotalSeconds);
+                    _history.Add(a); // newest first
+                    t = a.Started.AddSeconds(-rnd.Next(40, 240));
+                }
+            }
+
+            for (int day = 29; day >= 0 && activityCount == 0; day--)
             {
                 // Some days off, weekends busier
                 DateTime date = now.Date.AddDays(-day);
@@ -54,7 +76,7 @@ namespace TraXile.Next.Services
                 }
             }
 
-            _history.Reverse(); // newest first, like the core
+            if (activityCount == 0) _history.Reverse(); // newest first, like the core
 
             _currentActivity = new ActivityInfo
             {
