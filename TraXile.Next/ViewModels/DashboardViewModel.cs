@@ -238,11 +238,15 @@ namespace TraXile.Next.ViewModels
             foreach (LiveTagChip c in chips) LiveTags.Add(c);
         }
 
+        /// <summary>Raised on the UI thread after each live state poll (once per second and after live card actions).</summary>
+        public event EventHandler<LiveState> LiveUpdated;
+
         private void UpdateLive()
         {
             LiveState s = _source.GetLiveState();
             Live = s;
             UpdateLiveTags(s);
+            LiveUpdated?.Invoke(this, s);
 
             if (s.IsTracking && s.Activity != null)
             {

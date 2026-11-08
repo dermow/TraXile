@@ -110,6 +110,11 @@ namespace TraXile.Next
             System.Threading.Thread.CurrentThread.CurrentUICulture = en;
             Dashboard = new DashboardViewModel(Source);
             Dashboard.SetTheme(IsDark);
+            if (ScreenshotPath == null)
+            {
+                var tagSounds = new TagSoundNotifier(Source, new CoreTagSoundPlayer());
+                Dashboard.LiveUpdated += (s, live) => tagSounds.Observe(live);
+            }
             ActivityLog = new ActivityLogViewModel(Source);
             CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
             Settings = new SettingsViewModel(AppSetup.Default, Source, CanWriteSettings, IsDark, d => SetTheme(d, persist: false), Restart);
