@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -37,6 +37,8 @@
   <ItemGroup>
     <!-- Design system fonts (SIL OFL 1.1), see docs/design.md -->
     <Resource Include="Fonts\*.ttf" />
+    <!-- Window / taskbar icon: WPF windows don't pick up the exe's ApplicationIcon on their own -->
+    <Resource Include="TraXile.ico" />
     <None Include="Fonts\OFL-*.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
