@@ -148,7 +148,8 @@ namespace TraXile.Next.Views
             try
             {
                 System.IO.Directory.CreateDirectory(_vm.BackupFolder);
-                System.Diagnostics.Process.Start(_vm.BackupFolder);
+                // Shell execute: opens the folder in Explorer (not the default on .NET)
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(_vm.BackupFolder) { UseShellExecute = true });
             }
             catch (System.Exception ex)
             {

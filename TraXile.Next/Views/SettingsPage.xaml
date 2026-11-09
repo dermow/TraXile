@@ -73,9 +73,12 @@
                             <TextBlock Style="{StaticResource SettingHelp}" Text="Also switchable with the button in the title bar." />
                         </StackPanel>
                         <Border Grid.Column="1" Style="{StaticResource SegmentedGroup}">
+                            <!-- No GroupName: radios are then grouped by this panel. A named group spans every detached
+                                 (navigated-away) page instance, which all bind the same view model and would uncheck each
+                                 other in an endless loop. -->
                             <StackPanel Orientation="Horizontal">
-                                <RadioButton Style="{StaticResource Segment}" GroupName="Theme" Content="Dark" IsChecked="{Binding IsDark}" />
-                                <RadioButton Style="{StaticResource Segment}" GroupName="Theme" Content="Light" IsChecked="{Binding IsLight}" />
+                                <RadioButton Style="{StaticResource Segment}" Content="Dark" IsChecked="{Binding IsDark}" />
+                                <RadioButton Style="{StaticResource Segment}" Content="Light" IsChecked="{Binding IsLight}" />
                             </StackPanel>
                         </Border>
                     </Grid>

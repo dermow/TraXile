@@ -111,14 +111,15 @@
                 </StackPanel>
 
                 <Border Style="{StaticResource SegmentedGroup}" HorizontalAlignment="Right">
+                    <!-- No GroupName (grouped by this panel), see the theme switch in SettingsPage.xaml -->
                     <StackPanel Orientation="Horizontal">
-                        <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="Today"
+                        <RadioButton Style="{StaticResource Segment}" Content="Today"
                                      IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Today}" />
-                        <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="7 days"
+                        <RadioButton Style="{StaticResource Segment}" Content="7 days"
                                      IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Week}" />
-                        <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="30 days"
+                        <RadioButton Style="{StaticResource Segment}" Content="30 days"
                                      IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Month}" />
-                        <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="All time"
+                        <RadioButton Style="{StaticResource Segment}" Content="All time"
                                      IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=All}" />
                     </StackPanel>
                 </Border>
