@@ -56,7 +56,7 @@ namespace TraXile.Next
         /// <summary>The analytics pages (on the global filter), for theme switches and shutdown.</summary>
         private static AnalyticsViewModel[] AnalyticsPages => new AnalyticsViewModel[] { Statistics, Mapping, Heist, Lab, DivCards, Leagues };
 
-        /// <summary>Settings may be written (live data of this app, not forced demo / classic app running).</summary>
+        /// <summary>Settings may be written (not in forced demo mode or screenshots).</summary>
         public static bool CanWriteSettings { get; private set; }
 
         /// <summary>Raised after the theme changed (title bar button or settings page).</summary>
@@ -65,7 +65,7 @@ namespace TraXile.Next
         public static Shell.TrayIcon Tray { get; private set; }
         public static OverlayManager Overlays { get; private set; }
 
-        /// <summary>Setting MinimizeToTray (shared with the classic app): minimizing hides the window in the tray.</summary>
+        /// <summary>Setting MinimizeToTray (same key as TraXile 2.x): minimizing hides the window in the tray.</summary>
         public static bool MinimizeToTray { get; set; }
 
         private static string[] _args = Array.Empty<string>();
@@ -114,7 +114,7 @@ namespace TraXile.Next
                 return;
             }
 
-            // Only one TraXile.Next: a second start brings the running one to the front
+            // Only one TraXile: a second start brings the running one to the front
             if (ScreenshotPath == null)
             {
                 Instance = new AppInstance();
@@ -143,7 +143,8 @@ namespace TraXile.Next
             var en = System.Globalization.CultureInfo.GetCultureInfo("en-US");
             System.Threading.Thread.CurrentThread.CurrentCulture = en;
             System.Threading.Thread.CurrentThread.CurrentUICulture = en;
-            CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
+            // Also when live tracking could not start (no Client.txt yet): the settings are this app's own
+            CanWriteSettings = Source is LiveTrackingSource || (!demo && Instance != null);
             IReadOnlyList<LeagueInfo> leagues = Source.IsDemo
                 ? LeagueCatalog.Demo(DateTime.Now)
                 : LeagueCatalog.Load(TrX_Static.METADATA_XML_FULLPATH);
@@ -360,7 +361,7 @@ namespace TraXile.Next
         }
 
         /// <summary>
-        /// Restarts TraXile.Next (after reload, reset or restore): the new process waits until this one has
+        /// Restarts TraXile (after reload, reset or restore): the new process waits until this one has
         /// stopped the core and released its locks.
         /// </summary>
         public static void Restart()
@@ -407,16 +408,9 @@ namespace TraXile.Next
             restore = RestoreResult.Nothing;
             if (demo) return new DemoTrackingSource();
 
-            // Both UIs would parse Client.txt and write the same SQLite database: hold the classic app's lock
-            if (Instance == null || !Instance.TryClaimClassicLock(_restarted ? TimeSpan.FromSeconds(15) : TimeSpan.Zero))
-            {
-                return new DemoTrackingSource(
-                    "The classic TraXile is running. Close it to enable live tracking here — showing demo data meanwhile.");
-            }
-
             AppSetup setup = AppSetup.Default;
 
-            // A backup restore prepared by this or the classic app is applied before the core opens the database
+            // A backup restore prepared before the restart (also by TraXile 2.x) is applied before the core opens the database
             restore = BackupRestore.ApplyIfPrepared(setup);
 
             if (!setup.HasValidClientTxt)
@@ -449,7 +443,7 @@ namespace TraXile.Next
             {
                 if (_chartTypeface == null)
                 {
-                    var info = GetResourceStream(new Uri("pack://application:,,,/TraXile.Next;component/Fonts/InstrumentSans-Regular.ttf"));
+                    var info = GetResourceStream(new Uri("pack://application:,,,/TraXile;component/Fonts/InstrumentSans-Regular.ttf"));
                     if (info != null) _chartTypeface = SkiaSharp.SKTypeface.FromStream(info.Stream);
                 }
                 return _chartTypeface;

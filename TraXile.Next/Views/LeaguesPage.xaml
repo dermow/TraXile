@@ -29,7 +29,7 @@
         <TextBlock Style="{StaticResource Caption}" Margin="0,0,0,16" TextWrapping="Wrap"
                    Text="Type, area, level and tags of the filter apply here. Its time range does not: each league uses its own play period." />
 
-        <TextBlock Text="No league information yet. TraXile reads the leagues from the metadata the classic TraXile downloads."
+        <TextBlock Text="No league information yet. TraXile downloads the leagues at start; check your internet connection and restart TraXile."
                    Style="{StaticResource Meta}" TextWrapping="Wrap" Margin="0,8"
                    Visibility="{Binding HasLeagues, Converter={StaticResource InvBoolToVis}}" />
 

@@ -9,40 +9,32 @@ namespace TraXile.Next.Services
     /// <summary>
     /// Process-wide locks and restart:
     /// <list type="bullet">
-    /// <item>only one TraXile.Next runs; a second start asks the running one to show its window and exits</item>
-    /// <item>while TraXile.Next tracks live it also holds the classic TraXile's own single-instance mutex, so the
-    /// classic app refuses to start (both would parse Client.txt and write the same database), and a running
-    /// classic app keeps TraXile.Next in demo mode</item>
-    /// <item>restart: start a new process that waits for the locks, then shut down</item>
+    /// <item>only one TraXile runs; a second start asks the running one to show its window and exits</item>
+    /// <item>restart: start a new process that waits for the lock, then shut down</item>
     /// </list>
     /// </summary>
     public sealed class AppInstance : IDisposable
     {
-        /// <summary>Mutex name of the classic TraXile (TraXile/Program.cs).</summary>
-        public const string ClassicMutexName = "c0a76b5a-12ab-45c5-b9d9-d693faa6e7b9";
+
         public const string DefaultMutexName = "TraXile.Next.SingleInstance.7e1d2c54-3f0b-4a8e-9b6d-2a51c0f4e913";
 
         /// <summary>Argument of a restarted process: wait for the old process to release the locks.</summary>
         public const string RestartedArg = "--restarted";
 
         private readonly string _ownName;
-        private readonly string _classicName;
         private Mutex _own;
-        private Mutex _classic;
         private EventWaitHandle _showSignal;
         private RegisteredWaitHandle _showWait;
 
-        public AppInstance(string ownMutexName = DefaultMutexName, string classicMutexName = ClassicMutexName)
+        public AppInstance(string ownMutexName = DefaultMutexName)
         {
             _ownName = ownMutexName;
-            _classicName = classicMutexName;
         }
 
         /// <summary>Raised (on a thread pool thread) when another start asked this instance to show itself.</summary>
         public event EventHandler ShowRequested;
 
         public bool OwnsInstance => _own != null;
-        public bool OwnsClassicLock => _classic != null;
 
         /// <summary>Claims the single instance. False if another TraXile.Next runs (it is asked to show itself).</summary>
         public bool TryClaimInstance(TimeSpan wait)
@@ -60,12 +52,6 @@ namespace TraXile.Next.Services
             return true;
         }
 
-        /// <summary>Takes the classic app's lock. False if the classic TraXile is running.</summary>
-        public bool TryClaimClassicLock(TimeSpan wait)
-        {
-            _classic = TryAcquire(_classicName, wait);
-            return _classic != null;
-        }
 
         private void SignalRunningInstance()
         {
@@ -100,7 +86,7 @@ namespace TraXile.Next.Services
                        .Concat(new[] { RestartedArg })
                        .ToArray();
 
-        /// <summary>Starts a new TraXile.Next process; the caller shuts down afterwards, which releases the locks.</summary>
+        /// <summary>Starts a new TraXile process; the caller shuts down afterwards, which releases the lock.</summary>
         public static void StartNewProcess(IEnumerable<string> currentArgs)
         {
             string exe = Process.GetCurrentProcess().MainModule.FileName;
@@ -114,7 +100,6 @@ namespace TraXile.Next.Services
         {
             _showWait?.Unregister(null);
             _showSignal?.Dispose();
-            Release(ref _classic);
             Release(ref _own);
         }
 

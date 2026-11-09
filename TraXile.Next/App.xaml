@@ -9,8 +9,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
-                <ResourceDictionary Source="pack://application:,,,/TraXile.Next;component/Theme/Styles.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/TraXile.Next;component/Theme/Analytics.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TraXile;component/Theme/Styles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/TraXile;component/Theme/Analytics.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -125,7 +125,7 @@
                             </Border>
                             <Border Style="{StaticResource Notice}" Margin="0,4,0,0">
                                 <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap"
-                                           Text="Notice: the classic TraXile is running. Close it to enable live tracking." />
+                                           Text="Notice: no Client.txt selected yet. Restart TraXile to choose it." />
                             </Border>
                             <WrapPanel Margin="0,14,0,0">
                                 <Border Style="{StaticResource Chip}" Background="{DynamicResource SurfaceRaisedBrush}">

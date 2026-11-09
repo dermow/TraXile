@@ -29,7 +29,7 @@ namespace TraXile.Next.Tests
             File.WriteAllText(Path.Combine(AppData, "metadata", "metadata.xml"), "<metadata />");
             File.WriteAllText(Path.Combine(AppData, "backups", "2026-11-01", "data.db"), "old db");
             File.WriteAllText(Path.Combine(AppData, "Setup_3.0.1.msi"), "msi");
-            File.WriteAllText(Path.Combine(AppDir, "TraXile.Next.exe"), "exe");
+            File.WriteAllText(Path.Combine(AppDir, "TraXile.exe"), "exe");
             File.WriteAllText(ClientTxt, "2026/11/09 10:00:00 log line");
         }
 
@@ -108,7 +108,7 @@ namespace TraXile.Next.Tests
 
                 using (var reader = new StreamReader(archive.GetEntry("app_files.txt").Open()))
                 {
-                    Assert.Contains("TraXile.Next.exe", reader.ReadToEnd());
+                    Assert.Contains("TraXile.exe", reader.ReadToEnd());
                 }
             }
             Assert.False(Directory.Exists(Path.Combine(AppData, "Support", "temp")));

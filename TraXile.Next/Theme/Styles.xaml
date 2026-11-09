@@ -15,13 +15,13 @@
          Fonts (bundled, SIL OFL 1.1, see Fonts/OFL-*.txt)
          ================================================================ -->
     <!-- Orbitron: page titles and small labels only. Never for figures, tables or running text. -->
-    <FontFamily x:Key="DisplayFont">pack://application:,,,/TraXile.Next;component/Fonts/#Orbitron, Arial</FontFamily>
+    <FontFamily x:Key="DisplayFont">pack://application:,,,/TraXile;component/Fonts/#Orbitron, Arial</FontFamily>
     <!-- Familjen Grotesk: headings, navigation, prominent figures -->
-    <FontFamily x:Key="HeadFont">pack://application:,,,/TraXile.Next;component/Fonts/#Familjen Grotesk, Segoe UI</FontFamily>
+    <FontFamily x:Key="HeadFont">pack://application:,,,/TraXile;component/Fonts/#Familjen Grotesk, Segoe UI</FontFamily>
     <!-- Instrument Sans: all text and UI -->
-    <FontFamily x:Key="UiFont">pack://application:,,,/TraXile.Next;component/Fonts/#Instrument Sans, Segoe UI</FontFamily>
+    <FontFamily x:Key="UiFont">pack://application:,,,/TraXile;component/Fonts/#Instrument Sans, Segoe UI</FontFamily>
     <!-- Older name, same font -->
-    <FontFamily x:Key="UiFontText">pack://application:,,,/TraXile.Next;component/Fonts/#Instrument Sans, Segoe UI</FontFamily>
+    <FontFamily x:Key="UiFontText">pack://application:,,,/TraXile;component/Fonts/#Instrument Sans, Segoe UI</FontFamily>
 
     <!-- ================================================================
          Shape (2 px controls, 4 px surfaces) - also used by WPF-UI templates

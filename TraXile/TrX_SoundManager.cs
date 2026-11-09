@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using NAudio;
 using NAudio.Wave;
 using log4net;
@@ -26,7 +25,7 @@ namespace TraXile
             try
             {
                 WaveOutEvent waveOut = new WaveOutEvent();
-                AudioFileReader audioFileReader = new AudioFileReader(Application.StartupPath + $@"\audio\{sound_id}");
+                AudioFileReader audioFileReader = new AudioFileReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "audio", sound_id));
                 waveOut.Init(audioFileReader);
                 waveOut.Play();
             }

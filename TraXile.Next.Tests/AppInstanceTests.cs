@@ -17,14 +17,14 @@ namespace TraXile.Next.Tests
         [Fact]
         public void Only_one_instance_can_run()
         {
-            string own = Name("own"), classic = Name("classic");
-            using (var first = new AppInstance(own, classic))
+            string own = Name("own");
+            using (var first = new AppInstance(own))
             {
                 Assert.True(first.TryClaimInstance(TimeSpan.Zero));
 
                 bool second = OnOtherThread(() =>
                 {
-                    using (var other = new AppInstance(own, classic)) return other.TryClaimInstance(TimeSpan.Zero);
+                    using (var other = new AppInstance(own)) return other.TryClaimInstance(TimeSpan.Zero);
                 });
 
                 Assert.False(second);
@@ -34,8 +34,8 @@ namespace TraXile.Next.Tests
         [Fact]
         public void Second_start_asks_the_running_instance_to_show_itself()
         {
-            string own = Name("own"), classic = Name("classic");
-            using (var first = new AppInstance(own, classic))
+            string own = Name("own");
+            using (var first = new AppInstance(own))
             using (var shown = new ManualResetEventSlim())
             {
                 first.ShowRequested += (s, e) => shown.Set();
@@ -43,7 +43,7 @@ namespace TraXile.Next.Tests
 
                 OnOtherThread(() =>
                 {
-                    using (var other = new AppInstance(own, classic)) return other.TryClaimInstance(TimeSpan.Zero);
+                    using (var other = new AppInstance(own)) return other.TryClaimInstance(TimeSpan.Zero);
                 });
 
                 Assert.True(shown.Wait(TimeSpan.FromSeconds(5)));
@@ -53,59 +53,23 @@ namespace TraXile.Next.Tests
         [Fact]
         public void Instance_is_free_again_after_dispose()
         {
-            string own = Name("own"), classic = Name("classic");
-            var first = new AppInstance(own, classic);
+            string own = Name("own");
+            var first = new AppInstance(own);
             first.TryClaimInstance(TimeSpan.Zero);
             first.Dispose();
 
             bool second = OnOtherThread(() =>
             {
-                using (var other = new AppInstance(own, classic)) return other.TryClaimInstance(TimeSpan.Zero);
+                using (var other = new AppInstance(own)) return other.TryClaimInstance(TimeSpan.Zero);
             });
 
             Assert.True(second);
         }
 
         [Fact]
-        public void Running_classic_app_blocks_live_tracking()
-        {
-            string own = Name("own"), classic = Name("classic");
-            using (var classicApp = new Mutex(false, classic))
-            {
-                Assert.True(classicApp.WaitOne(0)); // the classic TraXile holds its lock
-
-                bool claimed = OnOtherThread(() =>
-                {
-                    using (var next = new AppInstance(own, classic)) return next.TryClaimClassicLock(TimeSpan.Zero);
-                });
-
-                Assert.False(claimed);
-                classicApp.ReleaseMutex();
-            }
-        }
-
-        [Fact]
-        public void Live_TraXile_Next_keeps_the_classic_app_out()
-        {
-            string own = Name("own"), classic = Name("classic");
-            using (var next = new AppInstance(own, classic))
-            {
-                Assert.True(next.TryClaimClassicLock(TimeSpan.Zero));
-
-                // what the classic Program.Main does
-                bool classicStarts = OnOtherThread(() =>
-                {
-                    using (var m = new Mutex(false, classic)) return m.WaitOne(0, false);
-                });
-
-                Assert.False(classicStarts);
-            }
-        }
-
-        [Fact]
         public void Lock_of_a_crashed_process_can_be_taken_over()
         {
-            string own = Name("own"), classic = Name("classic");
+            string own = Name("own");
             OnOtherThread(() =>
             {
                 var m = new Mutex(false, own);
@@ -113,7 +77,7 @@ namespace TraXile.Next.Tests
                 return true; // thread ends without releasing -> abandoned
             });
 
-            using (var next = new AppInstance(own, classic))
+            using (var next = new AppInstance(own))
             {
                 Assert.True(next.TryClaimInstance(TimeSpan.FromSeconds(1)));
             }

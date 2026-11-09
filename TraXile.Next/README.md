@@ -1,8 +1,23 @@
-# TraXile.Next — modern UI (preview)
+# TraXile.Next — the TraXile 3.0 app
 
-A from-scratch WPF user interface for TraXile in the design system of exile-tools.com
+The WPF user interface of TraXile 3.0 in the design system of exile-tools.com
 (see [docs/design.md](../docs/design.md)), with sidebar navigation and modern animated charts.
-The classic WinForms app keeps working unchanged; screens are migrated one by one.
+It replaced the WinForms UI of 2.x ([ADR 0001](../docs/adr/0001-wpf-ui-replaces-winforms-in-3-0.md)).
+The project is still called TraXile.Next, but it builds **`TraXile.exe`**, so shortcuts, taskbar pins and the
+updater of a 2.x installation keep working after the upgrade.
+
+## Projects
+
+| Project | Output | Content |
+|---------|--------|---------|
+| `TraXile` | `TraXile.Core.dll` (class library) | Tracking core: log parsing, SQLite database, statistics, tag sounds |
+| `TraXile.Next` | `TraXile.exe` | This app |
+| `TraXile.Updater` | `TraXile.Updater.exe` | Downloads and runs the installer of a new release |
+| `TraXile.Next.Tests` | | xUnit tests |
+
+Release builds: `MSBuild TraXile.sln /p:Configuration=Release` (Visual Studio's MSBuild; the updater's WinForms
+resources do not build with `dotnet build -c Release`). The installer takes its files from
+`TraXile.Next\bin\Release\net472`.
 
 ## Stack
 
@@ -11,10 +26,10 @@ The classic WinForms app keeps working unchanged; screens are migrated one by on
 | UI       | WPF + [WPF-UI](https://github.com/lepoco/wpfui) 4.3 | Controls and NavigationView, restyled with the design tokens |
 | Charts   | [LiveCharts2](https://livecharts.dev) 2.0.5 (SkiaSharp) | Animated, rounded, tooltips, theming |
 | MVVM     | CommunityToolkit.Mvvm | Observable objects and commands |
-| Core     | Existing `TraXile` project (referenced directly) | Log parsing, SQLite, stats stay battle-tested |
+| Core     | `TraXile` project (`TraXile.Core.dll`) | Log parsing, SQLite, stats stay battle-tested |
 
-Target framework is **.NET Framework 4.7.2** so the existing core can be referenced
-without any changes (`InternalsVisibleTo("TraXile.Next")` exposes settings and paths).
+Target framework is **.NET Framework 4.7.2** ([ADR 0002](../docs/adr/0002-stay-on-net472-until-parity.md));
+`InternalsVisibleTo("TraXile")` in the core exposes settings and paths to the app.
 
 ## Architecture
 
@@ -32,21 +47,21 @@ Views (XAML)  ->  ViewModels  ->  ITrackingSource
 ## Running
 
 ```
-TraXile.Next.exe                         # live mode (falls back to demo, see below)
-TraXile.Next.exe --demo                  # sample data
-TraXile.Next.exe --light                 # light theme
-TraXile.Next.exe --screenshot out.png    # render off-screen to PNG and exit (demo data)
-TraXile.Next.exe --screenshot out.png --page log --select 0,2   # screenshot of the activity log with rows selected
-TraXile.Next.exe --screenshot out.png --page gallery           # all base styles of the design system
-TraXile.Next.exe --screenshot out.png --page firstrun          # first-run screen (also: firstrun-empty)
-TraXile.Next.exe --screenshot out.png --page overlay-stopwatch # stopwatch overlay (also: overlay-stopwatch-move)
-TraXile.Next.exe --screenshot out.png --page overlay-tags      # tags overlay (also: overlay-tags-move)
-TraXile.Next.exe --screenshot out.png --page tags --select 0   # Tags page with the first tag selected
-TraXile.Next.exe --screenshot out.png --page settings --scroll 1500 # lower part of a long page
-TraXile.Next.exe --screenshot out.png --page log --filter last7days,map,level>=83,tag:juiced # with the global filter set
+TraXile.exe                              # live mode (falls back to demo, see below)
+TraXile.exe      --demo                  # sample data
+TraXile.exe      --light                 # light theme
+TraXile.exe      --screenshot out.png    # render off-screen to PNG and exit (demo data)
+TraXile.exe      --screenshot out.png --page log --select 0,2   # screenshot of the activity log with rows selected
+TraXile.exe      --screenshot out.png --page gallery           # all base styles of the design system
+TraXile.exe      --screenshot out.png --page firstrun          # first-run screen (also: firstrun-empty)
+TraXile.exe      --screenshot out.png --page overlay-stopwatch # stopwatch overlay (also: overlay-stopwatch-move)
+TraXile.exe      --screenshot out.png --page overlay-tags      # tags overlay (also: overlay-tags-move)
+TraXile.exe      --screenshot out.png --page tags --select 0   # Tags page with the first tag selected
+TraXile.exe      --screenshot out.png --page settings --scroll 1500 # lower part of a long page
+TraXile.exe      --screenshot out.png --page log --filter last7days,map,level>=83,tag:juiced # with the global filter set
                                                                # (also: league, custom, area:<name>, and, not)
-TraXile.Next.exe --screenshot out.png --update                 # title bar with the "update available" hint
-TraXile.Next.exe --screenshot out.png --page update            # update dialog (also: update-none)
+TraXile.exe      --screenshot out.png --update                 # title bar with the "update available" hint
+TraXile.exe      --screenshot out.png --page update            # update dialog (also: update-none)
 ```
 
 ## Updates
@@ -67,11 +82,9 @@ dotnet test TraXile.Next.Tests
 `TraXile.Next.Tests` (xUnit, net472) checks the view models against `DemoTrackingSource` without
 any UI, including time budgets for a 20k activity history.
 
-Live mode uses the same data folder as the classic app (`%APPDATA%\TraXile`: config.xml, data.db).
-Without a configured Client.txt a first-run screen offers the detected Steam / standalone installations
-and a file picker; the choice is written to config.xml, so the classic app reads it too.
-It **refuses to run live while the classic TraXile is open**, because both would parse
-Client.txt and write the same database. In that case it shows demo data and a notice.
+Live mode uses the data folder of TraXile 2.x unchanged (`%APPDATA%\TraXile`: config.xml, data.db, backups,
+overlay positions), so an upgrade keeps everything. Without a configured Client.txt a first-run screen offers the
+detected Steam / standalone installations and a file picker; the choice is written to config.xml.
 
 ## Migration status
 
@@ -92,7 +105,6 @@ Settings in the footer. The Help page replaces the classic Chat commands, Search
 
 * Deleting activities removes them from the database immediately but only hides them in the running
   core (its history list is not thread-safe); they are fully gone after the next start.
-* JSON export of the classic app is not ported yet (CSV only).
-* log4net 3.1.0 is pinned to match the core; it has a moderate advisory
+* log4net 3.1.0 is pinned in the core and the app; it has a moderate advisory
   (GHSA-4f7c-pmjv-c25w). Upgrade both projects together.
 * The core logs through log4net; without a `log4net.config` next to the exe, logging is off.
