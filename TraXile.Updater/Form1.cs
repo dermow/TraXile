@@ -2,14 +2,17 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Threading;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TraXile.Updater
 {
     public partial class Form1 : Form
     {
+        // The one HttpClient of the updater process
+        private static readonly HttpClient Http = new HttpClient();
+
         bool bStarted, bExit;
         readonly string _myAppData;
         readonly string _targetVersion;
@@ -46,17 +49,18 @@ namespace TraXile.Updater
             textBox1.Text += text + Environment.NewLine;
         }
 
-        private void Check()
+        private async Task StartUpdateAsync(string s_version)
         {
-            StartUpdate(_targetVersion);
-        }
-
-        private void StartUpdate(string s_version)
-        {
-            Log("Downloading https://github.com/dermow/TraXile/releases/download/" + s_version + @"/Setup.msi");
-            WebClient wc = new WebClient();
             Uri uri = new Uri("https://github.com/dermow/TraXile/releases/download/" + s_version + @"/Setup.msi");
-            wc.DownloadFile(uri, _myAppData + @"\Setup_" + s_version + ".msi");
+            Log("Downloading " + uri);
+            using (HttpResponseMessage response = await Http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead))
+            {
+                response.EnsureSuccessStatusCode();
+                using (FileStream file = File.Create(_myAppData + @"\Setup_" + s_version + ".msi"))
+                {
+                    await response.Content.CopyToAsync(file);
+                }
+            }
             Log("Download successful. Saved installer to: " + _myAppData);
 
             // TraXile 3.0 (TraXile.Next) closes itself after starting the updater; kill what is still running
@@ -70,7 +74,7 @@ namespace TraXile.Updater
                 {
                     pr.Kill();
                 }
-                Thread.Sleep(2000);
+                await Task.Delay(2000);
                 Log("TraXile closed successfully");
             }
 
@@ -92,7 +96,7 @@ namespace TraXile.Updater
 
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private async void timer1_Tick(object sender, EventArgs e)
         {
             if (!bStarted)
             {
@@ -100,7 +104,7 @@ namespace TraXile.Updater
 
                 try
                 {
-                    Check();
+                    await StartUpdateAsync(_targetVersion);
                 }
                 catch (Exception ex)
                 {

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -23,7 +22,7 @@ namespace TraXile.Next.Services
         {
             try
             {
-                download = download ?? DownloadString;
+                download = download ?? Http.GetStringAsync;
                 string data = await download(url).ConfigureAwait(false);
                 return Store(data, targetPath);
             }
@@ -46,15 +45,6 @@ namespace TraXile.Next.Services
             if (File.Exists(targetPath)) File.Delete(targetPath);
             File.Move(tmp, targetPath);
             return true;
-        }
-
-        private static async Task<string> DownloadString(string url)
-        {
-            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-            using (var client = new WebClient())
-            {
-                return await client.DownloadStringTaskAsync(new Uri(url)).ConfigureAwait(false);
-            }
         }
     }
 }
