@@ -63,8 +63,9 @@ namespace TraXile
         // DateTime format info for enforcing specific calendar info
         public DateTimeFormatInfo _dateTimeFormatInfo;
 
-        // Exit switch
-        private bool _exit;
+        // Exit switch: the worker threads end cooperatively (Thread.Abort does not exist on .NET)
+        private readonly CancellationTokenSource _stopSource = new CancellationTokenSource();
+        private bool _exit => _stopSource.IsCancellationRequested;
 
         // Flag if logic has been started 
         private bool _StartedFlag = false;
@@ -376,28 +377,31 @@ namespace TraXile
         /// <param name="timeout">timeout to wait for exit</param>
         public void Stop(int timeout = 2000)
         {
-            _exit = true;
-            int i = 0;
+            _stopSource.Cancel();
 
-            // Wait for threads to finish
-            while (_eventThread.IsAlive || _logParseThread.IsAlive)
+            // Wait for the threads to finish; a thread that does not is a background thread and ends with the process
+            var elapsed = System.Diagnostics.Stopwatch.StartNew();
+            foreach (Thread thread in new[] { _eventThread, _logParseThread })
             {
-                Thread.Sleep(1);
-                i++;
-                if (i > timeout)
+                if (thread == null || thread == Thread.CurrentThread)
                 {
-                    break;
+                    continue;
+                }
+
+                int remaining = Math.Max(0, timeout - (int)elapsed.ElapsedMilliseconds);
+                if (!thread.Join(remaining))
+                {
+                    _log.Warn($"{thread.Name} did not stop within {timeout} ms.");
                 }
             }
+        }
 
-            if (_eventThread.IsAlive)
-            {
-                _eventThread.Abort();
-            }
-            if (_logParseThread.IsAlive)
-            {
-                _logParseThread.Abort();
-            }
+        /// <summary>
+        /// Waits for the given time, but returns early when the logic is stopped.
+        /// </summary>
+        private void WaitUnlessStopped(int milliseconds)
+        {
+            _stopSource.Token.WaitHandle.WaitOne(milliseconds);
         }
 
         /// <summary>
@@ -862,7 +866,11 @@ namespace TraXile
             while (!_exit)
             {
                 // Wait for Valid log file to start parsing
-                Thread.Sleep(1000);
+                WaitUnlessStopped(1000);
+                if (_exit)
+                {
+                    break;
+                }
                 if (CheckForValidClientLogFile(_clientTxtPath))
                 {
                     ParseLogFile();
@@ -934,7 +942,7 @@ namespace TraXile
 
                         bNewContent = true;
 
-                        Thread.Sleep(100);
+                        WaitUnlessStopped(100);
                         continue;
                     }
 
@@ -1001,7 +1009,7 @@ namespace TraXile
         {
             while (!_exit)
             {
-                Thread.Sleep(1);
+                WaitUnlessStopped(1);
 
                 if (_eventQueueInitizalized)
                 {
