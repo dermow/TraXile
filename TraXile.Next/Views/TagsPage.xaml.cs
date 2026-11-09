@@ -51,7 +51,8 @@ namespace TraXile.Next.Views
             try
             {
                 System.IO.Directory.CreateDirectory(_vm.Sounds.Folder);
-                System.Diagnostics.Process.Start(_vm.Sounds.Folder);
+                // Shell execute: opens the folder in Explorer (not the default on .NET)
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(_vm.Sounds.Folder) { UseShellExecute = true });
             }
             catch (System.Exception ex)
             {

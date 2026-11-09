@@ -85,6 +85,8 @@ namespace TraXile.Updater
 
                 Process p1 = new Process();
                 p1.StartInfo.FileName = _myAppData + @"\Setup_" + s_version + ".msi";
+                // An .msi is not an executable; it needs the shell (not the default on .NET)
+                p1.StartInfo.UseShellExecute = true;
                 p1.Start();
                 bExit = true;
 
