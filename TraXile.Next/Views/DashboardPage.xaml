@@ -7,7 +7,10 @@
     xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
     xmlns:views="clr-namespace:TraXile.Next.Views"
     xmlns:local="clr-namespace:TraXile.Next"
-    Title="Dashboard">
+    Title="Dashboard"
+    ScrollViewer.CanContentScroll="False">
+    <!-- WPF-UI: without this the host wraps the page in its own scroll viewer, so the page's
+         ScrollViewer below gets infinite height, shows no scrollbar and swallows the mouse wheel. -->
 
     <Page.Resources>
         <local:EnumEqualsConverter x:Key="EnumEq" />
