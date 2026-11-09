@@ -2,17 +2,22 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net472</TargetFramework>
+    <!--
+      Windows SDK TFM: SkiaSharp.Views.WPF (LiveCharts) only ships .NET assets for windows10.0.19041;
+      with plain net10.0-windows NuGet falls back to its .NET Framework build (NU1701).
+    -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <UseWPF>true</UseWPF>
-    <LangVersion>latest</LangVersion>
+    <!-- Notification area icon (WPF has none) -->
+    <UseWindowsForms>true</UseWindowsForms>
     <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
     <RootNamespace>TraXile.Next</RootNamespace>
     <!-- TraXile.exe like 2.x, so shortcuts, taskbar pins and the updater keep working after the upgrade -->
     <AssemblyName>TraXile</AssemblyName>
     <Product>TraXile</Product>
     <Company>dermow</Company>
-    <!-- Native libs (SkiaSharp, e_sqlite3) are resolved per architecture -->
-    <PlatformTarget>x64</PlatformTarget>
     <ApplicationIcon>TraXile.ico</ApplicationIcon>
     <Version>3.0.0-preview1</Version>
   </PropertyGroup>
@@ -22,24 +27,11 @@
     <PackageReference Include="WPF-UI" Version="4.3.0" />
     <!-- Modern animated charts -->
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.5" />
+    <!-- LiveCharts brings 3.119.0, which has no net10.0 assets; same library, newer patch -->
+    <PackageReference Include="SkiaSharp.Views.WPF" Version="3.119.4" />
     <!-- MVVM helpers -->
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-
-    <!-- Native dependencies of the reused TraXile core (do not flow through ProjectReference on .NET Framework) -->
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.7" />
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.4" />
-    <PackageReference Include="log4net" Version="3.1.0" />
-    <!-- Same serializer and version as the core, so the JSON export equals the classic one -->
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- Notification area icon (WPF has none) -->
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Drawing" />
-    <!-- Support bundle (zip) -->
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
+    <!-- Microsoft.Data.Sqlite, log4net and Newtonsoft.Json flow in from the core -->
   </ItemGroup>
 
   <ItemGroup>

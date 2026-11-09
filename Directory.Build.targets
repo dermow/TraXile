@@ -1,0 +1,17 @@
+<Project>
+
+  <!--
+    Pins the .NET runtime (Microsoft.NETCore.App, Microsoft.WindowsDesktop.App) to $(TraXileRuntimeVersion)
+    independently of the SDK that builds, see Directory.Build.props. With TargetLatestRuntimePatch the SDK
+    uses LatestRuntimeFrameworkVersion for the runtimeconfig and for the self-contained runtime packs.
+  -->
+  <Target Name="TraXilePinRuntimeVersion" BeforeTargets="ProcessFrameworkReferences"
+          Condition="'$(TraXileRuntimeVersion)' != ''">
+    <ItemGroup>
+      <KnownFrameworkReference Condition="'%(KnownFrameworkReference.TargetFramework)' == 'net10.0' and ('%(KnownFrameworkReference.RuntimeFrameworkName)' == 'Microsoft.NETCore.App' or '%(KnownFrameworkReference.RuntimeFrameworkName)' == 'Microsoft.WindowsDesktop.App')">
+        <LatestRuntimeFrameworkVersion>$(TraXileRuntimeVersion)</LatestRuntimeFrameworkVersion>
+      </KnownFrameworkReference>
+    </ItemGroup>
+  </Target>
+
+</Project>
