@@ -117,14 +117,15 @@ namespace TraXile.Next.ViewModels
             TextSize = 11,
             SeparatorsPaint = null,
             TicksPaint = null,
-            MinStep = 1,
-            ForceStepToMin = labels.Count <= 31,
+            MinStep = labels.Count <= 31 ? 1 : 7,
+            ForceStepToMin = true,
         };
 
         /// <summary>Value axis starting at 0 with token grid lines.</summary>
         protected Axis ValueAxis(Func<double, string> labeler = null) => new Axis
         {
             MinLimit = 0,
+            MinStep = labeler == null ? 1 : 0, // counts: whole steps (no "0, 0, 0" labels on empty charts)
             LabelsPaint = new SolidColorPaint(TextMuted),
             TextSize = 11,
             SeparatorsPaint = new SolidColorPaint(GridColor, 1),

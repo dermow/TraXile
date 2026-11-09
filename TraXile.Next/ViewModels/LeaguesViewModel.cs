@@ -36,7 +36,7 @@ namespace TraXile.Next.ViewModels
 
     /// <summary>
     /// Leagues page: compares the last 3/5/10/15/20 leagues in eight charts (classic Main.RenderLeagueDashboard).
-    /// Ignores the global filter: every league uses its whole play period. Times are capped at the time cap of
+    /// Uses the global filter except its time range: every league uses its whole play period. Times are capped at the time cap of
     /// their activity type, like the classic dashboard.
     /// </summary>
     public sealed class LeaguesViewModel : AnalyticsViewModel
@@ -103,7 +103,8 @@ namespace TraXile.Next.ViewModels
 
         public override void Refresh()
         {
-            IReadOnlyList<ActivityInfo> history = Source.GetHistory(); // the global filter does not apply here
+            // type, area, level and tags of the global filter apply; its time range does not (each league has its own)
+            List<ActivityInfo> history = Source.GetHistory().Where(Filter.MatchesIgnoringTime).ToList();
             Stats = Filter.Leagues.OrderByDescending(l => l.Start).Take(LeagueCount).Reverse()
                 .Select(l => Compute(l, history, Source.GetTimeCap))
                 .ToList();
@@ -119,6 +120,9 @@ namespace TraXile.Next.ViewModels
             SKColor campaign = ActivityPalette.Sk(ACTIVITY_TYPES.CAMPAIGN);
             SKColor accent = AccentColor;
             SKColor deaths = Token("Brass"); // brass is the deaths color of the design system
+            Func<double, string> count = v => v.ToString("N0");
+            Func<double, string> hours = v => $"{v:0.#} h";
+            Func<double, string> minutes = v => $"{v:0.#} min";
 
             LeagueChart Chart(string title, string subtitle, Func<LeagueStats, double> value, SKColor color, Func<double, string> format) =>
                 new LeagueChart
@@ -127,12 +131,8 @@ namespace TraXile.Next.ViewModels
                     Subtitle = subtitle,
                     Series = new[] { Columns(title, Stats.Select(s => Math.Round(value(s), 1)), color, format) },
                     XAxes = new[] { CategoryAxis(Stats.Select(s => s.League.Name).ToList()) },
-                    YAxes = new[] { ValueAxis(format) }
+                    YAxes = new[] { ValueAxis(format == count ? null : format) } // counts: whole steps
                 };
-
-            Func<double, string> count = v => v.ToString("N0");
-            Func<double, string> hours = v => $"{v:0.#} h";
-            Func<double, string> minutes = v => $"{v:0.#} min";
 
             Charts = new[]
             {

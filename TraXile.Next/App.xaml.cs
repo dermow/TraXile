@@ -137,19 +137,19 @@ namespace TraXile.Next
             System.Threading.Thread.CurrentThread.CurrentCulture = en;
             System.Threading.Thread.CurrentThread.CurrentUICulture = en;
             CanWriteSettings = Source is LiveTrackingSource || (Instance != null && Instance.OwnsClassicLock);
-            Dashboard = new DashboardViewModel(Source, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);
-            Dashboard.SetTheme(IsDark);
-            if (ScreenshotPath == null)
-            {
-                var tagSounds = new TagSoundNotifier(Source, new CoreTagSoundPlayer());
-                Dashboard.LiveUpdated += (s, live) => tagSounds.Observe(live);
-            }
             IReadOnlyList<LeagueInfo> leagues = Source.IsDemo
                 ? LeagueCatalog.Demo(DateTime.Now)
                 : LeagueCatalog.Load(TrX_Static.METADATA_XML_FULLPATH);
             Filter = new GlobalFilter(leagues);
             FilterBar = new FilterBarViewModel(Filter, Source);
             ApplyFilterArg(args);
+            Dashboard = new DashboardViewModel(Source, AppSetup.Default, CanWriteSettings && ScreenshotPath == null, Filter);
+            Dashboard.SetTheme(IsDark);
+            if (ScreenshotPath == null)
+            {
+                var tagSounds = new TagSoundNotifier(Source, new CoreTagSoundPlayer());
+                Dashboard.LiveUpdated += (s, live) => tagSounds.Observe(live);
+            }
             ActivityLog = new ActivityLogViewModel(Source, Filter, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);
             Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
             Statistics = new StatisticsViewModel(Source, Filter);

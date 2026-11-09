@@ -59,17 +59,21 @@ namespace TraXile.Next.Tests
         }
 
         [Fact]
-        public void Ignores_the_global_filter()
+        public void Filter_applies_except_its_time_range()
         {
             using (var vm = new LeaguesViewModel(_source, _filter))
             {
-                int before = vm.Stats.Last().Activities;
-                Assert.True(before > 0);
+                LeagueInfo current = vm.Stats.Last().League;
+                int all = vm.Stats.Last().Activities;
+                Assert.True(all > 0);
 
-                _filter.Type = ACTIVITY_TYPES.HEIST;
-                _filter.Time = FilterTime.Today;
+                _filter.Time = FilterTime.Today; // ignored: the league keeps its play period
+                Assert.Equal(all, vm.Stats.Last().Activities);
 
-                Assert.Equal(before, vm.Stats.Last().Activities);
+                _filter.Type = ACTIVITY_TYPES.HEIST; // applies
+                int heists = _source.GetHistory().Count(a => a.Type == ACTIVITY_TYPES.HEIST && a.Started >= current.Start && a.Started <= current.End);
+                Assert.Equal(heists, vm.Stats.Last().Activities);
+                Assert.Equal(0, vm.Stats.Last().Maps);
             }
         }
 

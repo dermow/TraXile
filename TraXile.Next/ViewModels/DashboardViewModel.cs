@@ -15,7 +15,8 @@ using TraXile.Next.Services;
 
 namespace TraXile.Next.ViewModels
 {
-    public enum TimeRange { Today, Week, Month, All }
+    /// <summary>Dashboard range buttons; <see cref="Other"/> = another time range of the global filter.</summary>
+    public enum TimeRange { Today, Week, Month, All, Other }
 
     public sealed class KpiViewModel : ObservableObject
     {
@@ -93,9 +94,12 @@ namespace TraXile.Next.ViewModels
 
         /// <param name="settings">config.xml for <see cref="ShowHideoutKey"/>; classic default (true) if null.</param>
         /// <param name="canWriteSettings">False while the classic app owns the data: changes are not stored.</param>
-        public DashboardViewModel(ITrackingSource source, AppSetup settings = null, bool canWriteSettings = false)
+        /// <param name="filter">The global filter; a private, empty one if null (tests).</param>
+        public DashboardViewModel(ITrackingSource source, AppSetup settings = null, bool canWriteSettings = false, GlobalFilter filter = null)
         {
             _source = source;
+            Filter = filter ?? new GlobalFilter();
+            Filter.Changed += OnFilterChanged;
             _settings = settings;
             _canWriteSettings = canWriteSettings;
             _showHideout = !bool.TryParse(settings?.ReadSetting(ShowHideoutKey, "true"), out bool show) || show;
@@ -166,16 +170,41 @@ namespace TraXile.Next.ViewModels
         public void AddNotice(string title, string text, bool isError = false) =>
             Notices.Add(new NoticeItem { Title = title, Text = text, IsError = isError });
 
-        private TimeRange _range = TimeRange.Week;
+        /// <summary>The global filter; the dashboard shows the filtered activities (the live card is never filtered).</summary>
+        public GlobalFilter Filter { get; }
+
+        private void OnFilterChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(Range));
+            OnPropertyChanged(nameof(RangeLabel));
+            Refresh();
+        }
+
+        /// <summary>
+        /// The range buttons are shortcuts for the time range of the global filter (Today, last 7 / 30 days, all time).
+        /// Any other time range of the filter (league, 24 hours, custom, ...) reads as <see cref="TimeRange.Other"/>.
+        /// </summary>
         public TimeRange Range
         {
-            get => _range;
+            get
+            {
+                switch (Filter.Time)
+                {
+                    case FilterTime.Today: return TimeRange.Today;
+                    case FilterTime.Last7Days: return TimeRange.Week;
+                    case FilterTime.Last30Days: return TimeRange.Month;
+                    case FilterTime.All: return TimeRange.All;
+                    default: return TimeRange.Other;
+                }
+            }
             set
             {
-                if (SetProperty(ref _range, value))
+                switch (value)
                 {
-                    OnPropertyChanged(nameof(RangeLabel));
-                    Refresh();
+                    case TimeRange.Today: Filter.Time = FilterTime.Today; break;
+                    case TimeRange.Week: Filter.Time = FilterTime.Last7Days; break;
+                    case TimeRange.Month: Filter.Time = FilterTime.Last30Days; break;
+                    case TimeRange.All: Filter.Time = FilterTime.All; break;
                 }
             }
         }
@@ -184,12 +213,13 @@ namespace TraXile.Next.ViewModels
         {
             get
             {
-                switch (Range)
+                switch (Filter.Time)
                 {
-                    case TimeRange.Today: return "Today";
-                    case TimeRange.Week: return "Last 7 days";
-                    case TimeRange.Month: return "Last 30 days";
-                    default: return "All time";
+                    case FilterTime.League: return Filter.League == null ? "League" : $"League {Filter.League.Name}";
+                    case FilterTime.Custom:
+                        TimeWindow w = Filter.Window;
+                        return $"{w.From:yyyy-MM-dd HH:mm} – {w.To:yyyy-MM-dd HH:mm}";
+                    default: return GlobalFilter.TimeLabel(Filter.Time);
                 }
             }
         }
@@ -344,7 +374,7 @@ namespace TraXile.Next.ViewModels
         private Axis[] _dailyYAxes = { new Axis() };
         public Axis[] DailyYAxes { get => _dailyYAxes; private set => SetProperty(ref _dailyYAxes, value); }
 
-        public string DailyTitle => Range == TimeRange.Today ? "Activity by hour" : "Activity by day";
+        public string DailyTitle => _scale == Scale.Hourly ? "Activity by hour" : "Activity by day";
 
         private SolidColorPaint _chartTextPaint = new SolidColorPaint(ActivityPalette.Sk(DesignTokens.Get("Text").Dark));
         public SolidColorPaint ChartTextPaint { get => _chartTextPaint; private set => SetProperty(ref _chartTextPaint, value); }
@@ -354,32 +384,47 @@ namespace TraXile.Next.ViewModels
         private SKColor TextMuted => Token("TextMuted");
         private SKColor GridColor => Token("Border");
 
-        private (DateTime from, DateTime to) GetRange(TimeRange r)
+        /// <summary>Activities that pass the filter except its time range (charts that look beyond the range).</summary>
+        private List<ActivityInfo> _filtered = new List<ActivityInfo>();
+
+        /// <summary>How the charts bucket the range: by hour, 2 h, 6 h or day.</summary>
+        private enum Scale { Hourly, Week, Month, Long }
+
+        private Scale _scale = Scale.Long;
+
+        private static Scale ScaleOf(DateTime from, DateTime to, bool unbounded)
+        {
+            if (unbounded) return Scale.Long;
+            double days = (to - from).TotalDays;
+            return days <= 1.05 ? Scale.Hourly : days <= 8 ? Scale.Week : days <= 31 ? Scale.Month : Scale.Long;
+        }
+
+        /// <summary>The filter's time range, ending at "now" at the latest; open starts begin at the oldest activity.</summary>
+        private (DateTime from, DateTime to) GetRange()
         {
             DateTime now = DateTime.Now;
-            switch (r)
-            {
-                case TimeRange.Today: return (now.Date, now);
-                case TimeRange.Week: return (now.Date.AddDays(-6), now);
-                case TimeRange.Month: return (now.Date.AddDays(-29), now);
-                default:
-                    DateTime oldest = _history.Count > 0 ? _history.Min(a => a.Started) : now.Date;
-                    return (oldest.Date, now);
-            }
+            TimeWindow w = Filter.Window;
+            DateTime to = w.To.HasValue && w.To.Value < now ? w.To.Value : now;
+            DateTime from = w.From ?? (_history.Count > 0 ? _history.Min(a => a.Started).Date : now.Date);
+            if (from > to) from = to;
+            return (from, to);
         }
 
         public void Refresh()
         {
             _history = _source.GetHistory();
-            (DateTime from, DateTime to) = GetRange(Range);
+            _filtered = _history.Where(Filter.MatchesIgnoringTime).ToList();
+            (DateTime from, DateTime to) = GetRange();
+            bool unbounded = !Filter.Window.From.HasValue;
+            _scale = ScaleOf(from, to, unbounded);
 
-            List<ActivityInfo> inRange = _history.Where(a => a.Started >= from && a.Started <= to).ToList();
+            List<ActivityInfo> inRange = _filtered.Where(a => a.Started >= from && a.Started <= to).ToList();
 
             // Previous period of the same length, for deltas
             TimeSpan len = to - from;
-            List<ActivityInfo> prev = Range == TimeRange.All
+            List<ActivityInfo> prev = unbounded
                 ? new List<ActivityInfo>()
-                : _history.Where(a => a.Started >= from - len && a.Started < from).ToList();
+                : _filtered.Where(a => a.Started >= from - len && a.Started < from).ToList();
 
             BuildKpis(inRange, prev);
             BuildTimeDistribution(inRange, from, to);
@@ -387,7 +432,7 @@ namespace TraXile.Next.ViewModels
             BuildTrend(from, to);
 
             Recent.Clear();
-            foreach (ActivityInfo a in _history.Take(12)) Recent.Add(a);
+            foreach (ActivityInfo a in inRange.Take(12)) Recent.Add(a);
 
             OnPropertyChanged(nameof(DailyTitle));
         }
@@ -481,7 +526,7 @@ namespace TraXile.Next.ViewModels
             for (int i = 0; i < 14; i++)
             {
                 DateTime d = start.AddDays(i);
-                var vals = _history.Where(a => a.Started.Date == d).Select(selector).Where(v => !double.IsNaN(v)).ToList();
+                var vals = _filtered.Where(a => a.Started.Date == d).Select(selector).Where(v => !double.IsNaN(v)).ToList();
                 result[i] = vals.Count == 0 ? 0 : (average ? vals.Average() : vals.Sum());
             }
             return result;
@@ -554,14 +599,18 @@ namespace TraXile.Next.ViewModels
 
         private void BuildDaily(List<ActivityInfo> cur, DateTime from, DateTime to)
         {
-            bool hourly = Range == TimeRange.Today;
+            bool hourly = _scale == Scale.Hourly;
 
             // Buckets
             var labels = new List<string>();
             var bucketStarts = new List<DateTime>();
             if (hourly)
             {
-                for (int h = 0; h < 24; h++) { bucketStarts.Add(from.Date.AddHours(h)); labels.Add($"{h:00}"); }
+                // Whole hours of the range ("Today": 00-23, "Last 24 hours": 25 buckets across midnight)
+                DateTime first = new DateTime(from.Year, from.Month, from.Day, from.Hour, 0, 0);
+                DateTime end = Filter.Window.To ?? to;
+                int hours = Math.Max(1, Math.Min(25, (int)Math.Ceiling((end - first).TotalHours)));
+                for (int h = 0; h < hours; h++) { DateTime b = first.AddHours(h); bucketStarts.Add(b); labels.Add($"{b.Hour:00}"); }
             }
             else
             {
@@ -572,12 +621,15 @@ namespace TraXile.Next.ViewModels
                 {
                     DateTime d = start.AddDays(i);
                     bucketStarts.Add(d);
-                    labels.Add(days <= 7 ? d.ToString("ddd") : d.ToString("dd.MM"));
+                    // longer ranges: a label every 3rd / 7th day (counted back from the last day), the rest stay empty
+                    int step = days <= 14 ? 1 : days <= 31 ? 3 : 7;
+                    bool labelled = (days - 1 - i) % step == 0;
+                    labels.Add(!labelled ? "" : days <= 7 ? d.ToString("ddd") : d.ToString("dd.MM"));
                 }
-                cur = _history.Where(a => a.Started >= start && a.Started <= to).ToList();
+                cur = _filtered.Where(a => a.Started >= start && a.Started <= to).ToList();
             }
 
-            int Bucket(DateTime t) => hourly ? t.Hour : (int)(t.Date - bucketStarts[0]).TotalDays;
+            int Bucket(DateTime t) => hourly ? (int)Math.Floor((t - bucketStarts[0]).TotalHours) : (int)(t.Date - bucketStarts[0]).TotalDays;
 
             // Top 4 types are stacked individually, the rest is "Other"
             var top = cur.GroupBy(a => a.Type).OrderByDescending(g => g.Sum(Capped)).Take(4).Select(g => g.Key)
@@ -608,7 +660,7 @@ namespace TraXile.Next.ViewModels
                     SeparatorsPaint = null,
                     TicksPaint = null,
                     MinStep = 1,
-                    ForceStepToMin = labels.Count <= 31,
+                    ForceStepToMin = true,
                 }
             };
             DailyYAxes = new[]
@@ -691,26 +743,29 @@ namespace TraXile.Next.ViewModels
         private void BuildTrend(DateTime from, DateTime to)
         {
             // Fine buckets, so play sessions show up as steps of the curve
-            bool hourly = Range == TimeRange.Today;
+            bool hourly = _scale == Scale.Hourly;
             TimeSpan bucket;
             DateTime start;
             int count;
-            switch (Range)
+            // the axis spans the range up to the end of today at most; the curve stops at "now"
+            DateTime end = Filter.Window.To.HasValue && Filter.Window.To.Value < to.Date.AddDays(1) ? Filter.Window.To.Value : to.Date.AddDays(1);
+            switch (_scale)
             {
-                case TimeRange.Today: bucket = TimeSpan.FromHours(1); start = from.Date; count = 24; break;
-                case TimeRange.Week: bucket = TimeSpan.FromHours(2); start = from.Date; count = 7 * 12; break;
-                case TimeRange.Month: bucket = TimeSpan.FromHours(6); start = from.Date; count = 30 * 4; break;
-                default: bucket = TimeSpan.FromDays(1); count = 60; start = to.Date.AddDays(-(count - 1)); break;
+                case Scale.Hourly: bucket = TimeSpan.FromHours(1); start = new DateTime(from.Year, from.Month, from.Day, from.Hour, 0, 0); break;
+                case Scale.Week: bucket = TimeSpan.FromHours(2); start = from.Date; break;
+                case Scale.Month: bucket = TimeSpan.FromHours(6); start = from.Date; break;
+                default: bucket = TimeSpan.FromDays(1); start = to.Date.AddDays(-59); end = to.Date.AddDays(1); break;
             }
+            count = Math.Max(1, (int)Math.Ceiling((end - start).Ticks / (double)bucket.Ticks));
             int elapsed = Math.Min(count, (int)((to - start).Ticks / bucket.Ticks) + 1);
 
-            (double[] cur, int[] deaths) = Cumulate(_history, start, bucket, count);
+            (double[] cur, int[] deaths) = Cumulate(_filtered, start, bucket, count);
             double[] current = cur.Take(elapsed).ToArray(); // the curve stops at "now"
 
             TimeSpan length = TimeSpan.FromTicks(bucket.Ticks * count);
-            double[] previous = Range == TimeRange.All
+            double[] previous = !Filter.Window.From.HasValue
                 ? Array.Empty<double>()
-                : Cumulate(_history, start - length, bucket, count).cumulative;
+                : Cumulate(_filtered, start - length, bucket, count).cumulative;
             HasPreviousTrend = previous.Length > 0;
 
             SKColor curve = Token("Accent");
@@ -769,13 +824,14 @@ namespace TraXile.Next.ViewModels
             TrendXAxes = new[] { new Axis { IsVisible = false, MinLimit = 0, MaxLimit = count - 1 } };
             TrendYAxes = new[] { new Axis { IsVisible = false, MinLimit = 0, MaxLimit = Math.Max(1, max * 1.15) } };
 
-            TrendTitle = (hourly ? "Activities today" : Range == TimeRange.All ? "Activities, last 60 days" : $"Activities, {RangeLabel.ToLowerInvariant()}")
+            TrendTitle = (_scale == Scale.Long && !Filter.Window.From.HasValue ? "Activities, last 60 days" : $"Activities, {RangeLabel}")
                 + $" · {current.LastOrDefault():N0}";
         }
 
         public void Dispose()
         {
             _clock.Stop();
+            Filter.Changed -= OnFilterChanged;
             _refreshDebounce.Stop();
             _source.HistoryChanged -= OnHistoryChanged;
         }
