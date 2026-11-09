@@ -4,7 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
-    Title="Settings">
+    Title="Settings"
+    ScrollViewer.CanContentScroll="False">
+    <!-- WPF-UI: without this the host wraps the page in its own scroll viewer, so the page's
+         ScrollViewer below gets infinite height, shows no scrollbar and swallows the mouse wheel. -->
 
     <Page.Resources>
         <!-- One setting: name and help on the left, the control on the right -->
@@ -376,6 +379,7 @@
                         </ui:Button>
                     </Grid>
                 </StackPanel>
-            </Border>        </StackPanel>
+            </Border>
+        </StackPanel>
     </ScrollViewer>
 </Page>
