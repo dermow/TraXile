@@ -45,6 +45,9 @@
   <ItemGroup>
     <!-- Reuse the existing, battle-tested tracking core (log parsing, DB, stats) -->
     <ProjectReference Include="..\TraXile\TraXile.csproj" />
+    <!-- The updater is started from the app folder ("Install update"); built and copied, not referenced -->
+    <ProjectReference Include="..\TraXile.Updater\TraXile.Updater.csproj" ReferenceOutputAssembly="false"
+                      OutputItemType="Content" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

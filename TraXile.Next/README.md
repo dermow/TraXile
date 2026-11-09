@@ -45,7 +45,18 @@ TraXile.Next.exe --screenshot out.png --page tags --select 0   # Tags page with 
 TraXile.Next.exe --screenshot out.png --page settings --scroll 1500 # lower part of a long page
 TraXile.Next.exe --screenshot out.png --page log --filter last7days,map,level>=83,tag:juiced # with the global filter set
                                                                # (also: league, custom, area:<name>, and, not)
+TraXile.Next.exe --screenshot out.png --update                 # title bar with the "update available" hint
+TraXile.Next.exe --screenshot out.png --page update            # update dialog (also: update-none)
 ```
+
+## Updates
+
+At start and then every hour the app reads `versions.xml` from the metadata server
+(`{METADATA_BASE_URL}/{metadata_updates_branch}/versions.xml`, like the classic app). A newer version shows a
+button in the title bar; at start the update dialog opens directly. "Install update" starts
+`TraXile.Updater.exe <version>` (built and copied next to the exe), which downloads the release's `Setup.msi`,
+closes TraXile and runs the installer. Installer packages older than a day are removed from `%APPDATA%\TraXile`.
+The league metadata (`metadata.xml`) is downloaded at every start as well.
 
 ## Tests
 
