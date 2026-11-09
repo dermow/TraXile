@@ -39,10 +39,37 @@ namespace TraXile.Next.Tests
         public void Other_filter_times_show_no_button_and_name_the_range()
         {
             _filter.Time = FilterTime.League;
-            _filter.League = LeagueCatalog.Current(_filter.Leagues);
+            _filter.League = _filter.Leagues.First(l => !l.IsCurrent);
 
             Assert.Equal(TimeRange.Other, _vm.Range);
             Assert.Equal($"League {_filter.League.Name}", _vm.RangeLabel);
+        }
+
+        [Fact]
+        public void Current_league_button_sets_the_league_filter()
+        {
+            LeagueInfo current = LeagueCatalog.Current(_filter.Leagues);
+            Assert.True(_vm.HasCurrentLeague);
+
+            _vm.Range = TimeRange.League;
+
+            Assert.Equal(FilterTime.League, _filter.Time);
+            Assert.Same(current, _filter.League);
+            Assert.Equal(TimeRange.League, _vm.Range);
+            Assert.Equal($"League {current.Name}", _vm.RangeLabel);
+            Assert.Equal(_source.GetHistory().Count(a => a.Started >= current.Start && a.Started <= current.End), OverviewCount);
+        }
+
+        [Fact]
+        public void Current_league_button_is_disabled_without_leagues()
+        {
+            var filter = new GlobalFilter();
+            using (var vm = new DashboardViewModel(_source, filter: filter))
+            {
+                Assert.False(vm.HasCurrentLeague);
+                vm.Range = TimeRange.League;
+                Assert.Equal(FilterTime.All, filter.Time);
+            }
         }
 
         [Fact]

@@ -16,7 +16,7 @@ using TraXile.Next.Services;
 namespace TraXile.Next.ViewModels
 {
     /// <summary>Dashboard range buttons; <see cref="Other"/> = another time range of the global filter.</summary>
-    public enum TimeRange { Today, Week, Month, All, Other }
+    public enum TimeRange { Today, Week, Month, League, All, Other }
 
     public sealed class KpiViewModel : ObservableObject
     {
@@ -100,6 +100,7 @@ namespace TraXile.Next.ViewModels
             _source = source;
             Filter = filter ?? new GlobalFilter();
             Filter.Changed += OnFilterChanged;
+            Filter.LeaguesChanged += OnLeaguesChanged;
             _settings = settings;
             _canWriteSettings = canWriteSettings;
             _showHideout = !bool.TryParse(settings?.ReadSetting(ShowHideoutKey, "true"), out bool show) || show;
@@ -180,9 +181,23 @@ namespace TraXile.Next.ViewModels
             Refresh();
         }
 
+        private void OnLeaguesChanged(object sender, EventArgs e)
+        {
+            OnPropertyChanged(nameof(CurrentLeague));
+            OnPropertyChanged(nameof(HasCurrentLeague));
+            OnPropertyChanged(nameof(Range));
+        }
+
+        /// <summary>The running league (null while no league metadata is known).</summary>
+        public LeagueInfo CurrentLeague => LeagueCatalog.Current(Filter.Leagues);
+
+        /// <summary>Enables the "Current league" range button.</summary>
+        public bool HasCurrentLeague => CurrentLeague != null;
+
         /// <summary>
-        /// The range buttons are shortcuts for the time range of the global filter (Today, last 7 / 30 days, all time).
-        /// Any other time range of the filter (league, 24 hours, custom, ...) reads as <see cref="TimeRange.Other"/>.
+        /// The range buttons are shortcuts for the time range of the global filter
+        /// (Today, last 7 / 30 days, current league, all time). Any other time range of the filter
+        /// (an older league, 24 hours, custom, ...) reads as <see cref="TimeRange.Other"/>.
         /// </summary>
         public TimeRange Range
         {
@@ -194,6 +209,9 @@ namespace TraXile.Next.ViewModels
                     case FilterTime.Last7Days: return TimeRange.Week;
                     case FilterTime.Last30Days: return TimeRange.Month;
                     case FilterTime.All: return TimeRange.All;
+                    case FilterTime.League:
+                        return Filter.League != null && Filter.League.Name == CurrentLeague?.Name
+                            ? TimeRange.League : TimeRange.Other;
                     default: return TimeRange.Other;
                 }
             }
@@ -205,6 +223,15 @@ namespace TraXile.Next.ViewModels
                     case TimeRange.Week: Filter.Time = FilterTime.Last7Days; break;
                     case TimeRange.Month: Filter.Time = FilterTime.Last30Days; break;
                     case TimeRange.All: Filter.Time = FilterTime.All; break;
+                    case TimeRange.League:
+                        LeagueInfo current = CurrentLeague;
+                        if (current == null) break;
+                        Filter.Batch(() =>
+                        {
+                            Filter.League = current;
+                            Filter.Time = FilterTime.League;
+                        });
+                        break;
                 }
             }
         }
@@ -832,6 +859,7 @@ namespace TraXile.Next.ViewModels
         {
             _clock.Stop();
             Filter.Changed -= OnFilterChanged;
+            Filter.LeaguesChanged -= OnLeaguesChanged;
             _refreshDebounce.Stop();
             _source.HistoryChanged -= OnHistoryChanged;
         }

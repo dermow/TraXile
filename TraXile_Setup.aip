@@ -32,15 +32,57 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
     <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
-    <ROW Directory="DesktopFolder" Directory_Parent="TARGETDIR" DefaultDir="DESKTO~1|DesktopFolder" IsPseudoRoot="1"/>
     <ROW Directory="Fonts_Dir" Directory_Parent="APPDIR" DefaultDir="Fonts"/>
     <ROW Directory="ProgramMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="PROGRA~1|ProgramMenuFolder" IsPseudoRoot="1"/>
+    <ROW Directory="SHORTCUTDIR" Directory_Parent="TARGETDIR" DefaultDir="SHORTC~1|SHORTCUTDIR" IsPseudoRoot="1"/>
+    <ROW Directory="StartMenuFolder" Directory_Parent="TARGETDIR" DefaultDir="STARTM~1|StartMenuFolder" IsPseudoRoot="1"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
     <ROW Directory="audio_Dir" Directory_Parent="APPDIR" DefaultDir="audio"/>
+    <ROW Directory="browserwasm_Dir" Directory_Parent="runtimes_Dir" DefaultDir="BROWSE~1|browser-wasm"/>
+    <ROW Directory="linuxarm64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX-~2|linux-arm64"/>
+    <ROW Directory="linuxarm_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX-~1|linux-arm"/>
+    <ROW Directory="linuxarmel_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX-~3|linux-armel"/>
+    <ROW Directory="linuxmips64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX-~4|linux-mips64"/>
+    <ROW Directory="linuxmuslarm64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX-~6|linux-musl-arm64"/>
+    <ROW Directory="linuxmuslarm_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX-~5|linux-musl-arm"/>
+    <ROW Directory="linuxmuslriscv64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX-~7|linux-musl-riscv64"/>
+    <ROW Directory="linuxmusls390x_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX-~8|linux-musl-s390x"/>
+    <ROW Directory="linuxmuslx64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX-~9|linux-musl-x64"/>
+    <ROW Directory="linuxppc64le_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX~10|linux-ppc64le"/>
+    <ROW Directory="linuxriscv64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX~11|linux-riscv64"/>
+    <ROW Directory="linuxs390x_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX~12|linux-s390x"/>
+    <ROW Directory="linuxx64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX~13|linux-x64"/>
+    <ROW Directory="linuxx86_Dir" Directory_Parent="runtimes_Dir" DefaultDir="LINUX~14|linux-x86"/>
+    <ROW Directory="maccatalystarm64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="MACCAT~1|maccatalyst-arm64"/>
+    <ROW Directory="maccatalystx64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="MACCAT~2|maccatalyst-x64"/>
+    <ROW Directory="native_10_Dir" Directory_Parent="linuxmusls390x_Dir" DefaultDir="native"/>
+    <ROW Directory="native_11_Dir" Directory_Parent="linuxmuslx64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_12_Dir" Directory_Parent="linuxppc64le_Dir" DefaultDir="native"/>
+    <ROW Directory="native_13_Dir" Directory_Parent="linuxriscv64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_14_Dir" Directory_Parent="linuxs390x_Dir" DefaultDir="native"/>
+    <ROW Directory="native_15_Dir" Directory_Parent="linuxx64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_16_Dir" Directory_Parent="linuxx86_Dir" DefaultDir="native"/>
+    <ROW Directory="native_17_Dir" Directory_Parent="maccatalystarm64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_18_Dir" Directory_Parent="maccatalystx64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_19_Dir" Directory_Parent="osxarm64_Dir" DefaultDir="native"/>
     <ROW Directory="native_1_Dir" Directory_Parent="winx64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_20_Dir" Directory_Parent="osxx64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_21_Dir" Directory_Parent="winarm64_Dir" DefaultDir="native"/>
     <ROW Directory="native_2_Dir" Directory_Parent="winx86_Dir" DefaultDir="native"/>
+    <ROW Directory="native_3_Dir" Directory_Parent="linuxarm_Dir" DefaultDir="native"/>
+    <ROW Directory="native_4_Dir" Directory_Parent="linuxarm64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_5_Dir" Directory_Parent="linuxarmel_Dir" DefaultDir="native"/>
+    <ROW Directory="native_6_Dir" Directory_Parent="linuxmips64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_7_Dir" Directory_Parent="linuxmuslarm_Dir" DefaultDir="native"/>
+    <ROW Directory="native_8_Dir" Directory_Parent="linuxmuslarm64_Dir" DefaultDir="native"/>
+    <ROW Directory="native_9_Dir" Directory_Parent="linuxmuslriscv64_Dir" DefaultDir="native"/>
     <ROW Directory="native_Dir" Directory_Parent="winarm_Dir" DefaultDir="native"/>
+    <ROW Directory="nativeassets_Dir" Directory_Parent="browserwasm_Dir" DefaultDir="NATIVE~1|nativeassets"/>
+    <ROW Directory="net9.0_Dir" Directory_Parent="nativeassets_Dir" DefaultDir="net9.0"/>
+    <ROW Directory="osxarm64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="OSX-AR~1|osx-arm64"/>
+    <ROW Directory="osxx64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="osx-x64"/>
     <ROW Directory="runtimes_Dir" Directory_Parent="APPDIR" DefaultDir="runtimes"/>
+    <ROW Directory="winarm64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="WIN-AR~1|win-arm64"/>
     <ROW Directory="winarm_Dir" Directory_Parent="runtimes_Dir" DefaultDir="win-arm"/>
     <ROW Directory="winx64_Dir" Directory_Parent="runtimes_Dir" DefaultDir="win-x64"/>
     <ROW Directory="winx86_Dir" Directory_Parent="runtimes_Dir" DefaultDir="win-x86"/>
@@ -52,136 +94,189 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="APPDIR" ComponentId="{7720AF12-AF74-404E-9D4F-9675ADE898A7}" Directory_="APPDIR" Attributes="0"/>
-    <ROW Component="CommunityToolkit.Mvvm.dll" ComponentId="{2F834B48-FF8A-4FE7-BBFF-41B058506369}" Directory_="APPDIR" Attributes="0" KeyPath="CommunityToolkit.Mvvm.dll"/>
-    <ROW Component="GLWpfControl.dll" ComponentId="{03BD9E7C-1D4D-4709-AAAB-91692B2AAB6B}" Directory_="APPDIR" Attributes="0" KeyPath="GLWpfControl.dll"/>
-    <ROW Component="HarfBuzzSharp.dll" ComponentId="{114D709F-52D7-44B7-814B-B4CF603D5B61}" Directory_="APPDIR" Attributes="0" KeyPath="HarfBuzzSharp.dll"/>
-    <ROW Component="LiveChartsCore.SkiaSharpView.WPF.dll" ComponentId="{5B01453B-A2B7-4CB9-B571-75A4D5CDCBBB}" Directory_="APPDIR" Attributes="0" KeyPath="LiveChartsCore.SkiaSharpView.WPF.dll"/>
-    <ROW Component="LiveChartsCore.SkiaSharpView.dll" ComponentId="{48119ED5-FFA4-4CB7-8B34-A6D8330DDCF2}" Directory_="APPDIR" Attributes="0" KeyPath="LiveChartsCore.SkiaSharpView.dll"/>
-    <ROW Component="LiveChartsCore.dll" ComponentId="{0D23916D-ADC7-4DD5-A413-852978D3B555}" Directory_="APPDIR" Attributes="0" KeyPath="LiveChartsCore.dll"/>
-    <ROW Component="Microsoft.Bcl.AsyncInterfaces.dll" ComponentId="{AE8B03DC-B7A0-4F0B-AE8C-8F9C873A8AE9}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.Bcl.AsyncInterfaces.dll"/>
-    <ROW Component="Microsoft.Data.Sqlite.dll" ComponentId="{9C699E22-1237-4BBC-9CD0-295C7A0C3A5B}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.Data.Sqlite.dll"/>
-    <ROW Component="Microsoft.Win32.Registry.dll" ComponentId="{633807A0-8572-4565-8609-4F1CA51AE093}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.Win32.Registry.dll"/>
-    <ROW Component="NAudio.Asio.dll" ComponentId="{49635041-9F4A-43EA-B70E-04F5C2E9DA3E}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.Asio.dll"/>
-    <ROW Component="NAudio.Core.dll" ComponentId="{06A042A0-4F1E-4FA2-9860-5E21E43BE3A4}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.Core.dll"/>
-    <ROW Component="NAudio.Midi.dll" ComponentId="{D5F15797-AEE6-4348-A5D0-C6492D0B9413}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.Midi.dll"/>
-    <ROW Component="NAudio.Wasapi.dll" ComponentId="{B38D282A-8AFD-4573-906B-767E90F96AA8}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.Wasapi.dll"/>
-    <ROW Component="NAudio.WinForms.dll" ComponentId="{22D1F01B-E36E-41B1-8152-6426FFE39361}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.WinForms.dll"/>
-    <ROW Component="NAudio.WinMM.dll" ComponentId="{E46822A8-E7FE-4C75-AE89-CF8473914691}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.WinMM.dll"/>
-    <ROW Component="NAudio.dll" ComponentId="{AF494F0B-9F10-4E69-8D6B-6574BA966CB6}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.dll"/>
-    <ROW Component="Newtonsoft.Json.dll" ComponentId="{578C9FD3-2030-41A5-99B5-C5D16A694915}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
-    <ROW Component="OFLFamiljenGrotesk.txt" ComponentId="{1A00C882-BA54-40FB-9491-73A5B4606F43}" Directory_="Fonts_Dir" Attributes="0" KeyPath="OFLFamiljenGrotesk.txt" Type="0"/>
-    <ROW Component="OpenTK.dll" ComponentId="{1F09A3BA-0A38-443E-87D8-E470903E83C3}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.dll"/>
+    <ROW Component="CommunityToolkit.Mvvm.dll" ComponentId="{E4B078A9-9095-4ECC-9CD9-97497643BBCB}" Directory_="APPDIR" Attributes="0" KeyPath="CommunityToolkit.Mvvm.dll"/>
+    <ROW Component="GLWpfControl.dll" ComponentId="{60D778F2-3A9E-44B2-A322-925A72F94EC9}" Directory_="APPDIR" Attributes="0" KeyPath="GLWpfControl.dll"/>
+    <ROW Component="HarfBuzzSharp.dll" ComponentId="{C5315217-4AC1-4F7F-92C9-9D8B0C2984E2}" Directory_="APPDIR" Attributes="0" KeyPath="HarfBuzzSharp.dll"/>
+    <ROW Component="LiveChartsCore.SkiaSharpView.WPF.dll" ComponentId="{CC1414C5-8939-4BE6-AC54-9EE3CC730FFD}" Directory_="APPDIR" Attributes="0" KeyPath="LiveChartsCore.SkiaSharpView.WPF.dll"/>
+    <ROW Component="LiveChartsCore.SkiaSharpView.dll" ComponentId="{2B9FD6B9-5653-475E-B797-89D6DF576FE8}" Directory_="APPDIR" Attributes="0" KeyPath="LiveChartsCore.SkiaSharpView.dll"/>
+    <ROW Component="LiveChartsCore.dll" ComponentId="{99408F91-E632-4265-BA35-F105CE96AF16}" Directory_="APPDIR" Attributes="0" KeyPath="LiveChartsCore.dll"/>
+    <ROW Component="Microsoft.Data.Sqlite.dll" ComponentId="{BD7172CB-FCE6-4CDB-B4C9-46CCE7927116}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.Data.Sqlite.dll"/>
+    <ROW Component="Microsoft.Windows.SDK.NET.dll" ComponentId="{6D3D0E71-09A0-4DD0-8963-2B7E0E71F7C9}" Directory_="APPDIR" Attributes="0" KeyPath="Microsoft.Windows.SDK.NET.dll"/>
+    <ROW Component="NAudio.Asio.dll" ComponentId="{EC3D83D3-3477-46D6-A68C-C6436957690B}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.Asio.dll"/>
+    <ROW Component="NAudio.Core.dll" ComponentId="{4A4B6A59-74AB-4BA2-8D18-DC0806EB6FB6}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.Core.dll"/>
+    <ROW Component="NAudio.Midi.dll" ComponentId="{5A963824-1CB6-41B8-B4D8-D0098EE01218}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.Midi.dll"/>
+    <ROW Component="NAudio.Wasapi.dll" ComponentId="{D5FE68A5-8F36-4C84-8C61-4019F4185D6D}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.Wasapi.dll"/>
+    <ROW Component="NAudio.WinForms.dll" ComponentId="{F03FB0AA-772C-4880-90EA-0BEA2D175EAB}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.WinForms.dll"/>
+    <ROW Component="NAudio.WinMM.dll" ComponentId="{651296A9-D465-4456-8EDB-EB281C21AABA}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.WinMM.dll"/>
+    <ROW Component="NAudio.dll" ComponentId="{123CB0BC-08DD-4ABC-A569-5EFAB13099D0}" Directory_="APPDIR" Attributes="0" KeyPath="NAudio.dll"/>
+    <ROW Component="Newtonsoft.Json.dll" ComponentId="{8FEFDFCD-3AEB-49C6-A733-BC0ABDA4DE9B}" Directory_="APPDIR" Attributes="0" KeyPath="Newtonsoft.Json.dll"/>
+    <ROW Component="OFLFamiljenGrotesk.txt" ComponentId="{BB6EB145-EFB2-4E87-A1E0-311E5D4BC29B}" Directory_="Fonts_Dir" Attributes="0" KeyPath="OFLFamiljenGrotesk.txt" Type="0"/>
+    <ROW Component="OpenTK.Compute.dll" ComponentId="{578FD9F8-C3AE-463E-9E76-A54E192C0B9D}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.Compute.dll"/>
+    <ROW Component="OpenTK.Core.dll" ComponentId="{5F33AE08-EAFF-436F-A642-321DA4CC2F8E}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.Core.dll"/>
+    <ROW Component="OpenTK.Graphics.dll" ComponentId="{9651D8A9-10E1-4D13-BC37-F09419906471}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.Graphics.dll"/>
+    <ROW Component="OpenTK.Input.dll" ComponentId="{A8F651DB-E719-47CC-A36D-7BBE006FEE48}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.Input.dll"/>
+    <ROW Component="OpenTK.Mathematics.dll" ComponentId="{F62A9224-AB01-43EA-B5AA-038852B16EC3}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.Mathematics.dll"/>
+    <ROW Component="OpenTK.OpenAL.dll" ComponentId="{108E63BD-D93C-4303-8A9B-0A28FA3B76EE}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.OpenAL.dll"/>
+    <ROW Component="OpenTK.Windowing.Common.dll" ComponentId="{896D6F71-28D5-4341-AF9A-84D5D53E5739}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.Windowing.Common.dll"/>
+    <ROW Component="OpenTK.Windowing.Desktop.dll" ComponentId="{0BEF9315-6DD0-44B6-BDB9-7C04936D68F8}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.Windowing.Desktop.dll"/>
+    <ROW Component="OpenTK.Windowing.GraphicsLibraryFramework.dll" ComponentId="{104039EE-098C-4719-9E20-F92A242B2AFF}" Directory_="APPDIR" Attributes="0" KeyPath="OpenTK.Windowing.GraphicsLibraryFramework.dll"/>
     <ROW Component="ProductInformation" ComponentId="{5AB4E3D5-11EF-410A-B715-D7FF2EC0F407}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
-    <ROW Component="SQLitePCLRaw.batteries_v2.dll" ComponentId="{2BFCCD05-CD16-4C88-B3A9-286864CA3D28}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.batteries_v2.dll"/>
-    <ROW Component="SQLitePCLRaw.core.dll" ComponentId="{A1605845-A8B6-4C11-82B3-3F583EC61E6F}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.core.dll"/>
-    <ROW Component="SQLitePCLRaw.nativelibrary.dll" ComponentId="{1DC953AC-4E46-4056-A1F9-BB2282DCD8C3}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.nativelibrary.dll"/>
-    <ROW Component="SQLitePCLRaw.provider.dynamic_cdecl.dll" ComponentId="{B21E8F22-8E5D-411F-8994-0ECB861F062D}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.provider.dynamic_cdecl.dll"/>
-    <ROW Component="SkiaSharp.HarfBuzz.dll" ComponentId="{016124C0-2665-41A1-8F1E-DEC3108FEF67}" Directory_="APPDIR" Attributes="0" KeyPath="SkiaSharp.HarfBuzz.dll"/>
-    <ROW Component="SkiaSharp.Views.Desktop.Common.dll" ComponentId="{E0202DA1-F0E9-48A1-A93F-383BEA7BAED4}" Directory_="APPDIR" Attributes="0" KeyPath="SkiaSharp.Views.Desktop.Common.dll"/>
-    <ROW Component="SkiaSharp.Views.WPF.dll" ComponentId="{4A16E69E-C419-4435-B4F3-BBD4794B6325}" Directory_="APPDIR" Attributes="0" KeyPath="SkiaSharp.Views.WPF.dll"/>
-    <ROW Component="SkiaSharp.dll" ComponentId="{1E91352C-DCF8-4F85-A604-DA4A677BFD12}" Directory_="APPDIR" Attributes="0" KeyPath="SkiaSharp.dll"/>
-    <ROW Component="System.Buffers.dll" ComponentId="{66A064F8-D470-4CDA-9055-290AC74230AB}" Directory_="APPDIR" Attributes="0" KeyPath="System.Buffers.dll"/>
-    <ROW Component="System.ComponentModel.Annotations.dll" ComponentId="{7C4D7FF7-D6D5-451F-AC27-FE32DB3C1559}" Directory_="APPDIR" Attributes="0" KeyPath="System.ComponentModel.Annotations.dll"/>
-    <ROW Component="System.Memory.dll" ComponentId="{81E0AD98-995B-47BD-9AD8-470C2B4A10C5}" Directory_="APPDIR" Attributes="0" KeyPath="System.Memory.dll"/>
-    <ROW Component="System.Numerics.Vectors.dll" ComponentId="{EE8BB6CB-9B3D-4B54-A7C0-B6DE7B8C290D}" Directory_="APPDIR" Attributes="0" KeyPath="System.Numerics.Vectors.dll"/>
-    <ROW Component="System.Runtime.CompilerServices.Unsafe.dll" ComponentId="{0B0966BF-A1A7-4577-8611-26D2A8AA855F}" Directory_="APPDIR" Attributes="0" KeyPath="System.Runtime.CompilerServices.Unsafe.dll"/>
-    <ROW Component="System.Security.AccessControl.dll" ComponentId="{0B8DAD60-D639-4FF6-BF46-8DF4C1766C68}" Directory_="APPDIR" Attributes="0" KeyPath="System.Security.AccessControl.dll"/>
-    <ROW Component="System.Security.Principal.Windows.dll" ComponentId="{6F2D4D61-47E8-4799-94B2-65BCD33E3D63}" Directory_="APPDIR" Attributes="0" KeyPath="System.Security.Principal.Windows.dll"/>
-    <ROW Component="System.Text.Encodings.Web.dll" ComponentId="{45AF1FB9-6CD6-4715-9B7B-70DD0D22EC3F}" Directory_="APPDIR" Attributes="0" KeyPath="System.Text.Encodings.Web.dll"/>
-    <ROW Component="System.Text.Json.dll" ComponentId="{621A3AB5-80E2-459A-8359-23BCB46BC92D}" Directory_="APPDIR" Attributes="0" KeyPath="System.Text.Json.dll"/>
-    <ROW Component="System.Threading.Tasks.Extensions.dll" ComponentId="{26CB9F6C-F01A-41DD-9D7E-935A5DCF804B}" Directory_="APPDIR" Attributes="0" KeyPath="System.Threading.Tasks.Extensions.dll"/>
-    <ROW Component="System.ValueTuple.dll" ComponentId="{6C7C8A6F-00E7-4EAB-A019-34D58A43E786}" Directory_="APPDIR" Attributes="0" KeyPath="System.ValueTuple.dll"/>
-    <ROW Component="TraXile.Core.dll" ComponentId="{A5934459-4BF4-4B3B-8194-38F03873BF9E}" Directory_="APPDIR" Attributes="0" KeyPath="TraXile.Core.dll"/>
-    <ROW Component="TraXile.Updater.exe" ComponentId="{1BDAEE02-45E7-45FA-BCE3-15ECE5166CC8}" Directory_="APPDIR" Attributes="0" KeyPath="TraXile.Updater.exe"/>
-    <ROW Component="TraXile.exe" ComponentId="{585E9ED5-04C2-40AC-8294-51DDCBCAEAF7}" Directory_="APPDIR" Attributes="256" KeyPath="TraXile.exe"/>
-    <ROW Component="Wpf.Ui.Abstractions.dll" ComponentId="{501E7B4A-4B7C-48F7-8D5C-B4FFC625EB87}" Directory_="APPDIR" Attributes="0" KeyPath="Wpf.Ui.Abstractions.dll"/>
-    <ROW Component="Wpf.Ui.dll" ComponentId="{9FBF9C03-A72B-41FD-B2F0-F0A6186D34AA}" Directory_="APPDIR" Attributes="0" KeyPath="Wpf.Ui.dll"/>
-    <ROW Component="alert186270.mp3" ComponentId="{C21BC21C-7BD0-4932-85FE-0A8D3523587C}" Directory_="audio_Dir" Attributes="0" KeyPath="alert186270.mp3" Type="0"/>
-    <ROW Component="e_sqlite3.dll" ComponentId="{04CD4A55-FFE0-433F-909C-5301A5C3C88F}" Directory_="APPDIR" Attributes="256" KeyPath="e_sqlite3.dll"/>
-    <ROW Component="e_sqlite3.dll_1" ComponentId="{919ABC02-063F-4628-BAB3-20B4C34892EA}" Directory_="native_Dir" Attributes="0" KeyPath="e_sqlite3.dll_1"/>
-    <ROW Component="e_sqlite3.dll_2" ComponentId="{F200E311-1A1D-42EA-ABAF-9E92DE88E33D}" Directory_="native_1_Dir" Attributes="256" KeyPath="e_sqlite3.dll_2"/>
-    <ROW Component="e_sqlite3.dll_3" ComponentId="{2F49172C-B27B-4339-BD13-0F40D82E685F}" Directory_="native_2_Dir" Attributes="0" KeyPath="e_sqlite3.dll_3"/>
-    <ROW Component="libHarfBuzzSharp.dll" ComponentId="{3C31355A-2656-4E6E-9D65-FA2D770731F7}" Directory_="APPDIR" Attributes="256" KeyPath="libHarfBuzzSharp.dll"/>
-    <ROW Component="libHarfBuzzSharp.dll_1" ComponentId="{9FA54113-429F-403E-B071-12C79622304F}" Directory_="x64_Dir" Attributes="256" KeyPath="libHarfBuzzSharp.dll_1"/>
-    <ROW Component="libSkiaSharp.dll" ComponentId="{4357FC11-18DD-4025-A5FB-842938E45E97}" Directory_="APPDIR" Attributes="256" KeyPath="libSkiaSharp.dll"/>
-    <ROW Component="libSkiaSharp.dll_1" ComponentId="{82B40484-F72F-4783-AEF3-D6B8FBBED834}" Directory_="x64_Dir" Attributes="256" KeyPath="libSkiaSharp.dll_1"/>
-    <ROW Component="log4net.config" ComponentId="{E634FB46-5A12-4DFF-92A6-F368BBCA6E65}" Directory_="APPDIR" Attributes="0" KeyPath="log4net.config" Type="0"/>
-    <ROW Component="log4net.dll" ComponentId="{855A4D61-B975-4518-8236-9835E87A00C8}" Directory_="APPDIR" Attributes="0" KeyPath="log4net.dll"/>
+    <ROW Component="SHORTCUTDIR" ComponentId="{0FB782B9-09FB-464B-AA66-CA177294588F}" Directory_="SHORTCUTDIR" Attributes="0"/>
+    <ROW Component="SQLitePCLRaw.batteries_v2.dll" ComponentId="{9F45BA44-7677-45B9-84DB-D2802F732F6C}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.batteries_v2.dll"/>
+    <ROW Component="SQLitePCLRaw.core.dll" ComponentId="{299AC1CF-4E8B-4D98-9619-3D662DDA5FFD}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.core.dll"/>
+    <ROW Component="SQLitePCLRaw.provider.e_sqlite3.dll" ComponentId="{8DE95A5D-E7B5-4757-9363-E0E3DA3FDD3B}" Directory_="APPDIR" Attributes="0" KeyPath="SQLitePCLRaw.provider.e_sqlite3.dll"/>
+    <ROW Component="SkiaSharp.HarfBuzz.dll" ComponentId="{F2762C8D-7F85-4D20-A4A7-064BCE1E3079}" Directory_="APPDIR" Attributes="0" KeyPath="SkiaSharp.HarfBuzz.dll"/>
+    <ROW Component="SkiaSharp.Views.Desktop.Common.dll" ComponentId="{EA42FB79-58BD-4BD6-A356-0B487EB5F3B3}" Directory_="APPDIR" Attributes="0" KeyPath="SkiaSharp.Views.Desktop.Common.dll"/>
+    <ROW Component="SkiaSharp.Views.WPF.dll" ComponentId="{09DB2CB7-9440-4FEC-B19B-51B617D65F6B}" Directory_="APPDIR" Attributes="0" KeyPath="SkiaSharp.Views.WPF.dll"/>
+    <ROW Component="SkiaSharp.dll" ComponentId="{76A357E5-DBA9-4949-9C78-7F3A6DCB13AF}" Directory_="APPDIR" Attributes="0" KeyPath="SkiaSharp.dll"/>
+    <ROW Component="TraXile.Core.dll" ComponentId="{405DE60F-B580-4D1C-A2C9-BD752E58930E}" Directory_="APPDIR" Attributes="256" KeyPath="TraXile.Core.dll"/>
+    <ROW Component="TraXile.Updater.dll" ComponentId="{A6382DB1-F34B-401B-9DE5-B27B0BA8999D}" Directory_="APPDIR" Attributes="256" KeyPath="TraXile.Updater.dll"/>
+    <ROW Component="TraXile.Updater.exe" ComponentId="{18D3771B-F52B-4877-88D3-8D7F7D125F65}" Directory_="APPDIR" Attributes="256" KeyPath="TraXile.Updater.exe"/>
+    <ROW Component="TraXile.dll" ComponentId="{56C7AA4E-9F9D-4016-8862-E620D1238027}" Directory_="APPDIR" Attributes="256" KeyPath="TraXile.dll"/>
+    <ROW Component="TraXile.exe" ComponentId="{ADA37E33-717A-40FB-9644-956A90CA272C}" Directory_="APPDIR" Attributes="256" KeyPath="TraXile.exe"/>
+    <ROW Component="WinRT.Runtime.dll" ComponentId="{AA2467D6-63FB-4E82-B1F3-FFA2BDDE098F}" Directory_="APPDIR" Attributes="0" KeyPath="WinRT.Runtime.dll"/>
+    <ROW Component="Wpf.Ui.Abstractions.dll" ComponentId="{3AB448B7-CB0C-4808-B4D5-704D5DF8A20B}" Directory_="APPDIR" Attributes="0" KeyPath="Wpf.Ui.Abstractions.dll"/>
+    <ROW Component="Wpf.Ui.dll" ComponentId="{78A57233-E450-41F7-8F7D-F2BC98ACD7FA}" Directory_="APPDIR" Attributes="0" KeyPath="Wpf.Ui.dll"/>
+    <ROW Component="alert186270.mp3" ComponentId="{A52E4795-6645-4643-A48D-B1C2EE0D9A7C}" Directory_="audio_Dir" Attributes="0" KeyPath="alert186270.mp3" Type="0"/>
+    <ROW Component="e_sqlite3.a" ComponentId="{13473A1D-0D1E-491A-8A8F-6E48CF06F338}" Directory_="net9.0_Dir" Attributes="0" KeyPath="e_sqlite3.a" Type="0"/>
+    <ROW Component="e_sqlite3.dll" ComponentId="{29A39D4C-38FA-47F2-992E-4EB307E71D66}" Directory_="native_21_Dir" Attributes="256" KeyPath="e_sqlite3.dll"/>
+    <ROW Component="e_sqlite3.dll_1" ComponentId="{9549B063-8BE5-4CEE-995D-D7C69B6485B0}" Directory_="native_1_Dir" Attributes="256" KeyPath="e_sqlite3.dll_1"/>
+    <ROW Component="e_sqlite3.dll_2" ComponentId="{8582E06B-6FD8-4733-B08D-73023CBAAF8F}" Directory_="native_2_Dir" Attributes="0" KeyPath="e_sqlite3.dll_2"/>
+    <ROW Component="glfw3.dll" ComponentId="{672F7796-68B2-4DAC-9736-72CA82884AB2}" Directory_="native_1_Dir" Attributes="256" KeyPath="glfw3.dll"/>
+    <ROW Component="glfw3.dll_2" ComponentId="{C7288387-A9D5-40D1-91CF-1E87675DA931}" Directory_="native_2_Dir" Attributes="0" KeyPath="glfw3.dll_2"/>
+    <ROW Component="libHarfBuzzSharp.dll" ComponentId="{6CFCAAA8-7FF0-4420-85B8-74A913809415}" Directory_="native_21_Dir" Attributes="256" KeyPath="libHarfBuzzSharp.dll"/>
+    <ROW Component="libHarfBuzzSharp.dll_4" ComponentId="{CE80C78E-5FF6-42C0-80BD-683C6DA67E3E}" Directory_="native_1_Dir" Attributes="256" KeyPath="libHarfBuzzSharp.dll_4"/>
+    <ROW Component="libHarfBuzzSharp.dll_5" ComponentId="{1FD5D503-FCC8-4090-97B2-9FF9E98930AE}" Directory_="native_2_Dir" Attributes="0" KeyPath="libHarfBuzzSharp.dll_5"/>
+    <ROW Component="libSkiaSharp.dll" ComponentId="{8E63A1D0-869D-45C0-A8EE-DEB05E1A196A}" Directory_="native_21_Dir" Attributes="256" KeyPath="libSkiaSharp.dll"/>
+    <ROW Component="libSkiaSharp.dll_4" ComponentId="{3245F2C2-C92F-4118-9870-EDB119883CCD}" Directory_="native_1_Dir" Attributes="256" KeyPath="libSkiaSharp.dll_4"/>
+    <ROW Component="libSkiaSharp.dll_5" ComponentId="{71F6B377-5256-42FD-9BFD-CE5ED7C158F1}" Directory_="native_2_Dir" Attributes="0" KeyPath="libSkiaSharp.dll_5"/>
+    <ROW Component="libe_sqlite3.dylib" ComponentId="{03E6D450-B457-44E7-A9F0-FB4C6A6B050A}" Directory_="native_17_Dir" Attributes="0" KeyPath="libe_sqlite3.dylib" Type="0"/>
+    <ROW Component="libe_sqlite3.dylib_4" ComponentId="{DEDF3A7B-2B03-4629-8921-1157799450FD}" Directory_="native_18_Dir" Attributes="0" KeyPath="libe_sqlite3.dylib_4" Type="0"/>
+    <ROW Component="libe_sqlite3.dylib_5" ComponentId="{19C96446-7856-4AB8-B7F7-28B428609BB1}" Directory_="native_19_Dir" Attributes="0" KeyPath="libe_sqlite3.dylib_5" Type="0"/>
+    <ROW Component="libe_sqlite3.dylib_6" ComponentId="{AE1C10F5-34BF-4410-9001-8504366B1830}" Directory_="native_20_Dir" Attributes="0" KeyPath="libe_sqlite3.dylib_6" Type="0"/>
+    <ROW Component="libe_sqlite3.so" ComponentId="{9F7B09F4-804D-42B0-8EE3-6EF545B5A468}" Directory_="native_3_Dir" Attributes="0" KeyPath="libe_sqlite3.so" Type="0"/>
+    <ROW Component="libe_sqlite3.so_14" ComponentId="{1819C2A9-A585-45E1-8EC4-B24FEFAC01BF}" Directory_="native_4_Dir" Attributes="0" KeyPath="libe_sqlite3.so_14" Type="0"/>
+    <ROW Component="libe_sqlite3.so_15" ComponentId="{13B5A38E-CD07-44F7-ADC0-CA2A0599DD83}" Directory_="native_5_Dir" Attributes="0" KeyPath="libe_sqlite3.so_15" Type="0"/>
+    <ROW Component="libe_sqlite3.so_16" ComponentId="{080D4619-5B20-446B-A953-9CC0B653E322}" Directory_="native_6_Dir" Attributes="0" KeyPath="libe_sqlite3.so_16" Type="0"/>
+    <ROW Component="libe_sqlite3.so_17" ComponentId="{685408D6-147B-4AF4-B8C0-7D09CF139ECE}" Directory_="native_7_Dir" Attributes="0" KeyPath="libe_sqlite3.so_17" Type="0"/>
+    <ROW Component="libe_sqlite3.so_18" ComponentId="{C92C5026-9D3C-4E33-823A-6C9EA5EC0DBE}" Directory_="native_8_Dir" Attributes="0" KeyPath="libe_sqlite3.so_18" Type="0"/>
+    <ROW Component="libe_sqlite3.so_19" ComponentId="{DA10F765-C53B-409A-9E59-5E3F75F37D71}" Directory_="native_9_Dir" Attributes="0" KeyPath="libe_sqlite3.so_19" Type="0"/>
+    <ROW Component="libe_sqlite3.so_20" ComponentId="{309DC72E-5A07-41FD-B35A-E74FAE2EF3F0}" Directory_="native_10_Dir" Attributes="0" KeyPath="libe_sqlite3.so_20" Type="0"/>
+    <ROW Component="libe_sqlite3.so_21" ComponentId="{D619A986-2DC6-4ED1-B4E0-875CC5E1BD31}" Directory_="native_11_Dir" Attributes="0" KeyPath="libe_sqlite3.so_21" Type="0"/>
+    <ROW Component="libe_sqlite3.so_22" ComponentId="{56632B5B-51CE-48DC-ABE9-54E02346FCA4}" Directory_="native_12_Dir" Attributes="0" KeyPath="libe_sqlite3.so_22" Type="0"/>
+    <ROW Component="libe_sqlite3.so_23" ComponentId="{D541B874-FE1F-4F46-854E-CFB276451C1E}" Directory_="native_13_Dir" Attributes="0" KeyPath="libe_sqlite3.so_23" Type="0"/>
+    <ROW Component="libe_sqlite3.so_24" ComponentId="{DC3A25BF-2F4D-47C5-8615-778A27B44E43}" Directory_="native_14_Dir" Attributes="0" KeyPath="libe_sqlite3.so_24" Type="0"/>
+    <ROW Component="libe_sqlite3.so_25" ComponentId="{1CEE5D46-0B5A-4FD3-8032-3ABA1D52AC37}" Directory_="native_15_Dir" Attributes="0" KeyPath="libe_sqlite3.so_25" Type="0"/>
+    <ROW Component="libe_sqlite3.so_26" ComponentId="{088B6CEB-75C1-45DE-A04B-BA8DC489FC5A}" Directory_="native_16_Dir" Attributes="0" KeyPath="libe_sqlite3.so_26" Type="0"/>
+    <ROW Component="log4net.config" ComponentId="{FCB4B1A5-1FEC-4DA2-8D9A-C59602DB7453}" Directory_="APPDIR" Attributes="0" KeyPath="log4net.config" Type="0"/>
+    <ROW Component="log4net.dll" ComponentId="{A9DFDF0F-AE30-4692-B8CB-F561A609CFD0}" Directory_="APPDIR" Attributes="0" KeyPath="log4net.dll"/>
+    <ROW Component="native" ComponentId="{FBB78659-4B09-4B74-886E-5861EB4D1B7F}" Directory_="native_Dir" Attributes="0"/>
+    <ROW Component="x64" ComponentId="{ABCDC441-2346-4731-AF64-08942CCB3265}" Directory_="x64_Dir" Attributes="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="CommunityToolkit.Mvvm.dll" Component_="CommunityToolkit.Mvvm.dll" FileName="COMMUN~1.DLL|CommunityToolkit.Mvvm.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\CommunityToolkit.Mvvm.dll" SelfReg="false"/>
-    <ROW File="e_sqlite3.dll" Component_="e_sqlite3.dll" FileName="E_SQLI~1.DLL|e_sqlite3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\e_sqlite3.dll" SelfReg="false"/>
-    <ROW File="GLWpfControl.dll" Component_="GLWpfControl.dll" FileName="GLWPFC~1.DLL|GLWpfControl.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\GLWpfControl.dll" SelfReg="false"/>
-    <ROW File="HarfBuzzSharp.dll" Component_="HarfBuzzSharp.dll" FileName="HARFBU~1.DLL|HarfBuzzSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\HarfBuzzSharp.dll" SelfReg="false"/>
-    <ROW File="libHarfBuzzSharp.dll" Component_="libHarfBuzzSharp.dll" FileName="LIBHAR~1.DLL|libHarfBuzzSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\libHarfBuzzSharp.dll" SelfReg="false"/>
-    <ROW File="libSkiaSharp.dll" Component_="libSkiaSharp.dll" FileName="LIBSKI~1.DLL|libSkiaSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\libSkiaSharp.dll" SelfReg="false"/>
-    <ROW File="LiveChartsCore.dll" Component_="LiveChartsCore.dll" FileName="LIVECH~1.DLL|LiveChartsCore.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\LiveChartsCore.dll" SelfReg="false"/>
-    <ROW File="LiveChartsCore.SkiaSharpView.dll" Component_="LiveChartsCore.SkiaSharpView.dll" FileName="LIVECH~2.DLL|LiveChartsCore.SkiaSharpView.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\LiveChartsCore.SkiaSharpView.dll" SelfReg="false"/>
-    <ROW File="LiveChartsCore.SkiaSharpView.WPF.dll" Component_="LiveChartsCore.SkiaSharpView.WPF.dll" FileName="LIVECH~3.DLL|LiveChartsCore.SkiaSharpView.WPF.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\LiveChartsCore.SkiaSharpView.WPF.dll" SelfReg="false"/>
-    <ROW File="log4net.config" Component_="log4net.config" FileName="LOG4NE~1.CON|log4net.config" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\log4net.config" SelfReg="false"/>
-    <ROW File="log4net.dll" Component_="log4net.dll" FileName="log4net.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\log4net.dll" SelfReg="false"/>
-    <ROW File="Microsoft.Bcl.AsyncInterfaces.dll" Component_="Microsoft.Bcl.AsyncInterfaces.dll" FileName="MICROS~1.DLL|Microsoft.Bcl.AsyncInterfaces.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\Microsoft.Bcl.AsyncInterfaces.dll" SelfReg="false"/>
-    <ROW File="Microsoft.Data.Sqlite.dll" Component_="Microsoft.Data.Sqlite.dll" FileName="MICROS~2.DLL|Microsoft.Data.Sqlite.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\Microsoft.Data.Sqlite.dll" SelfReg="false"/>
-    <ROW File="Microsoft.Win32.Registry.dll" Component_="Microsoft.Win32.Registry.dll" FileName="MICROS~3.DLL|Microsoft.Win32.Registry.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\Microsoft.Win32.Registry.dll" SelfReg="false"/>
-    <ROW File="NAudio.Asio.dll" Component_="NAudio.Asio.dll" FileName="NAUDIO~1.DLL|NAudio.Asio.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\NAudio.Asio.dll" SelfReg="false"/>
-    <ROW File="NAudio.Core.dll" Component_="NAudio.Core.dll" FileName="NAUDIO~2.DLL|NAudio.Core.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\NAudio.Core.dll" SelfReg="false"/>
-    <ROW File="NAudio.dll" Component_="NAudio.dll" FileName="NAudio.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\NAudio.dll" SelfReg="false"/>
-    <ROW File="NAudio.Midi.dll" Component_="NAudio.Midi.dll" FileName="NAUDIO~3.DLL|NAudio.Midi.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\NAudio.Midi.dll" SelfReg="false"/>
-    <ROW File="NAudio.Wasapi.dll" Component_="NAudio.Wasapi.dll" FileName="NAUDIO~4.DLL|NAudio.Wasapi.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\NAudio.Wasapi.dll" SelfReg="false"/>
-    <ROW File="NAudio.WinForms.dll" Component_="NAudio.WinForms.dll" FileName="NAUDIO~5.DLL|NAudio.WinForms.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\NAudio.WinForms.dll" SelfReg="false"/>
-    <ROW File="NAudio.WinMM.dll" Component_="NAudio.WinMM.dll" FileName="NAUDIO~6.DLL|NAudio.WinMM.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\NAudio.WinMM.dll" SelfReg="false"/>
-    <ROW File="Newtonsoft.Json.dll" Component_="Newtonsoft.Json.dll" FileName="NEWTON~1.DLL|Newtonsoft.Json.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\Newtonsoft.Json.dll" SelfReg="false"/>
-    <ROW File="OpenTK.dll" Component_="OpenTK.dll" FileName="OpenTK.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\OpenTK.dll" SelfReg="false"/>
-    <ROW File="SkiaSharp.dll" Component_="SkiaSharp.dll" FileName="SKIASH~1.DLL|SkiaSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\SkiaSharp.dll" SelfReg="false"/>
-    <ROW File="SkiaSharp.HarfBuzz.dll" Component_="SkiaSharp.HarfBuzz.dll" FileName="SKIASH~2.DLL|SkiaSharp.HarfBuzz.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\SkiaSharp.HarfBuzz.dll" SelfReg="false"/>
-    <ROW File="SkiaSharp.Views.Desktop.Common.dll" Component_="SkiaSharp.Views.Desktop.Common.dll" FileName="SKIASH~3.DLL|SkiaSharp.Views.Desktop.Common.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\SkiaSharp.Views.Desktop.Common.dll" SelfReg="false"/>
-    <ROW File="SkiaSharp.Views.WPF.dll" Component_="SkiaSharp.Views.WPF.dll" FileName="SKIASH~4.DLL|SkiaSharp.Views.WPF.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\SkiaSharp.Views.WPF.dll" SelfReg="false"/>
-    <ROW File="SQLitePCLRaw.batteries_v2.dll" Component_="SQLitePCLRaw.batteries_v2.dll" FileName="SQLITE~1.DLL|SQLitePCLRaw.batteries_v2.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\SQLitePCLRaw.batteries_v2.dll" SelfReg="false"/>
-    <ROW File="SQLitePCLRaw.core.dll" Component_="SQLitePCLRaw.core.dll" FileName="SQLITE~2.DLL|SQLitePCLRaw.core.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\SQLitePCLRaw.core.dll" SelfReg="false"/>
-    <ROW File="SQLitePCLRaw.nativelibrary.dll" Component_="SQLitePCLRaw.nativelibrary.dll" FileName="SQLITE~3.DLL|SQLitePCLRaw.nativelibrary.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\SQLitePCLRaw.nativelibrary.dll" SelfReg="false"/>
-    <ROW File="SQLitePCLRaw.provider.dynamic_cdecl.dll" Component_="SQLitePCLRaw.provider.dynamic_cdecl.dll" FileName="SQLITE~4.DLL|SQLitePCLRaw.provider.dynamic_cdecl.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\SQLitePCLRaw.provider.dynamic_cdecl.dll" SelfReg="false"/>
-    <ROW File="System.Buffers.dll" Component_="System.Buffers.dll" FileName="SYSTEM~1.DLL|System.Buffers.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.Buffers.dll" SelfReg="false"/>
-    <ROW File="System.ComponentModel.Annotations.dll" Component_="System.ComponentModel.Annotations.dll" FileName="SYSTEM~2.DLL|System.ComponentModel.Annotations.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.ComponentModel.Annotations.dll" SelfReg="false"/>
-    <ROW File="System.Memory.dll" Component_="System.Memory.dll" FileName="SYSTEM~3.DLL|System.Memory.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.Memory.dll" SelfReg="false"/>
-    <ROW File="System.Numerics.Vectors.dll" Component_="System.Numerics.Vectors.dll" FileName="SYSTEM~4.DLL|System.Numerics.Vectors.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.Numerics.Vectors.dll" SelfReg="false"/>
-    <ROW File="System.Runtime.CompilerServices.Unsafe.dll" Component_="System.Runtime.CompilerServices.Unsafe.dll" FileName="SYSTEM~5.DLL|System.Runtime.CompilerServices.Unsafe.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.Runtime.CompilerServices.Unsafe.dll" SelfReg="false"/>
-    <ROW File="System.Security.AccessControl.dll" Component_="System.Security.AccessControl.dll" FileName="SYSTEM~6.DLL|System.Security.AccessControl.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.Security.AccessControl.dll" SelfReg="false"/>
-    <ROW File="System.Security.Principal.Windows.dll" Component_="System.Security.Principal.Windows.dll" FileName="SYSTEM~7.DLL|System.Security.Principal.Windows.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.Security.Principal.Windows.dll" SelfReg="false"/>
-    <ROW File="System.Text.Encodings.Web.dll" Component_="System.Text.Encodings.Web.dll" FileName="SYSTEM~8.DLL|System.Text.Encodings.Web.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.Text.Encodings.Web.dll" SelfReg="false"/>
-    <ROW File="System.Text.Json.dll" Component_="System.Text.Json.dll" FileName="SYSTEM~9.DLL|System.Text.Json.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.Text.Json.dll" SelfReg="false"/>
-    <ROW File="System.Threading.Tasks.Extensions.dll" Component_="System.Threading.Tasks.Extensions.dll" FileName="SYSTE~10.DLL|System.Threading.Tasks.Extensions.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.Threading.Tasks.Extensions.dll" SelfReg="false"/>
-    <ROW File="System.ValueTuple.dll" Component_="System.ValueTuple.dll" FileName="SYSTE~11.DLL|System.ValueTuple.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\System.ValueTuple.dll" SelfReg="false"/>
-    <ROW File="TraXile.Core.dll" Component_="TraXile.Core.dll" FileName="TRAXIL~1.DLL|TraXile.Core.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\TraXile.Core.dll" SelfReg="false"/>
-    <ROW File="TraXile.exe" Component_="TraXile.exe" FileName="TraXile.exe" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\TraXile.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="TraXile.exe.config" Component_="log4net.config" FileName="TRAXIL~1.CON|TraXile.exe.config" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\TraXile.exe.config" SelfReg="false"/>
-    <ROW File="TraXile.Updater.exe" Component_="TraXile.Updater.exe" FileName="TRAXIL~1.EXE|TraXile.Updater.exe" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\TraXile.Updater.exe" SelfReg="false" DigSign="true"/>
-    <ROW File="Wpf.Ui.Abstractions.dll" Component_="Wpf.Ui.Abstractions.dll" FileName="WPFUIA~1.DLL|Wpf.Ui.Abstractions.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\Wpf.Ui.Abstractions.dll" SelfReg="false"/>
-    <ROW File="Wpf.Ui.dll" Component_="Wpf.Ui.dll" FileName="WPFUI~1.DLL|Wpf.Ui.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\Wpf.Ui.dll" SelfReg="false"/>
-    <ROW File="alert186270.mp3" Component_="alert186270.mp3" FileName="ALERT-~1.MP3|alert-1-86270.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\alert-1-86270.mp3" SelfReg="false"/>
-    <ROW File="default_1.mp3" Component_="alert186270.mp3" FileName="DEFAUL~1.MP3|default_1.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\default_1.mp3" SelfReg="false"/>
-    <ROW File="default_2.mp3" Component_="alert186270.mp3" FileName="DEFAUL~2.MP3|default_2.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\default_2.mp3" SelfReg="false"/>
-    <ROW File="default_3.mp3" Component_="alert186270.mp3" FileName="DEFAUL~3.MP3|default_3.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\default_3.mp3" SelfReg="false"/>
-    <ROW File="default_4.mp3" Component_="alert186270.mp3" FileName="DEFAUL~4.MP3|default_4.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\default_4.mp3" SelfReg="false"/>
-    <ROW File="default_5.mp3" Component_="alert186270.mp3" FileName="DEFAUL~5.MP3|default_5.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\default_5.mp3" SelfReg="false"/>
-    <ROW File="default_6.mp3" Component_="alert186270.mp3" FileName="DEFAUL~6.MP3|default_6.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\default_6.mp3" SelfReg="false"/>
-    <ROW File="default_7.mp3" Component_="alert186270.mp3" FileName="DEFAUL~7.MP3|default_7.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\default_7.mp3" SelfReg="false"/>
-    <ROW File="default_8.mp3" Component_="alert186270.mp3" FileName="DEFAUL~8.MP3|default_8.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\default_8.mp3" SelfReg="false"/>
-    <ROW File="special_alert_1.mp3" Component_="alert186270.mp3" FileName="SPECIA~1.MP3|special_alert_1.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\special_alert_1.mp3" SelfReg="false"/>
-    <ROW File="special_alert_2.mp3" Component_="alert186270.mp3" FileName="SPECIA~2.MP3|special_alert_2.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\special_alert_2.mp3" SelfReg="false"/>
-    <ROW File="special_drum_1.mp3" Component_="alert186270.mp3" FileName="SPECIA~3.MP3|special_drum_1.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\special_drum_1.mp3" SelfReg="false"/>
-    <ROW File="special_guitar_1.mp3" Component_="alert186270.mp3" FileName="SPECIA~4.MP3|special_guitar_1.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\audio\special_guitar_1.mp3" SelfReg="false"/>
-    <ROW File="OFLFamiljenGrotesk.txt" Component_="OFLFamiljenGrotesk.txt" FileName="OFL-FA~1.TXT|OFL-FamiljenGrotesk.txt" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\Fonts\OFL-FamiljenGrotesk.txt" SelfReg="false"/>
-    <ROW File="OFLInstrumentSans.txt" Component_="OFLFamiljenGrotesk.txt" FileName="OFL-IN~1.TXT|OFL-InstrumentSans.txt" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\Fonts\OFL-InstrumentSans.txt" SelfReg="false"/>
-    <ROW File="OFLOrbitron.txt" Component_="OFLFamiljenGrotesk.txt" FileName="OFL-OR~1.TXT|OFL-Orbitron.txt" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\Fonts\OFL-Orbitron.txt" SelfReg="false"/>
-    <ROW File="e_sqlite3.dll_1" Component_="e_sqlite3.dll_1" FileName="E_SQLI~1.DLL|e_sqlite3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\runtimes\win-arm\native\e_sqlite3.dll" SelfReg="false"/>
-    <ROW File="e_sqlite3.dll_2" Component_="e_sqlite3.dll_2" FileName="E_SQLI~1.DLL|e_sqlite3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\runtimes\win-x64\native\e_sqlite3.dll" SelfReg="false"/>
-    <ROW File="e_sqlite3.dll_3" Component_="e_sqlite3.dll_3" FileName="E_SQLI~1.DLL|e_sqlite3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\runtimes\win-x86\native\e_sqlite3.dll" SelfReg="false"/>
-    <ROW File="libHarfBuzzSharp.dll_1" Component_="libHarfBuzzSharp.dll_1" FileName="LIBHAR~1.DLL|libHarfBuzzSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\x64\libHarfBuzzSharp.dll" SelfReg="false"/>
-    <ROW File="libSkiaSharp.dll_1" Component_="libSkiaSharp.dll_1" FileName="LIBSKI~1.DLL|libSkiaSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net472\x64\libSkiaSharp.dll" SelfReg="false"/>
+    <ROW File="alert186270.mp3" Component_="alert186270.mp3" FileName="ALERT-~1.MP3|alert-1-86270.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\alert-1-86270.mp3" SelfReg="false"/>
+    <ROW File="default_1.mp3" Component_="alert186270.mp3" FileName="DEFAUL~1.MP3|default_1.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\default_1.mp3" SelfReg="false"/>
+    <ROW File="default_2.mp3" Component_="alert186270.mp3" FileName="DEFAUL~2.MP3|default_2.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\default_2.mp3" SelfReg="false"/>
+    <ROW File="default_3.mp3" Component_="alert186270.mp3" FileName="DEFAUL~3.MP3|default_3.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\default_3.mp3" SelfReg="false"/>
+    <ROW File="default_4.mp3" Component_="alert186270.mp3" FileName="DEFAUL~4.MP3|default_4.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\default_4.mp3" SelfReg="false"/>
+    <ROW File="default_5.mp3" Component_="alert186270.mp3" FileName="DEFAUL~5.MP3|default_5.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\default_5.mp3" SelfReg="false"/>
+    <ROW File="default_6.mp3" Component_="alert186270.mp3" FileName="DEFAUL~6.MP3|default_6.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\default_6.mp3" SelfReg="false"/>
+    <ROW File="default_7.mp3" Component_="alert186270.mp3" FileName="DEFAUL~7.MP3|default_7.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\default_7.mp3" SelfReg="false"/>
+    <ROW File="default_8.mp3" Component_="alert186270.mp3" FileName="DEFAUL~8.MP3|default_8.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\default_8.mp3" SelfReg="false"/>
+    <ROW File="special_alert_1.mp3" Component_="alert186270.mp3" FileName="SPECIA~1.MP3|special_alert_1.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\special_alert_1.mp3" SelfReg="false"/>
+    <ROW File="special_alert_2.mp3" Component_="alert186270.mp3" FileName="SPECIA~2.MP3|special_alert_2.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\special_alert_2.mp3" SelfReg="false"/>
+    <ROW File="special_drum_1.mp3" Component_="alert186270.mp3" FileName="SPECIA~3.MP3|special_drum_1.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\special_drum_1.mp3" SelfReg="false"/>
+    <ROW File="special_guitar_1.mp3" Component_="alert186270.mp3" FileName="SPECIA~4.MP3|special_guitar_1.mp3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\audio\special_guitar_1.mp3" SelfReg="false"/>
+    <ROW File="OFLFamiljenGrotesk.txt" Component_="OFLFamiljenGrotesk.txt" FileName="OFL-FA~1.TXT|OFL-FamiljenGrotesk.txt" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\Fonts\OFL-FamiljenGrotesk.txt" SelfReg="false"/>
+    <ROW File="OFLInstrumentSans.txt" Component_="OFLFamiljenGrotesk.txt" FileName="OFL-IN~1.TXT|OFL-InstrumentSans.txt" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\Fonts\OFL-InstrumentSans.txt" SelfReg="false"/>
+    <ROW File="OFLOrbitron.txt" Component_="OFLFamiljenGrotesk.txt" FileName="OFL-OR~1.TXT|OFL-Orbitron.txt" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\Fonts\OFL-Orbitron.txt" SelfReg="false"/>
+    <ROW File="e_sqlite3.a" Component_="e_sqlite3.a" FileName="E_SQLI~1.A|e_sqlite3.a" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\browser-wasm\nativeassets\net9.0\e_sqlite3.a" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so" Component_="libe_sqlite3.so" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-arm\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_14" Component_="libe_sqlite3.so_14" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-arm64\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_15" Component_="libe_sqlite3.so_15" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-armel\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_16" Component_="libe_sqlite3.so_16" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-mips64\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_17" Component_="libe_sqlite3.so_17" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-musl-arm\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_18" Component_="libe_sqlite3.so_18" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-musl-arm64\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_19" Component_="libe_sqlite3.so_19" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-musl-riscv64\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_20" Component_="libe_sqlite3.so_20" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-musl-s390x\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_21" Component_="libe_sqlite3.so_21" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-musl-x64\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_22" Component_="libe_sqlite3.so_22" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-ppc64le\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_23" Component_="libe_sqlite3.so_23" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-riscv64\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_24" Component_="libe_sqlite3.so_24" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-s390x\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_25" Component_="libe_sqlite3.so_25" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-x64\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libglfw.so.3.3" Component_="libe_sqlite3.so_25" FileName="LIBGLF~1.3|libglfw.so.3.3" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-x64\native\libglfw.so.3.3" SelfReg="false"/>
+    <ROW File="libe_sqlite3.so_26" Component_="libe_sqlite3.so_26" FileName="LIBE_S~1.SO|libe_sqlite3.so" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\linux-x86\native\libe_sqlite3.so" SelfReg="false"/>
+    <ROW File="libe_sqlite3.dylib" Component_="libe_sqlite3.dylib" FileName="LIBE_S~1.DYL|libe_sqlite3.dylib" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\maccatalyst-arm64\native\libe_sqlite3.dylib" SelfReg="false"/>
+    <ROW File="libe_sqlite3.dylib_4" Component_="libe_sqlite3.dylib_4" FileName="LIBE_S~1.DYL|libe_sqlite3.dylib" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\maccatalyst-x64\native\libe_sqlite3.dylib" SelfReg="false"/>
+    <ROW File="libe_sqlite3.dylib_5" Component_="libe_sqlite3.dylib_5" FileName="LIBE_S~1.DYL|libe_sqlite3.dylib" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\osx-arm64\native\libe_sqlite3.dylib" SelfReg="false"/>
+    <ROW File="libe_sqlite3.dylib_6" Component_="libe_sqlite3.dylib_6" FileName="LIBE_S~1.DYL|libe_sqlite3.dylib" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\osx-x64\native\libe_sqlite3.dylib" SelfReg="false"/>
+    <ROW File="libglfw.3.dylib" Component_="libe_sqlite3.dylib_6" FileName="LIBGLF~1.DYL|libglfw.3.dylib" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\osx-x64\native\libglfw.3.dylib" SelfReg="false"/>
+    <ROW File="e_sqlite3.dll" Component_="e_sqlite3.dll" FileName="E_SQLI~1.DLL|e_sqlite3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-arm64\native\e_sqlite3.dll" SelfReg="false"/>
+    <ROW File="libHarfBuzzSharp.dll" Component_="libHarfBuzzSharp.dll" FileName="LIBHAR~1.DLL|libHarfBuzzSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-arm64\native\libHarfBuzzSharp.dll" SelfReg="false"/>
+    <ROW File="libSkiaSharp.dll" Component_="libSkiaSharp.dll" FileName="LIBSKI~1.DLL|libSkiaSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-arm64\native\libSkiaSharp.dll" SelfReg="false"/>
+    <ROW File="libSkiaSharp.pdb" Component_="libSkiaSharp.dll" FileName="LIBSKI~1.PDB|libSkiaSharp.pdb" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-arm64\native\libSkiaSharp.pdb" SelfReg="false"/>
+    <ROW File="e_sqlite3.dll_1" Component_="e_sqlite3.dll_1" FileName="E_SQLI~1.DLL|e_sqlite3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x64\native\e_sqlite3.dll" SelfReg="false"/>
+    <ROW File="glfw3.dll" Component_="glfw3.dll" FileName="glfw3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x64\native\glfw3.dll" SelfReg="false"/>
+    <ROW File="libHarfBuzzSharp.dll_4" Component_="libHarfBuzzSharp.dll_4" FileName="LIBHAR~1.DLL|libHarfBuzzSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x64\native\libHarfBuzzSharp.dll" SelfReg="false"/>
+    <ROW File="libSkiaSharp.dll_4" Component_="libSkiaSharp.dll_4" FileName="LIBSKI~1.DLL|libSkiaSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x64\native\libSkiaSharp.dll" SelfReg="false"/>
+    <ROW File="libSkiaSharp.pdb_3" Component_="libSkiaSharp.dll_4" FileName="LIBSKI~1.PDB|libSkiaSharp.pdb" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x64\native\libSkiaSharp.pdb" SelfReg="false"/>
+    <ROW File="e_sqlite3.dll_2" Component_="e_sqlite3.dll_2" FileName="E_SQLI~1.DLL|e_sqlite3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x86\native\e_sqlite3.dll" SelfReg="false"/>
+    <ROW File="glfw3.dll_2" Component_="glfw3.dll_2" FileName="glfw3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x86\native\glfw3.dll" SelfReg="false"/>
+    <ROW File="libHarfBuzzSharp.dll_5" Component_="libHarfBuzzSharp.dll_5" FileName="LIBHAR~1.DLL|libHarfBuzzSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x86\native\libHarfBuzzSharp.dll" SelfReg="false"/>
+    <ROW File="libSkiaSharp.dll_5" Component_="libSkiaSharp.dll_5" FileName="LIBSKI~1.DLL|libSkiaSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x86\native\libSkiaSharp.dll" SelfReg="false"/>
+    <ROW File="libSkiaSharp.pdb_4" Component_="libSkiaSharp.dll_5" FileName="LIBSKI~1.PDB|libSkiaSharp.pdb" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\runtimes\win-x86\native\libSkiaSharp.pdb" SelfReg="false"/>
+    <ROW File="HarfBuzzSharp.dll" Component_="HarfBuzzSharp.dll" FileName="HARFBU~1.DLL|HarfBuzzSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\HarfBuzzSharp.dll" SelfReg="false"/>
+    <ROW File="LiveChartsCore.dll" Component_="LiveChartsCore.dll" FileName="LIVECH~1.DLL|LiveChartsCore.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\LiveChartsCore.dll" SelfReg="false"/>
+    <ROW File="LiveChartsCore.SkiaSharpView.dll" Component_="LiveChartsCore.SkiaSharpView.dll" FileName="LIVECH~2.DLL|LiveChartsCore.SkiaSharpView.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\LiveChartsCore.SkiaSharpView.dll" SelfReg="false"/>
+    <ROW File="LiveChartsCore.SkiaSharpView.WPF.dll" Component_="LiveChartsCore.SkiaSharpView.WPF.dll" FileName="LIVECH~3.DLL|LiveChartsCore.SkiaSharpView.WPF.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\LiveChartsCore.SkiaSharpView.WPF.dll" SelfReg="false"/>
+    <ROW File="log4net.config" Component_="log4net.config" FileName="LOG4NE~1.CON|log4net.config" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\log4net.config" SelfReg="false"/>
+    <ROW File="log4net.dll" Component_="log4net.dll" FileName="log4net.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\log4net.dll" SelfReg="false"/>
+    <ROW File="Microsoft.Data.Sqlite.dll" Component_="Microsoft.Data.Sqlite.dll" FileName="MICROS~1.DLL|Microsoft.Data.Sqlite.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\Microsoft.Data.Sqlite.dll" SelfReg="false"/>
+    <ROW File="Microsoft.Windows.SDK.NET.dll" Component_="Microsoft.Windows.SDK.NET.dll" FileName="MICROS~2.DLL|Microsoft.Windows.SDK.NET.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\Microsoft.Windows.SDK.NET.dll" SelfReg="false"/>
+    <ROW File="NAudio.Asio.dll" Component_="NAudio.Asio.dll" FileName="NAUDIO~1.DLL|NAudio.Asio.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\NAudio.Asio.dll" SelfReg="false"/>
+    <ROW File="NAudio.Core.dll" Component_="NAudio.Core.dll" FileName="NAUDIO~2.DLL|NAudio.Core.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\NAudio.Core.dll" SelfReg="false"/>
+    <ROW File="NAudio.dll" Component_="NAudio.dll" FileName="NAudio.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\NAudio.dll" SelfReg="false"/>
+    <ROW File="NAudio.Midi.dll" Component_="NAudio.Midi.dll" FileName="NAUDIO~3.DLL|NAudio.Midi.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\NAudio.Midi.dll" SelfReg="false"/>
+    <ROW File="NAudio.Wasapi.dll" Component_="NAudio.Wasapi.dll" FileName="NAUDIO~4.DLL|NAudio.Wasapi.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\NAudio.Wasapi.dll" SelfReg="false"/>
+    <ROW File="NAudio.WinForms.dll" Component_="NAudio.WinForms.dll" FileName="NAUDIO~5.DLL|NAudio.WinForms.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\NAudio.WinForms.dll" SelfReg="false"/>
+    <ROW File="NAudio.WinMM.dll" Component_="NAudio.WinMM.dll" FileName="NAUDIO~6.DLL|NAudio.WinMM.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\NAudio.WinMM.dll" SelfReg="false"/>
+    <ROW File="Newtonsoft.Json.dll" Component_="Newtonsoft.Json.dll" FileName="NEWTON~1.DLL|Newtonsoft.Json.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\Newtonsoft.Json.dll" SelfReg="false"/>
+    <ROW File="OpenTK.Compute.dll" Component_="OpenTK.Compute.dll" FileName="OPENTK~1.DLL|OpenTK.Compute.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\OpenTK.Compute.dll" SelfReg="false"/>
+    <ROW File="OpenTK.Core.dll" Component_="OpenTK.Core.dll" FileName="OPENTK~2.DLL|OpenTK.Core.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\OpenTK.Core.dll" SelfReg="false"/>
+    <ROW File="OpenTK.Graphics.dll" Component_="OpenTK.Graphics.dll" FileName="OPENTK~3.DLL|OpenTK.Graphics.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\OpenTK.Graphics.dll" SelfReg="false"/>
+    <ROW File="OpenTK.Input.dll" Component_="OpenTK.Input.dll" FileName="OPENTK~4.DLL|OpenTK.Input.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\OpenTK.Input.dll" SelfReg="false"/>
+    <ROW File="OpenTK.Mathematics.dll" Component_="OpenTK.Mathematics.dll" FileName="OPENTK~5.DLL|OpenTK.Mathematics.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\OpenTK.Mathematics.dll" SelfReg="false"/>
+    <ROW File="OpenTK.OpenAL.dll" Component_="OpenTK.OpenAL.dll" FileName="OPENTK~6.DLL|OpenTK.OpenAL.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\OpenTK.OpenAL.dll" SelfReg="false"/>
+    <ROW File="OpenTK.Windowing.Common.dll" Component_="OpenTK.Windowing.Common.dll" FileName="OPENTK~7.DLL|OpenTK.Windowing.Common.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\OpenTK.Windowing.Common.dll" SelfReg="false"/>
+    <ROW File="OpenTK.Windowing.Desktop.dll" Component_="OpenTK.Windowing.Desktop.dll" FileName="OPENTK~8.DLL|OpenTK.Windowing.Desktop.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\OpenTK.Windowing.Desktop.dll" SelfReg="false"/>
+    <ROW File="OpenTK.Windowing.GraphicsLibraryFramework.dll" Component_="OpenTK.Windowing.GraphicsLibraryFramework.dll" FileName="OPENTK~9.DLL|OpenTK.Windowing.GraphicsLibraryFramework.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\OpenTK.Windowing.GraphicsLibraryFramework.dll" SelfReg="false"/>
+    <ROW File="SkiaSharp.dll" Component_="SkiaSharp.dll" FileName="SKIASH~1.DLL|SkiaSharp.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\SkiaSharp.dll" SelfReg="false"/>
+    <ROW File="SkiaSharp.HarfBuzz.dll" Component_="SkiaSharp.HarfBuzz.dll" FileName="SKIASH~2.DLL|SkiaSharp.HarfBuzz.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\SkiaSharp.HarfBuzz.dll" SelfReg="false"/>
+    <ROW File="SkiaSharp.Views.Desktop.Common.dll" Component_="SkiaSharp.Views.Desktop.Common.dll" FileName="SKIASH~3.DLL|SkiaSharp.Views.Desktop.Common.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\SkiaSharp.Views.Desktop.Common.dll" SelfReg="false"/>
+    <ROW File="SkiaSharp.Views.WPF.dll" Component_="SkiaSharp.Views.WPF.dll" FileName="SKIASH~4.DLL|SkiaSharp.Views.WPF.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\SkiaSharp.Views.WPF.dll" SelfReg="false"/>
+    <ROW File="SQLitePCLRaw.batteries_v2.dll" Component_="SQLitePCLRaw.batteries_v2.dll" FileName="SQLITE~1.DLL|SQLitePCLRaw.batteries_v2.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\SQLitePCLRaw.batteries_v2.dll" SelfReg="false"/>
+    <ROW File="SQLitePCLRaw.core.dll" Component_="SQLitePCLRaw.core.dll" FileName="SQLITE~2.DLL|SQLitePCLRaw.core.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\SQLitePCLRaw.core.dll" SelfReg="false"/>
+    <ROW File="SQLitePCLRaw.provider.e_sqlite3.dll" Component_="SQLitePCLRaw.provider.e_sqlite3.dll" FileName="SQLITE~3.DLL|SQLitePCLRaw.provider.e_sqlite3.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\SQLitePCLRaw.provider.e_sqlite3.dll" SelfReg="false"/>
+    <ROW File="TraXile.Core.dll" Component_="TraXile.Core.dll" FileName="TRAXIL~1.DLL|TraXile.Core.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.Core.dll" SelfReg="false"/>
+    <ROW File="TraXile.Core.pdb" Component_="TraXile.Core.dll" FileName="TRAXIL~1.PDB|TraXile.Core.pdb" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.Core.pdb" SelfReg="false"/>
+    <ROW File="TraXile.deps.json" Component_="log4net.config" FileName="TRAXIL~1.JSO|TraXile.deps.json" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.deps.json" SelfReg="false"/>
+    <ROW File="TraXile.dll" Component_="TraXile.dll" FileName="TraXile.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.dll" SelfReg="false"/>
+    <ROW File="TraXile.exe" Component_="TraXile.exe" FileName="TraXile.exe" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="TraXile.pdb" Component_="TraXile.exe" FileName="TraXile.pdb" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.pdb" SelfReg="false"/>
+    <ROW File="TraXile.runtimeconfig.json" Component_="log4net.config" FileName="TRAXIL~2.JSO|TraXile.runtimeconfig.json" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.runtimeconfig.json" SelfReg="false"/>
+    <ROW File="TraXile.Updater.deps.json" Component_="log4net.config" FileName="TRAXIL~3.JSO|TraXile.Updater.deps.json" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.Updater.deps.json" SelfReg="false"/>
+    <ROW File="TraXile.Updater.dll" Component_="TraXile.Updater.dll" FileName="TRAXIL~2.DLL|TraXile.Updater.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.Updater.dll" SelfReg="false"/>
+    <ROW File="TraXile.Updater.exe" Component_="TraXile.Updater.exe" FileName="TRAXIL~1.EXE|TraXile.Updater.exe" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.Updater.exe" SelfReg="false" DigSign="true"/>
+    <ROW File="TraXile.Updater.runtimeconfig.json" Component_="log4net.config" FileName="TRAXIL~4.JSO|TraXile.Updater.runtimeconfig.json" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\TraXile.Updater.runtimeconfig.json" SelfReg="false"/>
+    <ROW File="WinRT.Runtime.dll" Component_="WinRT.Runtime.dll" FileName="WINRTR~1.DLL|WinRT.Runtime.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\WinRT.Runtime.dll" SelfReg="false"/>
+    <ROW File="Wpf.Ui.Abstractions.dll" Component_="Wpf.Ui.Abstractions.dll" FileName="WPFUIA~1.DLL|Wpf.Ui.Abstractions.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\Wpf.Ui.Abstractions.dll" SelfReg="false"/>
+    <ROW File="Wpf.Ui.dll" Component_="Wpf.Ui.dll" FileName="WPFUI~1.DLL|Wpf.Ui.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\Wpf.Ui.dll" SelfReg="false"/>
+    <ROW File="CommunityToolkit.Mvvm.dll" Component_="CommunityToolkit.Mvvm.dll" FileName="COMMUN~1.DLL|CommunityToolkit.Mvvm.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\CommunityToolkit.Mvvm.dll" SelfReg="false"/>
+    <ROW File="GLWpfControl.dll" Component_="GLWpfControl.dll" FileName="GLWPFC~1.DLL|GLWpfControl.dll" Attributes="0" SourcePath="TraXile.Next\bin\Release\net10.0-windows10.0.19041.0\GLWpfControl.dll" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" Languages="en" InstallationType="4" UseLargeSchema="true"/>
@@ -234,6 +329,9 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCreateFolderComponent">
     <ROW Directory_="APPDIR" Component_="APPDIR" ManualDelete="true"/>
+    <ROW Directory_="native_Dir" Component_="native" ManualDelete="false"/>
+    <ROW Directory_="SHORTCUTDIR" Component_="SHORTCUTDIR" ManualDelete="false"/>
+    <ROW Directory_="x64_Dir" Component_="x64" ManualDelete="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
     <ROW Action="AI_DOWNGRADE" Type="19" Target="4010"/>
@@ -254,63 +352,87 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatCompsComponent">
     <ROW Feature_="MainFeature" Component_="APPDIR"/>
     <ROW Feature_="MainFeature" Component_="ProductInformation"/>
-    <ROW Feature_="MainFeature" Component_="CommunityToolkit.Mvvm.dll"/>
-    <ROW Feature_="MainFeature" Component_="e_sqlite3.dll"/>
-    <ROW Feature_="MainFeature" Component_="GLWpfControl.dll"/>
     <ROW Feature_="MainFeature" Component_="HarfBuzzSharp.dll"/>
-    <ROW Feature_="MainFeature" Component_="libHarfBuzzSharp.dll"/>
-    <ROW Feature_="MainFeature" Component_="libSkiaSharp.dll"/>
     <ROW Feature_="MainFeature" Component_="LiveChartsCore.dll"/>
     <ROW Feature_="MainFeature" Component_="LiveChartsCore.SkiaSharpView.dll"/>
     <ROW Feature_="MainFeature" Component_="LiveChartsCore.SkiaSharpView.WPF.dll"/>
+    <ROW Feature_="MainFeature" Component_="alert186270.mp3"/>
+    <ROW Feature_="MainFeature" Component_="OFLFamiljenGrotesk.txt"/>
+    <ROW Feature_="MainFeature" Component_="e_sqlite3.a"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_14"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_15"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_16"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_17"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_18"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_19"/>
     <ROW Feature_="MainFeature" Component_="log4net.config"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_20"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_21"/>
     <ROW Feature_="MainFeature" Component_="log4net.dll"/>
-    <ROW Feature_="MainFeature" Component_="Microsoft.Bcl.AsyncInterfaces.dll"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_22"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_23"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_24"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_25"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.so_26"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.dylib"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.dylib_4"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.dylib_5"/>
+    <ROW Feature_="MainFeature" Component_="libe_sqlite3.dylib_6"/>
+    <ROW Feature_="MainFeature" Component_="e_sqlite3.dll"/>
+    <ROW Feature_="MainFeature" Component_="libHarfBuzzSharp.dll"/>
+    <ROW Feature_="MainFeature" Component_="libSkiaSharp.dll"/>
+    <ROW Feature_="MainFeature" Component_="e_sqlite3.dll_1"/>
+    <ROW Feature_="MainFeature" Component_="x64"/>
     <ROW Feature_="MainFeature" Component_="Microsoft.Data.Sqlite.dll"/>
-    <ROW Feature_="MainFeature" Component_="Microsoft.Win32.Registry.dll"/>
+    <ROW Feature_="MainFeature" Component_="Microsoft.Windows.SDK.NET.dll"/>
     <ROW Feature_="MainFeature" Component_="NAudio.Asio.dll"/>
     <ROW Feature_="MainFeature" Component_="NAudio.Core.dll"/>
     <ROW Feature_="MainFeature" Component_="NAudio.dll"/>
     <ROW Feature_="MainFeature" Component_="NAudio.Midi.dll"/>
     <ROW Feature_="MainFeature" Component_="NAudio.Wasapi.dll"/>
     <ROW Feature_="MainFeature" Component_="NAudio.WinForms.dll"/>
+    <ROW Feature_="MainFeature" Component_="glfw3.dll"/>
+    <ROW Feature_="MainFeature" Component_="libHarfBuzzSharp.dll_4"/>
     <ROW Feature_="MainFeature" Component_="NAudio.WinMM.dll"/>
+    <ROW Feature_="MainFeature" Component_="libSkiaSharp.dll_4"/>
+    <ROW Feature_="MainFeature" Component_="e_sqlite3.dll_2"/>
     <ROW Feature_="MainFeature" Component_="Newtonsoft.Json.dll"/>
-    <ROW Feature_="MainFeature" Component_="OpenTK.dll"/>
+    <ROW Feature_="MainFeature" Component_="glfw3.dll_2"/>
+    <ROW Feature_="MainFeature" Component_="libHarfBuzzSharp.dll_5"/>
+    <ROW Feature_="MainFeature" Component_="OpenTK.Compute.dll"/>
+    <ROW Feature_="MainFeature" Component_="OpenTK.Core.dll"/>
+    <ROW Feature_="MainFeature" Component_="native"/>
+    <ROW Feature_="MainFeature" Component_="OpenTK.Graphics.dll"/>
+    <ROW Feature_="MainFeature" Component_="OpenTK.Input.dll"/>
+    <ROW Feature_="MainFeature" Component_="OpenTK.Mathematics.dll"/>
+    <ROW Feature_="MainFeature" Component_="OpenTK.OpenAL.dll"/>
+    <ROW Feature_="MainFeature" Component_="OpenTK.Windowing.Common.dll"/>
+    <ROW Feature_="MainFeature" Component_="OpenTK.Windowing.Desktop.dll"/>
+    <ROW Feature_="MainFeature" Component_="OpenTK.Windowing.GraphicsLibraryFramework.dll"/>
     <ROW Feature_="MainFeature" Component_="SkiaSharp.dll"/>
     <ROW Feature_="MainFeature" Component_="SkiaSharp.HarfBuzz.dll"/>
     <ROW Feature_="MainFeature" Component_="SkiaSharp.Views.Desktop.Common.dll"/>
+    <ROW Feature_="MainFeature" Component_="libSkiaSharp.dll_5"/>
     <ROW Feature_="MainFeature" Component_="SkiaSharp.Views.WPF.dll"/>
     <ROW Feature_="MainFeature" Component_="SQLitePCLRaw.batteries_v2.dll"/>
     <ROW Feature_="MainFeature" Component_="SQLitePCLRaw.core.dll"/>
-    <ROW Feature_="MainFeature" Component_="SQLitePCLRaw.nativelibrary.dll"/>
-    <ROW Feature_="MainFeature" Component_="SQLitePCLRaw.provider.dynamic_cdecl.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Buffers.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.ComponentModel.Annotations.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Memory.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Numerics.Vectors.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Runtime.CompilerServices.Unsafe.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Security.AccessControl.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Security.Principal.Windows.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Text.Encodings.Web.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Text.Json.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.Threading.Tasks.Extensions.dll"/>
-    <ROW Feature_="MainFeature" Component_="System.ValueTuple.dll"/>
+    <ROW Feature_="MainFeature" Component_="SQLitePCLRaw.provider.e_sqlite3.dll"/>
     <ROW Feature_="MainFeature" Component_="TraXile.Core.dll"/>
+    <ROW Feature_="MainFeature" Component_="TraXile.dll"/>
     <ROW Feature_="MainFeature" Component_="TraXile.exe"/>
+    <ROW Feature_="MainFeature" Component_="TraXile.Updater.dll"/>
     <ROW Feature_="MainFeature" Component_="TraXile.Updater.exe"/>
+    <ROW Feature_="MainFeature" Component_="WinRT.Runtime.dll"/>
     <ROW Feature_="MainFeature" Component_="Wpf.Ui.Abstractions.dll"/>
     <ROW Feature_="MainFeature" Component_="Wpf.Ui.dll"/>
-    <ROW Feature_="MainFeature" Component_="alert186270.mp3"/>
-    <ROW Feature_="MainFeature" Component_="OFLFamiljenGrotesk.txt"/>
-    <ROW Feature_="MainFeature" Component_="e_sqlite3.dll_1"/>
-    <ROW Feature_="MainFeature" Component_="e_sqlite3.dll_2"/>
-    <ROW Feature_="MainFeature" Component_="e_sqlite3.dll_3"/>
-    <ROW Feature_="MainFeature" Component_="libHarfBuzzSharp.dll_1"/>
-    <ROW Feature_="MainFeature" Component_="libSkiaSharp.dll_1"/>
+    <ROW Feature_="MainFeature" Component_="CommunityToolkit.Mvvm.dll"/>
+    <ROW Feature_="MainFeature" Component_="GLWpfControl.dll"/>
+    <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="TraXile.exe" SourcePath="TraXile.Next\TraXile.ico" Index="0"/>
+    <ROW Name="TraXile_1.exe" SourcePath="D:\repos\TraXile\TraXile\favicon-96x96.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
@@ -341,8 +463,8 @@
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
-    <ROW Shortcut="TraXile" Directory_="DesktopFolder" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Description="Tracking tool for Path of Exile" Hotkey="0" Icon_="TraXile.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
-    <ROW Shortcut="TraXile_1" Directory_="ProgramMenuFolder" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Description="Tracking tool for Path of Exile" Hotkey="0" Icon_="TraXile.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="TraXile" Directory_="SHORTCUTDIR" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Hotkey="0" Icon_="TraXile_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="TraXile1" Directory_="StartMenuFolder" Name="TRAXIL~1|TraXile (1)" Component_="TraXile.exe" Target="[#TraXile.exe]" Hotkey="0" Icon_="TraXile_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>

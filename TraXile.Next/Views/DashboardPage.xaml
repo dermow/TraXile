@@ -122,6 +122,10 @@
                                      IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Week}" />
                         <RadioButton Style="{StaticResource Segment}" Content="30 days"
                                      IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Month}" />
+                        <RadioButton Style="{StaticResource Segment}" Content="Current league"
+                                     IsEnabled="{Binding HasCurrentLeague}"
+                                     ToolTip="{Binding CurrentLeague.Name}"
+                                     IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=League}" />
                         <RadioButton Style="{StaticResource Segment}" Content="All time"
                                      IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=All}" />
                     </StackPanel>
