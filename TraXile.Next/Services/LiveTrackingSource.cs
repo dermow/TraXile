@@ -11,7 +11,7 @@ namespace TraXile.Next.Services
     /// The core parses Client.txt on worker threads and owns the SQLite database;
     /// this class only converts its state into immutable snapshots for the UI.
     /// </summary>
-    public sealed class LiveTrackingSource : ITrackingSource, ICoreMaintenance, IStatsSource
+    public sealed class LiveTrackingSource : ITrackingSource, ICoreMaintenance, IStatsSource, IDivCardSource
     {
         private readonly TrX_SettingsManager _settings;
         private readonly Dictionary<ACTIVITY_TYPES, int> _timeCaps = new Dictionary<ACTIVITY_TYPES, int>();
@@ -65,6 +65,7 @@ namespace TraXile.Next.Services
             _logic.OnActivityFinished += e => RaiseHistoryChanged();
             _logic.OnActivityStarted += e => RaiseHistoryChanged();
             _logic.OnTagsUpdated += e => RaiseHistoryChanged();
+            _logic.OnDivCardDrawn += e => RaiseHistoryChanged(); // the div card page listens to history changes
             _logic.Start();
         }
 
@@ -283,6 +284,22 @@ namespace TraXile.Next.Services
                 r => result.Add(Entry(r.GetInt64(0), r.GetInt32(1))));
             Query($"SELECT timestamp, stat_value FROM tx_stats WHERE stat_name = '{name}' AND timestamp BETWEEN {Unix(from)} AND {Unix(to)} ORDER BY timestamp ASC",
                 r => result.Add(Entry(r.GetInt64(0), r.GetInt32(1))));
+            return result;
+        }
+
+        public IReadOnlyList<DivCardInfo> GetDivCards(DateTime from, DateTime to)
+        {
+            var result = new List<DivCardInfo>();
+            // One query instead of the classic count + first + last query per card
+            Query($"SELECT divcard, COUNT(*), MIN(timestamp), MAX(timestamp) FROM tx_divcards WHERE timestamp >= {Unix(from)} AND timestamp <= {Unix(to)} " +
+                  "GROUP BY divcard ORDER BY COUNT(*) DESC, divcard ASC",
+                r => result.Add(new DivCardInfo
+                {
+                    Name = r.GetString(0),
+                    Count = r.GetInt32(1),
+                    FirstDraw = DateTimeOffset.FromUnixTimeSeconds(r.GetInt64(2)).LocalDateTime,
+                    LastDraw = DateTimeOffset.FromUnixTimeSeconds(r.GetInt64(3)).LocalDateTime
+                }));
             return result;
         }
 

@@ -43,9 +43,10 @@ namespace TraXile.Next
         public static MappingViewModel Mapping { get; private set; }
         public static HeistViewModel Heist { get; private set; }
         public static LabViewModel Lab { get; private set; }
+        public static DivCardsViewModel DivCards { get; private set; }
 
         /// <summary>The analytics pages (on the global filter), for theme switches and shutdown.</summary>
-        private static AnalyticsViewModel[] AnalyticsPages => new AnalyticsViewModel[] { Statistics, Mapping, Heist, Lab };
+        private static AnalyticsViewModel[] AnalyticsPages => new AnalyticsViewModel[] { Statistics, Mapping, Heist, Lab, DivCards };
 
         /// <summary>Settings may be written (live data of this app, not forced demo / classic app running).</summary>
         public static bool CanWriteSettings { get; private set; }
@@ -154,6 +155,7 @@ namespace TraXile.Next
             Mapping = new MappingViewModel(Source, Filter);
             Heist = new HeistViewModel(Source, Filter);
             Lab = new LabViewModel(Source, Filter, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);
+            DivCards = new DivCardsViewModel(Source, Filter);
             foreach (AnalyticsViewModel page in AnalyticsPages) page.SetTheme(IsDark);
 
             // Screenshots use the default overlay settings, not the ones of this machine

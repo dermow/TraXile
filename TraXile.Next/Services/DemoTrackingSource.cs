@@ -10,7 +10,7 @@ namespace TraXile.Next.Services
     /// Deterministic sample data so the UI can be explored (and screenshotted)
     /// without Path of Exile or an existing TraXile database.
     /// </summary>
-    public sealed class DemoTrackingSource : ITrackingSource, IStatsSource
+    public sealed class DemoTrackingSource : ITrackingSource, IStatsSource, IDivCardSource
     {
         private static readonly string[] MapNames =
         {
@@ -445,6 +445,30 @@ namespace TraXile.Next.Services
         }
 
         public DateTime? OldestStatTime => Stats.Count > 0 ? Stats.Min(s => s.entry.Time) : (DateTime?)null;
+
+        // ------------------------------------------------------------------
+        // Divination cards: some maps drop one (derived from the activity, no random numbers)
+        // ------------------------------------------------------------------
+
+        private static readonly string[] DemoCards =
+        {
+            "Rain of Chaos", "The Lover", "Emperor's Luck", "Her Mask", "The Gambler", "Loyalty", "The Scholar",
+            "Humility", "Boon of Justice", "The Union", "The Opulent", "Lucky Connections", "The Apothecary"
+        };
+
+        public IReadOnlyList<DivCardInfo> GetDivCards(DateTime from, DateTime to)
+        {
+            var draws = _history
+                .Where(a => a.Type == ACTIVITY_TYPES.MAP && a.TotalSeconds % 3 == 0)
+                // mostly the first (common) cards, now and then any card
+                .Select(a => (card: DemoCards[(a.TotalSeconds / 3) % (a.TotalSeconds % 7 == 0 ? DemoCards.Length : 6)],
+                              time: a.Started.AddSeconds(a.TotalSeconds / 2)))
+                .Where(d => d.time >= from && d.time <= to);
+            return draws.GroupBy(d => d.card)
+                .Select(g => new DivCardInfo { Name = g.Key, Count = g.Count(), FirstDraw = g.Min(d => d.time), LastDraw = g.Max(d => d.time) })
+                .OrderByDescending(c => c.Count).ThenBy(c => c.Name, StringComparer.Ordinal)
+                .ToList();
+        }
 
         public void Dispose() { }
     }
