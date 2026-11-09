@@ -906,100 +906,160 @@ namespace TraXile
             var fs = new FileStream(_clientTxtPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             bool bNewContent = _lastHash == 0;
 
-            using (StreamReader reader = new StreamReader(fs))
+            // Set when the resume line was not found (Client.txt deleted or truncated, or a hash stored by a
+            // 3.0 preview, which used the randomized string.GetHashCode): the file is read again and parsing
+            // resumes at the first line newer than the last tracked event. -1 = not in this mode.
+            long resumeAfterUnix = -1;
+
+            // Everything the initial parse writes goes into one transaction: one disk sync instead of one per INSERT
+            if (!_eventQueueInitizalized)
             {
-                string line;
-                int lineHash = 0;
-                DateTime lastEvTime = new DateTime();
+                _dataBackend.BeginBulk();
+            }
 
-                // Keep file open
-                while (!_exit)
+            try
+            {
+                using (StreamReader reader = new StreamReader(fs))
                 {
-                    line = reader.ReadLine();
+                    string line;
+                    int lineHash = 0;
+                    DateTime lastEvTime = new DateTime();
 
-                    if (line == null)
+                    // Keep file open
+                    while (!_exit)
                     {
-                        if (!_eventQueueInitizalized)
+                        line = reader.ReadLine();
+
+                        if (line == null)
                         {
-                            _currentActivity = null;
-                            _isMapZana = false;
-                            _initEndTime = DateTime.Now;
-                            TimeSpan tsInitDuration = (_initEndTime - _initStartTime);
-                            _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_READY)
+                            if (!_eventQueueInitizalized)
                             {
-                                EventTime = DateTime.Now,
-                                LogLine = $"Application initialized in {Math.Round(tsInitDuration.TotalSeconds, 2)} seconds."
-                            });
-                            _log.Info($"Initialized in {tsInitDuration.TotalSeconds} seconds.");
-                            _lastHash = lineHash;
+                                if (!bNewContent && resumeAfterUnix < 0)
+                                {
+                                    resumeAfterUnix = GetLastTrackedEventTime();
+                                    _log.Warn($"Resume line (hash {_lastHash}) not found in Client.txt, reading it again from the first line after {DateTimeOffset.FromUnixTimeSeconds(resumeAfterUnix).LocalDateTime}.");
+                                    fs.Seek(0, SeekOrigin.Begin);
+                                    reader.DiscardBufferedData();
+                                    _logLinesRead = 0;
+                                    continue;
+                                }
 
-                            // Trigger ready event
-                            OnHistoryInitialized(new TrX_CoreLogicGenericEventArgs(this));
+                                _currentActivity = null;
+                                _isMapZana = false;
+                                _initEndTime = DateTime.Now;
+                                TimeSpan tsInitDuration = (_initEndTime - _initStartTime);
+                                _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_READY)
+                                {
+                                    EventTime = DateTime.Now,
+                                    LogLine = $"Application initialized in {Math.Round(tsInitDuration.TotalSeconds, 2)} seconds."
+                                });
+                                _log.Info($"Initialized in {tsInitDuration.TotalSeconds} seconds.");
+                                _lastHash = lineHash;
 
-                            SaveStatsCache();
+                                // The new resume point is committed together with what was parsed up to it
+                                SaveStatsCache();
+                                _dataBackend.CommitBulk();
+
+                                // Trigger ready event
+                                OnHistoryInitialized(new TrX_CoreLogicGenericEventArgs(this));
+                            }
+                            _eventQueueInitizalized = true;
+
+                            bNewContent = true;
+
+                            WaitUnlessStopped(100);
+                            continue;
                         }
-                        _eventQueueInitizalized = true;
 
-                        bNewContent = true;
+                        lineHash = TrX_LineHash.Compute(line);
 
-                        WaitUnlessStopped(100);
-                        continue;
-                    }
+                        if (_dict.ContainsKey(lineHash))
+                            continue;
 
-                    lineHash = line.GetHashCode();
-
-                    if (_dict.ContainsKey(lineHash))
-                        continue;
-
-                    if (lineHash == _lastHash || _lastHash == 0)
-                    {
-                        bNewContent = true;
-                    }
-
-                    if (!bNewContent)
-                    {
-                        _logLinesRead++;
-                        continue;
-                    }
-
-                    _lastHash = lineHash;
-
-                    foreach (KeyValuePair<string, EVENT_TYPES> kv in _eventMapping.Mapping)
-                    {
-                        if (line.Contains(kv.Key))
+                        if (lineHash == _lastHash || _lastHash == 0)
                         {
-                            if (!_dict.ContainsKey(lineHash))
-                            {
-                                TrX_TrackingEvent ev = new TrX_TrackingEvent(kv.Value)
-                                {
-                                    LogLine = line
-                                };
-                                try
-                                {
-                                    DateTime dt = DateTime.Parse($"{line.Split(' ')[0]} {line.Split(' ')[1]}", _dateTimeFormatInfo);
-                                    ev.EventTime = dt;
-                                    lastEvTime = ev.EventTime;
-                                }
-                                catch
-                                {
-                                    ev.EventTime = lastEvTime;
-                                }
-                                _dict.Add(lineHash, "init");
+                            bNewContent = true;
+                        }
+                        else if (!bNewContent && resumeAfterUnix >= 0 && IsLineNewerThan(line, resumeAfterUnix))
+                        {
+                            bNewContent = true;
+                        }
 
-                                if (!_eventQueueInitizalized)
+                        if (!bNewContent)
+                        {
+                            _logLinesRead++;
+                            continue;
+                        }
+
+                        _lastHash = lineHash;
+
+                        foreach (KeyValuePair<string, EVENT_TYPES> kv in _eventMapping.Mapping)
+                        {
+                            if (line.Contains(kv.Key))
+                            {
+                                if (!_dict.ContainsKey(lineHash))
                                 {
-                                    HandleSingleEvent(ev);
-                                }
-                                else
-                                {
-                                    _eventQueue.Enqueue(ev);
+                                    TrX_TrackingEvent ev = new TrX_TrackingEvent(kv.Value)
+                                    {
+                                        LogLine = line
+                                    };
+                                    try
+                                    {
+                                        DateTime dt = DateTime.Parse($"{line.Split(' ')[0]} {line.Split(' ')[1]}", _dateTimeFormatInfo);
+                                        ev.EventTime = dt;
+                                        lastEvTime = ev.EventTime;
+                                    }
+                                    catch
+                                    {
+                                        ev.EventTime = lastEvTime;
+                                    }
+                                    _dict.Add(lineHash, "init");
+
+                                    if (!_eventQueueInitizalized)
+                                    {
+                                        HandleSingleEvent(ev);
+                                    }
+                                    else
+                                    {
+                                        _eventQueue.Enqueue(ev);
+                                    }
                                 }
                             }
                         }
+                        _logLinesRead++;
                     }
-                    _logLinesRead++;
                 }
             }
+            finally
+            {
+                // Stopped (or failed) during the initial parse: keep what was parsed, like before the bulk transaction
+                _dataBackend.CommitBulk();
+            }
+        }
+
+        /// <summary>
+        /// Time of the newest tracked event (newest tx_stats entry, written by most handled events), 0 if none.
+        /// </summary>
+        private long GetLastTrackedEventTime()
+        {
+            string value = _dataBackend.GetSingleValue("SELECT MAX(timestamp) FROM tx_stats");
+            return long.TryParse(value, out long ts) ? ts : 0;
+        }
+
+        /// <summary>
+        /// True if the line starts with a timestamp after the given time. Strictly after: events of that very second
+        /// may already be in the database, counting them twice would be worse than missing them.
+        /// </summary>
+        private bool IsLineNewerThan(string line, long unixTime)
+        {
+            string[] parts = line.Split(' ', 3);
+            if (parts.Length < 2)
+            {
+                return false;
+            }
+
+            return DateTime.TryParse($"{parts[0]} {parts[1]}", _dateTimeFormatInfo, DateTimeStyles.None, out DateTime dt)
+                && ((DateTimeOffset)dt).ToUnixTimeSeconds() > unixTime;
         }
 
         /// <summary>
