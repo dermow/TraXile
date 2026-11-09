@@ -57,13 +57,6 @@ namespace TraXile.Next.Views
         }
     }
 
-    public sealed class LabPage : ComingSoonPage
-    {
-        public LabPage() : base("Lab", SymbolRegular.Shield24,
-            "Labyrinth runs and enchant profit tracking.",
-            "Labs per difficulty and average time",
-            "Profit tracking table") { }
-    }
 
 
     public sealed class LeaguesPage : ComingSoonPage
