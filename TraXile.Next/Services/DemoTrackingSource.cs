@@ -18,6 +18,11 @@ namespace TraXile.Next.Services
             "Toxic Sewer", "Jungle Valley", "City Square", "Glacier", "Burial Chambers", "Lava Lake"
         };
 
+        private static readonly string[] LabNames =
+        {
+            "Uber-Lab", "Uber-Lab", "Uber-Lab", "The Merciless Labyrinth", "Advanced Uber-Lab", "The Cruel Labyrinth", "Unknown"
+        };
+
         private static readonly string[] HeistAreas =
         {
             "Bunker", "Laboratory", "Records Office", "Mansion", "Smuggler's Den", "Underbelly", "Prohibited Library", "Tunnels", "Repository"
@@ -161,7 +166,11 @@ namespace TraXile.Next.Services
                 case ACTIVITY_TYPES.SANCTUM:
                     area = "Forbidden Sanctum"; level = 83; seconds = rnd.Next(600, 1500); break;
                 case ACTIVITY_TYPES.LABYRINTH:
-                    area = "Eternal Labyrinth"; level = 75; seconds = rnd.Next(420, 720); break;
+                    // lab name derived from the duration (no extra random numbers); the core names labs by difficulty
+                    seconds = rnd.Next(420, 720);
+                    area = LabNames[seconds % LabNames.Length];
+                    level = 75;
+                    break;
                 case ACTIVITY_TYPES.SIMULACRUM:
                     area = "Bridge Enraptured"; level = 83; seconds = rnd.Next(900, 1500); break;
                 case ACTIVITY_TYPES.LOGBOOK:
