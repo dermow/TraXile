@@ -34,6 +34,9 @@
     <!-- Notification area icon (WPF has none) -->
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
+    <!-- Support bundle (zip) -->
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
 
   <ItemGroup>

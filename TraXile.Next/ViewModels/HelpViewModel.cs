@@ -35,12 +35,16 @@ namespace TraXile.Next.ViewModels
     /// </summary>
     public sealed class HelpViewModel
     {
-        public HelpViewModel(UpdateViewModel update)
+        public HelpViewModel(UpdateViewModel update, SupportViewModel support)
         {
             Update = update;
+            Support = support;
         }
 
         public UpdateViewModel Update { get; }
+
+        /// <summary>Support info and bundle (classic DebugInfo window).</summary>
+        public SupportViewModel Support { get; }
 
         public string Version => UpdateChecker.AppVersion;
 

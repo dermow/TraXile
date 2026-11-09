@@ -79,7 +79,7 @@ namespace TraXile.Next.Tests
         {
             using (var update = new UpdateViewModel("3.0.0", () => System.Threading.Tasks.Task.FromResult<UpdateInfo>(null), v => null))
             {
-                var help = new HelpViewModel(update);
+                var help = new HelpViewModel(update, null);
                 Assert.Equal(UpdateChecker.AppVersion, help.Version);
                 Assert.Same(update, help.Update);
             }

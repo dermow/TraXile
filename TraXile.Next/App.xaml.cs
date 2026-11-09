@@ -186,7 +186,8 @@ namespace TraXile.Next
             }
 
             Update = CreateUpdate(args);
-            Help = new HelpViewModel(Update);
+            Help = new HelpViewModel(Update, new SupportViewModel(TrX_Static.APPDATA_PATH, AppDomain.CurrentDomain.BaseDirectory,
+                CollectSupportContext, text => Clipboard.SetText(text)));
 
             if (ScreenshotPath != null && StartPage != null && StartPage.StartsWith("overlay", StringComparison.OrdinalIgnoreCase))
             {
@@ -211,6 +212,36 @@ namespace TraXile.Next
                 Overlays.ShowDefaults(); // "show by default" overlays open with the app, like the classic one
                 CheckForUpdateAtStart(window);
             }
+        }
+
+        /// <summary>State of the app for the support text (Help page, support bundle).</summary>
+        private static SupportContext CollectSupportContext()
+        {
+            Window w = Current.MainWindow;
+            AppSetup setup = AppSetup.Default;
+            System.Collections.Generic.KeyValuePair<string, string>[] settings;
+            try
+            {
+                settings = setup.LoadSettings().kvStore.ToArray();
+            }
+            catch (Exception)
+            {
+                settings = Array.Empty<System.Collections.Generic.KeyValuePair<string, string>>();
+            }
+            return new SupportContext
+            {
+                Now = DateTime.Now,
+                AppVersion = UpdateChecker.AppVersion,
+                CoreVersion = typeof(TrX_CoreLogic).Assembly.GetName().Version.ToString(3),
+                Mode = Source == null ? "" : Source.IsDemo ? $"Demo ({Source.Notice})" : "Live",
+                AppDir = AppDomain.CurrentDomain.BaseDirectory,
+                AppDataPath = setup.AppDataPath,
+                ClientTxtPath = setup.ClientTxtPath,
+                WindowSize = w == null ? "" : $"{w.ActualWidth:0}x{w.ActualHeight:0}",
+                WindowLocation = w == null ? "" : $"{w.Left:0}x{w.Top:0}",
+                WindowState = w?.WindowState.ToString() ?? "",
+                Settings = settings,
+            };
         }
 
         private static UpdateViewModel CreateUpdate(string[] args)

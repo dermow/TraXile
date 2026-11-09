@@ -129,6 +129,51 @@
                 </StackPanel>
             </Border>
 
+            <!-- ============ Support ============ -->
+            <TextBlock Text="SUPPORT" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="24,20" Margin="0,0,0,28" DataContext="{Binding Support}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap"
+                               Text="Something does not work? Create a support bundle and attach it to your issue. It contains everything needed to reproduce the problem." />
+                    <Border Style="{StaticResource Notice}" BorderBrush="{DynamicResource StatusWarningBrush}" Margin="0,14,0,0">
+                        <TextBlock Style="{StaticResource Meta}" TextWrapping="Wrap">
+                            <Run Text="Contains your chat messages." FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" />
+                            <Run Text="The bundle holds your TraXile database and settings and your Path of Exile log, which includes what you wrote in the game's chat. Only share it if you are fine with that — otherwise copy the support info below, which has no personal data besides file paths." />
+                        </TextBlock>
+                    </Border>
+
+                    <WrapPanel Margin="0,16,0,0">
+                        <ui:Button Content="Create support bundle" Appearance="Primary" Margin="0,0,8,8" Click="CreateBundle_Click"
+                                   IsEnabled="{Binding IsIdle}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="FolderZip20" /></ui:Button.Icon>
+                        </ui:Button>
+                        <ui:Button Content="Copy support info" Margin="0,0,8,8" Click="CopySupport_Click">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="Copy20" /></ui:Button.Icon>
+                        </ui:Button>
+                        <ui:Button Content="Open support folder" Appearance="Transparent" Margin="0,0,8,8" Click="OpenSupportFolder_Click">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </WrapPanel>
+                    <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Margin="0,2,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource Meta}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding StatusIsError}" Value="True">
+                                        <Setter Property="Foreground" Value="{DynamicResource StatusDangerBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <TextBlock Text="SUPPORT INFO" Style="{StaticResource Label}" Margin="0,18,0,8" />
+                    <TextBox Text="{Binding Text, Mode=OneWay}" IsReadOnly="True" TextWrapping="NoWrap" MaxHeight="220"
+                             VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                             FontFamily="{StaticResource UiFont}" FontSize="12" Padding="12,10"
+                             Background="{DynamicResource BgBrush}" Foreground="{DynamicResource TextMutedBrush}" BorderThickness="0" />
+                </StackPanel>
+            </Border>
+
             <!-- ============ Credits ============ -->
             <TextBlock Text="SPECIAL THANKS" Style="{StaticResource SectionLabel}" />
             <Border Style="{StaticResource Card}" Padding="24,20" Margin="0,0,0,28">
