@@ -13,6 +13,7 @@ namespace TraXile.Next
         {
             InitializeComponent();
             LoadingOverlay.DataContext = App.Loading;
+            UpdateButton.DataContext = App.Update;
 
             ModeText.Text = App.Source.IsDemo ? "DEMO" : "● LIVE";
             if (!App.Source.IsDemo)
@@ -108,6 +109,8 @@ protected override void OnStateChanged(EventArgs e)
         private void StopwatchOverlay_Click(object sender, RoutedEventArgs e) => App.Overlays.ToggleStopwatch();
 
         private void TagsOverlay_Click(object sender, RoutedEventArgs e) => App.Overlays.ToggleTags();
+
+        private void UpdateButton_Click(object sender, RoutedEventArgs e) => App.ShowUpdateDialog(this);
 
         private void ThemeButton_Click(object sender, RoutedEventArgs e)
         {

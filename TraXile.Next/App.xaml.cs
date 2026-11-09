@@ -23,6 +23,8 @@ namespace TraXile.Next
     ///   --scroll 1600          scroll the page down before the screenshot
     ///   --loading              show the loading state (demo, for screenshots)
     ///   --filter last7days,map set the global filter (for screenshots, see ApplyFilterArg)
+    ///   --update               pretend a newer version was found (for screenshots of the title bar hint;
+    ///                          --page update / update-none renders the update dialog)
     /// </summary>
     public partial class App : Application
     {
@@ -45,6 +47,9 @@ namespace TraXile.Next
         public static LabViewModel Lab { get; private set; }
         public static DivCardsViewModel DivCards { get; private set; }
         public static LeaguesViewModel Leagues { get; private set; }
+
+        /// <summary>Update check and updater start (title bar hint, update dialog).</summary>
+        public static UpdateViewModel Update { get; private set; }
 
         /// <summary>The analytics pages (on the global filter), for theme switches and shutdown.</summary>
         private static AnalyticsViewModel[] AnalyticsPages => new AnalyticsViewModel[] { Statistics, Mapping, Heist, Lab, DivCards, Leagues };
@@ -178,9 +183,16 @@ namespace TraXile.Next
                 Dashboard.AddNotice("Restore failed", restore.Error, isError: true);
             }
 
+            Update = CreateUpdate(args);
+
             if (ScreenshotPath != null && StartPage != null && StartPage.StartsWith("overlay", StringComparison.OrdinalIgnoreCase))
             {
                 ScreenshotOverlay(StartPage);
+                return;
+            }
+            if (ScreenshotPath != null && StartPage != null && StartPage.StartsWith("update", StringComparison.OrdinalIgnoreCase))
+            {
+                ScreenshotUpdate(available: !StartPage.EndsWith("-none", StringComparison.OrdinalIgnoreCase));
                 return;
             }
 
@@ -194,7 +206,65 @@ namespace TraXile.Next
                 Tray = new Shell.TrayIcon(window, Overlays);
                 Tray.ExitRequested += (s, a) => Shutdown();
                 Overlays.ShowDefaults(); // "show by default" overlays open with the app, like the classic one
+                CheckForUpdateAtStart(window);
             }
+        }
+
+        private static UpdateViewModel CreateUpdate(string[] args)
+        {
+            string branch = AppSetup.Default.ReadSetting(UpdateChecker.BranchKey, TrX_Static.UPDATE_DEFAULT_BRANCH);
+            string current = UpdateChecker.AppVersion;
+            var update = new UpdateViewModel(current,
+                () => UpdateChecker.CheckAsync(UpdateChecker.Url(branch), current),
+                version => UpdateChecker.StartUpdater(version, AppDomain.CurrentDomain.BaseDirectory, out string error) ? null : error);
+            if (ScreenshotPath != null && args.Any(a => a.Equals("--update", StringComparison.OrdinalIgnoreCase)))
+            {
+                update.SetInfo(DemoUpdate(current, available: true));
+            }
+            return update;
+        }
+
+        private static UpdateInfo DemoUpdate(string current, bool available) => new UpdateInfo
+        {
+            CurrentVersion = current,
+            LatestVersion = available ? "3.0.1" : current,
+            IsAvailable = available,
+            Changes = new[]
+            {
+                "Track the new league mechanic as its own activity type",
+                "Faster start with very large Client.txt files",
+                "Fixed: tags overlay remembered the wrong position on a second monitor",
+            },
+        };
+
+        /// <summary>
+        /// Like the classic app: check once at start and open the update dialog if there is a new version, then check
+        /// every hour in the background (those checks only show the title bar hint).
+        /// </summary>
+        private async void CheckForUpdateAtStart(Window owner)
+        {
+            if (Source is LiveTrackingSource) UpdateChecker.CleanupInstallers(TrX_Static.APPDATA_PATH, DateTime.Now);
+            UpdateInfo info = await Update.CheckAsync();
+            Update.StartPeriodicCheck();
+            if (info?.IsAvailable == true && owner.IsVisible) ShowUpdateDialog(owner);
+        }
+
+        /// <summary>Opens the update dialog (title bar hint, "Check for updates" on the Help page).</summary>
+        public static void ShowUpdateDialog(Window owner)
+        {
+            var dialog = new Views.UpdateWindow(Update) { Owner = owner };
+            dialog.ShowDialog();
+        }
+
+        /// <summary>--screenshot x.png --page update[-none]: render the update dialog with a sample changelog.</summary>
+        private void ScreenshotUpdate(bool available)
+        {
+            Update.SetInfo(DemoUpdate(Update.CurrentVersion, available));
+            var window = new Views.UpdateWindow(Update);
+            MainWindow = window;
+            Screenshot.PrepareOffscreen(window, 0, window.ContentRoot);
+            window.Show();
+            Screenshot.Schedule(window, ScreenshotPath, TimeSpan.FromSeconds(1));
         }
 
         /// <summary>
@@ -409,6 +479,7 @@ namespace TraXile.Next
             if (Statistics != null) foreach (AnalyticsViewModel page in AnalyticsPages) page?.Dispose();
             Source?.Dispose();
             Loading?.Dispose();
+            Update?.Dispose();
             Tray?.Dispose();
             Overlays?.Dispose();
             Instance?.Dispose(); // last: the core is stopped, a restarted process may take over

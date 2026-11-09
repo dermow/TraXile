@@ -34,6 +34,12 @@
             </ui:TitleBar.Header>
             <ui:TitleBar.TrailingContent>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- shown when a newer version was found (checked at start and every hour) -->
+                    <ui:Button x:Name="UpdateButton" Appearance="Primary" Style="{StaticResource SmallButton}" Margin="0,0,12,0"
+                               VerticalAlignment="Center" Content="{Binding HintText}" ToolTip="A new version of TraXile is available"
+                               Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BoolToVis}}" Click="UpdateButton_Click">
+                        <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowDownload20" /></ui:Button.Icon>
+                    </ui:Button>
                     <Border x:Name="ModeBadge" Margin="0,0,12,0" Padding="8,3" CornerRadius="{StaticResource ControlRadius}"
                             Background="{DynamicResource SurfaceBrush}" VerticalAlignment="Center">
                         <TextBlock x:Name="ModeText" Text="LIVE" Style="{StaticResource Label}" FontSize="11" />

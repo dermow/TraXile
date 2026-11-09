@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
@@ -58,7 +59,9 @@ namespace TraXile.Updater
             wc.DownloadFile(uri, _myAppData + @"\Setup_" + s_version + ".msi");
             Log("Download successful. Saved installer to: " + _myAppData);
 
+            // TraXile 3.0 (TraXile.Next) closes itself after starting the updater; kill what is still running
             Process[] p = Process.GetProcessesByName("TraXile");
+            p = p.Concat(Process.GetProcessesByName("TraXile.Next")).ToArray();
 
             if (p.Length > 0)
             {
