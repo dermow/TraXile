@@ -67,11 +67,4 @@ namespace TraXile.Next.Views
             "Compare two leagues") { }
     }
 
-    public sealed class DivCardsPage : ComingSoonPage
-    {
-        public DivCardsPage() : base("Div Cards", SymbolRegular.Collections24,
-            "Divination cards you found while playing.",
-            "Cards found per league",
-            "Where each card dropped") { }
-    }
 }

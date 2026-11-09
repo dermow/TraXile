@@ -1,0 +1,107 @@
+<Page
+    x:Class="TraXile.Next.Views.DivCardsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:svc="clr-namespace:TraXile.Next.Services"
+    xmlns:views="clr-namespace:TraXile.Next.Views"
+    Title="Div Cards"
+    ScrollViewer.CanContentScroll="False">
+    <!-- CanContentScroll=False: the page fills the window, the card list scrolls (and virtualizes) by itself -->
+
+    <Page.Resources>
+        <Style x:Key="Head" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="{StaticResource PagePadding}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- ============ Header ============ -->
+        <Grid Margin="0,0,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Div Cards" Style="{StaticResource PageTitle}" />
+                <TextBlock Style="{StaticResource Meta}" Margin="0,4,0,0" TextWrapping="Wrap">
+                    <Run Text="{Binding Summary, Mode=OneWay}" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" />
+                    <Run Text=" · Only the time range of the filter applies: TraXile records cards without the activity they dropped in." />
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="24,0,0,0" VerticalAlignment="Center">
+                <ui:TextBox Width="300" PlaceholderText="Search cards…" ClearButtonEnabled="True"
+                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                    <ui:TextBox.Icon><ui:SymbolIcon Symbol="Search20" /></ui:TextBox.Icon>
+                </ui:TextBox>
+                <ui:Button Content="Export CSV" Appearance="Secondary" Margin="10,0,0,0" Click="Export_Click"
+                           ToolTip="Export the listed cards as CSV">
+                    <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowDownload20" /></ui:Button.Icon>
+                </ui:Button>
+            </StackPanel>
+        </Grid>
+
+        <views:GlobalFilterBar Grid.Row="1" Margin="0,0,0,16" />
+
+        <!-- ============ Column header ============ -->
+        <Grid Grid.Row="3" Margin="19,0,24,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="90" />
+                <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="160" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Card" Style="{StaticResource Head}" />
+            <TextBlock Grid.Column="1" Text="Count" Style="{StaticResource Head}" HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="2" Text="Last draw" Style="{StaticResource Head}" HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="3" Text="First draw" Style="{StaticResource Head}" HorizontalAlignment="Right" />
+        </Grid>
+
+        <!-- ============ Card list ============ -->
+        <Grid Grid.Row="4">
+            <ListBox ItemsSource="{Binding Items}" ItemContainerStyle="{StaticResource CardListItem}" Background="Transparent"
+                     BorderThickness="0" Padding="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.ScrollUnit="Pixel">
+                <ListBox.Template>
+                    <ControlTemplate TargetType="ListBox">
+                        <ScrollViewer Focusable="False" Padding="0,0,8,0" CanContentScroll="True">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ListBox.Template>
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type svc:DivCardInfo}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="160" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource Body}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Grid.Column="1" Text="{Binding Count, StringFormat=N0}" Style="{StaticResource Num}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                            <TextBlock Grid.Column="2" Text="{Binding LastText}" Style="{StaticResource Num}" FontSize="13" HorizontalAlignment="Right"
+                                       Foreground="{DynamicResource TextMutedBrush}" />
+                            <TextBlock Grid.Column="3" Text="{Binding FirstText}" Style="{StaticResource Num}" FontSize="13" HorizontalAlignment="Right"
+                                       Foreground="{DynamicResource TextMutedBrush}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="360"
+                        Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
+                <ui:SymbolIcon Symbol="Collections24" FontSize="40" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" />
+                <TextBlock Text="{Binding EmptyText}" Style="{StaticResource Meta}" FontSize="14" TextAlignment="Center" TextWrapping="Wrap" Margin="0,10,0,0" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>
