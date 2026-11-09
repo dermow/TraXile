@@ -73,6 +73,20 @@ button in the title bar; at start the update dialog opens directly. "Install upd
 closes TraXile and runs the installer. Installer packages older than a day are removed from `%APPDATA%\TraXile`.
 The league metadata (`metadata.xml`) is downloaded at every start as well.
 
+## Installer
+
+`TraXile_Setup.aip` (Advanced Installer, freeware project) packages `TraXile.Next\bin\Release\net472` without
+`*.pdb`, `*.dylib` and the x86/arm64 SkiaSharp folders (the app is x64 only; the package refuses 32-bit Windows).
+It installs per user to `%APPDATA%\dermow\TraXile` like 2.x, with desktop and start menu shortcuts to
+`TraXile.exe`. Same UpgradeCode as 2.x, so installing 3.0 removes 2.x first (major upgrade); the data folder
+`%APPDATA%\TraXile` is not touched by the installer.
+
+The freeware edition cannot synchronize folders: when the build output gets new files (a new package), add them
+with `AdvancedInstaller.com /edit TraXile_Setup.aip /AddFile APPDIR <file>`. For a release:
+`AdvancedInstaller.com /edit TraXile_Setup.aip /SetVersion <x.y.z>` (new ProductCode) and
+`AdvancedInstaller.com /build TraXile_Setup.aip` → `TraXile_Setup-SetupFiles\TraXile_Setup.msi`. The updater
+downloads the release asset `Setup.msi`.
+
 ## Tests
 
 ```
