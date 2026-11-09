@@ -1,0 +1,61 @@
+<Page
+    x:Class="TraXile.Next.Views.LeaguesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
+    Title="Leagues">
+
+    <StackPanel Margin="{StaticResource PagePadding}">
+        <!-- ============ Header ============ -->
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Leagues" Style="{StaticResource PageTitle}" />
+                <TextBlock Text="Your last leagues side by side." Style="{StaticResource Meta}" Margin="0,4,0,0" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Compare the last" Style="{StaticResource Body}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                <ComboBox Width="80" ItemsSource="{Binding LeagueCounts}" SelectedItem="{Binding LeagueCount}" />
+                <TextBlock Text="leagues" Style="{StaticResource Body}" VerticalAlignment="Center" Margin="10,0,0,0" />
+            </StackPanel>
+        </Grid>
+
+        <!-- The global filter does not apply here: say so instead of showing the filter bar -->
+        <Border Style="{StaticResource Notice}" Margin="0,0,0,16" Padding="16,10">
+            <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
+                <Run Text="Not filtered." FontWeight="SemiBold" />
+                <Run Text=" Each league uses all of your activities in its play period; the global filter does not apply on this page."
+                     Foreground="{DynamicResource TextMutedBrush}" />
+            </TextBlock>
+        </Border>
+
+        <TextBlock Text="No league information yet. TraXile reads the leagues from the metadata the classic TraXile downloads."
+                   Style="{StaticResource Meta}" TextWrapping="Wrap" Margin="0,8"
+                   Visibility="{Binding HasLeagues, Converter={StaticResource InvBoolToVis}}" />
+
+        <!-- ============ Eight charts, two per row ============ -->
+        <ItemsControl ItemsSource="{Binding Charts}" Margin="0,0,-16,0">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="2" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:LeagueChart}">
+                    <Border Style="{StaticResource Card}" Margin="0,0,16,16">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Title}" Style="{StaticResource CardTitle}" />
+                            <TextBlock Text="{Binding Subtitle}" Style="{StaticResource CardSubtitle}" />
+                            <lvc:CartesianChart Height="220" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"
+                                                TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</Page>
