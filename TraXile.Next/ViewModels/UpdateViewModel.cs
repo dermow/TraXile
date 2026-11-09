@@ -60,8 +60,15 @@ namespace TraXile.Next.ViewModels
         public bool IsChecking
         {
             get => _isChecking;
-            private set { if (SetProperty(ref _isChecking, value)) OnPropertyChanged(nameof(StatusText)); }
+            private set
+            {
+                if (!SetProperty(ref _isChecking, value)) return;
+                OnPropertyChanged(nameof(StatusText));
+                OnPropertyChanged(nameof(CanCheck));
+            }
         }
+
+        public bool CanCheck => !IsChecking;
 
         private bool _lastCheckFailed;
 

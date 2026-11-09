@@ -86,7 +86,10 @@ namespace TraXile.Next
                    ?? typeof(DashboardPage);
         }
 
-protected override void OnStateChanged(EventArgs e)
+        /// <summary>Opens a page of the navigation (tray menu: Help).</summary>
+        public void ShowPage(Type pageType) => RootNavigation.Navigate(pageType);
+
+        protected override void OnStateChanged(EventArgs e)
         {
             base.OnStateChanged(e);
             // Like the classic app: minimized to the notification area instead of the taskbar

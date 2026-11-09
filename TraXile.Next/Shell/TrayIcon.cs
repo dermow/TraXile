@@ -10,7 +10,7 @@ namespace TraXile.Next.Shell
 {
     /// <summary>
     /// Notification area icon like the classic app: double-click restores the window, right-click opens a menu
-    /// (Open, Chat commands, About, Overlays, Exit). The menu is a WPF context menu, so it follows the design tokens.
+    /// (Open, Help and about, Overlays, Exit). The menu is a WPF context menu, so it follows the design tokens.
     /// </summary>
     public sealed class TrayIcon : IDisposable
     {
@@ -61,13 +61,10 @@ namespace TraXile.Next.Shell
             menu.Items.Add(open);
             menu.Items.Add(new Separator());
 
-            var chat = new MenuItem { Header = "Chat commands" };
-            chat.Click += (s, e) => { ShowWindow(); Dialogs.ShowChatCommands(_owner); };
-            menu.Items.Add(chat);
-
-            var about = new MenuItem { Header = "About" };
-            about.Click += (s, e) => { ShowWindow(); Dialogs.ShowAbout(_owner); };
-            menu.Items.Add(about);
+            // Classic: Chat commands and About windows; both live on the Help page now
+            var help = new MenuItem { Header = "Help and about" };
+            help.Click += (s, e) => ShowHelp();
+            menu.Items.Add(help);
 
             // Classic: Overlays submenu with the overlays as check items
             var overlays = new MenuItem { Header = "Overlays" };
@@ -99,6 +96,12 @@ namespace TraXile.Next.Shell
             SetForegroundWindow(handle);
             _menu.Placement = System.Windows.Controls.Primitives.PlacementMode.MousePoint;
             _menu.IsOpen = true;
+        }
+
+        private void ShowHelp()
+        {
+            ShowWindow();
+            (_owner as MainWindow)?.ShowPage(typeof(Views.HelpPage));
         }
 
         /// <summary>Brings the main window back from the tray / minimized state.</summary>
