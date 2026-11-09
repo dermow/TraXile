@@ -48,7 +48,26 @@ namespace TraXile.Next.ViewModels
         public event EventHandler Changed;
 
         /// <summary>Known leagues, newest last (for the league time option).</summary>
-        public IReadOnlyList<LeagueInfo> Leagues { get; }
+        public IReadOnlyList<LeagueInfo> Leagues { get; private set; }
+
+        /// <summary>Raised after <see cref="SetLeagues"/> replaced the league list.</summary>
+        public event EventHandler LeaguesChanged;
+
+        /// <summary>
+        /// Replaces the league list (e.g. after the metadata was downloaded). A selected league is kept by name;
+        /// if it is gone, the time filter falls back to "All time".
+        /// </summary>
+        public void SetLeagues(IReadOnlyList<LeagueInfo> leagues)
+        {
+            Leagues = leagues ?? Array.Empty<LeagueInfo>();
+            LeagueInfo selected = League == null ? null : Leagues.FirstOrDefault(l => l.Name == League.Name);
+            Batch(() =>
+            {
+                if (selected != null) League = selected;
+                else if (Time == FilterTime.League) { Time = FilterTime.All; League = null; }
+            });
+            LeaguesChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         // ------------------------------------------------------------------
         // Time

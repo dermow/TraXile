@@ -90,6 +90,13 @@ namespace TraXile.Next.ViewModels
             _source.HistoryChanged += OnHistoryChanged;
 
             Filter.Changed += (s, e) => SyncFromFilter();
+            Filter.LeaguesChanged += (s, e) =>
+            {
+                _syncing = true;
+                try { TimeOptions = BuildTimeOptions(Filter.Leagues); }
+                finally { _syncing = false; }
+                SyncFromFilter();
+            };
             RefreshOptions();
         }
 
@@ -109,7 +116,8 @@ namespace TraXile.Next.ViewModels
         // Time
         // ------------------------------------------------------------------
 
-        public IReadOnlyList<TimeOption> TimeOptions { get; }
+        private IReadOnlyList<TimeOption> _timeOptions;
+        public IReadOnlyList<TimeOption> TimeOptions { get => _timeOptions; private set => SetProperty(ref _timeOptions, value); }
 
         private static IReadOnlyList<TimeOption> BuildTimeOptions(IReadOnlyList<LeagueInfo> leagues)
         {
