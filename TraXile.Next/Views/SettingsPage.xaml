@@ -23,14 +23,14 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="{StaticResource PagePadding}" MaxWidth="980" HorizontalAlignment="Left">
             <TextBlock Text="Settings" Style="{StaticResource PageTitle}" />
-            <TextBlock Text="Stored in the same config.xml as the classic TraXile, so both apps use the same settings."
+            <TextBlock Text="Stored in config.xml in your TraXile data folder, the same file TraXile 2.x used."
                        Style="{StaticResource Meta}" Margin="0,4,0,24" />
 
             <Border Style="{StaticResource Notice}" Margin="0,0,0,24" BorderBrush="{DynamicResource StatusWarningBrush}"
                     Visibility="{Binding IsReadOnly, Converter={StaticResource BoolToVis}}">
                 <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
                     <Run Text="Read only" FontWeight="SemiBold" />
-                    <Run Text="  Settings can be changed while TraXile.Next tracks live (the classic TraXile must be closed)." Foreground="{DynamicResource TextMutedBrush}" />
+                    <Run Text="  TraXile shows demo data, so settings cannot be changed. Restart TraXile without --demo to track live." Foreground="{DynamicResource TextMutedBrush}" />
                 </TextBlock>
             </Border>
 
@@ -262,7 +262,7 @@
                         <StackPanel>
                             <TextBlock Text="Create backup" Style="{StaticResource SettingName}" />
                             <TextBlock Style="{StaticResource SettingHelp}"
-                                       Text="Copies Client.txt, the database, statistics cache, settings and lab data. Backups of the classic TraXile are listed too." />
+                                       Text="Copies Client.txt, the database, statistics cache, settings and lab data. Backups made with TraXile 2.x are listed too." />
                             <TextBlock Text="{Binding BackupNameError}" Style="{StaticResource SettingHelp}" Foreground="{DynamicResource StatusDangerBrush}"
                                        Visibility="{Binding HasBackupNameError, Converter={StaticResource BoolToVis}}" />
                         </StackPanel>

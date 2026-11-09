@@ -7,10 +7,13 @@
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
     <RootNamespace>TraXile.Next</RootNamespace>
-    <AssemblyName>TraXile.Next</AssemblyName>
+    <!-- TraXile.exe like 2.x, so shortcuts, taskbar pins and the updater keep working after the upgrade -->
+    <AssemblyName>TraXile</AssemblyName>
+    <Product>TraXile</Product>
+    <Company>dermow</Company>
     <!-- Native libs (SkiaSharp, e_sqlite3) are resolved per architecture -->
     <PlatformTarget>x64</PlatformTarget>
-    <ApplicationIcon>..\TraXile\ic-task.ico</ApplicationIcon>
+    <ApplicationIcon>TraXile.ico</ApplicationIcon>
     <Version>3.0.0-preview1</Version>
   </PropertyGroup>
 

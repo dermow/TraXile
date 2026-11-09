@@ -50,7 +50,7 @@
                 Visibility="{Binding IsDemo, Converter={StaticResource BoolToVis}}">
             <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
                 <Run Text="Demo data" FontWeight="SemiBold" />
-                <Run Text="  Changes to tags are not saved while TraXile.Next shows demo data." Foreground="{DynamicResource TextMutedBrush}" />
+                <Run Text="  Changes to tags are not saved while TraXile shows demo data." Foreground="{DynamicResource TextMutedBrush}" />
             </TextBlock>
         </Border>
 
