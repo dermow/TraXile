@@ -45,7 +45,16 @@ namespace TraXile.Next.ViewModels
 
         public LeaguesViewModel(ITrackingSource source, GlobalFilter filter) : base(source, filter)
         {
+            Filter.LeaguesChanged += OnLeaguesChanged;
             Refresh();
+        }
+
+        private void OnLeaguesChanged(object sender, EventArgs e) => Refresh();
+
+        public override void Dispose()
+        {
+            Filter.LeaguesChanged -= OnLeaguesChanged;
+            base.Dispose();
         }
 
         public IReadOnlyList<int> LeagueCounts => CountOptions;

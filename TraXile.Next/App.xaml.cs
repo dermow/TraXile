@@ -159,6 +159,7 @@ namespace TraXile.Next
             DivCards = new DivCardsViewModel(Source, Filter);
             Leagues = new LeaguesViewModel(Source, Filter);
             foreach (AnalyticsViewModel page in AnalyticsPages) page.SetTheme(IsDark);
+            if (Source is LiveTrackingSource) UpdateLeaguesInBackground();
 
             // Screenshots use the default overlay settings, not the ones of this machine
             AppSetup overlaySetup = ScreenshotPath == null ? AppSetup.Default
@@ -193,6 +194,19 @@ namespace TraXile.Next
                 Tray = new Shell.TrayIcon(window, Overlays);
                 Tray.ExitRequested += (s, a) => Shutdown();
                 Overlays.ShowDefaults(); // "show by default" overlays open with the app, like the classic one
+            }
+        }
+
+        /// <summary>
+        /// Downloads the league metadata like the classic app does on every start, then updates the league options
+        /// of the global filter and the Leagues page. Offline: the stored file stays in use.
+        /// </summary>
+        private async void UpdateLeaguesInBackground()
+        {
+            string url = MetadataDownloader.Url(AppSetup.Default.ReadSetting(MetadataDownloader.BranchKey, TrX_Static.METADATA_DEFAULT_BRANCH));
+            if (await MetadataDownloader.UpdateAsync(url, TrX_Static.METADATA_XML_FULLPATH))
+            {
+                Filter.SetLeagues(LeagueCatalog.Load(TrX_Static.METADATA_XML_FULLPATH)); // back on the UI thread
             }
         }
 
