@@ -36,6 +36,9 @@ namespace Traxile.Enanced
         // Q Thread
         private Thread _qThread;
 
+        // Ends the Q thread cooperatively (Thread.Abort does not exist on .NET)
+        private CancellationTokenSource _stopSource;
+
         // Unique Client ID
         private string _clientID;
 
@@ -84,7 +87,9 @@ namespace Traxile.Enanced
         public void Start()
         {
             _log.Info("Starting TEApiClient");
-            _qThread = new Thread(new ThreadStart(QueueHandling))
+            _stopSource = new CancellationTokenSource();
+            CancellationToken token = _stopSource.Token;
+            _qThread = new Thread(() => QueueHandling(token))
             {
                 IsBackground = true,
                 Name = "ApiClientQHandlingThread"
@@ -93,20 +98,25 @@ namespace Traxile.Enanced
             _started = true;
         }
 
-        public void Stop()
+        public void Stop(int timeout = 2000)
         {
-            _qThread.Abort();
+            _stopSource?.Cancel();
+            if (_qThread != null && _qThread != Thread.CurrentThread && !_qThread.Join(timeout))
+            {
+                _log.Warn($"{_qThread.Name} did not stop within {timeout} ms.");
+            }
             _started = false;
         }
 
-        private void QueueHandling()
+        private void QueueHandling(CancellationToken token)
         {
             TEApiQueueItem peek;
-            while (true)
+            while (!token.IsCancellationRequested)
             {
-                Thread.Sleep(_checkInterval);
+                // Returns early when stopped
+                token.WaitHandle.WaitOne(_checkInterval);
 
-                while (actQueue.Count > 0)
+                while (actQueue.Count > 0 && !token.IsCancellationRequested)
                 {
                     peek = actQueue.Peek();
 
@@ -145,7 +155,7 @@ namespace Traxile.Enanced
 
                     }
 
-                    Thread.Sleep(10);
+                    token.WaitHandle.WaitOne(10);
                 }
             }
         }
