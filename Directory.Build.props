@@ -1,0 +1,21 @@
+<Project>
+
+  <!--
+    Shared build settings of all TraXile projects (docs/adr/0006).
+    Only SDK-style projects take part; legacy (non-SDK) projects import this file too, via Microsoft.Common.props.
+  -->
+  <PropertyGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true'">
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- x64 only: native libraries (e_sqlite3, SkiaSharp, HarfBuzz) are shipped for one architecture -->
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+
+    <!--
+      Pinned .NET 10 runtime patch. App and updater are published self-contained into one folder and
+      share the runtime files, so they must always use the same version. Bump to the latest patch on
+      every release (docs/adr/0006, "TraXile owns runtime servicing").
+    -->
+    <RuntimeFrameworkVersion>10.0.14</RuntimeFrameworkVersion>
+  </PropertyGroup>
+
+</Project>
