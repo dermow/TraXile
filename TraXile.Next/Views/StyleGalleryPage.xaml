@@ -3,7 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="Style gallery">
+    Title="Style gallery"
+    ScrollViewer.CanContentScroll="False">
+    <!-- WPF-UI: without this the host wraps the page in its own scroll viewer, so the page's
+         ScrollViewer below gets infinite height, shows no scrollbar and swallows the mouse wheel. -->
     <!-- Every base style of docs/design.md on one page, for visual review: start TraXile.Next.exe with the options screenshot and page gallery -->
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
