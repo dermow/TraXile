@@ -22,6 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- reading the support bundle -->
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TraXile.Next\TraXile.Next.csproj" />
     <ProjectReference Include="..\TraXile\TraXile.csproj" />
   </ItemGroup>

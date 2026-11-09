@@ -84,7 +84,9 @@ The plan and its status live in the GitHub issues with the label `ui-rework`, gr
 
 Navigation: Dashboard, Activity log, Statistics, Mapping, Lab, Heist, Leagues, Div Cards, Tags, and Help and
 Settings in the footer. The Help page replaces the classic Chat commands, Search help and About windows
-(`--page help`).
+(`--page help`). Its Support section replaces the classic DebugInfo window: copy the support info, or create
+`%APPDATA%\TraXile\Support\TraXile_Support_Bundle_<date>.zip` (data folder without backups, Client.txt,
+`debug_info.txt`, and a listing of the app folder instead of a copy of its binaries). Secrets in the settings are masked.
 
 ## Known gaps / notes
 
