@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
@@ -112,22 +111,13 @@ namespace TraXile.Next.Services
         {
             try
             {
-                download = download ?? DownloadString;
+                download = download ?? Http.GetStringAsync;
                 string data = await download(url).ConfigureAwait(false);
                 return Parse(data, currentVersion);
             }
             catch (Exception)
             {
                 return null;
-            }
-        }
-
-        private static async Task<string> DownloadString(string url)
-        {
-            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-            using (var client = new WebClient())
-            {
-                return await client.DownloadStringTaskAsync(new Uri(url)).ConfigureAwait(false);
             }
         }
 
