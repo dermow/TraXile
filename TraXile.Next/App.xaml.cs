@@ -51,6 +51,8 @@ namespace TraXile.Next
         /// <summary>Update check and updater start (title bar hint, update dialog).</summary>
         public static UpdateViewModel Update { get; private set; }
 
+        public static HelpViewModel Help { get; private set; }
+
         /// <summary>The analytics pages (on the global filter), for theme switches and shutdown.</summary>
         private static AnalyticsViewModel[] AnalyticsPages => new AnalyticsViewModel[] { Statistics, Mapping, Heist, Lab, DivCards, Leagues };
 
@@ -184,6 +186,7 @@ namespace TraXile.Next
             }
 
             Update = CreateUpdate(args);
+            Help = new HelpViewModel(Update);
 
             if (ScreenshotPath != null && StartPage != null && StartPage.StartsWith("overlay", StringComparison.OrdinalIgnoreCase))
             {

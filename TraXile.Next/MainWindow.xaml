@@ -107,6 +107,9 @@
             </ui:NavigationView.MenuItems>
 
             <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Content="Help" TargetPageType="{x:Type pages:HelpPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="QuestionCircle24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
                 <ui:NavigationViewItem Content="Settings" TargetPageType="{x:Type pages:SettingsPage}">
                     <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Settings24" /></ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>

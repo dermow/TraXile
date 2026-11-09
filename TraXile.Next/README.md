@@ -82,8 +82,9 @@ The plan and its status live in the GitHub issues with the label `ui-rework`, gr
 3. [3.0 - Phase 3: Analytics](https://github.com/dermow/TraXile/milestone/12) - Statistics, Mapping, Lab, Heist, Leagues, Div Cards
 4. [3.0 - Phase 4: Switch](https://github.com/dermow/TraXile/milestone/13) - updater, installer, removal of the WinForms UI
 
-Navigation: Dashboard, Activity log, Statistics, Mapping, Lab, Heist, Leagues, Div Cards, Tags, and Settings in
-the footer. Pages that are not migrated yet show a placeholder.
+Navigation: Dashboard, Activity log, Statistics, Mapping, Lab, Heist, Leagues, Div Cards, Tags, and Help and
+Settings in the footer. The Help page replaces the classic Chat commands, Search help and About windows
+(`--page help`).
 
 ## Known gaps / notes
 
