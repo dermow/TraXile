@@ -435,6 +435,60 @@ namespace TraXile
             cmd.ExecuteNonQuery();
         }
 
+        // A bulk transaction is open (see BeginBulk)
+        private bool _bulkOpen;
+
+        /// <summary>
+        /// Opens a transaction that every following statement on this connection joins, until <see cref="CommitBulk"/>.
+        /// Without it each INSERT is its own transaction with its own disk sync, which makes reading a long
+        /// Client.txt from the start take many minutes.
+        /// </summary>
+        /// <remarks>
+        /// Plain BEGIN/COMMIT instead of SqliteTransaction on purpose: Microsoft.Data.Sqlite rejects every command
+        /// without that transaction object, and the UI runs its own statements on this connection meanwhile.
+        /// </remarks>
+        public void BeginBulk()
+        {
+            if (_bulkOpen)
+            {
+                return;
+            }
+
+            try
+            {
+                DoNonQueryNoErrorHandling("BEGIN");
+                _bulkOpen = true;
+            }
+            catch (Exception ex)
+            {
+                // Still works without, only slower
+                _log.Warn("Cannot start bulk transaction: " + ex.Message);
+                _log.Debug(ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Commits the transaction opened by <see cref="BeginBulk"/>; does nothing if none is open.
+        /// </summary>
+        public void CommitBulk()
+        {
+            if (!_bulkOpen)
+            {
+                return;
+            }
+
+            _bulkOpen = false;
+            try
+            {
+                DoNonQueryNoErrorHandling("COMMIT");
+            }
+            catch (Exception ex)
+            {
+                _log.Error("Cannot commit bulk transaction: " + ex.Message);
+                _log.Debug(ex.ToString());
+            }
+        }
+
         /// <summary>
         /// Close DB
         /// </summary>
