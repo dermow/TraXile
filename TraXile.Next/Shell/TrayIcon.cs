@@ -44,7 +44,8 @@ namespace TraXile.Next.Shell
         {
             try
             {
-                return Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetEntryAssembly().Location);
+                // The exe, not Assembly.Location: on .NET that is TraXile.dll, which has no icon
+                return Icon.ExtractAssociatedIcon(Environment.ProcessPath);
             }
             catch (Exception)
             {

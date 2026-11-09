@@ -5,6 +5,7 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:pages="clr-namespace:TraXile.Next.Views"
     Title="TraXile"
+    Icon="pack://application:,,,/TraXile.ico"
     Width="1440"
     Height="940"
     MinWidth="1100"
