@@ -5,9 +5,12 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
     xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
+    xmlns:views="clr-namespace:TraXile.Next.Views"
+    xmlns:local="clr-namespace:TraXile.Next"
     Title="Dashboard">
 
     <Page.Resources>
+        <local:EnumEqualsConverter x:Key="EnumEq" />
         <!-- KPI delta: success or danger text on a quiet veil -->
         <Style x:Key="DeltaPill" TargetType="Border">
             <Setter Property="CornerRadius" Value="{StaticResource ControlRadius}" />
@@ -110,13 +113,13 @@
                 <Border Style="{StaticResource SegmentedGroup}" HorizontalAlignment="Right">
                     <StackPanel Orientation="Horizontal">
                         <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="Today"
-                                     Command="{Binding SetRangeCommand}" CommandParameter="Today" />
-                        <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="7 days" IsChecked="True"
-                                     Command="{Binding SetRangeCommand}" CommandParameter="Week" />
+                                     IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Today}" />
+                        <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="7 days"
+                                     IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Week}" />
                         <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="30 days"
-                                     Command="{Binding SetRangeCommand}" CommandParameter="Month" />
+                                     IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=Month}" />
                         <RadioButton Style="{StaticResource Segment}" GroupName="Range" Content="All time"
-                                     Command="{Binding SetRangeCommand}" CommandParameter="All" />
+                                     IsChecked="{Binding Range, Converter={StaticResource EnumEq}, ConverterParameter=All}" />
                     </StackPanel>
                 </Border>
             </Grid>
@@ -246,6 +249,9 @@
                     </Grid>
                 </Grid>
             </Border>
+
+            <!-- ============ Global filter: applies to everything below the live card ============ -->
+            <views:GlobalFilterBar Margin="0,0,0,16" />
 
             <!-- ============ KPI tiles ============ -->
             <ItemsControl ItemsSource="{Binding Kpis}" Margin="-8,0,-8,8">

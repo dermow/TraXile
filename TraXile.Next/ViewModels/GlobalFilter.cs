@@ -208,10 +208,11 @@ namespace TraXile.Next.ViewModels
         {
             if (a == null) return false;
             if (!Window.Contains(a.Started)) return false;
-            return MatchesWithoutTime(a);
+            return MatchesIgnoringTime(a);
         }
 
-        private bool MatchesWithoutTime(ActivityInfo a)
+        /// <summary>All parts except the time range (leagues page, previous periods on the dashboard).</summary>
+        public bool MatchesIgnoringTime(ActivityInfo a)
         {
             if (Type.HasValue && a.Type != Type.Value) return false;
             if (Area != null && !string.Equals(a.Area, Area, StringComparison.OrdinalIgnoreCase)) return false;
@@ -234,7 +235,7 @@ namespace TraXile.Next.ViewModels
         public List<ActivityInfo> Apply(IEnumerable<ActivityInfo> source)
         {
             TimeWindow w = Window; // resolve "now" once
-            return source.Where(a => a != null && w.Contains(a.Started) && MatchesWithoutTime(a)).ToList();
+            return source.Where(a => a != null && w.Contains(a.Started) && MatchesIgnoringTime(a)).ToList();
         }
 
         private static bool Compare(int value, int level, LevelOperator op)

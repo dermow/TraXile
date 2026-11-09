@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
     xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
+    xmlns:views="clr-namespace:TraXile.Next.Views"
     Title="Leagues">
 
     <StackPanel Margin="{StaticResource PagePadding}">
@@ -24,14 +25,9 @@
             </StackPanel>
         </Grid>
 
-        <!-- The global filter does not apply here: say so instead of showing the filter bar -->
-        <Border Style="{StaticResource Notice}" Margin="0,0,0,16" Padding="16,10">
-            <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
-                <Run Text="Not filtered." FontWeight="SemiBold" />
-                <Run Text=" Each league uses all of your activities in its play period; the global filter does not apply on this page."
-                     Foreground="{DynamicResource TextMutedBrush}" />
-            </TextBlock>
-        </Border>
+        <views:GlobalFilterBar Margin="0,0,0,8" />
+        <TextBlock Style="{StaticResource Caption}" Margin="0,0,0,16" TextWrapping="Wrap"
+                   Text="Type, area, level and tags of the filter apply here. Its time range does not: each league uses its own play period." />
 
         <TextBlock Text="No league information yet. TraXile reads the leagues from the metadata the classic TraXile downloads."
                    Style="{StaticResource Meta}" TextWrapping="Wrap" Margin="0,8"
