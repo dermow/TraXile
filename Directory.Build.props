@@ -14,8 +14,11 @@
       Pinned .NET 10 runtime patch. App and updater are published self-contained into one folder and
       share the runtime files, so they must always use the same version. Bump to the latest patch on
       every release (docs/adr/0006, "TraXile owns runtime servicing").
+      Applied in Directory.Build.targets; RuntimeFrameworkVersion is not used because it would also pin
+      the Windows SDK projection (Microsoft.Windows.SDK.NET.Ref) of TraXile.Next.
     -->
-    <RuntimeFrameworkVersion>10.0.14</RuntimeFrameworkVersion>
+    <TraXileRuntimeVersion>10.0.14</TraXileRuntimeVersion>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
   </PropertyGroup>
 
 </Project>

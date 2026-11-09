@@ -98,7 +98,7 @@ namespace TraXile
             var buffer = new byte[2048];
 
             using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
-                stream.Read(buffer, 0, 2048);
+                stream.ReadExactly(buffer, 0, buffer.Length);
 
             var offset = BitConverter.ToInt32(buffer, c_PeHeaderOffset);
             var secondsSince1970 = BitConverter.ToInt32(buffer, offset + c_LinkerTimestampOffset);

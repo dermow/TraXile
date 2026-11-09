@@ -6,15 +6,12 @@
   -->
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net472</TargetFramework>
-    <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
     <RootNamespace>TraXile</RootNamespace>
     <AssemblyName>TraXile.Core</AssemblyName>
     <!-- Version and InternalsVisibleTo live in Properties\AssemblyInfo.cs -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <!-- Native SQLite is resolved per architecture by the app -->
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,16 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.7" />
-    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.0.4" />
+    <PackageReference Include="log4net" Version="3.5.0" />
+    <!-- Brings the matching SQLitePCLRaw.bundle_e_sqlite3 (native e_sqlite3) -->
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.14" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>
