@@ -1,0 +1,456 @@
+<Page
+    x:Class="TraXile.Next.Views.ActivityLogPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:local="clr-namespace:TraXile.Next"
+    xmlns:svc="clr-namespace:TraXile.Next.Services"
+    xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
+    xmlns:views="clr-namespace:TraXile.Next.Views"
+    Title="Activity log"
+    ScrollViewer.CanContentScroll="False">
+    <!-- WPF-UI: NavigationViewContentPresenter.IsDynamicScrollViewerEnabled = page's CanContentScroll.
+         Must be False here: inside the host ScrollViewer the DataGrid gets infinite height and
+         realizes every row (UI freeze with large histories) instead of virtualizing. -->
+
+    <Page.Resources>
+        <local:InverseBoolToVisibilityConverter x:Key="InvBoolToVis" />
+
+        <ItemsPanelTemplate x:Key="WrapPanelTemplate">
+            <WrapPanel />
+        </ItemsPanelTemplate>
+
+        <DataTemplate x:Key="TagChip" DataType="{x:Type svc:TagInfo}">
+            <Border Style="{StaticResource Chip}" Background="{Binding Background}" Padding="8,1" Margin="0,2,4,2">
+                <TextBlock Text="{Binding Name}" Foreground="{Binding Foreground}" FontSize="11" FontWeight="SemiBold" />
+            </Border>
+        </DataTemplate>
+
+        <!-- Tag chip with a remove button (custom tags only) -->
+        <DataTemplate x:Key="EditableTagChip" DataType="{x:Type svc:TagInfo}">
+            <Border Style="{StaticResource Chip}" Background="{Binding Background}" Padding="10,3,4,3">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}" Foreground="{Binding Foreground}" FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Center" Margin="0,0,4,0" />
+                    <Button x:Name="RemoveBtn" Cursor="Hand" ToolTip="Remove tag" Padding="0" Width="16" Height="16"
+                            Command="{Binding DataContext.RemoveTagCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                            CommandParameter="{Binding}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Bd" CornerRadius="{StaticResource ControlRadius}" Background="Transparent">
+                                    <ui:SymbolIcon Symbol="Dismiss12" FontSize="10" Foreground="{Binding Foreground}" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="{DynamicResource HoverVeilBrush}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsDefault}" Value="True">
+                    <Setter TargetName="RemoveBtn" Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <!-- caption above a group of menu items (export menu) -->
+        <Style x:Key="MenuSectionHeader" TargetType="MenuItem">
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <TextBlock Text="{Binding Header, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource Label}"
+                                   Foreground="{DynamicResource TextMutedBrush}" Margin="12,8,12,4" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DetailLabel" TargetType="TextBlock" BasedOn="{StaticResource Overline}">
+            <Setter Property="Margin" Value="0,0,0,2" />
+        </Style>
+        <Style x:Key="DetailValue" TargetType="TextBlock" BasedOn="{StaticResource Body}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Typography.NumeralAlignment" Value="Tabular" />
+        </Style>
+
+        <Style x:Key="RightCell" TargetType="TextBlock" BasedOn="{StaticResource Body}">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Typography.NumeralAlignment" Value="Tabular" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="{StaticResource PagePadding}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- ============ Header ============ -->
+        <Grid Margin="0,0,0,24">
+            <StackPanel>
+                <TextBlock Text="Activity log" Style="{StaticResource PageTitle}" />
+                <TextBlock Text="{Binding Summary}" Style="{StaticResource Meta}" Margin="0,4,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <ComboBox Width="150" Margin="0,0,10,0" ItemsSource="{Binding MaxItemsOptions}" SelectedItem="{Binding SelectedMaxItems}"
+                          DisplayMemberPath="Label"
+                          ToolTip="How many of the newest activities the list shows. A search always looks at all of them." />
+                <ui:TextBox x:Name="SearchBox" Width="340" PlaceholderText="Search area, type, tier or tag…  (Ctrl+F)"
+                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ClearButtonEnabled="True">
+                    <ui:TextBox.Icon><ui:SymbolIcon Symbol="Search20" /></ui:TextBox.Icon>
+                </ui:TextBox>
+                <ui:Button Content="Export" Appearance="Secondary" Click="Export_Click" Margin="10,0,0,0"
+                           ToolTip="Export the filtered or all activities as CSV or JSON">
+                    <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowDownload20" /></ui:Button.Icon>
+                </ui:Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- ============ Global filter ============ -->
+        <views:GlobalFilterBar Grid.Row="1" Margin="0,0,0,16" />
+
+        <!-- ============ Grid + details ============ -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="360" />
+            </Grid.ColumnDefinitions>
+
+            <!-- rows are row cards directly on the page (no panel around the table) -->
+            <Border>
+                <Grid>
+                    <DataGrid x:Name="Grid"
+                              ItemsSource="{Binding Items}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Extended"
+                              SelectionUnit="FullRow"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="None"
+                              CanUserResizeRows="False"
+                              CanUserReorderColumns="False"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              HorizontalScrollBarVisibility="Disabled"
+                              EnableRowVirtualization="True"
+                              VirtualizingPanel.IsVirtualizing="True"
+                              VirtualizingPanel.VirtualizationMode="Recycling"
+                              VirtualizingPanel.ScrollUnit="Pixel"
+                              SelectionChanged="Grid_SelectionChanged"
+                              Sorting="Grid_Sorting"
+                              PreviewKeyDown="Grid_PreviewKeyDown">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Activity" Width="2.2*" MinWidth="200" SortMemberPath="Area">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type svc:ActivityInfo}">
+                                        <StackPanel Orientation="Horizontal" Margin="0,6">
+                                            <Rectangle Width="8" Height="8" RadiusX="2" RadiusY="2" Fill="{Binding TypeBrush}"
+                                                       Margin="0,0,12,0" VerticalAlignment="Center" />
+                                            <StackPanel VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Area}" Style="{StaticResource Body}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding TypeName}" Style="{StaticResource Caption}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Level" Width="70" SortMemberPath="AreaLevel">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type svc:ActivityInfo}">
+                                        <TextBlock Text="{Binding LevelText}" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Tags" Width="2*" CanUserSort="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type svc:ActivityInfo}">
+                                        <ItemsControl ItemsSource="{Binding Tags}" ItemTemplate="{StaticResource TagChip}"
+                                                      ItemsPanel="{StaticResource WrapPanelTemplate}" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Deaths" Width="70" SortMemberPath="Deaths">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type svc:ActivityInfo}">
+                                        <TextBlock x:Name="T" Text="{Binding Deaths}" Style="{StaticResource RightCell}" Margin="0,0,8,0" />
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Deaths}" Value="0">
+                                                <Setter TargetName="T" Property="Opacity" Value="0.35" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Started" Width="160" SortMemberPath="Started">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type svc:ActivityInfo}">
+                                        <TextBlock Text="{Binding StartedFull}" Style="{StaticResource RightCell}" Margin="0,0,8,0"
+                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Duration" Width="90" SortMemberPath="TotalSeconds">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate DataType="{x:Type svc:ActivityInfo}">
+                                        <TextBlock Text="{Binding Duration}" Style="{StaticResource RightCell}" FontWeight="SemiBold" Margin="0,0,12,0" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- empty state -->
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="360"
+                                Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
+                        <ui:SymbolIcon Symbol="History24" FontSize="40" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding EmptyText}" Style="{StaticResource Meta}" FontSize="14"
+                                   TextAlignment="Center" TextWrapping="Wrap" Margin="0,10,0,10" />
+                        <ui:Button Content="Clear filters" HorizontalAlignment="Center" Appearance="Secondary"
+                                   Command="{Binding ClearFiltersCommand}"
+                                   Visibility="{Binding HasActiveFilters, Converter={StaticResource BoolToVis}}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ============ Side panel ============ -->
+            <Border Grid.Column="2" Style="{StaticResource Card}" Padding="0">
+                <Grid>
+                    <!-- nothing selected -->
+                    <StackPanel VerticalAlignment="Center" Margin="32"
+                                Visibility="{Binding HasSelection, Converter={StaticResource InvBoolToVis}}">
+                        <ui:SymbolIcon Symbol="CursorClick24" FontSize="36" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center" />
+                        <TextBlock Text="Select an activity" Style="{StaticResource CardTitle}" HorizontalAlignment="Center" Margin="0,10,0,4" />
+                        <TextBlock Style="{StaticResource Caption}" TextAlignment="Center" TextWrapping="Wrap">
+                            Details, side areas and tags appear here.
+                            Hold Ctrl or Shift to select several activities for bulk tagging, export or delete.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <!-- single activity -->
+                    <Grid Visibility="{Binding DataContext.HasSingleSelection, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource BoolToVis}}"
+                          DataContext="{Binding SelectedActivity}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="22,22,22,12">
+                                <!-- activity type: color mark + label -->
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <Rectangle Width="8" Height="8" RadiusX="2" RadiusY="2" Fill="{Binding TypeBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding TypeName}" Style="{StaticResource Label}" />
+                                </StackPanel>
+                                <TextBlock Text="{Binding Area}" Style="{StaticResource H2}" TextWrapping="Wrap" />
+                                <TextBlock Style="{StaticResource Meta}" Margin="0,4,0,20">
+                                    <Run Text="{Binding Started, StringFormat='dddd, MMM d yyyy · HH:mm', Mode=OneWay}" />
+                                </TextBlock>
+
+                                <!-- key facts -->
+                                <UniformGrid Columns="3" Margin="0,0,0,18">
+                                    <StackPanel Margin="0,0,0,14">
+                                        <TextBlock Text="Duration" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding Duration}" Style="{StaticResource DetailValue}" FontSize="18" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,14">
+                                        <TextBlock Text="Level" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding LevelText}" Style="{StaticResource DetailValue}" FontSize="18" />
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,14">
+                                        <TextBlock Text="Deaths" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding Deaths}" Style="{StaticResource DetailValue}" FontSize="18" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Portals" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding Portals}" Style="{StaticResource DetailValue}" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Paused" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding PausedText}" Style="{StaticResource DetailValue}" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Area level" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding AreaLevel}" Style="{StaticResource DetailValue}" />
+                                    </StackPanel>
+                                </UniformGrid>
+
+                                <!-- tags -->
+                                <Grid Margin="0,0,0,8">
+                                    <TextBlock Text="Tags" Style="{StaticResource CardTitle}" VerticalAlignment="Center" />
+                                    <ui:Button HorizontalAlignment="Right" Appearance="Transparent" Style="{StaticResource SmallButton}" Content="Add tag"
+                                               Click="AddTag_Click"
+                                               IsEnabled="{Binding DataContext.HasAvailableTags, RelativeSource={RelativeSource AncestorType=Page}}">
+                                        <ui:Button.Icon><ui:SymbolIcon Symbol="Add16" /></ui:Button.Icon>
+                                    </ui:Button>
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding Tags}" ItemTemplate="{StaticResource EditableTagChip}"
+                                              ItemsPanel="{StaticResource WrapPanelTemplate}" />
+                                <TextBlock Text="No tags" Margin="0,0,0,6">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Tags.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+
+                                <!-- side areas -->
+                                <StackPanel Margin="0,14,0,0" Visibility="{Binding HasSubActivities, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="Side areas" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
+                                    <ItemsControl ItemsSource="{Binding SubActivities}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type svc:ActivityInfo}">
+                                                <Grid Margin="0,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Rectangle Width="8" Height="8" RadiusX="2" RadiusY="2" Fill="{Binding TypeBrush}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock Text="{Binding Area}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Text="{Binding TypeName}" Style="{StaticResource Caption}" FontSize="11" />
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="2" Text="{Binding Duration}" Style="{StaticResource DetailValue}" FontSize="13" VerticalAlignment="Center" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <Border Grid.Row="1" Padding="22,0,22,22">
+                            <ui:Button Content="Delete activity" Appearance="Danger" HorizontalAlignment="Stretch" Click="Delete_Click">
+                                <ui:Button.Icon><ui:SymbolIcon Symbol="Delete20" /></ui:Button.Icon>
+                            </ui:Button>
+                        </Border>
+                    </Grid>
+
+                    <!-- several activities -->
+                    <Grid Visibility="{Binding HasMultiSelection, Converter={StaticResource BoolToVis}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="22,22,22,12" DataContext="{Binding SelectionSummary}">
+                                <TextBlock Text="SELECTION" Style="{StaticResource Label}" Foreground="{DynamicResource AccentTextBrush}" Margin="0,0,0,10" />
+                                <TextBlock Text="{Binding DataContext.SelectionText, RelativeSource={RelativeSource AncestorType=Page}}"
+                                           Style="{StaticResource H2}" TextWrapping="Wrap" Margin="0,0,0,20" />
+
+                                <!-- key facts (classic SummaryForm) -->
+                                <UniformGrid Columns="3" Margin="0,0,0,20">
+                                    <StackPanel>
+                                        <TextBlock Text="Activities" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding Count, StringFormat=N0}" Style="{StaticResource DetailValue}" FontSize="18" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Total time" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding Total}" Style="{StaticResource DetailValue}" FontSize="18" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Text="Average" Style="{StaticResource DetailLabel}" />
+                                        <TextBlock Text="{Binding Average}" Style="{StaticResource DetailValue}" FontSize="18" />
+                                    </StackPanel>
+                                </UniformGrid>
+
+                                <!-- per activity type -->
+                                <TextBlock Text="By type" Style="{StaticResource CardTitle}" Margin="0,0,0,6" />
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="44" />
+                                        <ColumnDefinition Width="72" />
+                                        <ColumnDefinition Width="56" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Type" Style="{StaticResource Caption}" />
+                                    <TextBlock Grid.Column="1" Text="Count" Style="{StaticResource Caption}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="2" Text="Total" Style="{StaticResource Caption}" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="3" Text="Avg." Style="{StaticResource Caption}" HorizontalAlignment="Right" />
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding Types}" Margin="0,0,0,18">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type vm:SummaryTypeRow}">
+                                            <Grid Margin="0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="44" />
+                                                    <ColumnDefinition Width="72" />
+                                                    <ColumnDefinition Width="56" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Rectangle Width="8" Height="8" RadiusX="2" RadiusY="2" Fill="{Binding Brush}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Name}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Text="{Binding Count, StringFormat=N0}" Style="{StaticResource RightCell}" FontSize="13" />
+                                                <TextBlock Grid.Column="2" Text="{Binding Total}" Style="{StaticResource RightCell}" FontSize="13" FontWeight="SemiBold" />
+                                                <TextBlock Grid.Column="3" Text="{Binding Average}" Style="{StaticResource RightCell}" FontSize="13" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <!-- tags: count and share of the selection -->
+                                <StackPanel Visibility="{Binding HasTags, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="Tags" Style="{StaticResource CardTitle}" Margin="0,0,0,8" />
+                                    <ItemsControl ItemsSource="{Binding Tags}" ItemsPanel="{StaticResource WrapPanelTemplate}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type vm:SummaryTagRow}">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,12,6">
+                                                    <Border Style="{StaticResource Chip}" Background="{Binding Background}" Padding="8,1" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Name}" Foreground="{Binding Foreground}" FontSize="11" FontWeight="SemiBold" />
+                                                    </Border>
+                                                    <TextBlock Text="{Binding Text}" Style="{StaticResource Caption}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <StackPanel Grid.Row="1" Margin="22,0,22,22">
+                            <ui:Button Content="Add tag to all" HorizontalAlignment="Stretch" Appearance="Secondary" Margin="0,0,0,8"
+                                       Click="AddTag_Click" IsEnabled="{Binding HasAvailableTags}">
+                                <ui:Button.Icon><ui:SymbolIcon Symbol="TagMultiple20" /></ui:Button.Icon>
+                            </ui:Button>
+                            <ui:Button Content="Export selected" HorizontalAlignment="Stretch" Appearance="Secondary" Margin="0,0,0,8"
+                                       Click="ExportSelected_Click">
+                                <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowDownload20" /></ui:Button.Icon>
+                            </ui:Button>
+                        </StackPanel>
+                        <Border Grid.Row="2" Padding="22,0,22,22">
+                            <ui:Button Appearance="Danger" HorizontalAlignment="Stretch" Click="Delete_Click">
+                                <ui:Button.Icon><ui:SymbolIcon Symbol="Delete20" /></ui:Button.Icon>
+                                <ui:Button.Content>
+                                    <TextBlock>
+                                        <Run Text="Delete " /><Run Text="{Binding SelectedCount, Mode=OneWay}" /><Run Text=" activities" />
+                                    </TextBlock>
+                                </ui:Button.Content>
+                            </ui:Button>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

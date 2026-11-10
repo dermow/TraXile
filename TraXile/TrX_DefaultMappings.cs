@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace TraXile
 {
@@ -206,9 +205,12 @@ namespace TraXile
 
         // Voidborn Keys
         public List<string> _reliqKeyAreas;
-        private List<string> _heistIntroVoiceLines;
-
+        //private List<string> _heistIntroVoiceLines;
         public List<string> ReliqKeyAreas => _reliqKeyAreas;
+
+        // Anomaly Areas
+        public List<string> _anomalyAreas;
+        public List<string> AnomalyAreas => _anomalyAreas;
 
         // All
         public List<string> AllAreas
@@ -252,6 +254,7 @@ namespace TraXile
                 lst.AddRange(AdmiralValeriusAreas);
                 lst.AddRange(SasanAreas);
                 lst.AddRange(OshabiAreas);
+                lst.AddRange(AnomalyAreas);
                 lst.Sort();
                 return lst;
             }
@@ -964,6 +967,21 @@ namespace TraXile
                 "Forgotten Reliquary",
                 "Vaal Reliquary",
 
+            };
+
+            _anomalyAreas = new List<string>
+            {
+                "Rivers End",
+                "Syndicate Hideout",
+                "Untainted Paradise",
+                "Lake Islet",
+                "Overgrown Grove",
+                "Forgotten Shrine",
+                "The Court of Chaos",
+                "Uncharted Expedition",
+                "The Manor Foyer",
+                "Planned Heist",
+                "Gambling District"
             };
            
             _pausableActivityTypes = new List<ACTIVITY_TYPES>

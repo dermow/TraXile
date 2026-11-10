@@ -1,0 +1,388 @@
+<Page
+    x:Class="TraXile.Next.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
+    Title="Settings"
+    ScrollViewer.CanContentScroll="False">
+    <!-- WPF-UI: without this the host wraps the page in its own scroll viewer, so the page's
+         ScrollViewer below gets infinite height, shows no scrollbar and swallows the mouse wheel. -->
+
+    <Page.Resources>
+        <!-- One setting: name and help on the left, the control on the right -->
+        <Style x:Key="SettingName" TargetType="TextBlock" BasedOn="{StaticResource Body}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style x:Key="SettingHelp" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,2,24,0" />
+        </Style>
+        <Style x:Key="SectionLabel" TargetType="TextBlock" BasedOn="{StaticResource Label}">
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="{StaticResource PagePadding}" MaxWidth="980" HorizontalAlignment="Left">
+            <TextBlock Text="Settings" Style="{StaticResource PageTitle}" />
+            <TextBlock Text="Stored in config.xml in your TraXile data folder, the same file TraXile 2.x used."
+                       Style="{StaticResource Meta}" Margin="0,4,0,24" />
+
+            <Border Style="{StaticResource Notice}" Margin="0,0,0,24" BorderBrush="{DynamicResource StatusWarningBrush}"
+                    Visibility="{Binding IsReadOnly, Converter={StaticResource BoolToVis}}">
+                <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
+                    <Run Text="Read only" FontWeight="SemiBold" />
+                    <Run Text="  TraXile shows demo data, so settings cannot be changed. Restart TraXile without --demo to track live." Foreground="{DynamicResource TextMutedBrush}" />
+                </TextBlock>
+            </Border>
+
+            <!-- ============ General ============ -->
+            <TextBlock Text="GENERAL" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,28">
+                <StackPanel>
+                    <!-- Client.txt -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Path of Exile log (Client.txt)" Style="{StaticResource SettingName}" />
+                            <TextBlock Text="{Binding ClientTxtText}" Style="{StaticResource Meta}" Margin="0,4,24,0"
+                                       TextTrimming="CharacterEllipsis" ToolTip="{Binding ClientTxtPath}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Changing it restarts TraXile and reads the new log from the start." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Change…" VerticalAlignment="Center" Click="ChangeClientTxt_Click"
+                                   IsEnabled="{Binding CanWrite}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Theme -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Theme" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}" Text="Also switchable with the button in the title bar." />
+                        </StackPanel>
+                        <Border Grid.Column="1" Style="{StaticResource SegmentedGroup}">
+                            <!-- No GroupName: radios are then grouped by this panel. A named group spans every detached
+                                 (navigated-away) page instance, which all bind the same view model and would uncheck each
+                                 other in an endless loop. -->
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Style="{StaticResource Segment}" Content="Dark" IsChecked="{Binding IsDark}" />
+                                <RadioButton Style="{StaticResource Segment}" Content="Light" IsChecked="{Binding IsLight}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Minimize to tray -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Minimize to tray" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="When minimized, TraXile hides from the taskbar and keeps tracking in the notification area. Double-click the icon to open it again." />
+                        </StackPanel>
+                        <ui:ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding MinimizeToTray}" IsEnabled="{Binding CanWrite}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ============ Time caps ============ -->
+            <TextBlock Text="TIME CAPS" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="24,20" Margin="0,0,0,28">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SettingHelp}" Margin="0,0,0,16"
+                               Text="Activities that run longer than their cap (e.g. you went AFK) count with the cap in statistics. Values in seconds." />
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Minimum time" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}" Text="Shorter activities are not tracked. Applies after a restart." />
+                        </StackPanel>
+                        <ui:TextBox Grid.Column="1" Width="110" VerticalAlignment="Center" TextAlignment="Right"
+                                    Text="{Binding MinimumText, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding CanWrite}" />
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding TimeCaps}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><UniformGrid Columns="3" /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:TimeCapRow}">
+                                <Border x:Name="Row" Background="{DynamicResource SurfaceRowBrush}" CornerRadius="{StaticResource SurfaceRadius}"
+                                        Margin="0,0,8,4" Padding="12,6">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Rectangle Width="8" Height="8" RadiusX="2" RadiusY="2" Fill="{Binding Brush}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,8,0">
+                                            <TextBlock Text="{Binding Name}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" />
+                                            <TextBlock x:Name="Duration" Text="{Binding DurationText}" Style="{StaticResource Caption}" Typography.NumeralAlignment="Tabular" />
+                                        </StackPanel>
+                                        <ui:TextBox Grid.Column="2" Width="86" MinHeight="32" FontSize="13" TextAlignment="Right" VerticalAlignment="Center"
+                                                    Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                                                    IsEnabled="{Binding DataContext.CanWrite, RelativeSource={RelativeSource AncestorType=Page}}" />
+                                    </Grid>
+                                </Border>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsValid}" Value="False">
+                                        <Setter TargetName="Duration" Property="Foreground" Value="{DynamicResource StatusDangerBrush}" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Grid Margin="0,16,0,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding TimeCapStatus}" Style="{StaticResource Meta}" VerticalAlignment="Center" />
+                            <ui:Button Content="Restart now" Appearance="Transparent" Margin="8,0,0,0" Click="RestartNow_Click"
+                                       Visibility="{Binding NeedsRestart, Converter={StaticResource BoolToVis}}" />
+                        </StackPanel>
+                        <ui:Button Content="Save time caps" Appearance="Primary" HorizontalAlignment="Right" Click="SaveTimeCaps_Click"
+                                   IsEnabled="{Binding CanWrite}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ============ Overlays ============ -->
+            <TextBlock Text="OVERLAYS" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,28">
+                <StackPanel>
+                    <!-- Opacity -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="260" />
+                            <ColumnDefinition Width="52" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Opacity" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}" Text="How solid the overlays are drawn over the game." />
+                        </StackPanel>
+                        <Slider Grid.Column="1" VerticalAlignment="Center" Minimum="{Binding MinOverlayOpacity, Mode=OneTime}" Maximum="100"
+                                TickFrequency="5" IsSnapToTickEnabled="True" Value="{Binding OverlayOpacity}" IsEnabled="{Binding CanWrite}" />
+                        <TextBlock Grid.Column="2" Text="{Binding OverlayOpacity, StringFormat={}{0} %}" Style="{StaticResource Num}"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Show by default -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Open with TraXile" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="These overlays open when TraXile starts. Open or close them any time with the overlay button in the title bar or the tray menu." />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <CheckBox Content="Stopwatch" IsChecked="{Binding StopwatchShowDefault}" IsEnabled="{Binding CanWrite}" Margin="0,0,0,6" />
+                            <CheckBox Content="Tags" IsChecked="{Binding TagsShowDefault}" IsEnabled="{Binding CanWrite}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Tag slots -->
+                    <Grid Margin="24,20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Tags overlay" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}" Text="The three tags the overlay shows; each lights up while the current activity has it." />
+                        </StackPanel>
+                        <UniformGrid Grid.Row="1" Columns="3" Margin="0,12,0,0">
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Text="Slot 1" Style="{StaticResource Caption}" FontWeight="SemiBold" Margin="0,0,0,6" />
+                                <ComboBox ItemsSource="{Binding TagSlotOptions}" SelectedItem="{Binding TagSlot1}" IsEnabled="{Binding CanWrite}" />
+                            </StackPanel>
+                            <StackPanel Margin="4,0,4,0">
+                                <TextBlock Text="Slot 2" Style="{StaticResource Caption}" FontWeight="SemiBold" Margin="0,0,0,6" />
+                                <ComboBox ItemsSource="{Binding TagSlotOptions}" SelectedItem="{Binding TagSlot2}" IsEnabled="{Binding CanWrite}" />
+                            </StackPanel>
+                            <StackPanel Margin="8,0,0,0">
+                                <TextBlock Text="Slot 3" Style="{StaticResource Caption}" FontWeight="SemiBold" Margin="0,0,0,6" />
+                                <ComboBox ItemsSource="{Binding TagSlotOptions}" SelectedItem="{Binding TagSlot3}" IsEnabled="{Binding CanWrite}" />
+                            </StackPanel>
+                        </UniformGrid>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- Reset positions -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Reset positions" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Moves both overlays back next to the TraXile window, e.g. when one is lost on a disconnected monitor." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Reset positions" VerticalAlignment="Center" Command="{Binding ResetOverlayPositionsCommand}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowReset20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- ============ Backups ============ -->
+            <TextBlock Text="BACKUPS" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,28">
+                <StackPanel>
+                    <!-- Create -->
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Create backup" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Copies Client.txt, the database, statistics cache, settings and lab data. Backups made with TraXile 2.x are listed too." />
+                            <TextBlock Text="{Binding BackupNameError}" Style="{StaticResource SettingHelp}" Foreground="{DynamicResource StatusDangerBrush}"
+                                       Visibility="{Binding HasBackupNameError, Converter={StaticResource BoolToVis}}" />
+                        </StackPanel>
+                        <ui:TextBox x:Name="BackupNameBox" Grid.Column="1" VerticalAlignment="Center" PlaceholderText="Name (Default)"
+                                    Text="{Binding NewBackupName, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding CanWrite}"
+                                    KeyDown="BackupName_KeyDown" />
+                        <ui:Button Grid.Column="2" Content="Create" Margin="8,0,0,0" VerticalAlignment="Center" Click="CreateBackup_Click"
+                                   IsEnabled="{Binding CanWrite}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="Save20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <!-- List -->
+                    <StackPanel Margin="24,20">
+                        <TextBlock Text="No backups yet." Style="{StaticResource Meta}"
+                                   Visibility="{Binding HasBackups, Converter={StaticResource InvBoolToVis}}" />
+                        <ListBox ItemsSource="{Binding BackupList}" SelectedItem="{Binding SelectedBackup}" MaxHeight="300"
+                                 ItemContainerStyle="{StaticResource CardListItem}" Background="Transparent" BorderThickness="0" Padding="0"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 Visibility="{Binding HasBackups, Converter={StaticResource BoolToVis}}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:BackupRow}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="200" />
+                                            <ColumnDefinition Width="150" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Name}" Style="{StaticResource Body}" FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="1" Text="{Binding CreatedText}" Style="{StaticResource Num}" VerticalAlignment="Center" />
+                                        <TextBlock Grid.Column="2" Text="{Binding Details}" Style="{StaticResource Caption}"
+                                                   TextTrimming="CharacterEllipsis" VerticalAlignment="Center" ToolTip="{Binding Details}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <Grid Margin="0,12,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:Button Content="Restore…" Appearance="Primary" Margin="0,0,8,0" Click="RestoreBackup_Click"
+                                           IsEnabled="{Binding CanChangeSelectedBackup}">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowCounterclockwise20" /></ui:Button.Icon>
+                                </ui:Button>
+                                <ui:Button Content="Delete…" Appearance="Danger" Click="DeleteBackup_Click" IsEnabled="{Binding CanChangeSelectedBackup}">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="Delete20" /></ui:Button.Icon>
+                                </ui:Button>
+                            </StackPanel>
+                            <ui:Button Content="Open folder" Appearance="Transparent" HorizontalAlignment="Right" Click="OpenBackupFolder_Click">
+                                <ui:Button.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></ui:Button.Icon>
+                            </ui:Button>
+                        </Grid>
+                        <TextBlock Style="{StaticResource SettingHelp}" Margin="0,10,0,0"
+                                   Text="Restoring replaces your current activities, statistics and settings with the backup and restarts TraXile. Path of Exile must be closed." />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ============ Maintenance ============ -->
+            <TextBlock Text="MAINTENANCE" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="0" Margin="0,0,0,28">
+                <StackPanel>
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Reload log" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Reads Client.txt again from the start and rebuilds all activities. Tags and pauses you added by hand are lost." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Reload…" VerticalAlignment="Center" Click="Reload_Click" IsEnabled="{Binding CanMaintain}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowClockwise20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Shrink log" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Keeps a copy of Client.txt next to it and empties the original, so TraXile starts fast again. Your history stays." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Shrink…" VerticalAlignment="Center" Click="Shrink_Click" IsEnabled="{Binding CanMaintain}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowMinimize20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+
+                    <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                    <Grid Margin="24,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Full reset" Style="{StaticResource SettingName}" />
+                            <TextBlock Style="{StaticResource SettingHelp}"
+                                       Text="Deletes all activities and statistics and empties Client.txt. You can create a backup first." />
+                        </StackPanel>
+                        <ui:Button Grid.Column="1" Content="Reset…" Appearance="Danger" VerticalAlignment="Center" Click="Reset_Click" IsEnabled="{Binding CanMaintain}">
+                            <ui:Button.Icon><ui:SymbolIcon Symbol="Delete20" /></ui:Button.Icon>
+                        </ui:Button>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

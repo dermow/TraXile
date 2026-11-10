@@ -1,0 +1,264 @@
+<Page
+    x:Class="TraXile.Next.Views.TagsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:vm="clr-namespace:TraXile.Next.ViewModels"
+    Title="Tags">
+
+    <Page.Resources>
+        <CollectionViewSource x:Key="GroupedTags" Source="{Binding Tags}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="IsDefault" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+        </Style>
+        <Style x:Key="SettingName" TargetType="TextBlock" BasedOn="{StaticResource Body}">
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style x:Key="SettingHelp" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,2,16,0" />
+        </Style>
+        <Style x:Key="ErrorText" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="Foreground" Value="{DynamicResource StatusDangerBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="{StaticResource PagePadding}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- ============ Header ============ -->
+        <StackPanel Margin="0,0,0,24">
+            <TextBlock Text="Tags" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Meta}" Margin="0,4,0,0" TextWrapping="Wrap">
+                <Run Text="Default tags are set by TraXile. Add your own tags on the live card, in the activity log or in the game chat with" />
+                <Run Text="trax::tag &lt;id&gt;" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" /><Run Text="." />
+            </TextBlock>
+        </StackPanel>
+
+        <Border Grid.Row="1" Style="{StaticResource Notice}" Margin="0,0,0,24" BorderBrush="{DynamicResource StatusWarningBrush}"
+                Visibility="{Binding IsDemo, Converter={StaticResource BoolToVis}}">
+            <TextBlock Style="{StaticResource Body}" TextWrapping="Wrap">
+                <Run Text="Demo data" FontWeight="SemiBold" />
+                <Run Text="  Changes to tags are not saved while TraXile shows demo data." Foreground="{DynamicResource TextMutedBrush}" />
+            </TextBlock>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="420" />
+                <ColumnDefinition Width="24" />
+                <ColumnDefinition Width="440" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ============ Tag list ============ -->
+            <ListBox x:Name="TagList" ItemsSource="{Binding Source={StaticResource GroupedTags}}" SelectedItem="{Binding Selected}"
+                     ItemContainerStyle="{StaticResource CardListItem}" Background="Transparent" BorderThickness="0" Padding="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingPanel.IsVirtualizingWhenGrouping="True">
+                <ListBox.Template>
+                    <ControlTemplate TargetType="ListBox">
+                        <ScrollViewer Focusable="False" Padding="0,0,8,0">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ListBox.Template>
+                <ListBox.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,8">
+                                    <TextBlock x:Name="Title" Text="CUSTOM TAGS" Style="{StaticResource Label}" />
+                                    <TextBlock Text="{Binding ItemCount, StringFormat=' · {0}'}" Style="{StaticResource Label}"
+                                               Foreground="{DynamicResource TextMutedBrush}" />
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Name}" Value="True">
+                                        <Setter TargetName="Title" Property="Text" Value="DEFAULT TAGS" />
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="GroupItem">
+                                <Setter Property="Margin" Value="0,0,0,20" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="GroupItem">
+                                            <StackPanel>
+                                                <ContentPresenter />
+                                                <ItemsPresenter />
+                                            </StackPanel>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ListBox.GroupStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:TagRow}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="170" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="110" />
+                            </Grid.ColumnDefinitions>
+                            <Border Style="{StaticResource Chip}" Background="{Binding Background}" Margin="0"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Name}" Foreground="{Binding Foreground}" FontSize="12" FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis" MaxWidth="150" />
+                            </Border>
+                            <TextBlock Grid.Column="1" Text="{Binding Id}" Style="{StaticResource Meta}" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" Margin="12,0" />
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0">
+                                <ui:SymbolIcon Symbol="Speaker220" FontSize="16" ToolTip="Plays a sound"
+                                               Foreground="{DynamicResource TextMutedBrush}" Margin="6,0,0,0"
+                                               Visibility="{Binding SoundEnabled, Converter={StaticResource BoolToVis}}" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="3" Text="{Binding UsageText}" Style="{StaticResource Caption}"
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" Typography.NumeralAlignment="Tabular" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- ============ Right column: add + edit ============ -->
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Add custom tag -->
+                    <TextBlock Text="ADD CUSTOM TAG" Style="{StaticResource Label}" Margin="0,4,0,8" />
+                    <Border Style="{StaticResource Card}" Padding="24,20" Margin="0,0,0,28">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="12" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="ID" Style="{StaticResource FieldLabel}" />
+                                    <ui:TextBox x:Name="NewIdBox" PlaceholderText="e.g. juiced" Text="{Binding NewId, UpdateSourceTrigger=PropertyChanged}"
+                                                KeyDown="NewTag_KeyDown" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Display name" Style="{StaticResource FieldLabel}" />
+                                    <ui:TextBox PlaceholderText="e.g. Juiced" Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"
+                                                KeyDown="NewTag_KeyDown" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Style="{StaticResource SettingHelp}" Margin="0,8,0,0"
+                                       Text="The ID is used in chat commands and cannot be changed later. No spaces." />
+                            <TextBlock Text="{Binding AddError}" Style="{StaticResource ErrorText}" Margin="0,8,0,0"
+                                       Visibility="{Binding HasAddError, Converter={StaticResource BoolToVis}}" />
+                            <ui:Button Content="Add tag" Appearance="Primary" HorizontalAlignment="Left" Margin="0,16,0,0"
+                                       Command="{Binding AddCommand}">
+                                <ui:Button.Icon><ui:SymbolIcon Symbol="Add20" /></ui:Button.Icon>
+                            </ui:Button>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Edit selected tag -->
+                    <TextBlock Text="SELECTED TAG" Style="{StaticResource Label}" Margin="0,0,0,8" />
+                    <Border Style="{StaticResource Card}" Padding="24,20"
+                            Visibility="{Binding HasSelection, Converter={StaticResource InvBoolToVis}}">
+                        <TextBlock Text="Select a tag in the list to rename it or change how it is shown." Style="{StaticResource Meta}"
+                                   TextWrapping="Wrap" />
+                    </Border>
+                    <Border Style="{StaticResource Card}" Padding="0"
+                            Visibility="{Binding HasSelection, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <StackPanel Margin="24,20">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                    <Border Style="{StaticResource Chip}" Background="{Binding Selected.Background}" Margin="0,0,10,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding EditName}" Foreground="{Binding Selected.Foreground}" FontSize="12" FontWeight="SemiBold" />
+                                    </Border>
+                                    <TextBlock VerticalAlignment="Center" Style="{StaticResource Meta}">
+                                        <Run Text="{Binding Selected.Id, Mode=OneWay}" /><Run Text="  ·  " /><Run Text="{Binding SelectedKind, Mode=OneWay}" />
+                                    </TextBlock>
+                                </StackPanel>
+
+                                <TextBlock Text="Display name" Style="{StaticResource FieldLabel}" />
+                                <ui:TextBox Text="{Binding EditName, UpdateSourceTrigger=PropertyChanged}" KeyDown="EditName_KeyDown" />
+                                <TextBlock Text="{Binding EditError}" Style="{StaticResource ErrorText}" Margin="0,6,0,0"
+                                           Visibility="{Binding HasEditError, Converter={StaticResource BoolToVis}}" />
+                            </StackPanel>
+
+                            <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                            <!-- Sound notification -->
+                            <StackPanel Margin="24,16">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Sound" Style="{StaticResource SettingName}" />
+                                        <TextBlock Style="{StaticResource SettingHelp}" Text="Played when the tag becomes active on the current activity." />
+                                    </StackPanel>
+                                    <ui:ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding EditSoundEnabled}" />
+                                </Grid>
+
+                                <Grid Margin="0,12,0,0" Visibility="{Binding EditSoundEnabled, Converter={StaticResource BoolToVis}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox ItemsSource="{Binding SoundFiles}" SelectedItem="{Binding EditSoundId}" ToolTip="Sound file" />
+                                    <ui:Button Grid.Column="1" Margin="8,0,0,0" Padding="10,0" MinHeight="36" Command="{Binding PlaySoundCommand}"
+                                               ToolTip="Play the sound">
+                                        <ui:Button.Icon><ui:SymbolIcon Symbol="Play20" /></ui:Button.Icon>
+                                    </ui:Button>
+                                </Grid>
+                                <TextBlock Style="{StaticResource SettingHelp}" Margin="0,8,0,0"
+                                           Visibility="{Binding HasSoundFiles, Converter={StaticResource InvBoolToVis}}"
+                                           Text="No sound files found. Put .mp3 or .wav files into the audio folder and reload." />
+
+                                <WrapPanel Margin="-8,10,0,0">
+                                    <ui:Button Content="Open audio folder" Style="{StaticResource SmallButton}" Appearance="Transparent" Margin="0,0,4,0" Click="OpenAudioFolder_Click"
+                                               ToolTip="Add your own .mp3 or .wav files here">
+                                        <ui:Button.Icon><ui:SymbolIcon Symbol="FolderOpen20" /></ui:Button.Icon>
+                                    </ui:Button>
+                                    <ui:Button Content="Reload sounds" Style="{StaticResource SmallButton}" Appearance="Transparent" Margin="0,0,4,0" Command="{Binding ReloadSoundsCommand}">
+                                        <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowClockwise20" /></ui:Button.Icon>
+                                    </ui:Button>
+                                    <ui:Button Content="Reset to default" Style="{StaticResource SmallButton}" Appearance="Transparent" Margin="0,0,4,0" Command="{Binding ResetSoundCommand}"
+                                               ToolTip="No sound, like a new tag">
+                                        <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowUndo20" /></ui:Button.Icon>
+                                    </ui:Button>
+                                </WrapPanel>
+                            </StackPanel>
+
+                            <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
+
+                            <Grid Margin="24,16,24,20">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:Button Content="Save" Appearance="Primary" Command="{Binding SaveCommand}" Margin="0,0,8,0" />
+                                    <ui:Button Content="Discard" Command="{Binding RevertCommand}" />
+                                </StackPanel>
+                                <ui:Button Content="Delete" Appearance="Danger" HorizontalAlignment="Right" Click="Delete_Click"
+                                           Visibility="{Binding CanDelete, Converter={StaticResource BoolToVis}}">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="Delete20" /></ui:Button.Icon>
+                                </ui:Button>
+                                <TextBlock Text="Default tags cannot be deleted." Style="{StaticResource Caption}"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                                           Visibility="{Binding CanDelete, Converter={StaticResource InvBoolToVis}}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>

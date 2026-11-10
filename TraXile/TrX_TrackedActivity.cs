@@ -141,6 +141,9 @@ namespace TraXile
             set { _areaName = value; }
         }
 
+        // Area name as stored (Area strips apostrophes); TraXile.Next needs it for the classic JSON export
+        internal string AreaRaw => _areaName;
+
         // Original area name (if overwritten)
         private string _origAreaName = "";
         public string AreaOrig

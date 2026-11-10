@@ -1,0 +1,118 @@
+<Page
+    x:Class="TraXile.Next.Views.StatisticsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+    xmlns:svc="clr-namespace:TraXile.Next.Services"
+    xmlns:views="clr-namespace:TraXile.Next.Views"
+    Title="Statistics"
+    ScrollViewer.CanContentScroll="False">
+    <!-- CanContentScroll=False: the page fills the window, the stat list scrolls by itself -->
+
+    <Grid Margin="{StaticResource PagePadding}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- ============ Header ============ -->
+        <StackPanel Margin="0,0,0,24">
+            <TextBlock Text="Statistics" Style="{StaticResource PageTitle}" />
+            <TextBlock Style="{StaticResource Meta}" Margin="0,4,0,0" TextWrapping="Wrap">
+                <Run Text="Counters TraXile reads from your log, for" />
+                <Run Text="{Binding RangeText, Mode=OneWay}" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" /><Run Text="." />
+                <Run Text="Only the time range of the filter applies: the counters are not linked to activities." />
+            </TextBlock>
+        </StackPanel>
+
+        <views:GlobalFilterBar Grid.Row="1" Margin="0,0,0,16" />
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- ============ Stat list ============ -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <ui:TextBox PlaceholderText="Search statistics…" Margin="0,0,0,12" ClearButtonEnabled="True"
+                            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                    <ui:TextBox.Icon><ui:SymbolIcon Symbol="Search20" /></ui:TextBox.Icon>
+                </ui:TextBox>
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedStat}"
+                         ItemContainerStyle="{StaticResource CardListItem}" Background="Transparent" BorderThickness="0" Padding="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.Template>
+                        <ControlTemplate TargetType="ListBox">
+                            <ScrollViewer Focusable="False" Padding="0,0,8,0">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ListBox.Template>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type svc:StatInfo}">
+                            <Grid Margin="4,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="Name" Text="{Binding Name}" Style="{StaticResource Body}" TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" ToolTip="{Binding ToolTip}" />
+                                <TextBlock x:Name="Value" Grid.Column="1" Text="{Binding ValueText}" Style="{StaticResource Num}" FontWeight="SemiBold"
+                                           Margin="12,0,0,0" VerticalAlignment="Center" />
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Value}" Value="0">
+                                    <Setter TargetName="Value" Property="Opacity" Value="0.4" />
+                                    <Setter TargetName="Name" Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <TextBlock Grid.Row="1" Text="No statistics match your search." Style="{StaticResource Meta}" Margin="4,12"
+                           Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}" />
+            </Grid>
+
+            <!-- ============ Chart ============ -->
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid DataContext="{Binding SelectedStat}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource CardTitle}" />
+                            <TextBlock Text="Per day" Style="{StaticResource Caption}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <StackPanel HorizontalAlignment="Right">
+                            <TextBlock Text="{Binding ValueText}" Style="{StaticResource Metric}" HorizontalAlignment="Right" />
+                            <TextBlock Text="in this range" Style="{StaticResource Caption}" HorizontalAlignment="Right" />
+                        </StackPanel>
+                    </Grid>
+
+                    <lvc:CartesianChart Grid.Row="1" Margin="0,16,0,0" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"
+                                        ZoomMode="X" TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent"
+                                        Visibility="{Binding HasSelection, Converter={StaticResource BoolToVis}}" />
+
+                    <TextBlock Grid.Row="1" Text="Select a statistic to see its history." Style="{StaticResource Meta}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Visibility="{Binding HasSelection, Converter={StaticResource InvBoolToVis}}" />
+
+                    <TextBlock Grid.Row="2" Text="Scroll to zoom, drag to move along the time axis." Style="{StaticResource Caption}" Margin="0,8,0,0" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

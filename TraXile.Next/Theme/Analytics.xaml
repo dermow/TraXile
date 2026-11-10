@@ -1,0 +1,57 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:TraXile.Next.ViewModels">
+    <!-- Shared building blocks of the analytics pages (mapping, lab, heist, ...) -->
+
+    <!-- "count by ..." row: label or tag chip, optional detail, count, bar relative to the top row -->
+    <DataTemplate DataType="{x:Type vm:CountRow}">
+        <StackPanel Margin="0,4,0,6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="Label" Text="{Binding Label}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" />
+                <Border x:Name="Chip" Style="{StaticResource Chip}" Background="{Binding Tag.Background}" Padding="8,1"
+                        HorizontalAlignment="Left" Visibility="Collapsed">
+                    <TextBlock Text="{Binding Tag.Name}" Foreground="{Binding Tag.Foreground}" FontSize="11" FontWeight="SemiBold" />
+                </Border>
+                <TextBlock Grid.Column="1" Text="{Binding Detail}" Style="{StaticResource Caption}" Margin="12,0,0,0"
+                           VerticalAlignment="Center" Typography.NumeralAlignment="Tabular" />
+                <TextBlock Grid.Column="2" Text="{Binding CountText}" Style="{StaticResource Num}" FontSize="13" FontWeight="SemiBold"
+                           MinWidth="40" TextAlignment="Right" VerticalAlignment="Center" />
+            </Grid>
+            <ProgressBar Style="{StaticResource SlimProgress}" Value="{Binding Fraction, Mode=OneWay}" Margin="0,5,0,0"
+                         Foreground="{DynamicResource AccentBrush}" />
+        </StackPanel>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding HasTag}" Value="True">
+                <Setter TargetName="Label" Property="Visibility" Value="Collapsed" />
+                <Setter TargetName="Chip" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <!-- title + caption of a card -->
+    <Style x:Key="CardSubtitle" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+        <Setter Property="Margin" Value="0,2,0,12" />
+    </Style>
+
+    <!-- scrollable "count by ..." list inside a card. CanContentScroll=True lets a VirtualizingStackPanel items panel
+         actually virtualize (without it every item is realized); ScrollUnit=Pixel keeps smooth scrolling. -->
+    <Style x:Key="CountList" TargetType="ItemsControl">
+        <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
+        <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ItemsControl">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,8,0" Focusable="False" CanContentScroll="True">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows.Forms;
 using log4net;
 using Microsoft.Data.Sqlite;
 
@@ -64,8 +63,9 @@ namespace TraXile
         // DateTime format info for enforcing specific calendar info
         public DateTimeFormatInfo _dateTimeFormatInfo;
 
-        // Exit switch
-        private bool _exit;
+        // Exit switch: the worker threads end cooperatively (Thread.Abort does not exist on .NET)
+        private readonly CancellationTokenSource _stopSource = new CancellationTokenSource();
+        private bool _exit => _stopSource.IsCancellationRequested;
 
         // Flag if logic has been started 
         private bool _StartedFlag = false;
@@ -85,8 +85,11 @@ namespace TraXile
         // seed of next area
         private long _nextAreaSeed;
 
-        // Hash code of the last known logfile line
+        // Resume point of the log parser: hash and byte offset of the last known logfile line.
+        // Written by the parser thread and saved by the event thread, so both are only accessed under _resumeLock.
         private int _lastHash = 0;
+        private long _lastHashOffset = 0;
+        private readonly object _resumeLock = new object();
 
         // Flag if history is initialized (logfile read finished)
         private bool _historyInitialized;
@@ -156,13 +159,13 @@ namespace TraXile
         private bool _eventQueueInitizalized;
         public bool EventQueueInitialized => _eventQueueInitizalized;
 
-        // Property: LogLines total 
-        private double _logLinesTotal;
-        public double LogLinesTotal => _logLinesTotal;
+        // Property: Client.txt size in bytes when parsing started (progress calculation)
+        private double _logBytesTotal;
+        public double LogBytesTotal => _logBytesTotal;
 
-        // Property: LogLines read
-        private double _logLinesRead;
-        public double LogLinesRead => _logLinesRead;
+        // Property: Client.txt bytes read so far
+        private double _logBytesRead;
+        public double LogBytesRead => _logBytesRead;
 
         // Property: Is current map zana
         private bool _isMapZana;
@@ -377,28 +380,31 @@ namespace TraXile
         /// <param name="timeout">timeout to wait for exit</param>
         public void Stop(int timeout = 2000)
         {
-            _exit = true;
-            int i = 0;
+            _stopSource.Cancel();
 
-            // Wait for threads to finish
-            while (_eventThread.IsAlive || _logParseThread.IsAlive)
+            // Wait for the threads to finish; a thread that does not is a background thread and ends with the process
+            var elapsed = System.Diagnostics.Stopwatch.StartNew();
+            foreach (Thread thread in new[] { _eventThread, _logParseThread })
             {
-                Thread.Sleep(1);
-                i++;
-                if (i > timeout)
+                if (thread == null || thread == Thread.CurrentThread)
                 {
-                    break;
+                    continue;
+                }
+
+                int remaining = Math.Max(0, timeout - (int)elapsed.ElapsedMilliseconds);
+                if (!thread.Join(remaining))
+                {
+                    _log.Warn($"{thread.Name} did not stop within {timeout} ms.");
                 }
             }
+        }
 
-            if (_eventThread.IsAlive)
-            {
-                _eventThread.Abort();
-            }
-            if (_logParseThread.IsAlive)
-            {
-                _logParseThread.Abort();
-            }
+        /// <summary>
+        /// Waits for the given time, but returns early when the logic is stopped.
+        /// </summary>
+        private void WaitUnlessStopped(int milliseconds)
+        {
+            _stopSource.Token.WaitHandle.WaitOne(milliseconds);
         }
 
         /// <summary>
@@ -408,8 +414,10 @@ namespace TraXile
         {
             SqliteDataReader dataReader;
 
-            // Read last hash
+            // Read the resume point. The offset is missing in databases written by TraXile 2.x; the parser
+            // then finds the line by its hash.
             _lastHash = Convert.ToInt32(_dataBackend.GetKVStoreValue("last_hash"));
+            _lastHashOffset = long.TryParse(_dataBackend.GetKVStoreValue("last_hash_offset"), out long offset) ? offset : 0;
 
             // Read last stat vaules
             List<string> stats = new List<string>();
@@ -435,8 +443,28 @@ namespace TraXile
         /// </summary>
         private void SaveStatsCache()
         {
-            // DB
-            _dataBackend.SetKVStoreValue("last_hash", _lastHash.ToString());
+            int hash;
+            long offset;
+            lock (_resumeLock)
+            {
+                hash = _lastHash;
+                offset = _lastHashOffset;
+            }
+
+            _dataBackend.SetKVStoreValue("last_hash", hash.ToString());
+            _dataBackend.SetKVStoreValue("last_hash_offset", offset.ToString());
+        }
+
+        /// <summary>
+        /// Set the resume point of the log parser
+        /// </summary>
+        private void SetResumePoint(int hash, long offset)
+        {
+            lock (_resumeLock)
+            {
+                _lastHash = hash;
+                _lastHashOffset = offset;
+            }
         }
 
         /// <summary>
@@ -593,7 +621,7 @@ namespace TraXile
             {
                 { "TotalMapsDone", "Total maps done" },
                 { "TotalHeistsDone", "Total heists done" },
-                { "TotalKilledCount", "Death count" },
+                { "TotalKilledCount", "Deaths" },
                 { "EinharCaptures", "Einhar beasts captured" },
                 { "TrialMasterTookReward", "Ultimatum: took rewards" },
                 { "TrialMasterVictory", "Ultimatum: cleared all rounds" },
@@ -862,30 +890,43 @@ namespace TraXile
         {
             while (!_exit)
             {
-                // Wait for Valid log file to start parsing
-                Thread.Sleep(1000);
                 if (CheckForValidClientLogFile(_clientTxtPath))
                 {
                     ParseLogFile();
+                }
+                else
+                {
+                    // Wait for a valid log file to start parsing
+                    WaitUnlessStopped(1000);
                 }
             }
         }
 
         /// <summary>
-        /// Get line count from Client.txt. Used for progress calculation
+        /// Jump to the stored resume line if it is still at its stored byte offset. Otherwise the reader stays at the
+        /// start of the file and the resume line is searched by its hash.
         /// </summary>
-        /// <returns></returns>
-        private int GetLogFileLineCount()
+        private void SeekToResumePoint(TrX_LogLineReader reader, long fileLength)
         {
-            int iCount = 0;
-            FileStream fs1 = new FileStream(_clientTxtPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            TextReader reader1 = new StreamReader(fs1);
-            while ((reader1.ReadLine()) != null)
+            if (_lastHash == 0 || _lastHashOffset <= 0)
             {
-                iCount++;
+                return;
             }
-            reader1.Close();
-            return iCount;
+
+            if (_lastHashOffset < fileLength)
+            {
+                reader.Seek(_lastHashOffset);
+                if (reader.TryReadLine(out string line, out _) && TrX_LineHash.Compute(line) == _lastHash)
+                {
+                    // Read the resume line again in the parse loop, it marks the start of the new content there
+                    reader.Seek(_lastHashOffset);
+                    _log.Info($"Resuming at byte {_lastHashOffset} of {fileLength}.");
+                    return;
+                }
+            }
+
+            _log.Warn($"Resume line (hash {_lastHash}) not at byte {_lastHashOffset}, searching it from the start of Client.txt.");
+            reader.Seek(0);
         }
 
         /// <summary>
@@ -893,106 +934,167 @@ namespace TraXile
         /// </summary>
         private void ParseLogFile()
         {
-            _log.Info($"Started logfile parsing. Last hash was {_lastHash}");
-            _logLinesTotal = Convert.ToDouble(GetLogFileLineCount());
+            _log.Info($"Started logfile parsing. Last hash was {_lastHash}, at byte {_lastHashOffset}");
 
             var fs = new FileStream(_clientTxtPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            _logBytesTotal = fs.Length;
             bool bNewContent = _lastHash == 0;
 
-            using (StreamReader reader = new StreamReader(fs))
+            // Set when the resume line was not found (Client.txt deleted or truncated, or a hash stored by a
+            // 3.0 preview, which used the randomized string.GetHashCode): the file is read again and parsing
+            // resumes at the first line newer than the last tracked event. -1 = not in this mode.
+            long resumeAfterUnix = -1;
+
+            // Everything the initial parse writes goes into one transaction: one disk sync instead of one per INSERT
+            if (!_eventQueueInitizalized)
             {
-                string line;
-                int lineHash = 0;
-                DateTime lastEvTime = new DateTime();
+                _dataBackend.BeginBulk();
+            }
 
-                // Keep file open
-                while (!_exit)
+            try
+            {
+                using (TrX_LogLineReader reader = new TrX_LogLineReader(fs))
                 {
-                    line = reader.ReadLine();
+                    string line;
+                    int lineHash = 0;
+                    long lineOffset = 0;
+                    DateTime lastEvTime = new DateTime();
 
-                    if (line == null)
+                    SeekToResumePoint(reader, fs.Length);
+                    _logBytesRead = reader.Position;
+
+                    // Keep file open
+                    while (!_exit)
                     {
-                        if (!_eventQueueInitizalized)
+                        if (!reader.TryReadLine(out line, out long offset))
                         {
-                            _currentActivity = null;
-                            _isMapZana = false;
-                            _initEndTime = DateTime.Now;
-                            TimeSpan tsInitDuration = (_initEndTime - _initStartTime);
-                            _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_READY)
+                            if (!_eventQueueInitizalized)
                             {
-                                EventTime = DateTime.Now,
-                                LogLine = $"Application initialized in {Math.Round(tsInitDuration.TotalSeconds, 2)} seconds."
-                            });
-                            _log.Info($"Initialized in {tsInitDuration.TotalSeconds} seconds.");
-                            _lastHash = lineHash;
+                                if (!bNewContent && resumeAfterUnix < 0)
+                                {
+                                    resumeAfterUnix = GetLastTrackedEventTime();
+                                    _log.Warn($"Resume line (hash {_lastHash}) not found in Client.txt, reading it again from the first line after {DateTimeOffset.FromUnixTimeSeconds(resumeAfterUnix).LocalDateTime}.");
+                                    reader.Seek(0);
+                                    _logBytesRead = 0;
+                                    continue;
+                                }
 
-                            // Trigger ready event
-                            OnHistoryInitialized(new TrX_CoreLogicGenericEventArgs(this));
+                                _currentActivity = null;
+                                _isMapZana = false;
+                                _initEndTime = DateTime.Now;
+                                TimeSpan tsInitDuration = (_initEndTime - _initStartTime);
+                                _eventQueue.Enqueue(new TrX_TrackingEvent(EVENT_TYPES.APP_READY)
+                                {
+                                    EventTime = DateTime.Now,
+                                    LogLine = $"Application initialized in {Math.Round(tsInitDuration.TotalSeconds, 2)} seconds."
+                                });
+                                _log.Info($"Initialized in {tsInitDuration.TotalSeconds} seconds.");
+                                SetResumePoint(lineHash, lineOffset);
 
-                            SaveStatsCache();
+                                // The new resume point is committed together with what was parsed up to it
+                                SaveStatsCache();
+                                _dataBackend.CommitBulk();
+
+                                // Trigger ready event
+                                OnHistoryInitialized(new TrX_CoreLogicGenericEventArgs(this));
+                            }
+                            _eventQueueInitizalized = true;
+
+                            bNewContent = true;
+
+                            WaitUnlessStopped(100);
+                            continue;
                         }
-                        _eventQueueInitizalized = true;
 
-                        bNewContent = true;
+                        lineHash = TrX_LineHash.Compute(line);
+                        lineOffset = offset;
+                        _logBytesRead = reader.Position;
 
-                        Thread.Sleep(100);
-                        continue;
-                    }
+                        if (_dict.ContainsKey(lineHash))
+                            continue;
 
-                    lineHash = line.GetHashCode();
-
-                    if (_dict.ContainsKey(lineHash))
-                        continue;
-
-                    if (lineHash == _lastHash || _lastHash == 0)
-                    {
-                        bNewContent = true;
-                    }
-
-                    if (!bNewContent)
-                    {
-                        _logLinesRead++;
-                        continue;
-                    }
-
-                    _lastHash = lineHash;
-
-                    foreach (KeyValuePair<string, EVENT_TYPES> kv in _eventMapping.Mapping)
-                    {
-                        if (line.Contains(kv.Key))
+                        if (lineHash == _lastHash || _lastHash == 0)
                         {
-                            if (!_dict.ContainsKey(lineHash))
-                            {
-                                TrX_TrackingEvent ev = new TrX_TrackingEvent(kv.Value)
-                                {
-                                    LogLine = line
-                                };
-                                try
-                                {
-                                    DateTime dt = DateTime.Parse($"{line.Split(' ')[0]} {line.Split(' ')[1]}", _dateTimeFormatInfo);
-                                    ev.EventTime = dt;
-                                    lastEvTime = ev.EventTime;
-                                }
-                                catch
-                                {
-                                    ev.EventTime = lastEvTime;
-                                }
-                                _dict.Add(lineHash, "init");
+                            bNewContent = true;
+                        }
+                        else if (!bNewContent && resumeAfterUnix >= 0 && IsLineNewerThan(line, resumeAfterUnix))
+                        {
+                            bNewContent = true;
+                        }
 
-                                if (!_eventQueueInitizalized)
+                        if (!bNewContent)
+                        {
+                            continue;
+                        }
+
+                        SetResumePoint(lineHash, lineOffset);
+
+                        foreach (KeyValuePair<string, EVENT_TYPES> kv in _eventMapping.Mapping)
+                        {
+                            if (line.Contains(kv.Key))
+                            {
+                                if (!_dict.ContainsKey(lineHash))
                                 {
-                                    HandleSingleEvent(ev);
-                                }
-                                else
-                                {
-                                    _eventQueue.Enqueue(ev);
+                                    TrX_TrackingEvent ev = new TrX_TrackingEvent(kv.Value)
+                                    {
+                                        LogLine = line
+                                    };
+                                    try
+                                    {
+                                        DateTime dt = DateTime.Parse($"{line.Split(' ')[0]} {line.Split(' ')[1]}", _dateTimeFormatInfo);
+                                        ev.EventTime = dt;
+                                        lastEvTime = ev.EventTime;
+                                    }
+                                    catch
+                                    {
+                                        ev.EventTime = lastEvTime;
+                                    }
+                                    _dict.Add(lineHash, "init");
+
+                                    if (!_eventQueueInitizalized)
+                                    {
+                                        HandleSingleEvent(ev);
+                                    }
+                                    else
+                                    {
+                                        _eventQueue.Enqueue(ev);
+                                    }
                                 }
                             }
                         }
                     }
-                    _logLinesRead++;
                 }
             }
+            finally
+            {
+                // Stopped (or failed) during the initial parse: keep what was parsed, like before the bulk transaction
+                _dataBackend.CommitBulk();
+            }
+        }
+
+        /// <summary>
+        /// Time of the newest tracked event (newest tx_stats entry, written by most handled events), 0 if none.
+        /// </summary>
+        private long GetLastTrackedEventTime()
+        {
+            string value = _dataBackend.GetSingleValue("SELECT MAX(timestamp) FROM tx_stats");
+            return long.TryParse(value, out long ts) ? ts : 0;
+        }
+
+        /// <summary>
+        /// True if the line starts with a timestamp after the given time. Strictly after: events of that very second
+        /// may already be in the database, counting them twice would be worse than missing them.
+        /// </summary>
+        private bool IsLineNewerThan(string line, long unixTime)
+        {
+            string[] parts = line.Split(' ', 3);
+            if (parts.Length < 2)
+            {
+                return false;
+            }
+
+            return DateTime.TryParse($"{parts[0]} {parts[1]}", _dateTimeFormatInfo, DateTimeStyles.None, out DateTime dt)
+                && ((DateTimeOffset)dt).ToUnixTimeSeconds() > unixTime;
         }
 
         /// <summary>
@@ -1002,7 +1104,7 @@ namespace TraXile
         {
             while (!_exit)
             {
-                Thread.Sleep(1);
+                WaitUnlessStopped(1);
 
                 if (_eventQueueInitizalized)
                 {
@@ -1232,7 +1334,8 @@ namespace TraXile
             bTargetAreaIsValerius = _defaultMappings.AdmiralValeriusAreas.Contains(sTargetArea),
             bTargetAreaIsOshabi = _defaultMappings.OshabiAreas.Contains(sTargetArea),
             bTargetAreaIsReliqKey = _defaultMappings.ReliqKeyAreas.Contains(sTargetArea),
-            bTargetAreaIsSasan = _defaultMappings.SasanAreas.Contains(sTargetArea);
+            bTargetAreaIsSasan = _defaultMappings.SasanAreas.Contains(sTargetArea),
+            bTargetAreaIsAnomaly = _defaultMappings.AnomalyAreas.Contains(sTargetArea);
 
             long lTS = ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds();
 
@@ -1553,11 +1656,14 @@ namespace TraXile
             {
                 actType = ACTIVITY_TYPES.RELIQUARY_KEY;
             }
+            else if (bTargetAreaIsAnomaly)
+            {
+                actType = ACTIVITY_TYPES.ANOMALY;
+            }
             else
             {
                 actType = ACTIVITY_TYPES.OTHER;
             }
-
 
             // Special handling for logbook cemetery + vaal temple
             if (bTargetAreaIsLogbook && bTargetAreaIsMap)
@@ -2077,7 +2183,8 @@ namespace TraXile
                     || _defaultMappings.AdmiralValeriusAreas.Contains(sSourceArea)
                     || _defaultMappings.OshabiAreas.Contains(sSourceArea)
                     || _defaultMappings.ReliqKeyAreas.Contains(sSourceArea)
-                    || _defaultMappings.SasanAreas.Contains(sSourceArea);
+                    || _defaultMappings.SasanAreas.Contains(sSourceArea)
+                    || _defaultMappings.AnomalyAreas.Contains(sSourceArea);
 
                 // Do not track first town visit after login
                 if (!_StartedFlag && !bFromActivity)
@@ -2163,7 +2270,7 @@ namespace TraXile
                 bTargetAreaIsMavenFight ||
                 bTargetAreaIsSirusFight ||
                 bTargetAreaIsLogbook ||
-                (bTargetAreaIsSafehouse && !_isMapSafeHouseSide)||
+                (bTargetAreaIsSafehouse && !_isMapSafeHouseSide) ||
                 bTargetAreaIsCata ||
                 bTargetAreaIsExarch ||
                 bTargetAreaIsBreachStone ||
@@ -2184,7 +2291,8 @@ namespace TraXile
                 bTargetAreaIsValerius ||
                 bTargetAreaIsOshabi ||
                 bTargetAreaIsReliqKey ||
-                bTargetAreaIsMists;
+                bTargetAreaIsMists ||
+                bTargetAreaIsAnomaly;
 
             // Check if opened activity needs to be opened on Mapdevice
             bool isMapDeviceActivity =
@@ -2194,7 +2302,7 @@ namespace TraXile
                 bTargetAreaIsElder ||
                 bTargetAreaIsShaper ||
                 bTargetAreaIsSimu ||
-                (bTargetAreaIsSafehouse && ! _isMapSafeHouseSide) ||
+                (bTargetAreaIsSafehouse && !_isMapSafeHouseSide) ||
                 bTargetAreaIsSirusFight ||
                 bTargetAreaTemple ||
                 bTargetAreaIsMI ||
@@ -2219,7 +2327,8 @@ namespace TraXile
                 bTargetAreaIsValerius ||
                 bTargetAreaIsOshabi ||
                 bTargetAreaIsReliqKey ||
-                bTargetAreaIsMists;
+                bTargetAreaIsMists ||
+                bTargetAreaIsAnomaly;
 
             if (enteringDefaultTrackableActivity)
             {
@@ -3092,7 +3201,8 @@ namespace TraXile
             try
             {
                 string sDivCard = ev.LogLine.Split(new string[] { "{" }, StringSplitOptions.None)[1].Replace("}", "");
-                
+                sDivCard = sDivCard.Replace("'", "");
+
                 _dataBackend.AddDivCardEntry(sDivCard, ((DateTimeOffset)ev.EventTime).ToUnixTimeSeconds());
                 _log.Debug($"drawn divination card: {sDivCard}");
 
@@ -3186,6 +3296,7 @@ namespace TraXile
                 TimeSpan tsLogbookSide = new TimeSpan();
                 TimeSpan tsSanctum = new TimeSpan();
                 TimeSpan tsSafeHouse = new TimeSpan();
+
                 int totalSecondsMainActivity;
                 int totalSecondsZanaMap = 0;
                 int totalSecondsVallSideArea = 0;
@@ -4101,8 +4212,9 @@ namespace TraXile
                     sTags += act.Tags[i];
                     if (i < (act.Tags.Count - 1))
                         sTags += "|";
-                    _dataBackend.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
                 }
+                // Outside the loop, so removing the last tag is persisted as well
+                _dataBackend.DoNonQuery("UPDATE tx_activity_log SET act_tags = '" + sTags + "' WHERE timestamp = " + act.TimeStamp.ToString());
             }
         }
 

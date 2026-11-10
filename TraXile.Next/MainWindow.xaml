@@ -1,0 +1,133 @@
+<ui:FluentWindow
+    x:Class="TraXile.Next.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:pages="clr-namespace:TraXile.Next.Views"
+    Title="TraXile"
+    Icon="pack://application:,,,/TraXile.ico"
+    Width="1440"
+    Height="940"
+    MinWidth="1100"
+    MinHeight="700"
+    ExtendsContentIntoTitleBar="True"
+    WindowBackdropType="None"
+    WindowCornerPreference="Round"
+    WindowStartupLocation="CenterScreen"
+    Background="{DynamicResource BgBrush}"
+    Foreground="{DynamicResource TextBrush}"
+    FontFamily="{StaticResource UiFont}">
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar x:Name="TitleBar" Grid.Row="0" Background="{DynamicResource BgBrush}" ShowMaximize="True">
+            <ui:TitleBar.Header>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                    <ui:SymbolIcon Symbol="Timer24" FontSize="18" Foreground="{DynamicResource AccentBrush}" Margin="0,0,10,0" />
+                    <!-- wordmark in the display face, like the TraXile name on exile-tools.com -->
+                    <TextBlock Text="TraXile" FontFamily="{StaticResource DisplayFont}" FontWeight="SemiBold" FontSize="14"
+                               Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" />
+                </StackPanel>
+            </ui:TitleBar.Header>
+            <ui:TitleBar.TrailingContent>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- shown when a newer version was found (checked at start and every hour) -->
+                    <ui:Button x:Name="UpdateButton" Appearance="Primary" Style="{StaticResource SmallButton}" Margin="0,0,12,0"
+                               VerticalAlignment="Center" Content="{Binding HintText}" ToolTip="A new version of TraXile is available"
+                               Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BoolToVis}}" Click="UpdateButton_Click">
+                        <ui:Button.Icon><ui:SymbolIcon Symbol="ArrowDownload20" /></ui:Button.Icon>
+                    </ui:Button>
+                    <Border x:Name="ModeBadge" Margin="0,0,12,0" Padding="8,3" CornerRadius="{StaticResource ControlRadius}"
+                            Background="{DynamicResource SurfaceBrush}" VerticalAlignment="Center">
+                        <TextBlock x:Name="ModeText" Text="LIVE" Style="{StaticResource Label}" FontSize="11" />
+                    </Border>
+                    <ui:Button x:Name="OverlayButton" Appearance="Transparent" Padding="8" Margin="0,0,4,0"
+                               ToolTip="Overlays" Click="OverlayButton_Click">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon Symbol="PictureInPicture24" />
+                        </ui:Button.Icon>
+                        <ui:Button.ContextMenu>
+                            <ContextMenu x:Name="OverlayMenu">
+                                <MenuItem x:Name="StopwatchOverlayItem" Header="Stopwatch overlay" IsCheckable="True" Click="StopwatchOverlay_Click" />
+                                <MenuItem x:Name="TagsOverlayItem" Header="Tags overlay" IsCheckable="True" Click="TagsOverlay_Click" />
+                            </ContextMenu>
+                        </ui:Button.ContextMenu>
+                    </ui:Button>
+                    <ui:Button x:Name="ThemeButton" Appearance="Transparent" Padding="8" Margin="0,0,8,0"
+                               ToolTip="Toggle light / dark theme" Click="ThemeButton_Click">
+                        <ui:Button.Icon>
+                            <ui:SymbolIcon x:Name="ThemeIcon" Symbol="WeatherSunny24" />
+                        </ui:Button.Icon>
+                    </ui:Button>
+                </StackPanel>
+            </ui:TitleBar.TrailingContent>
+        </ui:TitleBar>
+
+        <ui:NavigationView
+            x:Name="RootNavigation"
+            Grid.Row="1"
+            PaneDisplayMode="Left"
+            OpenPaneLength="232"
+            IsBackButtonVisible="Collapsed"
+            IsPaneToggleVisible="True"
+            FrameMargin="0"
+            Transition="FadeInWithSlide">
+
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="Dashboard" TargetPageType="{x:Type pages:DashboardPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Home24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Activity log" TargetPageType="{x:Type pages:ActivityLogPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="History24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Statistics" TargetPageType="{x:Type pages:StatisticsPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="DataTrending24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Mapping" TargetPageType="{x:Type pages:MappingPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Map24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Lab" TargetPageType="{x:Type pages:LabPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Shield24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Heist" TargetPageType="{x:Type pages:HeistPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="LockClosed24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Leagues" TargetPageType="{x:Type pages:LeaguesPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Trophy24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Div Cards" TargetPageType="{x:Type pages:DivCardsPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Collections24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Tags" TargetPageType="{x:Type pages:TagsPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="TagMultiple24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Content="Help" TargetPageType="{x:Type pages:HelpPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="QuestionCircle24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="Settings" TargetPageType="{x:Type pages:SettingsPage}">
+                    <ui:NavigationViewItem.Icon><ui:SymbolIcon Symbol="Settings24" /></ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.FooterMenuItems>
+        </ui:NavigationView>
+
+        <!-- Loading state while Client.txt is read after start -->
+        <Border x:Name="LoadingOverlay" Grid.Row="1" Background="{DynamicResource BgBrush}"
+                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="420">
+                <TextBlock Text="LOADING" Style="{StaticResource Label}" Foreground="{DynamicResource AccentTextBrush}" />
+                <TextBlock Text="Reading your Path of Exile log" Style="{StaticResource H2}" Margin="0,8,0,4" />
+                <TextBlock Text="This can take a while the first time. Your activities show up as soon as it is done."
+                           Style="{StaticResource Meta}" TextWrapping="Wrap" Margin="0,0,0,20" />
+                <ProgressBar Style="{StaticResource SlimProgress}" Value="{Binding Progress, Mode=OneWay}"
+                             Foreground="{DynamicResource AccentBrush}" />
+                <TextBlock Text="{Binding PercentText}" Style="{StaticResource Num}" FontWeight="SemiBold" Margin="0,8,0,0" />
+            </StackPanel>
+        </Border>    </Grid>
+</ui:FluentWindow>
