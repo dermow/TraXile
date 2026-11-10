@@ -65,11 +65,13 @@ namespace TraXile.Next.Services
             _logic.OnActivityFinished += e => RaiseHistoryChanged();
             _logic.OnActivityStarted += e => RaiseHistoryChanged();
             _logic.OnTagsUpdated += e => RaiseHistoryChanged();
-            _logic.OnDivCardDrawn += e => RaiseHistoryChanged(); // the div card page listens to history changes
+            _logic.OnDivCardDrawn += e => DivCardsChanged?.Invoke(this, EventArgs.Empty);
             _logic.Start();
         }
 
         private void RaiseHistoryChanged() => HistoryChanged?.Invoke(this, EventArgs.Empty);
+
+        public event EventHandler DivCardsChanged;
 
         public bool IsLoading => _logic != null && !_logic.EventQueueInitialized;
 
@@ -270,17 +272,32 @@ namespace TraXile.Next.Services
                     Key = k,
                     Name = names != null && names.TryGetValue(k, out string n) ? n : k,
                     Value = k == StatMath.DeathsKey
-                        ? StatMath.ActivityDeaths(GetHistory(), from, to)
+                        ? StatMath.ActivityDeaths(DeathHistory(), from, to)
                         : increase.TryGetValue(k, out int v) ? v : 0
                 })
                 .ToList();
+        }
+
+        /// <summary>
+        /// Start and death counter of the Activities with deaths: all the "Deaths" Statistic needs, without the cost
+        /// of converting the whole history (<see cref="GetHistory"/>).
+        /// </summary>
+        private List<ActivityInfo> DeathHistory()
+        {
+            TrX_TrackedActivity[] copy = _logic.ActivityHistory.ToArray();
+            lock (_deletedIds)
+            {
+                return copy.Where(a => a != null && a.DeathCounter > 0 && !_deletedIds.Contains(a.UniqueID))
+                    .Select(a => new ActivityInfo { Started = a.Started, Deaths = a.DeathCounter })
+                    .ToList();
+            }
         }
 
         public IReadOnlyList<StatEntry> GetStatSeries(string key, DateTime from, DateTime to)
         {
             var result = new List<StatEntry>();
             if (_logic == null || string.IsNullOrEmpty(key)) return result;
-            if (key == StatMath.DeathsKey) return StatMath.ActivityDeathSeries(GetHistory(), from, to);
+            if (key == StatMath.DeathsKey) return StatMath.ActivityDeathSeries(DeathHistory(), from, to);
 
             string name = Sql(key);
             Query($"SELECT timestamp, stat_value FROM tx_stats WHERE stat_name = '{name}' AND timestamp < {Unix(from)} ORDER BY timestamp DESC LIMIT 1",

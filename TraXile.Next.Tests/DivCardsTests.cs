@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Threading;
 using TraXile.Next.Services;
 using TraXile.Next.ViewModels;
 using Xunit;
@@ -96,6 +98,82 @@ namespace TraXile.Next.Tests
             Assert.Equal(DivCardSortColumn.Name, _vm.SortColumn);
             string[] names = _vm.Items.Select(c => c.Name).ToArray();
             Assert.Equal(names.OrderBy(n => n, StringComparer.CurrentCultureIgnoreCase), names);
+        }
+
+        /// <summary>Live source stand-in whose card list grows when a card is "drawn".</summary>
+        private sealed class DrawingSource : ITrackingSource, IDivCardSource
+        {
+            private readonly DemoTrackingSource _demo = new DemoTrackingSource();
+            public int Drawn;
+            public int HistoryReads;
+
+            public void Draw()
+            {
+                Drawn++;
+                // the core raises it on its worker thread
+                var t = new System.Threading.Thread(() => DivCardsChanged?.Invoke(this, EventArgs.Empty));
+                t.Start();
+                t.Join();
+            }
+
+            public event EventHandler DivCardsChanged;
+            public IReadOnlyList<DivCardInfo> GetDivCards(DateTime from, DateTime to) =>
+                Drawn == 0 ? Array.Empty<DivCardInfo>()
+                    : new[] { new DivCardInfo { Name = "The Gemcutter", Count = Drawn, FirstDraw = DateTime.Now, LastDraw = DateTime.Now } };
+
+            public bool IsDemo => false;
+            public string Notice => null;
+            public event EventHandler HistoryChanged { add { } remove { } }
+            public void Start() { }
+            public bool IsLoading => false;
+            public double LoadProgress => 1;
+            public IReadOnlyList<ActivityInfo> GetHistory() { HistoryReads++; return _demo.GetHistory(); }
+            public LiveState GetLiveState() => _demo.GetLiveState();
+            public double GetHideoutSeconds(DateTime from, DateTime to) => 0;
+            public int GetTimeCap(ACTIVITY_TYPES type) => 3600;
+            public void TogglePause() { }
+            public void StopCurrentActivity() { }
+            public void ToggleCurrentActivityTag(string tagId) { }
+            public void CreateTag(string id, string displayName) { }
+            public void UpdateTag(TagInfo changed) { }
+            public void DeleteTag(string id) { }
+            public IReadOnlyList<TagInfo> GetTags() => _demo.GetTags();
+            public void AddTag(string activityId, string tagId) { }
+            public void RemoveTag(string activityId, string tagId) { }
+            public void DeleteActivities(IReadOnlyCollection<string> activityIds) { }
+            public void Dispose() => _demo.Dispose();
+        }
+
+        /// <summary>Runs the dispatcher of this thread until <paramref name="done"/> or the timeout.</summary>
+        private static bool PumpUntil(Func<bool> done, TimeSpan timeout)
+        {
+            DateTime end = DateTime.Now + timeout;
+            while (!done() && DateTime.Now < end)
+            {
+                var frame = new DispatcherFrame();
+                var tick = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(20) };
+                tick.Tick += (s, e) => { tick.Stop(); frame.Continue = false; };
+                tick.Start();
+                Dispatcher.PushFrame(frame);
+            }
+            return done();
+        }
+
+        [Fact]
+        public void A_drawn_card_shows_up_without_rebuilding_the_history_pages()
+        {
+            var source = new DrawingSource();
+            using (var vm = new DivCardsViewModel(source, new GlobalFilter()))
+            {
+                Assert.True(vm.IsEmpty);
+
+                source.Draw();
+                source.Draw();
+                Assert.True(PumpUntil(() => vm.Items.Count == 1 && vm.Items[0].Count == 2, TimeSpan.FromSeconds(3)));
+                Assert.Equal("2 cards · 1 different", vm.Summary);
+                Assert.Equal(0, source.HistoryReads); // the div card page does not need the Activities
+            }
+            source.Dispose();
         }
 
         [Fact]

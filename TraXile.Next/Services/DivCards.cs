@@ -20,5 +20,11 @@ namespace TraXile.Next.Services
     {
         /// <summary>Cards drawn in [from, to], most drawn first (classic TrX_DataBackend.GetDivCardStats).</summary>
         IReadOnlyList<DivCardInfo> GetDivCards(DateTime from, DateTime to);
+
+        /// <summary>
+        /// A card was drawn (raised on a worker thread). Separate from HistoryChanged on purpose: a draw does not
+        /// change the Activities, and rebuilding every page per draw freezes the UI while a stack of decks is opened.
+        /// </summary>
+        event EventHandler DivCardsChanged;
     }
 }
