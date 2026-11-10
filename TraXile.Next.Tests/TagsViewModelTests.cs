@@ -73,18 +73,16 @@ namespace TraXile.Next.Tests
         }
 
         [Fact]
-        public void Renames_and_sets_show_in_history()
+        public void Renames_a_tag()
         {
             _vm.Selected = Row("party");
             _vm.EditName = "Party play";
-            _vm.EditShowInHistory = true;
             Assert.True(_vm.HasChanges);
 
             Assert.True(_vm.Save(out string error), error);
 
             TagInfo tag = _source.GetTags().Single(t => t.Id == "party");
             Assert.Equal("Party play", tag.Name);
-            Assert.True(tag.ShowInHistory);
             Assert.False(_vm.HasChanges);
             Assert.Equal("party", _vm.Selected.Id);
         }

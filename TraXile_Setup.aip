@@ -12,10 +12,10 @@
     <ROW Property="ARPURLUPDATEINFO" Value="https://github.com/dermow/TraXile"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="dermow"/>
-    <ROW Property="ProductCode" Value="1033:{8F6F9DFC-1AF6-431D-A04A-214EE0CEA7DA} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{C480643D-9C45-4FFF-B5D2-5D77F193CD47} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="TraXile"/>
-    <ROW Property="ProductVersion" Value="3.0.0" Options="32"/>
+    <ROW Property="ProductVersion" Value="3.0.1" Options="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{E4B8E0B2-1577-4E31-ACDE-2C19A61BD8B6}"/>
@@ -464,7 +464,7 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
     <ROW Shortcut="TraXile" Directory_="SHORTCUTDIR" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Hotkey="0" Icon_="TraXile_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
-    <ROW Shortcut="TraXile1" Directory_="StartMenuFolder" Name="TRAXIL~1|TraXile (1)" Component_="TraXile.exe" Target="[#TraXile.exe]" Hotkey="0" Icon_="TraXile_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="TraXile1" Directory_="StartMenuFolder" Name="TraXile" Component_="TraXile.exe" Target="[#TraXile.exe]" Hotkey="0" Icon_="TraXile_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>

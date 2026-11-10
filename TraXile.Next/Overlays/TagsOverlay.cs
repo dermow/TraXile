@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using TraXile.Next.Services;
 
 namespace TraXile.Next.Overlays
@@ -17,17 +16,13 @@ namespace TraXile.Next.Overlays
     }
 
     /// <summary>
-    /// Tags overlay (classic: OverlayTags): the time of the current activity and of the previous one of the
-    /// same type, and the three configured tags (overlay.tags.tag1..3), highlighted while the current
-    /// activity has them.
+    /// Tags overlay (classic: OverlayTags): the three configured tags (overlay.tags.tag1..3), highlighted
+    /// while the current activity has them. Shows no times; the time lives in <see cref="StopwatchOverlay"/>.
     /// </summary>
     public sealed class TagsOverlay : OverlayWindow
     {
         private const double ChipWidth = 92;
 
-        private readonly Rectangle _mark;
-        private readonly TextBlock _current;
-        private readonly TextBlock _previous;
         private readonly Border[] _chips = new Border[3];
         private readonly TextBlock[] _chipTexts = new TextBlock[3];
 
@@ -36,46 +31,6 @@ namespace TraXile.Next.Overlays
             Title = "TraXile tags";
 
             var row = new StackPanel { Orientation = Orientation.Horizontal };
-
-            _mark = new Rectangle
-            {
-                Width = 7,
-                Height = 7,
-                Margin = new Thickness(0, 0, 9, 0),
-                VerticalAlignment = VerticalAlignment.Center,
-                RenderTransform = new RotateTransform(45, 3.5, 3.5)
-            };
-            row.Children.Add(_mark);
-
-            _current = new TextBlock
-            {
-                Style = (Style)Application.Current.FindResource("Metric"),
-                FontSize = 18,
-                MinWidth = 54,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            row.Children.Add(_current);
-
-            var prevLabel = new TextBlock
-            {
-                Text = "PREV",
-                Style = (Style)Application.Current.FindResource("Label"),
-                FontSize = 10,
-                Margin = new Thickness(12, 0, 6, 0),
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            prevLabel.SetResourceReference(TextBlock.ForegroundProperty, "TextMutedBrush");
-            row.Children.Add(prevLabel);
-
-            _previous = new TextBlock
-            {
-                Style = (Style)Application.Current.FindResource("Num"),
-                FontSize = 13,
-                MinWidth = 40,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            _previous.SetResourceReference(TextBlock.ForegroundProperty, "TextMutedBrush");
-            row.Children.Add(_previous);
 
             for (int i = 0; i < 3; i++)
             {
@@ -89,7 +44,7 @@ namespace TraXile.Next.Overlays
                 _chips[i] = new Border
                 {
                     Width = ChipWidth,
-                    Margin = new Thickness(i == 0 ? 12 : 4, 0, 0, 0),
+                    Margin = new Thickness(i == 0 ? 0 : 4, 0, 0, 0),
                     Padding = new Thickness(6, 2, 6, 2),
                     BorderThickness = new Thickness(1),
                     CornerRadius = (CornerRadius)Application.Current.FindResource("ControlRadius"),
@@ -100,7 +55,7 @@ namespace TraXile.Next.Overlays
             }
 
             Body = row;
-            Update(new LiveState(), new TagSlotState[3]);
+            Update(new TagSlotState[3]);
         }
 
         /// <summary>The three slots for the current live state; a slot is active while the current activity has its tag.</summary>
@@ -114,17 +69,8 @@ namespace TraXile.Next.Overlays
             }).ToArray();
         }
 
-        public void Update(LiveState state, IReadOnlyList<TagSlotState> slots)
+        public void Update(IReadOnlyList<TagSlotState> slots)
         {
-            bool tracking = state != null && state.IsTracking;
-            _current.Text = StopwatchOverlay.TextFor(state);
-            _current.SetResourceReference(TextBlock.ForegroundProperty, tracking && !state.IsPaused ? "TextBrush" : "TextMutedBrush");
-            _mark.Fill = state?.Activity != null ? state.Activity.TypeBrush : ActivityPalette.BrushOf(ActivityPalette.Other);
-
-            ActivityInfo prev = tracking ? state.PreviousActivity : null;
-            _previous.Text = prev != null ? prev.Duration : "—";
-            _previous.ToolTip = prev != null ? $"Previous {prev.TypeName.ToLowerInvariant()}: {prev.Area}" : null;
-
             for (int i = 0; i < 3; i++)
             {
                 TagSlotState slot = slots != null && i < slots.Count ? slots[i] : null;

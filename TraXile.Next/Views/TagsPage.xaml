@@ -122,9 +122,6 @@
                             <TextBlock Grid.Column="1" Text="{Binding Id}" Style="{StaticResource Meta}" VerticalAlignment="Center"
                                        TextTrimming="CharacterEllipsis" Margin="12,0" />
                             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0">
-                                <ui:SymbolIcon Symbol="History20" FontSize="16" ToolTip="Shown in the history"
-                                               Foreground="{DynamicResource TextMutedBrush}" Margin="6,0,0,0"
-                                               Visibility="{Binding ShowInHistory, Converter={StaticResource BoolToVis}}" />
                                 <ui:SymbolIcon Symbol="Speaker220" FontSize="16" ToolTip="Plays a sound"
                                                Foreground="{DynamicResource TextMutedBrush}" Margin="6,0,0,0"
                                                Visibility="{Binding SoundEnabled, Converter={StaticResource BoolToVis}}" />
@@ -196,20 +193,6 @@
                                 <TextBlock Text="{Binding EditError}" Style="{StaticResource ErrorText}" Margin="0,6,0,0"
                                            Visibility="{Binding HasEditError, Converter={StaticResource BoolToVis}}" />
                             </StackPanel>
-
-                            <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
-
-                            <Grid Margin="24,16">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <StackPanel>
-                                    <TextBlock Text="Show in history" Style="{StaticResource SettingName}" />
-                                    <TextBlock Style="{StaticResource SettingHelp}" Text="Gives the tag its own column in the activity history." />
-                                </StackPanel>
-                                <ui:ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding EditShowInHistory}" />
-                            </Grid>
 
                             <Rectangle Height="1" Fill="{DynamicResource BgBrush}" />
 

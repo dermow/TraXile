@@ -105,7 +105,7 @@ namespace TraXile.Next.Overlays
         {
             IReadOnlyList<TagInfo> all = _source.GetTags();
             TagInfo[] slotTags = _tagSlots.Select(s => OverlaySettings.ResolveTag(s, all)).ToArray();
-            _tags.Update(_live, TagsOverlay.SlotsFor(_live, slotTags));
+            _tags.Update(TagsOverlay.SlotsFor(_live, slotTags));
         }
 
         /// <summary>Re-reads opacity and tag slots after the overlay settings changed.</summary>

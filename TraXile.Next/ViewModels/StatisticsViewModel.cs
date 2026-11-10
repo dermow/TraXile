@@ -45,10 +45,7 @@ namespace TraXile.Next.ViewModels
         public (DateTime from, DateTime to) Window()
         {
             TimeWindow w = Filter.Window;
-            DateTime now = _now();
-            DateTime from = w.From ?? _stats?.OldestStatTime ?? now;
-            DateTime to = w.To ?? now;
-            return (from.Date, to.Date.AddDays(1).AddSeconds(-1));
+            return StatMath.Window(w.From, w.To, _stats?.OldestStatTime, _now());
         }
 
         public string RangeText => $"{_from:yyyy-MM-dd} – {_to:yyyy-MM-dd}";
@@ -119,7 +116,7 @@ namespace TraXile.Next.ViewModels
             IsLoading = false;
             ApplySearch();
 
-            string key = SelectedStat?.Key ?? _pendingKey;
+            string key = _pendingKey ?? SelectedStat?.Key; // the selection, or a Select() made while loading
             SelectedStat = _all.FirstOrDefault(s => s.Key == key) ?? Items.FirstOrDefault(s => s.Value > 0) ?? Items.FirstOrDefault();
             _seriesTask = LoadSeriesAsync();
             await _seriesTask;
@@ -145,6 +142,20 @@ namespace TraXile.Next.ViewModels
         }
 
         public bool HasSelection => SelectedStat != null;
+
+        /// <summary>
+        /// Selects the Statistic with <paramref name="key"/> (dashboard tile click). Clears a search that would hide it;
+        /// while the list is still loading, the reload picks it up.
+        /// </summary>
+        public void Select(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return;
+            _pendingKey = key;
+            StatInfo stat = _all.FirstOrDefault(s => s.Key == key);
+            if (stat == null) return;
+            if (!Items.Contains(stat)) SearchText = "";
+            SelectedStat = stat;
+        }
 
         private IReadOnlyList<KeyValuePair<DateTime, int>> _daily = Array.Empty<KeyValuePair<DateTime, int>>();
         /// <summary>Increase per day of the selected stat in the window.</summary>
@@ -205,7 +216,7 @@ namespace TraXile.Next.ViewModels
             };
             XAxes = new Axis[]
             {
-                new DateTimeAxis(TimeSpan.FromDays(1), d => d.ToString("MMM d"))
+                new DateTimeAxis(TimeSpan.FromDays(1), d => d.ToString("MMM d, yyyy"))
                 {
                     LabelsPaint = new SolidColorPaint(TextMuted),
                     TextSize = 11,

@@ -377,7 +377,7 @@ namespace TraXile.Next.Services
         {
             { "TotalMapsDone", "Total maps done" },
             { "TotalHeistsDone", "Total heists done" },
-            { "TotalKilledCount", "Death count" },
+            { "TotalKilledCount", "Deaths" },
             { "LevelUps", "Level Ups" },
             { "SimulacrumStarted", "Simulacrum started" },
             { "LabsStarted", "Labs started" },

@@ -87,7 +87,8 @@ namespace TraXile.Next.Tests
 
             int expected = _source.GetHistory().Count(a => a.Type == ACTIVITY_TYPES.MAP && a.Tags.Any(t => t.Id == "juiced"));
             Assert.Equal(expected, OverviewCount);
-            Assert.Equal(expected.ToString("N0"), _vm.Kpis.Single(k => k.Title == "Activities").Value);
+            // the type filter is maps only, so "Maps completed" counts all of them
+            Assert.Equal(expected.ToString("N0"), _vm.Kpis.Single(k => k.Title == "Maps completed").Value);
             Assert.All(_vm.Recent, a => Assert.Contains(a.Tags, t => t.Id == "juiced"));
         }
 
