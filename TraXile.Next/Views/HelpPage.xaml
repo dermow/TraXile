@@ -177,6 +177,33 @@
                 </StackPanel>
             </Border>
 
+            <!-- ============ Contact ============ -->
+            <TextBlock Text="CONTACT" Style="{StaticResource SectionLabel}" />
+            <Border Style="{StaticResource Card}" Padding="24,20" Margin="0,0,0,28">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Meta}" TextWrapping="Wrap" Margin="0,0,0,16"
+                               Text="Questions, ideas or feedback? Get in touch." />
+                    <ItemsControl ItemsSource="{x:Static vm:HelpViewModel.Contacts}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:HelpLink}">
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="190" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Label}" Style="{StaticResource Body}" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1" Style="{StaticResource Body}" TextWrapping="Wrap">
+                                        <Hyperlink Style="{StaticResource LinkText}" NavigateUri="{Binding Url}" RequestNavigate="Link_RequestNavigate">
+                                            <Run Text="{Binding Url, Mode=OneWay}" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
             <!-- ============ Credits ============ -->
             <TextBlock Text="SPECIAL THANKS" Style="{StaticResource SectionLabel}" />
             <Border Style="{StaticResource Card}" Padding="24,20" Margin="0,0,0,28">

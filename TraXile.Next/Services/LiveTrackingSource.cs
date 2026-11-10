@@ -76,7 +76,7 @@ namespace TraXile.Next.Services
         public bool IsLoading => _logic != null && !_logic.EventQueueInitialized;
 
         public double LoadProgress =>
-            _logic == null || _logic.LogLinesTotal <= 0 ? 0 : Math.Min(1.0, _logic.LogLinesRead / _logic.LogLinesTotal);
+            _logic == null || _logic.LogBytesTotal <= 0 ? 0 : Math.Min(1.0, _logic.LogBytesRead / _logic.LogBytesTotal);
 
         public IReadOnlyList<ActivityInfo> GetHistory()
         {
@@ -364,7 +364,7 @@ namespace TraXile.Next.Services
             _logic.Stop();
             _logic.Database.DoNonQuery("DELETE FROM tx_activity_log");
             _logic.Database.DoNonQuery("DELETE FROM tx_stats");
-            _logic.Database.DoNonQuery("UPDATE tx_kvstore SET value = '0' WHERE key = 'last_hash'");
+            _logic.Database.DoNonQuery("UPDATE tx_kvstore SET value = '0' WHERE key IN ('last_hash', 'last_hash_offset')");
             _logic.Database.Close();
             _logic = null;
         }
