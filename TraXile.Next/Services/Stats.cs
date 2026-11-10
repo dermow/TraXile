@@ -21,6 +21,16 @@ namespace TraXile.Next.Services
 
         public string ValueText => IsDuration ? FormatSeconds(Value) : Value.ToString("N0");
 
+        /// <summary>Tooltip of the Statistic: its description if it has one, else its key.</summary>
+        public string ToolTip => Descriptions.TryGetValue(Key ?? "", out string d) ? d : Key;
+
+        /// <summary>Explanations for Statistics whose meaning is easy to mix up with an Activity-based value.</summary>
+        private static readonly Dictionary<string, string> Descriptions = new Dictionary<string, string>
+        {
+            { "TotalKilledCount", "Every death in the game log, also outside Activities (campaign, hideout, Activities too short to be saved). " +
+                                  "Can be higher than the Activity Deaths on the Dashboard." }
+        };
+
         internal static string FormatSeconds(double seconds)
         {
             TimeSpan ts = TimeSpan.FromSeconds(seconds);
@@ -64,6 +74,24 @@ namespace TraXile.Next.Services
         /// as 0 (the first increment of a counter is part of the window).
         /// </summary>
         public static int Increase(int min, int max) => max - (min == 1 ? 0 : min);
+
+        /// <summary>
+        /// The window for Statistics: the filter's time range widened to whole days, like the classic stats list;
+        /// an open start begins at the oldest stored value (<paramref name="oldest"/>), an open end at <paramref name="now"/>.
+        /// </summary>
+        public static (DateTime from, DateTime to) Window(DateTime? rangeFrom, DateTime? rangeTo, DateTime? oldest, DateTime now)
+        {
+            DateTime from = rangeFrom ?? oldest ?? now;
+            DateTime to = rangeTo ?? now;
+            return (from.Date, to.Date.AddDays(1).AddSeconds(-1));
+        }
+
+        /// <summary>The window of the same length right before [<paramref name="from"/>, <paramref name="to"/>].</summary>
+        public static (DateTime from, DateTime to) PreviousWindow(DateTime from, DateTime to)
+        {
+            TimeSpan length = to - from + TimeSpan.FromSeconds(1);
+            return (from - length, from.AddSeconds(-1));
+        }
 
         /// <summary>
         /// Increase per day between <paramref name="from"/> and <paramref name="to"/> (local days). Entries before

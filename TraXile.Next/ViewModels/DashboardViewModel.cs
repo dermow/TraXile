@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -18,13 +19,17 @@ namespace TraXile.Next.ViewModels
     /// <summary>Dashboard range buttons; <see cref="Other"/> = another time range of the global filter.</summary>
     public enum TimeRange { Today, Week, Month, League, All, Other }
 
-    public sealed class KpiViewModel : ObservableObject
+    public class KpiViewModel : ObservableObject
     {
         public string Title { get; set; }
         public string Value { get; set; }
         public string Unit { get; set; }
         public string Delta { get; set; }
+        /// <summary>Explanation shown when hovering the tile; null for none.</summary>
+        public string ToolTip { get; set; }
         public bool DeltaPositive { get; set; }
+        /// <summary>The change is neither good nor bad: the delta is not colored.</summary>
+        public bool DeltaNeutral { get; set; }
         public bool HasDelta => !string.IsNullOrEmpty(Delta);
         public Brush AccentBrush { get; set; }
         public ISeries[] Sparkline { get; set; }
@@ -33,6 +38,19 @@ namespace TraXile.Next.ViewModels
         public Axis[] SparkXAxes { get; } = { new Axis { IsVisible = false } };
         public Axis[] SparkYAxes { get; } = { new Axis { IsVisible = false, MinLimit = 0 } };
         public Margin SparkMargin { get; } = new Margin(0);
+    }
+
+    /// <summary>
+    /// The rotating KPI tile: one Statistic at a time from a shuffled deck. A click opens the Statistic on the
+    /// Statistics page, the skip button moves on to the next one.
+    /// </summary>
+    public sealed class StatSpotlightViewModel : KpiViewModel
+    {
+        /// <summary>Key of the shown Statistic; null while none is eligible.</summary>
+        public string StatKey { get; set; }
+        public bool HasStat => StatKey != null;
+        public IRelayCommand OpenCommand { get; set; }
+        public IRelayCommand SkipCommand { get; set; }
     }
 
     /// <summary>A tag on the live card: custom tags can be toggled, default tags are only shown while active.</summary>
@@ -58,22 +76,30 @@ namespace TraXile.Next.ViewModels
 
     /// <summary>
     /// Row of the overview table under the time distribution (classic Statistics > Overview): one per activity type
-    /// in the range, plus hideout time. Types that the donut folds into "Other" carry the "Other" color.
+    /// with its own donut slice, one "Other" row for the small types the donut groups, plus hideout time.
     /// </summary>
     public sealed class OverviewRow
     {
         public string Name { get; set; }
+        /// <summary>Null for the "Other" row and for hideout time.</summary>
         public ACTIVITY_TYPES? Type { get; set; }
         public Brush Brush { get; set; }
         public int Count { get; set; }
         /// <summary>"–" for hideout time (no activities).</summary>
-        public string CountText => Type.HasValue ? Count.ToString("N0") : "–";
+        public string CountText => IsHideout ? "–" : Count.ToString("N0");
         public double Seconds { get; set; }
         public string Hours => $"{Seconds / 3600.0:0.0} h";
         /// <summary>Share of the total time (activities plus, if shown, hideout), 0..1.</summary>
         public double Fraction { get; set; }
         public string Percent => $"{Fraction * 100:0.#} %";
-        public bool IsHideout => !Type.HasValue;
+        public bool IsHideout { get; set; }
+        public bool IsOther => Members.Count > 0;
+        /// <summary>The activity types grouped into the "Other" row, by time descending; empty otherwise.</summary>
+        public IReadOnlyList<OverviewRow> Members { get; set; } = Array.Empty<OverviewRow>();
+        /// <summary>Breakdown of the grouped types for the "Other" row's tooltip; null otherwise.</summary>
+        public string MembersText => IsOther
+            ? string.Join(Environment.NewLine, Members.Select(m => $"{m.Name}: {m.CountText} × · {m.Hours} · {m.Percent}"))
+            : null;
     }
 
     public sealed class DashboardViewModel : ObservableObject, IDisposable
@@ -95,9 +121,13 @@ namespace TraXile.Next.ViewModels
         /// <param name="settings">config.xml for <see cref="ShowHideoutKey"/>; classic default (true) if null.</param>
         /// <param name="canWriteSettings">False while the classic app owns the data: changes are not stored.</param>
         /// <param name="filter">The global filter; a private, empty one if null (tests).</param>
-        public DashboardViewModel(ITrackingSource source, AppSetup settings = null, bool canWriteSettings = false, GlobalFilter filter = null)
+        /// <param name="random">Shuffles the rotating Statistic tile; a new one if null.</param>
+        public DashboardViewModel(ITrackingSource source, AppSetup settings = null, bool canWriteSettings = false, GlobalFilter filter = null,
+            Random random = null)
         {
             _source = source;
+            _stats = source as IStatsSource;
+            _deck = new StatDeck(random);
             Filter = filter ?? new GlobalFilter();
             Filter.Changed += OnFilterChanged;
             Filter.LeaguesChanged += OnLeaguesChanged;
@@ -120,6 +150,17 @@ namespace TraXile.Next.ViewModels
             // Coalesce bursts of core events (e.g. during initial log parsing)
             _refreshDebounce = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(600) };
             _refreshDebounce.Tick += (s, e) => { _refreshDebounce.Stop(); Refresh(); };
+
+            OpenStatisticCommand = new RelayCommand(() =>
+            {
+                if (Spotlight.StatKey != null) StatisticRequested?.Invoke(this, Spotlight.StatKey);
+            });
+            SkipStatisticCommand = new RelayCommand(SkipStatistic, () => _deck.Count > 1);
+            _spotlight = SpotlightTile(null, null, null);
+
+            _rotation = new DispatcherTimer { Interval = SpotlightInterval };
+            _rotation.Tick += (s, e) => NextStatistic();
+            _rotation.Start();
 
             _source.HistoryChanged += OnHistoryChanged;
             if (!string.IsNullOrEmpty(_source.Notice)) AddNotice(_source.IsDemo ? "Demo mode" : "Note", _source.Notice);
@@ -462,6 +503,7 @@ namespace TraXile.Next.ViewModels
             foreach (ActivityInfo a in inRange.Take(12)) Recent.Add(a);
 
             OnPropertyChanged(nameof(DailyTitle));
+            _spotlightTask = LoadSpotlightAsync();
         }
 
         private int Capped(ActivityInfo a) => Math.Min(a.TotalSeconds, _source.GetTimeCap(a.Type));
@@ -482,9 +524,8 @@ namespace TraXile.Next.ViewModels
             int deaths = cur.Sum(a => a.Deaths);
             int prevDeaths = prev.Sum(a => a.Deaths);
 
-            Kpis.Add(Kpi("Activities", cur.Count.ToString("N0"), "",
-                Delta(cur.Count, prev.Count, higherIsBetter: true), DesignTokens.Get("Accent").For(_isDark),
-                Daily(a => 1)));
+            // The rotating Statistic; its values load in the background (LoadSpotlightAsync)
+            Kpis.Add(_spotlight);
 
             Kpis.Add(Kpi("Maps completed", maps.Count.ToString("N0"), "",
                 Delta(maps.Count, prevMaps.Count, higherIsBetter: true), ActivityPalette.ColorOf(ActivityPalette.Green),
@@ -498,9 +539,12 @@ namespace TraXile.Next.ViewModels
                 Delta(hours, prevHours, higherIsBetter: true), ActivityPalette.ColorOf(ActivityPalette.Blue),
                 Daily(a => Capped(a) / 3600.0)));
 
-            Kpis.Add(Kpi("Deaths", deaths.ToString("N0"), "",
+            KpiViewModel deathsKpi = Kpi("Activity Deaths", deaths.ToString("N0"), "",
                 Delta(deaths, prevDeaths, higherIsBetter: false), DesignTokens.Get("Brass").For(_isDark),
-                Daily(a => a.Deaths)));
+                Daily(a => a.Deaths));
+            deathsKpi.ToolTip = "Deaths during the Activities in this filter. The \"Deaths\" Statistic also counts " +
+                                "deaths outside Activities, so it can be higher.";
+            Kpis.Add(deathsKpi);
         }
 
         /// <summary>
@@ -517,32 +561,157 @@ namespace TraXile.Next.ViewModels
         }
 
         private KpiViewModel Kpi(string title, string value, string unit, (string text, bool good) delta,
-            Color accent, double[] spark)
+            Color accent, double[] spark) =>
+            Fill(new KpiViewModel(), title, value, unit, delta, accent, spark);
+
+        private static T Fill<T>(T kpi, string title, string value, string unit, (string text, bool good) delta,
+            Color accent, double[] spark) where T : KpiViewModel
         {
             SKColor c = ActivityPalette.Sk(accent);
-            return new KpiViewModel
+            kpi.Title = title;
+            kpi.Value = value;
+            kpi.Unit = unit;
+            kpi.Delta = delta.text;
+            kpi.DeltaPositive = delta.good;
+            kpi.AccentBrush = ActivityPalette.BrushOf(accent);
+            kpi.Sparkline = new ISeries[]
             {
-                Title = title,
-                Value = value,
-                Unit = unit,
-                Delta = delta.text,
-                DeltaPositive = delta.good,
-                AccentBrush = ActivityPalette.BrushOf(accent),
-                Sparkline = new ISeries[]
+                new LineSeries<double>
                 {
-                    new LineSeries<double>
-                    {
-                        Values = spark,
-                        GeometrySize = 0,
-                        LineSmoothness = 0.7,
-                        Stroke = new SolidColorPaint(c, 2),
-                        Fill = new LinearGradientPaint(
-                            new[] { c.WithAlpha(90), c.WithAlpha(0) },
-                            new SKPoint(0.5f, 0), new SKPoint(0.5f, 1)),
-                        IsHoverable = false,
-                    }
+                    Values = spark,
+                    GeometrySize = 0,
+                    LineSmoothness = 0.7,
+                    Stroke = new SolidColorPaint(c, 2),
+                    Fill = new LinearGradientPaint(
+                        new[] { c.WithAlpha(90), c.WithAlpha(0) },
+                        new SKPoint(0.5f, 0), new SKPoint(0.5f, 1)),
+                    IsHoverable = false,
                 }
             };
+            return kpi;
+        }
+
+        // ------------------------------------------------------------------
+        // Rotating Statistic tile
+        // ------------------------------------------------------------------
+
+        /// <summary>How long the tile shows one Statistic.</summary>
+        public static readonly TimeSpan SpotlightInterval = TimeSpan.FromMinutes(2);
+
+        private readonly IStatsSource _stats;
+        private readonly StatDeck _deck;
+        private readonly DispatcherTimer _rotation;
+        private StatSpotlightViewModel _spotlight;
+        private Task _spotlightTask = Task.CompletedTask;
+        private int _spotlightVersion;
+
+        /// <summary>The rotating tile (first KPI).</summary>
+        public StatSpotlightViewModel Spotlight => _spotlight;
+
+        /// <summary>Opens the shown Statistic on the Statistics page (raises <see cref="StatisticRequested"/>).</summary>
+        public IRelayCommand OpenStatisticCommand { get; }
+
+        /// <summary>Moves on to the next Statistic and restarts the rotation timer.</summary>
+        public IRelayCommand SkipStatisticCommand { get; }
+
+        /// <summary>The player wants to see this Statistic (key) on the Statistics page.</summary>
+        public event EventHandler<string> StatisticRequested;
+
+        /// <summary>Completes when the tile's values are loaded (tests).</summary>
+        public async Task WhenSpotlightIdle()
+        {
+            Task t;
+            do { t = _spotlightTask; await t; } while (t != _spotlightTask);
+        }
+
+        private void SkipStatistic()
+        {
+            _rotation.Stop();
+            _rotation.Start();
+            NextStatistic();
+        }
+
+        private void NextStatistic()
+        {
+            _deck.Next();
+            _spotlightTask = LoadSpotlightAsync();
+        }
+
+        /// <summary>
+        /// Reads the Statistics of the filter's time range in the background, updates the deck's pool (only
+        /// Statistics &gt; 0 are eligible) and shows the current one with its delta and last 14 days.
+        /// </summary>
+        private async Task LoadSpotlightAsync()
+        {
+            int version = ++_spotlightVersion;
+            if (_stats == null)
+            {
+                ShowSpotlight(null, null, null);
+                return;
+            }
+
+            TimeWindow w = Filter.Window;
+            DateTime now = DateTime.Now;
+            bool hasPrevious = w.From.HasValue; // like the other KPIs: no delta for an open range
+            (DateTime from, DateTime to, IReadOnlyList<StatInfo> stats) = await Task.Run(() =>
+            {
+                // the same window as the Statistics page, so a click there shows the same value
+                (DateTime f, DateTime t) = StatMath.Window(w.From, w.To, _stats.OldestStatTime, now);
+                return (f, t, _stats.GetStats(f, t));
+            });
+            if (version != _spotlightVersion) return;
+
+            _deck.Update(stats.Where(s => s.Value > 0).Select(s => s.Key));
+            SkipStatisticCommand.NotifyCanExecuteChanged();
+            StatInfo stat = stats.FirstOrDefault(s => s.Key == _deck.Current);
+            if (stat == null)
+            {
+                ShowSpotlight(null, null, null);
+                return;
+            }
+
+            DateTime sparkFrom = now.Date.AddDays(-13);
+            (int? previous, IReadOnlyList<StatEntry> entries) = await Task.Run(() =>
+            {
+                int? p = null;
+                if (hasPrevious)
+                {
+                    (DateTime pFrom, DateTime pTo) = StatMath.PreviousWindow(from, to);
+                    p = _stats.GetStats(pFrom, pTo).FirstOrDefault(s => s.Key == stat.Key)?.Value ?? 0;
+                }
+                return (p, _stats.GetStatSeries(stat.Key, sparkFrom, now));
+            });
+            if (version != _spotlightVersion) return;
+
+            double[] spark = StatMath.DailyIncrease(entries, sparkFrom, now)
+                .Select(d => stat.IsDuration ? d.Value / 3600.0 : d.Value).ToArray();
+            ShowSpotlight(stat, previous, spark);
+        }
+
+        private void ShowSpotlight(StatInfo stat, int? previous, double[] spark)
+        {
+            _spotlight = SpotlightTile(stat, previous, spark);
+            int i = Kpis.IndexOf(Kpis.OfType<StatSpotlightViewModel>().FirstOrDefault());
+            if (i >= 0) Kpis[i] = _spotlight;
+            OnPropertyChanged(nameof(Spotlight));
+        }
+
+        private StatSpotlightViewModel SpotlightTile(StatInfo stat, int? previous, double[] spark)
+        {
+            var tile = new StatSpotlightViewModel
+            {
+                StatKey = stat?.Key,
+                DeltaNeutral = true, // more of a Statistic is neither good nor bad
+                OpenCommand = OpenStatisticCommand,
+                SkipCommand = SkipStatisticCommand,
+            };
+            return Fill(tile,
+                stat?.Name ?? "No statistics in this range",
+                stat?.ValueText ?? "—",
+                "",
+                stat != null && previous.HasValue ? Delta(stat.Value, previous.Value, higherIsBetter: true) : (null, true),
+                DesignTokens.Get("Accent").For(_isDark),
+                spark ?? new double[14]);
         }
 
         /// <summary>Per-day values for the last 14 days (sparklines).</summary>
@@ -559,66 +728,93 @@ namespace TraXile.Next.ViewModels
             return result;
         }
 
-        private void BuildTimeDistribution(List<ActivityInfo> cur, DateTime from, DateTime to)
+        /// <summary>Share of the total time below which an activity type is grouped into "Other".</summary>
+        public const double OtherThreshold = 0.04;
+
+        /// <summary>
+        /// Rows of the time distribution, shared by the donut and the overview table: types by time descending,
+        /// then "Other" (only if at least two types are below <see cref="OtherThreshold"/>), then hideout (if &gt; 0).
+        /// </summary>
+        public static List<OverviewRow> GroupTimeDistribution(
+            IEnumerable<(ACTIVITY_TYPES type, int count, double seconds)> byType, double hideoutSeconds)
         {
-            var byType = cur.GroupBy(a => a.Type)
-                            .Select(g => new { Type = g.Key, Count = g.Count(), Seconds = (double)g.Sum(Capped) })
-                            .OrderByDescending(x => x.Seconds)
-                            .ToList();
+            var types = byType.OrderByDescending(t => t.seconds).ToList();
+            double total = types.Sum(t => t.seconds) + hideoutSeconds;
+            double Frac(double s) => total > 0 ? s / total : 0;
 
-            double hideout = ShowHideout ? _source.GetHideoutSeconds(from, to) : 0;
-            double total = byType.Sum(x => x.Seconds) + hideout;
-
-            var slices = new List<(string name, Color color, double seconds)>();
-            Overview.Clear();
-            double other = 0;
-            foreach (var t in byType)
+            OverviewRow TypeRow((ACTIVITY_TYPES type, int count, double seconds) t) => new OverviewRow
             {
-                bool own = total > 0 && t.Seconds / total >= 0.04;
-                if (own) slices.Add((ActivityPalette.DisplayName(t.Type), ActivityPalette.ColorOf(t.Type), t.Seconds));
-                else other += t.Seconds;
+                Name = ActivityPalette.DisplayName(t.type),
+                Type = t.type,
+                Brush = ActivityPalette.Brush(t.type),
+                Count = t.count,
+                Seconds = t.seconds,
+                Fraction = Frac(t.seconds)
+            };
 
-                Overview.Add(new OverviewRow
+            var small = types.Where(t => Frac(t.seconds) < OtherThreshold).ToList();
+            bool group = small.Count >= 2; // a lone small type keeps its name
+
+            var rows = types.Where(t => !group || Frac(t.seconds) >= OtherThreshold).Select(TypeRow).ToList();
+            if (group)
+            {
+                double seconds = small.Sum(t => t.seconds);
+                rows.Add(new OverviewRow
                 {
-                    Name = ActivityPalette.DisplayName(t.Type),
-                    Type = t.Type,
-                    Brush = own ? ActivityPalette.Brush(t.Type) : ActivityPalette.BrushOf(ActivityPalette.ColorOf(ActivityPalette.Other)),
-                    Count = t.Count,
-                    Seconds = t.Seconds,
-                    Fraction = total > 0 ? t.Seconds / total : 0
+                    Name = "Other",
+                    Brush = ActivityPalette.BrushOf(ActivityPalette.ColorOf(ActivityPalette.Other)),
+                    Count = small.Sum(t => t.count),
+                    Seconds = seconds,
+                    Fraction = Frac(seconds),
+                    Members = small.Select(TypeRow).ToList()
                 });
             }
-            if (other > 0) slices.Add(("Other", ActivityPalette.ColorOf(ActivityPalette.Other), other));
-            if (hideout > 0)
+            if (hideoutSeconds > 0)
             {
-                slices.Add(("Hideout", ActivityPalette.ColorOf(ActivityPalette.Hideout), hideout));
-                Overview.Add(new OverviewRow
+                rows.Add(new OverviewRow
                 {
                     Name = "Hideout",
                     Brush = ActivityPalette.BrushOf(ActivityPalette.ColorOf(ActivityPalette.Hideout)),
-                    Seconds = hideout,
-                    Fraction = hideout / total
+                    Seconds = hideoutSeconds,
+                    Fraction = Frac(hideoutSeconds),
+                    IsHideout = true
                 });
             }
+            return rows;
+        }
 
+        private void BuildTimeDistribution(List<ActivityInfo> cur, DateTime from, DateTime to)
+        {
+            var byType = cur.GroupBy(a => a.Type)
+                            .Select(g => (g.Key, g.Count(), (double)g.Sum(Capped)));
+            double hideout = ShowHideout ? _source.GetHideoutSeconds(from, to) : 0;
+
+            List<OverviewRow> rows = GroupTimeDistribution(byType, hideout);
+            Overview.Clear();
+            foreach (OverviewRow r in rows) Overview.Add(r);
+
+            double total = rows.Sum(r => r.Seconds);
             TotalHours = (total / 3600.0).ToString(total >= 36000 ? "0" : "0.0");
 
             var series = new List<ISeries>();
-            foreach (var s in slices)
+            foreach (OverviewRow r in rows)
             {
-                double hours = s.seconds / 3600.0;
-                double frac = total > 0 ? s.seconds / total : 0;
+                Color color = r.IsHideout ? ActivityPalette.ColorOf(ActivityPalette.Hideout)
+                            : r.IsOther ? ActivityPalette.ColorOf(ActivityPalette.Other)
+                            : ActivityPalette.ColorOf(r.Type.Value);
+                string tip = $"{r.Seconds / 3600.0:0.0} h ({r.Fraction:P0})";
+                if (r.IsOther) tip += Environment.NewLine + r.MembersText;
 
                 series.Add(new PieSeries<double>
                 {
-                    Name = s.name,
-                    Values = new[] { Math.Round(hours, 2) },
+                    Name = r.Name,
+                    Values = new[] { Math.Round(r.Seconds / 3600.0, 2) },
                     InnerRadius = 78,
                     CornerRadius = 2,
-                    Fill = new SolidColorPaint(ActivityPalette.Sk(s.color)),
+                    Fill = new SolidColorPaint(ActivityPalette.Sk(color)),
                     Stroke = new SolidColorPaint(Token("Surface"), 2), // surface ring between slices
                     HoverPushout = 6,
-                    ToolTipLabelFormatter = p => $"{p.Coordinate.PrimaryValue:0.0} h ({frac:P0})",
+                    ToolTipLabelFormatter = p => tip,
                 });
             }
             TimeSeries = series.ToArray();
@@ -837,7 +1033,7 @@ namespace TraXile.Next.ViewModels
             {
                 series.Add(new ScatterSeries<LiveChartsCore.Defaults.ObservablePoint>
                 {
-                    Name = "Deaths",
+                    Name = "Activity Deaths",
                     Values = markers,
                     GeometrySize = 9,
                     Fill = new SolidColorPaint(Token("Brass")),
@@ -858,6 +1054,8 @@ namespace TraXile.Next.ViewModels
         public void Dispose()
         {
             _clock.Stop();
+            _rotation.Stop();
+            _spotlightVersion++; // drop a running load
             Filter.Changed -= OnFilterChanged;
             Filter.LeaguesChanged -= OnLeaguesChanged;
             _refreshDebounce.Stop();

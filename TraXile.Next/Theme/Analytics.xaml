@@ -39,12 +39,15 @@
         <Setter Property="Margin" Value="0,2,0,12" />
     </Style>
 
-    <!-- scrollable "count by ..." list inside a card -->
+    <!-- scrollable "count by ..." list inside a card. CanContentScroll=True lets a VirtualizingStackPanel items panel
+         actually virtualize (without it every item is realized); ScrollUnit=Pixel keeps smooth scrolling. -->
     <Style x:Key="CountList" TargetType="ItemsControl">
+        <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
+        <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ItemsControl">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,8,0" Focusable="False">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,8,0" Focusable="False" CanContentScroll="True">
                         <ItemsPresenter />
                     </ScrollViewer>
                 </ControlTemplate>

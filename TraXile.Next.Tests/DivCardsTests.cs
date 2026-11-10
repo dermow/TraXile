@@ -57,6 +57,48 @@ namespace TraXile.Next.Tests
         }
 
         [Fact]
+        public void Every_column_is_sortable_and_a_second_click_flips_the_direction()
+        {
+            _vm.SortBy(DivCardSortColumn.Name);
+            Assert.False(_vm.SortDescending);
+            string[] names = _vm.Items.Select(c => c.Name).ToArray();
+            Assert.Equal(names.OrderBy(n => n, StringComparer.CurrentCultureIgnoreCase), names);
+
+            _vm.SortBy(DivCardSortColumn.Name);
+            Assert.True(_vm.SortDescending);
+            names = _vm.Items.Select(c => c.Name).ToArray();
+            Assert.Equal(names.OrderByDescending(n => n, StringComparer.CurrentCultureIgnoreCase), names);
+
+            _vm.SortBy(DivCardSortColumn.LastDraw);
+            Assert.True(_vm.SortDescending);
+            DateTime[] last = _vm.Items.Select(c => c.LastDraw).ToArray();
+            Assert.Equal(last.OrderByDescending(d => d), last);
+
+            _vm.SortBy(DivCardSortColumn.FirstDraw);
+            _vm.SortBy(DivCardSortColumn.FirstDraw);
+            Assert.False(_vm.SortDescending);
+            DateTime[] first = _vm.Items.Select(c => c.FirstDraw).ToArray();
+            Assert.Equal(first.OrderBy(d => d), first);
+
+            _vm.SortBy(DivCardSortColumn.Count);
+            _vm.SortBy(DivCardSortColumn.Count);
+            int[] counts = _vm.Items.Select(c => c.Count).ToArray();
+            Assert.Equal(counts.OrderBy(c => c), counts);
+        }
+
+        [Fact]
+        public void Sort_order_survives_search_and_refresh()
+        {
+            _vm.SortBy(DivCardSortColumn.Name);
+            _vm.SearchText = "a";
+            _filter.Time = FilterTime.Last7Days;
+
+            Assert.Equal(DivCardSortColumn.Name, _vm.SortColumn);
+            string[] names = _vm.Items.Select(c => c.Name).ToArray();
+            Assert.Equal(names.OrderBy(n => n, StringComparer.CurrentCultureIgnoreCase), names);
+        }
+
+        [Fact]
         public void Csv_export_uses_the_classic_layout()
         {
             string path = Path.Combine(Path.GetTempPath(), $"traxile-cards-{Guid.NewGuid():N}.csv");

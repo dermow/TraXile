@@ -5,13 +5,55 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:svc="clr-namespace:TraXile.Next.Services"
     xmlns:views="clr-namespace:TraXile.Next.Views"
+    xmlns:local="clr-namespace:TraXile.Next"
     Title="Div Cards"
     ScrollViewer.CanContentScroll="False">
     <!-- CanContentScroll=False: the page fills the window, the card list scrolls (and virtualizes) by itself -->
 
     <Page.Resources>
+        <local:EnumEqualsConverter x:Key="EnumEq" />
+
         <Style x:Key="Head" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
             <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <!-- Sortable column header. Tag = "this column is the sort column" (bool); the arrow looks like CardColumnHeader's. -->
+        <Style x:Key="SortHead" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="Label" Grid.Column="1" Text="{TemplateBinding Content}" Style="{StaticResource Head}" VerticalAlignment="Center" />
+                            <Path x:Name="SortArrow" Grid.Column="2" Width="8" Height="5" Margin="6,1,0,0" Stretch="Fill" VerticalAlignment="Center"
+                                  Fill="{DynamicResource AccentTextBrush}" Visibility="Collapsed" Data="M0,0 L1,0 0.5,1 z" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Label" Property="Foreground" Value="{DynamicResource TextBrush}" />
+                            </Trigger>
+                            <Trigger Property="HorizontalAlignment" Value="Right">
+                                <Setter TargetName="SortArrow" Property="Grid.Column" Value="0" />
+                                <Setter TargetName="SortArrow" Property="Margin" Value="0,1,6,0" />
+                            </Trigger>
+                            <Trigger Property="Tag" Value="True">
+                                <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                                <Setter TargetName="Label" Property="Foreground" Value="{DynamicResource TextBrush}" />
+                            </Trigger>
+                            <DataTrigger Binding="{Binding SortDescending}" Value="False">
+                                <Setter TargetName="SortArrow" Property="Data" Value="M0,1 L1,1 0.5,0 z" />
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Page.Resources>
 
@@ -59,10 +101,17 @@
                 <ColumnDefinition Width="160" />
                 <ColumnDefinition Width="160" />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Card" Style="{StaticResource Head}" />
-            <TextBlock Grid.Column="1" Text="Count" Style="{StaticResource Head}" HorizontalAlignment="Right" />
-            <TextBlock Grid.Column="2" Text="Last draw" Style="{StaticResource Head}" HorizontalAlignment="Right" />
-            <TextBlock Grid.Column="3" Text="First draw" Style="{StaticResource Head}" HorizontalAlignment="Right" />
+            <Button Content="Card" Style="{StaticResource SortHead}" Click="SortHeader_Click" CommandParameter="Name"
+                    Tag="{Binding SortColumn, Converter={StaticResource EnumEq}, ConverterParameter=Name}" />
+            <Button Grid.Column="1" Content="Count" Style="{StaticResource SortHead}" HorizontalAlignment="Right"
+                    Click="SortHeader_Click" CommandParameter="Count"
+                    Tag="{Binding SortColumn, Converter={StaticResource EnumEq}, ConverterParameter=Count}" />
+            <Button Grid.Column="2" Content="Last draw" Style="{StaticResource SortHead}" HorizontalAlignment="Right"
+                    Click="SortHeader_Click" CommandParameter="LastDraw"
+                    Tag="{Binding SortColumn, Converter={StaticResource EnumEq}, ConverterParameter=LastDraw}" />
+            <Button Grid.Column="3" Content="First draw" Style="{StaticResource SortHead}" HorizontalAlignment="Right"
+                    Click="SortHeader_Click" CommandParameter="FirstDraw"
+                    Tag="{Binding SortColumn, Converter={StaticResource EnumEq}, ConverterParameter=FirstDraw}" />
         </Grid>
 
         <!-- ============ Card list ============ -->

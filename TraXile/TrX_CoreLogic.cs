@@ -596,7 +596,7 @@ namespace TraXile
             {
                 { "TotalMapsDone", "Total maps done" },
                 { "TotalHeistsDone", "Total heists done" },
-                { "TotalKilledCount", "Death count" },
+                { "TotalKilledCount", "Deaths" },
                 { "EinharCaptures", "Einhar beasts captured" },
                 { "TrialMasterTookReward", "Ultimatum: took rewards" },
                 { "TrialMasterVictory", "Ultimatum: cleared all rounds" },

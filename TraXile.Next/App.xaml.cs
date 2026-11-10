@@ -161,6 +161,11 @@ namespace TraXile.Next
             ActivityLog = new ActivityLogViewModel(Source, Filter, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);
             Tags = new TagsViewModel(Source, ScreenshotPath == null ? new CoreTagSoundPlayer() : null);
             Statistics = new StatisticsViewModel(Source, Filter);
+            Dashboard.StatisticRequested += (s, key) =>
+            {
+                Statistics.Select(key);
+                (MainWindow as MainWindow)?.ShowPage(typeof(Views.StatisticsPage));
+            };
             Mapping = new MappingViewModel(Source, Filter);
             Heist = new HeistViewModel(Source, Filter);
             Lab = new LabViewModel(Source, Filter, AppSetup.Default, CanWriteSettings && ScreenshotPath == null);

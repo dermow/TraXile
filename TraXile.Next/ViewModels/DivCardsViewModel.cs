@@ -8,6 +8,9 @@ using TraXile.Next.Services;
 
 namespace TraXile.Next.ViewModels
 {
+    /// <summary>The sortable columns of the Div Cards list.</summary>
+    public enum DivCardSortColumn { Name, Count, LastDraw, FirstDraw }
+
     /// <summary>
     /// Div Cards page (classic Main.RenderDivCards): every divination card drawn in the filter's time range with
     /// count, last and first draw, a search and the CSV export. Only the time range of the global filter applies:
@@ -40,8 +43,53 @@ namespace TraXile.Next.ViewModels
             set { if (SetProperty(ref _searchText, value ?? "")) ApplySearch(); }
         }
 
+        private DivCardSortColumn _sortColumn = DivCardSortColumn.Count;
+        /// <summary>The column the list is sorted by; most drawn first by default.</summary>
+        public DivCardSortColumn SortColumn { get => _sortColumn; private set => SetProperty(ref _sortColumn, value); }
+
+        private bool _sortDescending = true;
+        public bool SortDescending { get => _sortDescending; private set => SetProperty(ref _sortDescending, value); }
+
+        /// <summary>
+        /// Sorts by <paramref name="column"/>. The same column again flips the direction; a new column starts
+        /// ascending for the card name and descending (largest / newest first) for the others.
+        /// </summary>
+        public void SortBy(DivCardSortColumn column)
+        {
+            if (column == SortColumn) SortDescending = !SortDescending;
+            else
+            {
+                SortColumn = column;
+                SortDescending = column != DivCardSortColumn.Name;
+            }
+            ApplySearch();
+        }
+
+        private IEnumerable<DivCardInfo> Sort(IEnumerable<DivCardInfo> cards)
+        {
+            IOrderedEnumerable<DivCardInfo> sorted;
+            switch (SortColumn)
+            {
+                case DivCardSortColumn.Name:
+                    sorted = SortDescending
+                        ? cards.OrderByDescending(c => c.Name, StringComparer.CurrentCultureIgnoreCase)
+                        : cards.OrderBy(c => c.Name, StringComparer.CurrentCultureIgnoreCase);
+                    return sorted; // names are unique: no tie-break needed
+                case DivCardSortColumn.LastDraw:
+                    sorted = SortDescending ? cards.OrderByDescending(c => c.LastDraw) : cards.OrderBy(c => c.LastDraw);
+                    break;
+                case DivCardSortColumn.FirstDraw:
+                    sorted = SortDescending ? cards.OrderByDescending(c => c.FirstDraw) : cards.OrderBy(c => c.FirstDraw);
+                    break;
+                default:
+                    sorted = SortDescending ? cards.OrderByDescending(c => c.Count) : cards.OrderBy(c => c.Count);
+                    break;
+            }
+            return sorted.ThenBy(c => c.Name, StringComparer.CurrentCultureIgnoreCase); // stable, readable tie-break
+        }
+
         private IReadOnlyList<DivCardInfo> _items = Array.Empty<DivCardInfo>();
-        /// <summary>Cards matching the search, most drawn first.</summary>
+        /// <summary>Cards matching the search, in the chosen sort order.</summary>
         public IReadOnlyList<DivCardInfo> Items { get => _items; private set => SetProperty(ref _items, value); }
 
         private string _summary = "";
@@ -64,9 +112,10 @@ namespace TraXile.Next.ViewModels
         private void ApplySearch()
         {
             string term = SearchText.Trim();
-            Items = term.Length == 0
+            IEnumerable<DivCardInfo> matches = term.Length == 0
                 ? _all
-                : _all.Where(c => c.Name.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                : _all.Where(c => c.Name.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0);
+            Items = Sort(matches).ToList();
 
             int total = Items.Sum(c => c.Count);
             Summary = $"{total:N0} cards · {Items.Count:N0} different";

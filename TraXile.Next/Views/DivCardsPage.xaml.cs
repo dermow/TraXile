@@ -18,6 +18,12 @@ namespace TraXile.Next.Views
             DataContext = _vm;
         }
 
+        private void SortHeader_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b && Enum.TryParse(b.CommandParameter as string, out DivCardSortColumn column))
+                _vm.SortBy(column);
+        }
+
         private void Export_Click(object sender, RoutedEventArgs e)
         {
             if (_vm.Items.Count == 0) return;

@@ -116,15 +116,13 @@ namespace TraXile.Next.ViewModels
 
         private void BuildCharts()
         {
-            SKColor map = ActivityPalette.Sk(ACTIVITY_TYPES.MAP);
-            SKColor campaign = ActivityPalette.Sk(ACTIVITY_TYPES.CAMPAIGN);
-            SKColor accent = AccentColor;
-            SKColor deaths = Token("Brass"); // brass is the deaths color of the design system
+            // every chart is a single series compared across leagues, so one color for all keeps the grid calm
+            SKColor color = AccentColor;
             Func<double, string> count = v => v.ToString("N0");
             Func<double, string> hours = v => $"{v:0.#} h";
             Func<double, string> minutes = v => $"{v:0.#} min";
 
-            LeagueChart Chart(string title, string subtitle, Func<LeagueStats, double> value, SKColor color, Func<double, string> format) =>
+            LeagueChart Chart(string title, string subtitle, Func<LeagueStats, double> value, Func<double, string> format) =>
                 new LeagueChart
                 {
                     Title = title,
@@ -136,14 +134,14 @@ namespace TraXile.Next.ViewModels
 
             Charts = new[]
             {
-                Chart("Maps", "Maps done per league", s => s.Maps, map, count),
-                Chart("T16 maps", "Maps of area level 83 and above", s => s.MapsT16, map, count),
-                Chart("Activities", "All activities per league", s => s.Activities, accent, count),
-                Chart("Playtime", "Hours in activities, capped at the time caps", s => s.PlaySeconds / 3600, accent, hours),
-                Chart("Average map time", "Minutes per map", s => s.AverageMapSeconds / 60, map, minutes),
-                Chart("Average T16 map time", "Minutes per map of area level 83 and above", s => s.AverageMapT16Seconds / 60, map, minutes),
-                Chart("Deaths", "Deaths in all activities", s => s.Deaths, deaths, count),
-                Chart("Campaign", "Hours in the campaign", s => s.CampaignSeconds / 3600, campaign, hours),
+                Chart("Maps", "Maps done per league", s => s.Maps, count),
+                Chart("T16 maps", "Maps of area level 83 and above", s => s.MapsT16, count),
+                Chart("Activities", "All activities per league", s => s.Activities, count),
+                Chart("Playtime", "Hours in activities, capped at the time caps", s => s.PlaySeconds / 3600, hours),
+                Chart("Average map time", "Minutes per map", s => s.AverageMapSeconds / 60, minutes),
+                Chart("Average T16 map time", "Minutes per map of area level 83 and above", s => s.AverageMapT16Seconds / 60, minutes),
+                Chart("Activity Deaths", "Deaths during the activities of the league", s => s.Deaths, count),
+                Chart("Campaign", "Hours in the campaign", s => s.CampaignSeconds / 3600, hours),
             };
         }
     }

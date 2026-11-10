@@ -24,6 +24,9 @@
                 <DataTrigger Binding="{Binding DeltaPositive}" Value="False">
                     <Setter Property="TextElement.Foreground" Value="{DynamicResource StatusDangerBrush}" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding DeltaNeutral}" Value="True">
+                    <Setter Property="TextElement.Foreground" Value="{DynamicResource TextMutedBrush}" />
+                </DataTrigger>
                 <DataTrigger Binding="{Binding HasDelta}" Value="False">
                     <Setter Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
@@ -249,7 +252,7 @@
                                 <TextBlock Text="previous period" Style="{StaticResource LegendText}" />
                             </StackPanel>
                             <Ellipse Width="8" Height="8" Fill="{DynamicResource BrassBrush}" VerticalAlignment="Center" />
-                            <TextBlock Text="death" Style="{StaticResource LegendText}" />
+                            <TextBlock Text="activity deaths" Style="{StaticResource LegendText}" />
                         </StackPanel>
                         <lvc:CartesianChart Grid.Row="1" Height="120" Margin="-6,4,-6,0"
                                             Series="{Binding TrendSeries}" XAxes="{Binding TrendXAxes}" YAxes="{Binding TrendYAxes}"
@@ -262,15 +265,66 @@
             <views:GlobalFilterBar Margin="0,0,0,16" />
 
             <!-- ============ KPI tiles ============ -->
+            <!-- The templates are picked by item type: the first tile is the rotating Statistic -->
             <ItemsControl ItemsSource="{Binding Kpis}" Margin="-8,0,-8,8">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Rows="1" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
+                <ItemsControl.Resources>
+                    <!-- Rotating Statistic: click opens it on the Statistics page, the button skips to the next one -->
+                    <DataTemplate DataType="{x:Type vm:StatSpotlightViewModel}">
+                        <Border x:Name="Tile" Style="{StaticResource Card}" Margin="8" Padding="20,16,20,10"
+                                ToolTip="Open this statistic on the Statistics page">
+                            <Border.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{Binding OpenCommand}" />
+                            </Border.InputBindings>
+                            <Grid>
+                                <StackPanel>
+                                    <!-- A random fact: "Random fact" over "15 Level Ups" -->
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="ArrowShuffle20" FontSize="13" Foreground="{Binding AccentBrush}"
+                                                       Margin="0,0,6,0" VerticalAlignment="Center" />
+                                        <TextBlock Text="Random fact" Style="{StaticResource Label}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <!-- One wrapping text, so a long name continues on the next line instead of being cut off -->
+                                    <TextBlock Style="{StaticResource Metric}" TextWrapping="Wrap" Margin="0,10,0,0">
+                                        <Run Text="{Binding Value, Mode=OneWay}" /><Run Text=" " /><Run
+                                             Text="{Binding Title, Mode=OneWay}" FontFamily="{StaticResource UiFont}" FontSize="16"
+                                             FontWeight="Normal" Foreground="{DynamicResource TextMutedBrush}" />
+                                    </TextBlock>
+                                    <Border Style="{StaticResource DeltaPill}" HorizontalAlignment="Left" Margin="0,4,0,0">
+                                        <TextBlock FontSize="12" FontWeight="SemiBold" Typography.NumeralAlignment="Tabular">
+                                            <Run Text="{Binding Delta, Mode=OneWay}" /><Run Text="  vs. prev." FontWeight="Normal" />
+                                        </TextBlock>
+                                    </Border>
+                                    <lvc:CartesianChart Series="{Binding Sparkline}" Height="44" Margin="-4,8,-4,0"
+                                                        XAxes="{Binding SparkXAxes}" YAxes="{Binding SparkYAxes}"
+                                                        DrawMargin="{Binding SparkMargin}"
+                                                        TooltipPosition="Hidden" LegendPosition="Hidden"
+                                                        IsHitTestVisible="False" />
+                                </StackPanel>
+                                <!-- Overlay, so the button does not push the tile's rows down -->
+                                <ui:Button Appearance="Transparent" Padding="4" Margin="0,-6,-12,0"
+                                           HorizontalAlignment="Right" VerticalAlignment="Top"
+                                           ToolTip="Show the next statistic" Command="{Binding SkipCommand}">
+                                    <ui:Button.Icon><ui:SymbolIcon Symbol="ChevronRight20" /></ui:Button.Icon>
+                                </ui:Button>
+                            </Grid>
+                        </Border>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding HasStat}" Value="True">
+                                <Setter TargetName="Tile" Property="Cursor" Value="Hand" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding HasStat}" Value="False">
+                                <Setter TargetName="Tile" Property="ToolTip" Value="{x:Null}" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+
                     <DataTemplate DataType="{x:Type vm:KpiViewModel}">
-                        <Border Style="{StaticResource Card}" Margin="8" Padding="20,16,20,10">
+                        <Border Style="{StaticResource Card}" Margin="8" Padding="20,16,20,10" ToolTip="{Binding ToolTip}">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Width="7" Height="7" Fill="{Binding AccentBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
@@ -294,7 +348,7 @@
                             </StackPanel>
                         </Border>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                </ItemsControl.Resources>
             </ItemsControl>
 
             <!-- ============ Charts ============ -->
@@ -359,7 +413,8 @@
                         <ItemsControl ItemsSource="{Binding Overview}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type vm:OverviewRow}">
-                                    <Grid Margin="0,4">
+                                    <!-- the "Other" row lists its grouped types; null tooltip = none for the rest -->
+                                    <Grid Margin="0,4" Background="Transparent" ToolTip="{Binding MembersText}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
@@ -377,7 +432,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <TextBlock Text="Types under 4 % share the &quot;Other&quot; slice of the chart." Style="{StaticResource Caption}"
+                        <TextBlock Text="Types under 4 % are grouped as &quot;Other&quot;." Style="{StaticResource Caption}"
                                    Margin="0,8,0,0" TextWrapping="Wrap" />
 
                     </StackPanel>

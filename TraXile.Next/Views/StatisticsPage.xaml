@@ -65,7 +65,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock x:Name="Name" Text="{Binding Name}" Style="{StaticResource Body}" TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center" ToolTip="{Binding Key}" />
+                                           VerticalAlignment="Center" ToolTip="{Binding ToolTip}" />
                                 <TextBlock x:Name="Value" Grid.Column="1" Text="{Binding ValueText}" Style="{StaticResource Num}" FontWeight="SemiBold"
                                            Margin="12,0,0,0" VerticalAlignment="Center" />
                             </Grid>
