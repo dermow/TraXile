@@ -19,7 +19,7 @@
     <Product>TraXile</Product>
     <Company>dermow</Company>
     <ApplicationIcon>TraXile.ico</ApplicationIcon>
-    <Version>3.0.0-preview1</Version>
+    <Version>3.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,8 +46,7 @@
     <!-- Reuse the existing, battle-tested tracking core (log parsing, DB, stats) -->
     <ProjectReference Include="..\TraXile\TraXile.csproj" />
     <!-- The updater is started from the app folder ("Install update"); built and copied, not referenced -->
-    <ProjectReference Include="..\TraXile.Updater\TraXile.Updater.csproj" ReferenceOutputAssembly="false"
-                      OutputItemType="Content" CopyToOutputDirectory="PreserveNewest" />
+    <ProjectReference Include="..\TraXile.Updater\TraXile.Updater.csproj" ReferenceOutputAssembly="false" OutputItemType="Content" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

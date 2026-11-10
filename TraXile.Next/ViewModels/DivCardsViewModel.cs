@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Threading;
 using TraXile.Next.Services;
 
 namespace TraXile.Next.ViewModels
@@ -20,13 +21,39 @@ namespace TraXile.Next.ViewModels
     {
         private readonly IDivCardSource _cards;
         private readonly Func<DateTime> _now;
+        private readonly DispatcherTimer _drawDebounce;
         private IReadOnlyList<DivCardInfo> _all = Array.Empty<DivCardInfo>();
+
+        /// <summary>How long after a draw the list is re-read (draws come in bursts while decks are opened).</summary>
+        public static readonly TimeSpan DrawDebounce = TimeSpan.FromMilliseconds(250);
 
         public DivCardsViewModel(ITrackingSource source, GlobalFilter filter, Func<DateTime> now = null) : base(source, filter)
         {
             _cards = source as IDivCardSource;
             _now = now ?? (() => DateTime.Now);
+
+            // Only this page re-reads on a draw; the query is cheap, so a short debounce is enough
+            _drawDebounce = new DispatcherTimer { Interval = DrawDebounce };
+            _drawDebounce.Tick += (s, e) => { _drawDebounce.Stop(); Refresh(); };
+            if (_cards != null) _cards.DivCardsChanged += OnDivCardsChanged;
+
             Refresh();
+        }
+
+        private void OnDivCardsChanged(object sender, EventArgs e)
+        {
+            _drawDebounce.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                _drawDebounce.Stop();
+                _drawDebounce.Start();
+            }));
+        }
+
+        public override void Dispose()
+        {
+            if (_cards != null) _cards.DivCardsChanged -= OnDivCardsChanged;
+            _drawDebounce.Stop();
+            base.Dispose();
         }
 
         /// <summary>The filter's time range; "All" means everything up to now.</summary>

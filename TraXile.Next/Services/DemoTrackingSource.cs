@@ -460,6 +460,9 @@ namespace TraXile.Next.Services
             "Humility", "Boon of Justice", "The Union", "The Opulent", "Lucky Connections", "The Apothecary"
         };
 
+        /// <summary>Demo cards are derived from the history: no draws of their own.</summary>
+        public event EventHandler DivCardsChanged { add { } remove { } }
+
         public IReadOnlyList<DivCardInfo> GetDivCards(DateTime from, DateTime to)
         {
             var draws = _history
