@@ -269,7 +269,9 @@ namespace TraXile.Next.Services
                 {
                     Key = k,
                     Name = names != null && names.TryGetValue(k, out string n) ? n : k,
-                    Value = increase.TryGetValue(k, out int v) ? v : 0
+                    Value = k == StatMath.DeathsKey
+                        ? StatMath.ActivityDeaths(GetHistory(), from, to)
+                        : increase.TryGetValue(k, out int v) ? v : 0
                 })
                 .ToList();
         }
@@ -278,6 +280,7 @@ namespace TraXile.Next.Services
         {
             var result = new List<StatEntry>();
             if (_logic == null || string.IsNullOrEmpty(key)) return result;
+            if (key == StatMath.DeathsKey) return StatMath.ActivityDeathSeries(GetHistory(), from, to);
 
             string name = Sql(key);
             Query($"SELECT timestamp, stat_value FROM tx_stats WHERE stat_name = '{name}' AND timestamp < {Unix(from)} ORDER BY timestamp DESC LIMIT 1",

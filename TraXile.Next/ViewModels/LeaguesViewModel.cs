@@ -140,7 +140,7 @@ namespace TraXile.Next.ViewModels
                 Chart("Playtime", "Hours in activities, capped at the time caps", s => s.PlaySeconds / 3600, hours),
                 Chart("Average map time", "Minutes per map", s => s.AverageMapSeconds / 60, minutes),
                 Chart("Average T16 map time", "Minutes per map of area level 83 and above", s => s.AverageMapT16Seconds / 60, minutes),
-                Chart("Activity Deaths", "Deaths during the activities of the league", s => s.Deaths, count),
+                Chart("Deaths", "Deaths during the activities of the league", s => s.Deaths, count),
                 Chart("Campaign", "Hours in the campaign", s => s.CampaignSeconds / 3600, hours),
             };
         }

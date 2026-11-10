@@ -27,8 +27,8 @@ namespace TraXile.Next.Services
         /// <summary>Explanations for Statistics whose meaning is easy to mix up with an Activity-based value.</summary>
         private static readonly Dictionary<string, string> Descriptions = new Dictionary<string, string>
         {
-            { "TotalKilledCount", "Every death in the game log, also outside Activities (campaign, hideout, Activities too short to be saved). " +
-                                  "Can be higher than the Activity Deaths on the Dashboard." }
+            { StatMath.DeathsKey, "Sum of the death counters of the Activities started in this time range " +
+                                  "(the same value as the Deaths on the Dashboard)." }
         };
 
         internal static string FormatSeconds(double seconds)
@@ -69,6 +69,36 @@ namespace TraXile.Next.Services
 
     public static class StatMath
     {
+        /// <summary>
+        /// Key of the "Deaths" Statistic. Its value is not read from tx_stats (the core counts every death in the
+        /// log there) but derived from the Activities' death counters, so it matches the Deaths on the Dashboard.
+        /// </summary>
+        public const string DeathsKey = "TotalKilledCount";
+
+        /// <summary>Sum of the death counters of the Activities started in [from, to].</summary>
+        public static int ActivityDeaths(IEnumerable<ActivityInfo> history, DateTime from, DateTime to) =>
+            history.Where(a => a.Started >= from && a.Started <= to).Sum(a => a.Deaths);
+
+        /// <summary>
+        /// The Activities' death counters as a cumulative series like tx_stats (one entry per Activity with deaths,
+        /// at its start): the last entry before <paramref name="from"/> (if any), then the entries in [from, to].
+        /// </summary>
+        public static IReadOnlyList<StatEntry> ActivityDeathSeries(IEnumerable<ActivityInfo> history, DateTime from, DateTime to)
+        {
+            var result = new List<StatEntry>();
+            StatEntry? before = null;
+            int total = 0;
+            foreach (ActivityInfo a in history.Where(a => a.Deaths > 0 && a.Started <= to).OrderBy(a => a.Started))
+            {
+                total += a.Deaths;
+                var e = new StatEntry(a.Started, total);
+                if (a.Started < from) before = e;
+                else result.Add(e);
+            }
+            if (before.HasValue) result.Insert(0, before.Value);
+            return result;
+        }
+
         /// <summary>
         /// The classic increase of a stat in a window: max - min of the stored values, where a minimum of 1 counts
         /// as 0 (the first increment of a counter is part of the window).
