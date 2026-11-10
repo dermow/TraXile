@@ -28,10 +28,7 @@ _Avoid_: User tag, manual tag
 A counter TraXile reads from the game log, such as maps done or bosses killed, that is not tied to any single Activity.
 _Avoid_: Stat, counter, metric
 
-**Death**:
-A Statistic: every time the player dies according to the game log, wherever it happens, also outside any Activity.
-_Avoid_: Kill count, killed count
-
-**Activity Deaths**:
-The deaths that happen while an Activity is running, including deaths in its Side Areas.
-_Avoid_: Deaths (without qualifier), death counter
+**Deaths**:
+The deaths that happen while an Activity is running, including deaths in its Side Areas. The Dashboard KPI and the
+"Deaths" Statistic both sum the Activities' death counters; deaths outside any Activity are not counted.
+_Avoid_: Activity Deaths, kill count, killed count

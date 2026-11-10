@@ -539,11 +539,10 @@ namespace TraXile.Next.ViewModels
                 Delta(hours, prevHours, higherIsBetter: true), ActivityPalette.ColorOf(ActivityPalette.Blue),
                 Daily(a => Capped(a) / 3600.0)));
 
-            KpiViewModel deathsKpi = Kpi("Activity Deaths", deaths.ToString("N0"), "",
+            KpiViewModel deathsKpi = Kpi("Deaths", deaths.ToString("N0"), "",
                 Delta(deaths, prevDeaths, higherIsBetter: false), DesignTokens.Get("Brass").For(_isDark),
                 Daily(a => a.Deaths));
-            deathsKpi.ToolTip = "Deaths during the Activities in this filter. The \"Deaths\" Statistic also counts " +
-                                "deaths outside Activities, so it can be higher.";
+            deathsKpi.ToolTip = "Deaths during the Activities in this filter.";
             Kpis.Add(deathsKpi);
         }
 
@@ -1033,7 +1032,7 @@ namespace TraXile.Next.ViewModels
             {
                 series.Add(new ScatterSeries<LiveChartsCore.Defaults.ObservablePoint>
                 {
-                    Name = "Activity Deaths",
+                    Name = "Deaths",
                     Values = markers,
                     GeometrySize = 9,
                     Fill = new SolidColorPaint(Token("Brass")),

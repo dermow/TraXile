@@ -412,7 +412,6 @@ namespace TraXile.Next.Services
                     if (a.Type == ACTIVITY_TYPES.HEIST) Inc("TotalHeistsDone", end);
                     if (a.Type == ACTIVITY_TYPES.SIMULACRUM) Inc("SimulacrumStarted", a.Started);
                     if (a.Type == ACTIVITY_TYPES.LABYRINTH) { Inc("LabsStarted", a.Started); Inc("LabsFinished", end); }
-                    if (a.Deaths > 0) Inc("TotalKilledCount", end, a.Deaths);
                     if (a.Tags.Any(t => t.Id == "expedition")) Inc("ExpeditionEncounters", end);
                     Inc("HideoutTimeSec", end.AddSeconds(30), (int)(a.TotalSeconds * 0.12));
                     if (++n % 40 == 0) Inc("LevelUps", end);
@@ -425,6 +424,10 @@ namespace TraXile.Next.Services
         {
             return DemoStatNames.Select(kv =>
             {
+                if (kv.Key == StatMath.DeathsKey)
+                {
+                    return new StatInfo { Key = kv.Key, Name = kv.Value, Value = StatMath.ActivityDeaths(_history, from, to) };
+                }
                 int[] inWindow = Stats.Where(s => s.key == kv.Key && s.entry.Time >= from && s.entry.Time <= to)
                                       .Select(s => s.entry.Value).ToArray();
                 return new StatInfo
@@ -438,6 +441,7 @@ namespace TraXile.Next.Services
 
         public IReadOnlyList<StatEntry> GetStatSeries(string key, DateTime from, DateTime to)
         {
+            if (key == StatMath.DeathsKey) return StatMath.ActivityDeathSeries(_history, from, to);
             var ofKey = Stats.Where(s => s.key == key).Select(s => s.entry).ToList();
             var result = ofKey.Where(e => e.Time < from).OrderBy(e => e.Time).Skip(Math.Max(0, ofKey.Count(e => e.Time < from) - 1)).ToList();
             result.AddRange(ofKey.Where(e => e.Time >= from && e.Time <= to).OrderBy(e => e.Time));
