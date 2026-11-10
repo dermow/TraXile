@@ -86,6 +86,14 @@ namespace TraXile.Next.ViewModels
             new HelpLink("Support me on Patreon", "https://www.patreon.com/c/dermow"),
         };
 
+        /// <summary>Ways to get in touch with the developer (same as on exile-tools.com).</summary>
+        public static IReadOnlyList<HelpLink> Contacts { get; } = new[]
+        {
+            new HelpLink("GitHub", "https://github.com/dermow/"),
+            new HelpLink("Discord server", "https://discord.gg/bc6psDP6U"),
+            new HelpLink("Reddit", "https://reddit.com/user/graring"),
+        };
+
         /// <summary>Special thanks (classic AboutForm).</summary>
         public static IReadOnlyList<HelpLink> Credits { get; } = new[]
         {

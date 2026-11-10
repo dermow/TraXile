@@ -85,8 +85,11 @@ namespace TraXile
         // seed of next area
         private long _nextAreaSeed;
 
-        // Hash code of the last known logfile line
+        // Resume point of the log parser: hash and byte offset of the last known logfile line.
+        // Written by the parser thread and saved by the event thread, so both are only accessed under _resumeLock.
         private int _lastHash = 0;
+        private long _lastHashOffset = 0;
+        private readonly object _resumeLock = new object();
 
         // Flag if history is initialized (logfile read finished)
         private bool _historyInitialized;
@@ -156,13 +159,13 @@ namespace TraXile
         private bool _eventQueueInitizalized;
         public bool EventQueueInitialized => _eventQueueInitizalized;
 
-        // Property: LogLines total 
-        private double _logLinesTotal;
-        public double LogLinesTotal => _logLinesTotal;
+        // Property: Client.txt size in bytes when parsing started (progress calculation)
+        private double _logBytesTotal;
+        public double LogBytesTotal => _logBytesTotal;
 
-        // Property: LogLines read
-        private double _logLinesRead;
-        public double LogLinesRead => _logLinesRead;
+        // Property: Client.txt bytes read so far
+        private double _logBytesRead;
+        public double LogBytesRead => _logBytesRead;
 
         // Property: Is current map zana
         private bool _isMapZana;
@@ -411,8 +414,10 @@ namespace TraXile
         {
             SqliteDataReader dataReader;
 
-            // Read last hash
+            // Read the resume point. The offset is missing in databases written by TraXile 2.x; the parser
+            // then finds the line by its hash.
             _lastHash = Convert.ToInt32(_dataBackend.GetKVStoreValue("last_hash"));
+            _lastHashOffset = long.TryParse(_dataBackend.GetKVStoreValue("last_hash_offset"), out long offset) ? offset : 0;
 
             // Read last stat vaules
             List<string> stats = new List<string>();
@@ -438,8 +443,28 @@ namespace TraXile
         /// </summary>
         private void SaveStatsCache()
         {
-            // DB
-            _dataBackend.SetKVStoreValue("last_hash", _lastHash.ToString());
+            int hash;
+            long offset;
+            lock (_resumeLock)
+            {
+                hash = _lastHash;
+                offset = _lastHashOffset;
+            }
+
+            _dataBackend.SetKVStoreValue("last_hash", hash.ToString());
+            _dataBackend.SetKVStoreValue("last_hash_offset", offset.ToString());
+        }
+
+        /// <summary>
+        /// Set the resume point of the log parser
+        /// </summary>
+        private void SetResumePoint(int hash, long offset)
+        {
+            lock (_resumeLock)
+            {
+                _lastHash = hash;
+                _lastHashOffset = offset;
+            }
         }
 
         /// <summary>
@@ -865,34 +890,43 @@ namespace TraXile
         {
             while (!_exit)
             {
-                // Wait for Valid log file to start parsing
-                WaitUnlessStopped(1000);
-                if (_exit)
-                {
-                    break;
-                }
                 if (CheckForValidClientLogFile(_clientTxtPath))
                 {
                     ParseLogFile();
+                }
+                else
+                {
+                    // Wait for a valid log file to start parsing
+                    WaitUnlessStopped(1000);
                 }
             }
         }
 
         /// <summary>
-        /// Get line count from Client.txt. Used for progress calculation
+        /// Jump to the stored resume line if it is still at its stored byte offset. Otherwise the reader stays at the
+        /// start of the file and the resume line is searched by its hash.
         /// </summary>
-        /// <returns></returns>
-        private int GetLogFileLineCount()
+        private void SeekToResumePoint(TrX_LogLineReader reader, long fileLength)
         {
-            int iCount = 0;
-            FileStream fs1 = new FileStream(_clientTxtPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            TextReader reader1 = new StreamReader(fs1);
-            while ((reader1.ReadLine()) != null)
+            if (_lastHash == 0 || _lastHashOffset <= 0)
             {
-                iCount++;
+                return;
             }
-            reader1.Close();
-            return iCount;
+
+            if (_lastHashOffset < fileLength)
+            {
+                reader.Seek(_lastHashOffset);
+                if (reader.TryReadLine(out string line, out _) && TrX_LineHash.Compute(line) == _lastHash)
+                {
+                    // Read the resume line again in the parse loop, it marks the start of the new content there
+                    reader.Seek(_lastHashOffset);
+                    _log.Info($"Resuming at byte {_lastHashOffset} of {fileLength}.");
+                    return;
+                }
+            }
+
+            _log.Warn($"Resume line (hash {_lastHash}) not at byte {_lastHashOffset}, searching it from the start of Client.txt.");
+            reader.Seek(0);
         }
 
         /// <summary>
@@ -900,10 +934,10 @@ namespace TraXile
         /// </summary>
         private void ParseLogFile()
         {
-            _log.Info($"Started logfile parsing. Last hash was {_lastHash}");
-            _logLinesTotal = Convert.ToDouble(GetLogFileLineCount());
+            _log.Info($"Started logfile parsing. Last hash was {_lastHash}, at byte {_lastHashOffset}");
 
             var fs = new FileStream(_clientTxtPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            _logBytesTotal = fs.Length;
             bool bNewContent = _lastHash == 0;
 
             // Set when the resume line was not found (Client.txt deleted or truncated, or a hash stored by a
@@ -919,18 +953,20 @@ namespace TraXile
 
             try
             {
-                using (StreamReader reader = new StreamReader(fs))
+                using (TrX_LogLineReader reader = new TrX_LogLineReader(fs))
                 {
                     string line;
                     int lineHash = 0;
+                    long lineOffset = 0;
                     DateTime lastEvTime = new DateTime();
+
+                    SeekToResumePoint(reader, fs.Length);
+                    _logBytesRead = reader.Position;
 
                     // Keep file open
                     while (!_exit)
                     {
-                        line = reader.ReadLine();
-
-                        if (line == null)
+                        if (!reader.TryReadLine(out line, out long offset))
                         {
                             if (!_eventQueueInitizalized)
                             {
@@ -938,9 +974,8 @@ namespace TraXile
                                 {
                                     resumeAfterUnix = GetLastTrackedEventTime();
                                     _log.Warn($"Resume line (hash {_lastHash}) not found in Client.txt, reading it again from the first line after {DateTimeOffset.FromUnixTimeSeconds(resumeAfterUnix).LocalDateTime}.");
-                                    fs.Seek(0, SeekOrigin.Begin);
-                                    reader.DiscardBufferedData();
-                                    _logLinesRead = 0;
+                                    reader.Seek(0);
+                                    _logBytesRead = 0;
                                     continue;
                                 }
 
@@ -954,7 +989,7 @@ namespace TraXile
                                     LogLine = $"Application initialized in {Math.Round(tsInitDuration.TotalSeconds, 2)} seconds."
                                 });
                                 _log.Info($"Initialized in {tsInitDuration.TotalSeconds} seconds.");
-                                _lastHash = lineHash;
+                                SetResumePoint(lineHash, lineOffset);
 
                                 // The new resume point is committed together with what was parsed up to it
                                 SaveStatsCache();
@@ -972,6 +1007,8 @@ namespace TraXile
                         }
 
                         lineHash = TrX_LineHash.Compute(line);
+                        lineOffset = offset;
+                        _logBytesRead = reader.Position;
 
                         if (_dict.ContainsKey(lineHash))
                             continue;
@@ -987,11 +1024,10 @@ namespace TraXile
 
                         if (!bNewContent)
                         {
-                            _logLinesRead++;
                             continue;
                         }
 
-                        _lastHash = lineHash;
+                        SetResumePoint(lineHash, lineOffset);
 
                         foreach (KeyValuePair<string, EVENT_TYPES> kv in _eventMapping.Mapping)
                         {
@@ -1026,7 +1062,6 @@ namespace TraXile
                                 }
                             }
                         }
-                        _logLinesRead++;
                     }
                 }
             }
