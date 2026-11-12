@@ -96,10 +96,10 @@ namespace TraXile.Next.ViewModels
         public bool IsOther => Members.Count > 0;
         /// <summary>The activity types grouped into the "Other" row, by time descending; empty otherwise.</summary>
         public IReadOnlyList<OverviewRow> Members { get; set; } = Array.Empty<OverviewRow>();
-        /// <summary>Breakdown of the grouped types for the "Other" row's tooltip; null otherwise.</summary>
-        public string MembersText => IsOther
-            ? string.Join(Environment.NewLine, Members.Select(m => $"{m.Name}: {m.CountText} × · {m.Hours} · {m.Percent}"))
-            : null;
+        /// <summary>A type grouped into "Other", shown as an indented sub-row while "Other" is expanded.</summary>
+        public bool IsMember { get; set; }
+        /// <summary>The "Other" row shows its members as sub-rows (chevron down); set before the table is rebuilt.</summary>
+        public bool IsExpanded { get; set; }
     }
 
     public sealed class DashboardViewModel : ObservableObject, IDisposable
@@ -138,6 +138,7 @@ namespace TraXile.Next.ViewModels
             TogglePauseCommand = new RelayCommand(() => { _source.TogglePause(); UpdateLive(); });
             StopCommand = new RelayCommand(StopCurrentActivity, () => Live.IsTracking);
             ToggleTagCommand = new RelayCommand<LiveTagChip>(ToggleTag);
+            ToggleOtherCommand = new RelayCommand(ToggleOther);
             SetRangeCommand = new RelayCommand<string>(r =>
             {
                 if (Enum.TryParse(r, out TimeRange tr)) Range = tr;
@@ -478,6 +479,33 @@ namespace TraXile.Next.ViewModels
             return (from, to);
         }
 
+        /// <summary>
+        /// The period the deltas compare against: by default the period of the same length right before
+        /// the range. For a league filter it is the previous league instead, over the same span from its
+        /// start (day 20 of this league vs. day 20 of the previous one), ending at its end at the latest.
+        /// </summary>
+        private (DateTime from, DateTime to) ComparisonWindow(DateTime from, DateTime to) =>
+            ComparisonWindow(from, to, Filter.Time == FilterTime.League ? Filter.League : null, Filter.Leagues);
+
+        public static (DateTime from, DateTime to) ComparisonWindow(DateTime from, DateTime to,
+            LeagueInfo league, IEnumerable<LeagueInfo> leagues)
+        {
+            TimeSpan len = to - from;
+            LeagueInfo previous = PreviousLeague(league, leagues);
+            if (previous == null) return (from - len, from);
+
+            DateTime end = previous.Start + len;
+            if (end > previous.End) end = previous.End;
+            if (end > from) end = from;
+            return (previous.Start, end);
+        }
+
+        /// <summary>The league that started last before <paramref name="league"/> (null for none).</summary>
+        public static LeagueInfo PreviousLeague(LeagueInfo league, IEnumerable<LeagueInfo> leagues) =>
+            league == null || leagues == null
+                ? null
+                : leagues.Where(l => l.Start < league.Start).OrderBy(l => l.Start).LastOrDefault();
+
         public void Refresh()
         {
             _history = _source.GetHistory();
@@ -488,11 +516,11 @@ namespace TraXile.Next.ViewModels
 
             List<ActivityInfo> inRange = _filtered.Where(a => a.Started >= from && a.Started <= to).ToList();
 
-            // Previous period of the same length, for deltas
-            TimeSpan len = to - from;
+            // Comparison period for the deltas
+            (DateTime pFrom, DateTime pTo) = ComparisonWindow(from, to);
             List<ActivityInfo> prev = unbounded
                 ? new List<ActivityInfo>()
-                : _filtered.Where(a => a.Started >= from - len && a.Started < from).ToList();
+                : _filtered.Where(a => a.Started >= pFrom && a.Started < pTo).ToList();
 
             BuildKpis(inRange, prev);
             BuildTimeDistribution(inRange, from, to);
@@ -652,6 +680,8 @@ namespace TraXile.Next.ViewModels
             TimeWindow w = Filter.Window;
             DateTime now = DateTime.Now;
             bool hasPrevious = w.From.HasValue; // like the other KPIs: no delta for an open range
+            LeagueInfo league = Filter.Time == FilterTime.League ? Filter.League : null;
+            LeagueInfo previousLeague = PreviousLeague(league, Filter.Leagues);
             (DateTime from, DateTime to, IReadOnlyList<StatInfo> stats) = await Task.Run(() =>
             {
                 // the same window as the Statistics page, so a click there shows the same value
@@ -675,7 +705,10 @@ namespace TraXile.Next.ViewModels
                 int? p = null;
                 if (hasPrevious)
                 {
-                    (DateTime pFrom, DateTime pTo) = StatMath.PreviousWindow(from, to);
+                    // a league compares with the previous league (see ComparisonWindow)
+                    (DateTime pFrom, DateTime pTo) = previousLeague != null
+                        ? ComparisonWindow(from, to, league, new[] { previousLeague })
+                        : StatMath.PreviousWindow(from, to);
                     p = _stats.GetStats(pFrom, pTo).FirstOrDefault(s => s.Key == stat.Key)?.Value ?? 0;
                 }
                 return (p, _stats.GetStatSeries(stat.Key, sparkFrom, now));
@@ -765,7 +798,13 @@ namespace TraXile.Next.ViewModels
                     Count = small.Sum(t => t.count),
                     Seconds = seconds,
                     Fraction = Frac(seconds),
-                    Members = small.Select(TypeRow).ToList()
+                    Members = small.Select(t =>
+                    {
+                        OverviewRow m = TypeRow(t);
+                        m.IsMember = true;
+                        m.Brush = ActivityPalette.BrushOf(ActivityPalette.ColorOf(ActivityPalette.Other));
+                        return m;
+                    }).ToList()
                 });
             }
             if (hideoutSeconds > 0)
@@ -792,17 +831,20 @@ namespace TraXile.Next.ViewModels
             Overview.Clear();
             foreach (OverviewRow r in rows) Overview.Add(r);
 
+            // the expansion survives refreshes as long as there is an "Other" row
+            if (!rows.Any(r => r.IsOther)) IsOtherExpanded = false;
+            FillOverviewTable();
+
             double total = rows.Sum(r => r.Seconds);
             TotalHours = (total / 3600.0).ToString(total >= 36000 ? "0" : "0.0");
 
+            // the view shows its own tooltip per slice (RowOfSlice), so the series carry no tooltip text
             var series = new List<ISeries>();
             foreach (OverviewRow r in rows)
             {
                 Color color = r.IsHideout ? ActivityPalette.ColorOf(ActivityPalette.Hideout)
                             : r.IsOther ? ActivityPalette.ColorOf(ActivityPalette.Other)
                             : ActivityPalette.ColorOf(r.Type.Value);
-                string tip = $"{r.Seconds / 3600.0:0.0} h ({r.Fraction:P0})";
-                if (r.IsOther) tip += Environment.NewLine + r.MembersText;
 
                 series.Add(new PieSeries<double>
                 {
@@ -813,10 +855,48 @@ namespace TraXile.Next.ViewModels
                     Fill = new SolidColorPaint(ActivityPalette.Sk(color)),
                     Stroke = new SolidColorPaint(Token("Surface"), 2), // surface ring between slices
                     HoverPushout = 6,
-                    ToolTipLabelFormatter = p => tip,
                 });
             }
             TimeSeries = series.ToArray();
+        }
+
+        /// <summary>
+        /// Rows shown in the overview table: <see cref="Overview"/>, plus the members of "Other" as sub-rows
+        /// right below it while <see cref="IsOtherExpanded"/>.
+        /// </summary>
+        public ObservableCollection<OverviewRow> OverviewTable { get; } = new ObservableCollection<OverviewRow>();
+
+        private bool _isOtherExpanded;
+        /// <summary>The "Other" row shows its grouped types; kept across refreshes, not persisted.</summary>
+        public bool IsOtherExpanded { get => _isOtherExpanded; private set => SetProperty(ref _isOtherExpanded, value); }
+
+        /// <summary>Expands / collapses the "Other" row (click on the row or on its donut slice).</summary>
+        public IRelayCommand ToggleOtherCommand { get; }
+
+        private void ToggleOther()
+        {
+            if (!Overview.Any(r => r.IsOther)) return;
+            IsOtherExpanded = !IsOtherExpanded;
+            FillOverviewTable();
+        }
+
+        private void FillOverviewTable()
+        {
+            OverviewTable.Clear();
+            foreach (OverviewRow r in Overview)
+            {
+                r.IsExpanded = r.IsOther && IsOtherExpanded;
+                OverviewTable.Add(r);
+                if (r.IsExpanded)
+                    foreach (OverviewRow m in r.Members) OverviewTable.Add(m);
+            }
+        }
+
+        /// <summary>The overview row a donut slice stands for (series and rows share their order); null if unknown.</summary>
+        public OverviewRow RowOfSlice(ISeries slice)
+        {
+            int i = Array.IndexOf(TimeSeries, slice);
+            return i >= 0 && i < Overview.Count ? Overview[i] : null;
         }
 
         private void BuildDaily(List<ActivityInfo> cur, DateTime from, DateTime to)
@@ -984,10 +1064,23 @@ namespace TraXile.Next.ViewModels
             (double[] cur, int[] deaths) = Cumulate(_filtered, start, bucket, count);
             double[] current = cur.Take(elapsed).ToArray(); // the curve stops at "now"
 
-            TimeSpan length = TimeSpan.FromTicks(bucket.Ticks * count);
-            double[] previous = !Filter.Window.From.HasValue
-                ? Array.Empty<double>()
-                : Cumulate(_filtered, start - length, bucket, count).cumulative;
+            LeagueInfo previousLeague = Filter.Time == FilterTime.League ? PreviousLeague(Filter.League, Filter.Leagues) : null;
+            double[] previous;
+            if (!Filter.Window.From.HasValue)
+            {
+                previous = Array.Empty<double>();
+            }
+            else if (previousLeague != null)
+            {
+                // the previous league, aligned to its start (see ComparisonWindow); stops at its end
+                previous = Cumulate(_filtered.Where(a => a.Started < previousLeague.End),
+                    start - (from - previousLeague.Start), bucket, count).cumulative;
+            }
+            else
+            {
+                TimeSpan length = TimeSpan.FromTicks(bucket.Ticks * count);
+                previous = Cumulate(_filtered, start - length, bucket, count).cumulative;
+            }
             HasPreviousTrend = previous.Length > 0;
 
             SKColor curve = Token("Accent");

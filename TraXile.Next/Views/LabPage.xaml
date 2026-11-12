@@ -40,18 +40,18 @@
             </Grid.ColumnDefinitions>
             <Border Style="{StaticResource Card}">
                 <StackPanel>
-                    <TextBlock Text="Labs done" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="Runs without deaths per lab" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Labs done" Style="{StaticResource CardHeading}" />
                     <lvc:CartesianChart Height="240" Series="{Binding CountSeries}" XAxes="{Binding CountXAxes}" YAxes="{Binding CountYAxes}"
                                         TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                    <TextBlock Text="Runs without deaths." Style="{StaticResource CardNote}" />
                 </StackPanel>
             </Border>
             <Border Grid.Column="2" Style="{StaticResource Card}">
                 <StackPanel>
-                    <TextBlock Text="Average time per lab" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="Minutes per run without deaths, capped at the lab time cap" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Average time per lab" Style="{StaticResource CardHeading}" />
                     <lvc:CartesianChart Height="240" Series="{Binding TimeSeries}" XAxes="{Binding TimeXAxes}" YAxes="{Binding TimeYAxes}"
                                         TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                    <TextBlock Text="Runs without deaths, capped at the lab time cap." Style="{StaticResource CardNote}" />
                 </StackPanel>
             </Border>
         </Grid>
@@ -66,8 +66,7 @@
             <!-- ============ Per lab ============ -->
             <Border Style="{StaticResource Card}" VerticalAlignment="Top">
                 <StackPanel>
-                    <TextBlock Text="Best runs" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="Fastest run without deaths per lab" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Best runs" Style="{StaticResource CardHeading}" />
                     <Grid Margin="0,0,0,4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -111,8 +110,7 @@
             <!-- ============ Lab runs ============ -->
             <Border Grid.Column="2" Style="{StaticResource Card}" VerticalAlignment="Top">
                 <StackPanel>
-                    <TextBlock Text="Lab runs" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="All lab activities in the filter, newest first" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Lab runs" Style="{StaticResource CardHeading}" />
                     <ItemsControl ItemsSource="{Binding Runs}" MaxHeight="520" Style="{StaticResource CountList}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate><VirtualizingStackPanel /></ItemsPanelTemplate>
