@@ -48,7 +48,6 @@ namespace TraXile.Next.Services
         public string TypeName => ActivityPalette.DisplayName(Type);
         public Brush TypeBrush => ActivityPalette.Brush(Type);
         public string Duration => FormatDuration(TotalSeconds);
-        public string StartedText => Started.ToString("ddd HH:mm");
         public string StartedFull => Started.ToString("yyyy-MM-dd HH:mm");
         public string PausedText => PausedSeconds >= 1 ? FormatDuration((int)PausedSeconds) : "—";
         public string TagNames => string.Join(", ", Tags.Select(t => t.Name));
