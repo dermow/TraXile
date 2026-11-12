@@ -403,8 +403,7 @@ namespace TraXile.Next
                 ? (OverlayWindow)Overlays.ShowTags() : Overlays.ShowStopwatch();
             overlay.IsMovable = page.EndsWith("-move", StringComparison.OrdinalIgnoreCase);
             Overlays.Update(Source.GetLiveState());
-            overlay.Left = -30000;
-            overlay.Top = -30000;
+            overlay.MoveOffScreen();
             Screenshot.Schedule(overlay, ScreenshotPath, TimeSpan.FromSeconds(1));
         }
 

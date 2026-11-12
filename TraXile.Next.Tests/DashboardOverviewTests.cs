@@ -82,10 +82,83 @@ namespace TraXile.Next.Tests
             Assert.Equal(0.06, other.Fraction, 6);
             Assert.Equal(new[] { ACTIVITY_TYPES.DELVE, ACTIVITY_TYPES.TEMPLE, ACTIVITY_TYPES.LABYRINTH },
                          other.Members.Select(m => m.Type.Value));
-            Assert.Equal(3, other.MembersText.Split(Environment.NewLine).Length);
+            Assert.All(other.Members, m => Assert.True(m.IsMember));
+
+            // sub-row shares are shares of the total time and add up to "Other"
+            Assert.Equal(new[] { 0.03, 0.02, 0.01 }, other.Members.Select(m => Math.Round(m.Fraction, 6)));
+            Assert.Equal(other.Fraction, other.Members.Sum(m => m.Fraction), 6);
 
             Assert.True(rows[3].IsHideout);
             Assert.Equal(1.0, rows.Sum(r => r.Fraction), 6);
+        }
+
+        [Fact]
+        public void Other_expands_into_sub_rows_below_it_and_collapses_again()
+        {
+            using (var vm = new DashboardViewModel(_source, _setup) { Range = TimeRange.All })
+            {
+                OverviewRow other = vm.Overview.SingleOrDefault(r => r.IsOther);
+                Assert.NotNull(other); // the demo data has small types
+
+                Assert.False(vm.IsOtherExpanded);
+                Assert.Equal(vm.Overview, vm.OverviewTable);
+                Assert.False(other.IsExpanded);
+
+                vm.ToggleOtherCommand.Execute(null);
+                Assert.True(vm.IsOtherExpanded);
+                int at = vm.OverviewTable.IndexOf(other);
+                Assert.Equal(other.Members, vm.OverviewTable.Skip(at + 1).Take(other.Members.Count));
+                Assert.Equal(vm.Overview.Count + other.Members.Count, vm.OverviewTable.Count);
+                Assert.True(other.IsExpanded);
+
+                vm.ToggleOtherCommand.Execute(null);
+                Assert.False(vm.IsOtherExpanded);
+                Assert.False(other.IsExpanded);
+                Assert.Equal(vm.Overview, vm.OverviewTable);
+            }
+        }
+
+        [Fact]
+        public void Expansion_survives_refreshes_and_range_changes()
+        {
+            using (var vm = new DashboardViewModel(_source, _setup) { Range = TimeRange.All })
+            {
+                vm.ToggleOtherCommand.Execute(null);
+
+                vm.Refresh();
+                vm.ShowHideout = !vm.ShowHideout;
+                vm.Range = TimeRange.Month;
+                Assert.True(vm.Overview.Any(r => r.IsOther), "the month of demo data has small types");
+
+                Assert.True(vm.IsOtherExpanded);
+                OverviewRow other = vm.Overview.Single(r => r.IsOther);
+                Assert.Contains(other.Members[0], vm.OverviewTable);
+            }
+        }
+
+        [Fact]
+        public void Expansion_ends_when_there_is_no_other_row()
+        {
+            using (var vm = new DashboardViewModel(_source, _setup) { Range = TimeRange.All })
+            {
+                vm.ToggleOtherCommand.Execute(null);
+                vm.Filter.Type = ACTIVITY_TYPES.MAP; // a single type: nothing to group
+
+                Assert.DoesNotContain(vm.Overview, r => r.IsOther);
+                Assert.False(vm.IsOtherExpanded);
+                Assert.Equal(vm.Overview, vm.OverviewTable);
+            }
+        }
+
+        [Fact]
+        public void Each_donut_slice_stands_for_its_overview_row()
+        {
+            using (var vm = new DashboardViewModel(_source, _setup) { Range = TimeRange.All })
+            {
+                Assert.Equal(vm.Overview.Count, vm.TimeSeries.Length);
+                for (int i = 0; i < vm.TimeSeries.Length; i++)
+                    Assert.Same(vm.Overview[i], vm.RowOfSlice(vm.TimeSeries[i]));
+            }
         }
 
         [Fact]
@@ -112,7 +185,7 @@ namespace TraXile.Next.Tests
 
             Assert.DoesNotContain(rows, r => r.IsOther);
             Assert.Equal(new ACTIVITY_TYPES?[] { ACTIVITY_TYPES.MAP, ACTIVITY_TYPES.DELVE }, rows.Select(r => r.Type));
-            Assert.Null(rows[1].MembersText);
+            Assert.False(rows[1].IsMember);
         }
 
         [Fact]

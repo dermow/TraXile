@@ -23,8 +23,7 @@
 
             <Border Style="{StaticResource Card}">
                 <StackPanel>
-                    <TextBlock Text="Maps per tier" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="How many maps of each tier you ran" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Maps per tier" Style="{StaticResource CardHeading}" />
                     <lvc:CartesianChart Height="260" Series="{Binding TierCountSeries}" XAxes="{Binding TierXAxes}" YAxes="{Binding CountYAxes}"
                                         TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
                 </StackPanel>
@@ -32,10 +31,10 @@
 
             <Border Grid.Column="2" Style="{StaticResource Card}">
                 <StackPanel>
-                    <TextBlock Text="Average time per tier" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="Minutes per map, capped at the map time cap" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Average time per tier" Style="{StaticResource CardHeading}" />
                     <lvc:CartesianChart Height="260" Series="{Binding TierTimeSeries}" XAxes="{Binding TierXAxes2}" YAxes="{Binding TimeYAxes}"
                                         TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                    <TextBlock Text="Capped at the map time cap." Style="{StaticResource CardNote}" />
                 </StackPanel>
             </Border>
         </Grid>
@@ -50,8 +49,7 @@
 
             <Border Style="{StaticResource Card}" VerticalAlignment="Top">
                 <StackPanel>
-                    <TextBlock Text="Count by map" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="Maps you ran most, with their average time" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Count by map" Style="{StaticResource CardHeading}" />
                     <ItemsControl ItemsSource="{Binding ByMap}" />
                     <TextBlock Text="No maps in the filtered activities." Style="{StaticResource Meta}"
                                Visibility="{Binding HasData, Converter={StaticResource InvBoolToVis}}" />
@@ -60,8 +58,7 @@
 
             <Border Grid.Column="2" Style="{StaticResource Card}" VerticalAlignment="Top">
                 <StackPanel>
-                    <TextBlock Text="Count by tag" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="Tags on your maps" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Count by tag" Style="{StaticResource CardHeading}" />
                     <ItemsControl ItemsSource="{Binding ByTag}" />
                     <TextBlock Text="None of these maps has a tag.">
                         <TextBlock.Style>

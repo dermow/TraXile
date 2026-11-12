@@ -96,10 +96,10 @@ namespace TraXile.Next.ViewModels
         public bool IsOther => Members.Count > 0;
         /// <summary>The activity types grouped into the "Other" row, by time descending; empty otherwise.</summary>
         public IReadOnlyList<OverviewRow> Members { get; set; } = Array.Empty<OverviewRow>();
-        /// <summary>Breakdown of the grouped types for the "Other" row's tooltip; null otherwise.</summary>
-        public string MembersText => IsOther
-            ? string.Join(Environment.NewLine, Members.Select(m => $"{m.Name}: {m.CountText} × · {m.Hours} · {m.Percent}"))
-            : null;
+        /// <summary>A type grouped into "Other", shown as an indented sub-row while "Other" is expanded.</summary>
+        public bool IsMember { get; set; }
+        /// <summary>The "Other" row shows its members as sub-rows (chevron down); set before the table is rebuilt.</summary>
+        public bool IsExpanded { get; set; }
     }
 
     public sealed class DashboardViewModel : ObservableObject, IDisposable
@@ -138,6 +138,7 @@ namespace TraXile.Next.ViewModels
             TogglePauseCommand = new RelayCommand(() => { _source.TogglePause(); UpdateLive(); });
             StopCommand = new RelayCommand(StopCurrentActivity, () => Live.IsTracking);
             ToggleTagCommand = new RelayCommand<LiveTagChip>(ToggleTag);
+            ToggleOtherCommand = new RelayCommand(ToggleOther);
             SetRangeCommand = new RelayCommand<string>(r =>
             {
                 if (Enum.TryParse(r, out TimeRange tr)) Range = tr;
@@ -425,6 +426,10 @@ namespace TraXile.Next.ViewModels
                 Refresh();
             }
         }
+        /// <summary>Number of entries in the recent activities list.</summary>
+        public const int RecentCount = 5;
+
+        /// <summary>The latest activities, newest first; not affected by the global filter.</summary>
         public ObservableCollection<ActivityInfo> Recent { get; } = new ObservableCollection<ActivityInfo>();
 
         private ISeries[] _timeSeries = Array.Empty<ISeries>();
@@ -478,6 +483,33 @@ namespace TraXile.Next.ViewModels
             return (from, to);
         }
 
+        /// <summary>
+        /// The period the deltas compare against: by default the period of the same length right before
+        /// the range. For a league filter it is the previous league instead, over the same span from its
+        /// start (day 20 of this league vs. day 20 of the previous one), ending at its end at the latest.
+        /// </summary>
+        private (DateTime from, DateTime to) ComparisonWindow(DateTime from, DateTime to) =>
+            ComparisonWindow(from, to, Filter.Time == FilterTime.League ? Filter.League : null, Filter.Leagues);
+
+        public static (DateTime from, DateTime to) ComparisonWindow(DateTime from, DateTime to,
+            LeagueInfo league, IEnumerable<LeagueInfo> leagues)
+        {
+            TimeSpan len = to - from;
+            LeagueInfo previous = PreviousLeague(league, leagues);
+            if (previous == null) return (from - len, from);
+
+            DateTime end = previous.Start + len;
+            if (end > previous.End) end = previous.End;
+            if (end > from) end = from;
+            return (previous.Start, end);
+        }
+
+        /// <summary>The league that started last before <paramref name="league"/> (null for none).</summary>
+        public static LeagueInfo PreviousLeague(LeagueInfo league, IEnumerable<LeagueInfo> leagues) =>
+            league == null || leagues == null
+                ? null
+                : leagues.Where(l => l.Start < league.Start).OrderBy(l => l.Start).LastOrDefault();
+
         public void Refresh()
         {
             _history = _source.GetHistory();
@@ -488,19 +520,19 @@ namespace TraXile.Next.ViewModels
 
             List<ActivityInfo> inRange = _filtered.Where(a => a.Started >= from && a.Started <= to).ToList();
 
-            // Previous period of the same length, for deltas
-            TimeSpan len = to - from;
+            // Comparison period for the deltas
+            (DateTime pFrom, DateTime pTo) = ComparisonWindow(from, to);
             List<ActivityInfo> prev = unbounded
                 ? new List<ActivityInfo>()
-                : _filtered.Where(a => a.Started >= from - len && a.Started < from).ToList();
+                : _filtered.Where(a => a.Started >= pFrom && a.Started < pTo).ToList();
 
             BuildKpis(inRange, prev);
             BuildTimeDistribution(inRange, from, to);
             BuildDaily(inRange, from, to);
-            BuildTrend(from, to);
 
+            // Unfiltered like the live card: the list sits above the filter bar
             Recent.Clear();
-            foreach (ActivityInfo a in inRange.Take(12)) Recent.Add(a);
+            foreach (ActivityInfo a in _history.Take(RecentCount)) Recent.Add(a);
 
             OnPropertyChanged(nameof(DailyTitle));
             _spotlightTask = LoadSpotlightAsync();
@@ -652,6 +684,8 @@ namespace TraXile.Next.ViewModels
             TimeWindow w = Filter.Window;
             DateTime now = DateTime.Now;
             bool hasPrevious = w.From.HasValue; // like the other KPIs: no delta for an open range
+            LeagueInfo league = Filter.Time == FilterTime.League ? Filter.League : null;
+            LeagueInfo previousLeague = PreviousLeague(league, Filter.Leagues);
             (DateTime from, DateTime to, IReadOnlyList<StatInfo> stats) = await Task.Run(() =>
             {
                 // the same window as the Statistics page, so a click there shows the same value
@@ -675,7 +709,10 @@ namespace TraXile.Next.ViewModels
                 int? p = null;
                 if (hasPrevious)
                 {
-                    (DateTime pFrom, DateTime pTo) = StatMath.PreviousWindow(from, to);
+                    // a league compares with the previous league (see ComparisonWindow)
+                    (DateTime pFrom, DateTime pTo) = previousLeague != null
+                        ? ComparisonWindow(from, to, league, new[] { previousLeague })
+                        : StatMath.PreviousWindow(from, to);
                     p = _stats.GetStats(pFrom, pTo).FirstOrDefault(s => s.Key == stat.Key)?.Value ?? 0;
                 }
                 return (p, _stats.GetStatSeries(stat.Key, sparkFrom, now));
@@ -765,7 +802,13 @@ namespace TraXile.Next.ViewModels
                     Count = small.Sum(t => t.count),
                     Seconds = seconds,
                     Fraction = Frac(seconds),
-                    Members = small.Select(TypeRow).ToList()
+                    Members = small.Select(t =>
+                    {
+                        OverviewRow m = TypeRow(t);
+                        m.IsMember = true;
+                        m.Brush = ActivityPalette.BrushOf(ActivityPalette.ColorOf(ActivityPalette.Other));
+                        return m;
+                    }).ToList()
                 });
             }
             if (hideoutSeconds > 0)
@@ -792,31 +835,72 @@ namespace TraXile.Next.ViewModels
             Overview.Clear();
             foreach (OverviewRow r in rows) Overview.Add(r);
 
+            // the expansion survives refreshes as long as there is an "Other" row
+            if (!rows.Any(r => r.IsOther)) IsOtherExpanded = false;
+            FillOverviewTable();
+
             double total = rows.Sum(r => r.Seconds);
             TotalHours = (total / 3600.0).ToString(total >= 36000 ? "0" : "0.0");
 
+            // the view shows its own tooltip per slice (RowOfSlice), so the series carry no tooltip text
             var series = new List<ISeries>();
             foreach (OverviewRow r in rows)
             {
                 Color color = r.IsHideout ? ActivityPalette.ColorOf(ActivityPalette.Hideout)
                             : r.IsOther ? ActivityPalette.ColorOf(ActivityPalette.Other)
                             : ActivityPalette.ColorOf(r.Type.Value);
-                string tip = $"{r.Seconds / 3600.0:0.0} h ({r.Fraction:P0})";
-                if (r.IsOther) tip += Environment.NewLine + r.MembersText;
 
                 series.Add(new PieSeries<double>
                 {
                     Name = r.Name,
                     Values = new[] { Math.Round(r.Seconds / 3600.0, 2) },
-                    InnerRadius = 78,
+                    InnerRadius = 52,
                     CornerRadius = 2,
                     Fill = new SolidColorPaint(ActivityPalette.Sk(color)),
                     Stroke = new SolidColorPaint(Token("Surface"), 2), // surface ring between slices
                     HoverPushout = 6,
-                    ToolTipLabelFormatter = p => tip,
                 });
             }
             TimeSeries = series.ToArray();
+        }
+
+        /// <summary>
+        /// Rows shown in the overview table: <see cref="Overview"/>, plus the members of "Other" as sub-rows
+        /// right below it while <see cref="IsOtherExpanded"/>.
+        /// </summary>
+        public ObservableCollection<OverviewRow> OverviewTable { get; } = new ObservableCollection<OverviewRow>();
+
+        private bool _isOtherExpanded;
+        /// <summary>The "Other" row shows its grouped types; kept across refreshes, not persisted.</summary>
+        public bool IsOtherExpanded { get => _isOtherExpanded; private set => SetProperty(ref _isOtherExpanded, value); }
+
+        /// <summary>Expands / collapses the "Other" row (click on the row or on its donut slice).</summary>
+        public IRelayCommand ToggleOtherCommand { get; }
+
+        private void ToggleOther()
+        {
+            if (!Overview.Any(r => r.IsOther)) return;
+            IsOtherExpanded = !IsOtherExpanded;
+            FillOverviewTable();
+        }
+
+        private void FillOverviewTable()
+        {
+            OverviewTable.Clear();
+            foreach (OverviewRow r in Overview)
+            {
+                r.IsExpanded = r.IsOther && IsOtherExpanded;
+                OverviewTable.Add(r);
+                if (r.IsExpanded)
+                    foreach (OverviewRow m in r.Members) OverviewTable.Add(m);
+            }
+        }
+
+        /// <summary>The overview row a donut slice stands for (series and rows share their order); null if unknown.</summary>
+        public OverviewRow RowOfSlice(ISeries slice)
+        {
+            int i = Array.IndexOf(TimeSeries, slice);
+            return i >= 0 && i < Overview.Count ? Overview[i] : null;
         }
 
         private void BuildDaily(List<ActivityInfo> cur, DateTime from, DateTime to)
@@ -921,134 +1005,6 @@ namespace TraXile.Next.ViewModels
             MaxBarWidth = 26,
             Padding = 3,
         };
-
-        // ------------------------------------------------------------------
-        // Trend (live card): cumulative activities in the range vs. the previous period,
-        // drawn like the TraXile chart on exile-tools.com
-        // ------------------------------------------------------------------
-
-        private ISeries[] _trendSeries = Array.Empty<ISeries>();
-        public ISeries[] TrendSeries { get => _trendSeries; private set => SetProperty(ref _trendSeries, value); }
-
-        private Axis[] _trendXAxes = { new Axis { IsVisible = false } };
-        public Axis[] TrendXAxes { get => _trendXAxes; private set => SetProperty(ref _trendXAxes, value); }
-
-        private Axis[] _trendYAxes = { new Axis { IsVisible = false } };
-        public Axis[] TrendYAxes { get => _trendYAxes; private set => SetProperty(ref _trendYAxes, value); }
-
-        public Margin TrendMargin { get; } = new Margin(6, 12, 6, 6);
-
-        private string _trendTitle = "";
-        public string TrendTitle { get => _trendTitle; private set => SetProperty(ref _trendTitle, value); }
-
-        private bool _hasPreviousTrend;
-        public bool HasPreviousTrend { get => _hasPreviousTrend; private set => SetProperty(ref _hasPreviousTrend, value); }
-
-        /// <summary>Cumulative activity count per bucket for a period, and the deaths in each bucket.</summary>
-        internal static (double[] cumulative, int[] deaths) Cumulate(IEnumerable<ActivityInfo> items, DateTime start, TimeSpan bucket, int count)
-        {
-            var perBucket = new double[count];
-            var deaths = new int[count];
-            foreach (ActivityInfo a in items)
-            {
-                int i = (int)((a.Started - start).Ticks / bucket.Ticks);
-                if (i < 0 || i >= count) continue;
-                perBucket[i]++;
-                deaths[i] += a.Deaths;
-            }
-            var cumulative = new double[count];
-            double sum = 0;
-            for (int i = 0; i < count; i++) { sum += perBucket[i]; cumulative[i] = sum; }
-            return (cumulative, deaths);
-        }
-
-        private void BuildTrend(DateTime from, DateTime to)
-        {
-            // Fine buckets, so play sessions show up as steps of the curve
-            bool hourly = _scale == Scale.Hourly;
-            TimeSpan bucket;
-            DateTime start;
-            int count;
-            // the axis spans the range up to the end of today at most; the curve stops at "now"
-            DateTime end = Filter.Window.To.HasValue && Filter.Window.To.Value < to.Date.AddDays(1) ? Filter.Window.To.Value : to.Date.AddDays(1);
-            switch (_scale)
-            {
-                case Scale.Hourly: bucket = TimeSpan.FromHours(1); start = new DateTime(from.Year, from.Month, from.Day, from.Hour, 0, 0); break;
-                case Scale.Week: bucket = TimeSpan.FromHours(2); start = from.Date; break;
-                case Scale.Month: bucket = TimeSpan.FromHours(6); start = from.Date; break;
-                default: bucket = TimeSpan.FromDays(1); start = to.Date.AddDays(-59); end = to.Date.AddDays(1); break;
-            }
-            count = Math.Max(1, (int)Math.Ceiling((end - start).Ticks / (double)bucket.Ticks));
-            int elapsed = Math.Min(count, (int)((to - start).Ticks / bucket.Ticks) + 1);
-
-            (double[] cur, int[] deaths) = Cumulate(_filtered, start, bucket, count);
-            double[] current = cur.Take(elapsed).ToArray(); // the curve stops at "now"
-
-            TimeSpan length = TimeSpan.FromTicks(bucket.Ticks * count);
-            double[] previous = !Filter.Window.From.HasValue
-                ? Array.Empty<double>()
-                : Cumulate(_filtered, start - length, bucket, count).cumulative;
-            HasPreviousTrend = previous.Length > 0;
-
-            SKColor curve = Token("Accent");
-            var series = new List<ISeries>();
-
-            if (previous.Length > 0)
-            {
-                series.Add(new LineSeries<double>
-                {
-                    Name = "Previous period",
-                    Values = previous,
-                    GeometrySize = 0,
-                    LineSmoothness = 0.35,
-                    Fill = null,
-                    Stroke = new SolidColorPaint(Token("TextMuted").WithAlpha(150), 1.5f)
-                    {
-                        PathEffect = new LiveChartsCore.SkiaSharpView.Painting.Effects.DashEffect(new float[] { 5, 5 })
-                    },
-                    IsHoverable = false,
-                });
-            }
-
-            series.Add(new LineSeries<double>
-            {
-                Name = "This period",
-                Values = current,
-                GeometrySize = 0,
-                LineSmoothness = 0.35,
-                Stroke = new SolidColorPaint(curve, 2.5f),
-                Fill = new LinearGradientPaint(
-                    new[] { curve.WithAlpha(66), curve.WithAlpha(18), curve.WithAlpha(0) },
-                    new SKPoint(0.5f, 0), new SKPoint(0.5f, 1)),
-                YToolTipLabelFormatter = p => $"{p.Coordinate.PrimaryValue:N0} activities",
-            });
-
-            // Brass markers where deaths happened, sitting on the curve
-            var markers = Enumerable.Range(0, current.Length)
-                .Where(i => deaths[i] > 0)
-                .Select(i => new LiveChartsCore.Defaults.ObservablePoint(i, current[i]))
-                .ToArray();
-            if (markers.Length > 0)
-            {
-                series.Add(new ScatterSeries<LiveChartsCore.Defaults.ObservablePoint>
-                {
-                    Name = "Deaths",
-                    Values = markers,
-                    GeometrySize = 9,
-                    Fill = new SolidColorPaint(Token("Brass")),
-                    Stroke = new SolidColorPaint(Token("Surface"), 2),
-                    YToolTipLabelFormatter = p => $"{deaths[(int)p.Coordinate.SecondaryValue]} deaths",
-                });
-            }
-
-            TrendSeries = series.ToArray();
-            double max = Math.Max(current.DefaultIfEmpty(0).Max(), previous.DefaultIfEmpty(0).Max());
-            TrendXAxes = new[] { new Axis { IsVisible = false, MinLimit = 0, MaxLimit = count - 1 } };
-            TrendYAxes = new[] { new Axis { IsVisible = false, MinLimit = 0, MaxLimit = Math.Max(1, max * 1.15) } };
-
-            TrendTitle = (_scale == Scale.Long && !Filter.Window.From.HasValue ? "Activities, last 60 days" : $"Activities, {RangeLabel}")
-                + $" · {current.LastOrDefault():N0}";
-        }
 
         public void Dispose()
         {

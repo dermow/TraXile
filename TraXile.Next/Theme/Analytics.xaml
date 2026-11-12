@@ -34,9 +34,15 @@
         </DataTemplate.Triggers>
     </DataTemplate>
 
-    <!-- title + caption of a card -->
-    <Style x:Key="CardSubtitle" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
-        <Setter Property="Margin" Value="0,2,0,12" />
+    <!-- title of a card; no caption below it, the title has to say it all -->
+    <Style x:Key="CardHeading" TargetType="TextBlock" BasedOn="{StaticResource CardTitle}">
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <!-- note below the content of a card, e.g. how its figures are computed -->
+    <Style x:Key="CardNote" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+        <Setter Property="Margin" Value="0,8,0,0" />
+        <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
 
     <!-- scrollable "count by ..." list inside a card. CanContentScroll=True lets a VirtualizingStackPanel items panel

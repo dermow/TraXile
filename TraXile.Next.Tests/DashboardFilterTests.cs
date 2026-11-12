@@ -80,7 +80,7 @@ namespace TraXile.Next.Tests
         }
 
         [Fact]
-        public void Type_and_tag_filter_apply_to_kpis_overview_and_recent()
+        public void Type_and_tag_filter_apply_to_kpis_and_overview()
         {
             _filter.Type = ACTIVITY_TYPES.MAP;
             _filter.SetTag("juiced", true);
@@ -89,7 +89,16 @@ namespace TraXile.Next.Tests
             Assert.Equal(expected, OverviewCount);
             // the type filter is maps only, so "Maps completed" counts all of them
             Assert.Equal(expected.ToString("N0"), _vm.Kpis.Single(k => k.Title == "Maps completed").Value);
-            Assert.All(_vm.Recent, a => Assert.Contains(a.Tags, t => t.Id == "juiced"));
+        }
+
+        [Fact]
+        public void Recent_activities_ignore_the_filter_and_show_the_latest_five()
+        {
+            _filter.Type = ACTIVITY_TYPES.MAP;
+            _filter.SetTag("juiced", true);
+            _filter.Time = FilterTime.Last24Hours;
+
+            Assert.Equal(_source.GetHistory().Take(5).Select(a => a.Id), _vm.Recent.Select(a => a.Id));
         }
 
         [Fact]
@@ -100,7 +109,43 @@ namespace TraXile.Next.Tests
             DateTime from = DateTime.Now.AddHours(-24).AddMinutes(-1);
             Assert.Equal(_source.GetHistory().Count(a => a.Started >= from), OverviewCount);
             Assert.Equal("Activity by hour", _vm.DailyTitle);
-            Assert.All(_vm.Recent, a => Assert.True(a.Started >= from));
+        }
+
+        private static readonly LeagueInfo[] Leagues =
+        {
+            new LeagueInfo { Name = "Old", Start = new DateTime(2026, 1, 1), End = new DateTime(2026, 4, 1) },
+            new LeagueInfo { Name = "Previous", Start = new DateTime(2026, 4, 10), End = new DateTime(2026, 7, 1) },
+            new LeagueInfo { Name = "Current", Start = new DateTime(2026, 7, 10), End = new DateTime(2026, 11, 1) },
+        };
+
+        [Fact]
+        public void League_compares_with_the_same_span_of_the_previous_league()
+        {
+            // day 20 of the current league vs. the first 20 days of the previous one
+            (DateTime from, DateTime to) = DashboardViewModel.ComparisonWindow(
+                Leagues[2].Start, Leagues[2].Start.AddDays(20), Leagues[2], Leagues);
+
+            Assert.Equal(new DateTime(2026, 4, 10), from);
+            Assert.Equal(new DateTime(2026, 4, 30), to);
+        }
+
+        [Fact]
+        public void League_comparison_ends_with_the_previous_league()
+        {
+            // the previous league ran 82 days; the current one is at day 100
+            (DateTime from, DateTime to) = DashboardViewModel.ComparisonWindow(
+                Leagues[2].Start, Leagues[2].Start.AddDays(100), Leagues[2], Leagues);
+
+            Assert.Equal(Leagues[1].Start, from);
+            Assert.Equal(Leagues[1].End, to);
+        }
+
+        [Fact]
+        public void Other_ranges_and_the_first_league_compare_with_the_period_right_before()
+        {
+            DateTime start = new DateTime(2026, 1, 1);
+            Assert.Equal((start.AddDays(-7), start), DashboardViewModel.ComparisonWindow(start, start.AddDays(7), null, Leagues));
+            Assert.Equal((start.AddDays(-7), start), DashboardViewModel.ComparisonWindow(start, start.AddDays(7), Leagues[0], Leagues));
         }
 
         [Fact]

@@ -72,25 +72,23 @@ namespace TraXile.Next.Tests
         }
 
         [Fact]
-        public void Pixels_are_converted_to_device_independent_units()
+        public void Positions_off_all_screens_are_rejected()
         {
-            // 150 % scaling: 1500 px are 1000 DIPs
-            var fromDevice = new Matrix(1 / 1.5, 0, 0, 1 / 1.5, 0, 0);
+            var monitors = new[] { new Rect(0, 0, 1920, 1080), new Rect(-1920, 0, 1920, 1080) }; // second monitor on the left
 
-            Point p = OverlayWindow.PixelsToDips(1500, 300, fromDevice);
-
-            Assert.Equal(1000, p.X, 3);
-            Assert.Equal(200, p.Y, 3);
+            Assert.True(OverlayWindow.IsOnScreen(-1800, 100, monitors));
+            Assert.False(OverlayWindow.IsOnScreen(2500, 100, monitors)); // monitor removed
+            Assert.False(OverlayWindow.IsOnScreen(100, 1075, monitors));
         }
 
         [Fact]
-        public void Positions_off_all_screens_are_rejected()
+        public void Positions_in_the_gap_between_monitors_of_different_size_are_rejected()
         {
-            var desktop = new Rect(-1920, 0, 3840, 1080); // second monitor on the left
+            // 4K primary (150 % scaling) next to a 1080p monitor on the right, top-aligned
+            var monitors = new[] { new Rect(0, 0, 3840, 2160), new Rect(3840, 0, 1920, 1080) };
 
-            Assert.True(OverlayWindow.IsOnScreen(new Point(-1800, 100), desktop));
-            Assert.False(OverlayWindow.IsOnScreen(new Point(2500, 100), desktop)); // monitor removed
-            Assert.False(OverlayWindow.IsOnScreen(new Point(100, 1075), desktop));
+            Assert.True(OverlayWindow.IsOnScreen(4000, 900, monitors));
+            Assert.False(OverlayWindow.IsOnScreen(4000, 1500, monitors)); // below the smaller monitor
         }
 
         [Fact]
