@@ -23,8 +23,7 @@
 
             <Border Style="{StaticResource Card}">
                 <StackPanel>
-                    <TextBlock Text="Heists by area level" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="How many heists you ran per area level" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Heists by area level" Style="{StaticResource CardHeading}" />
                     <lvc:CartesianChart Height="260" Series="{Binding CountSeries}" XAxes="{Binding CountXAxes}" YAxes="{Binding CountYAxes}"
                                         TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
                 </StackPanel>
@@ -32,10 +31,10 @@
 
             <Border Grid.Column="2" Style="{StaticResource Card}">
                 <StackPanel>
-                    <TextBlock Text="Average time by area level" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="Minutes per heist, capped at the heist time cap" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Average time by area level" Style="{StaticResource CardHeading}" />
                     <lvc:CartesianChart Height="260" Series="{Binding TimeSeries}" XAxes="{Binding TimeXAxes}" YAxes="{Binding TimeYAxes}"
                                         TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                    <TextBlock Text="Capped at the heist time cap." Style="{StaticResource CardNote}" />
                 </StackPanel>
             </Border>
         </Grid>
@@ -50,8 +49,7 @@
 
             <Border Style="{StaticResource Card}" VerticalAlignment="Top">
                 <StackPanel>
-                    <TextBlock Text="Count by area" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="Heist areas you ran most, with their average time" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Count by area" Style="{StaticResource CardHeading}" />
                     <ItemsControl ItemsSource="{Binding ByArea}" />
                     <TextBlock Text="No heists in the filtered activities." Style="{StaticResource Meta}"
                                Visibility="{Binding HasData, Converter={StaticResource InvBoolToVis}}" />
@@ -60,8 +58,7 @@
 
             <Border Grid.Column="2" Style="{StaticResource Card}" VerticalAlignment="Top">
                 <StackPanel>
-                    <TextBlock Text="Count by tag" Style="{StaticResource CardTitle}" />
-                    <TextBlock Text="Tags on your heists" Style="{StaticResource CardSubtitle}" />
+                    <TextBlock Text="Count by tag" Style="{StaticResource CardHeading}" />
                     <ItemsControl ItemsSource="{Binding ByTag}" />
                     <TextBlock Text="None of these heists has a tag.">
                         <TextBlock.Style>

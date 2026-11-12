@@ -33,6 +33,63 @@
             </Style.Triggers>
         </Style>
 
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Tooltip of a time distribution row (donut slice and table row): name, time and share;
+             for "Other" a small table of the grouped types, aligned like the overview table -->
+        <DataTemplate x:Key="TimeShareTip" DataType="{x:Type vm:OverviewRow}">
+            <StackPanel MinWidth="240" Margin="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Width="10" Height="10" CornerRadius="2" Background="{Binding Brush}" Margin="0,0,8,0" />
+                    <TextBlock Grid.Column="1" Text="{Binding Name}" Style="{StaticResource Body}" FontSize="13" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="2" Style="{StaticResource Num}" FontSize="13" Margin="16,0,0,0">
+                        <Run Text="{Binding Hours, Mode=OneWay}" /><Run Text="  ·  " Foreground="{DynamicResource TextMutedBrush}" /><Run Text="{Binding Percent, Mode=OneWay}" FontWeight="SemiBold" />
+                    </TextBlock>
+                </Grid>
+                <StackPanel Visibility="{Binding IsOther, Converter={StaticResource BoolToVis}}" Margin="0,8,0,0">
+                    <Grid Margin="0,0,0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="18" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="48" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Text="Type" Style="{StaticResource Caption}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="2" Text="Count" Style="{StaticResource Caption}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                        <TextBlock Grid.Column="3" Text="Time" Style="{StaticResource Caption}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                        <TextBlock Grid.Column="4" Text="%" Style="{StaticResource Caption}" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                    </Grid>
+                    <ItemsControl ItemsSource="{Binding Members}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:OverviewRow}">
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="18" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="48" />
+                                        <ColumnDefinition Width="60" />
+                                        <ColumnDefinition Width="50" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Width="8" Height="8" CornerRadius="2" Background="{Binding Brush}" HorizontalAlignment="Left" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" Style="{StaticResource Body}" FontSize="12" Margin="0,0,8,0" />
+                                    <TextBlock Grid.Column="2" Text="{Binding CountText}" Style="{StaticResource Num}" FontSize="12" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="3" Text="{Binding Hours}" Style="{StaticResource Caption}" FontSize="12" HorizontalAlignment="Right"
+                                               Typography.NumeralAlignment="Tabular" />
+                                    <TextBlock Grid.Column="4" Text="{Binding Percent}" Style="{StaticResource Num}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
         <DataTemplate x:Key="TagChip">
             <Border Style="{StaticResource Chip}" Background="{Binding Background}">
                 <TextBlock Text="{Binding Name}" Foreground="{Binding Foreground}" FontSize="12" FontWeight="SemiBold" />
@@ -367,7 +424,6 @@
                         </Grid.RowDefinitions>
                         <StackPanel>
                             <TextBlock Text="{Binding DailyTitle}" Style="{StaticResource CardTitle}" />
-                            <TextBlock Text="Hours spent per activity type" Style="{StaticResource Caption}" Margin="0,2,0,0" />
                         </StackPanel>
                         <lvc:CartesianChart Grid.Row="1" MinHeight="320" Margin="0,12,0,0"
                                             Series="{Binding DailySeries}"
@@ -383,14 +439,15 @@
                         <Grid>
                             <StackPanel>
                                 <TextBlock Text="Time distribution" Style="{StaticResource CardTitle}" />
-                                <TextBlock Text="Where your time went" Style="{StaticResource Caption}" Margin="0,2,0,0" />
                             </StackPanel>
                             <CheckBox HorizontalAlignment="Right" VerticalAlignment="Top" Content="Hideout"
                                       IsChecked="{Binding ShowHideout}" ToolTip="Count the time spent in your hideout" />
                         </Grid>
 
                         <Grid Height="220" Margin="0,8,0,8">
-                            <lvc:PieChart Series="{Binding TimeSeries}" InitialRotation="-90" LegendPosition="Hidden" TooltipPosition="Center" />
+                            <!-- tooltip: SliceTooltip (code-behind); a click on "Other" toggles its sub-rows -->
+                            <lvc:PieChart x:Name="Donut" Series="{Binding TimeSeries}" InitialRotation="-90" LegendPosition="Hidden"
+                                          TooltipPosition="Center" DataPointerDown="Donut_DataPointerDown" />
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
                                 <TextBlock Text="{Binding TotalHours}" Style="{StaticResource Metric}" FontSize="30" HorizontalAlignment="Center" />
                                 <TextBlock Text="hours total" Style="{StaticResource Caption}" HorizontalAlignment="Center" />
@@ -410,11 +467,15 @@
                             <TextBlock Grid.Column="2" Text="Time" Style="{StaticResource Caption}" FontWeight="SemiBold" HorizontalAlignment="Right" />
                             <TextBlock Grid.Column="3" Text="%" Style="{StaticResource Caption}" FontWeight="SemiBold" HorizontalAlignment="Right" />
                         </Grid>
-                        <ItemsControl ItemsSource="{Binding Overview}">
+                        <ItemsControl x:Name="OverviewItems" ItemsSource="{Binding OverviewTable}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type vm:OverviewRow}">
-                                    <!-- the "Other" row lists its grouped types; null tooltip = none for the rest -->
-                                    <Grid Margin="0,4" Background="Transparent" ToolTip="{Binding MembersText}">
+                                    <!-- "Other": breakdown tooltip, a click expands / collapses its types as sub-rows -->
+                                    <Grid x:Name="Row" Margin="0,4" Background="Transparent"
+                                          ToolTipService.IsEnabled="{Binding IsOther}" MouseLeftButtonUp="OverviewRow_Click">
+                                        <Grid.ToolTip>
+                                            <ToolTip Content="{Binding}" ContentTemplate="{StaticResource TimeShareTip}" MaxWidth="600" />
+                                        </Grid.ToolTip>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
@@ -422,17 +483,45 @@
                                             <ColumnDefinition Width="68" />
                                             <ColumnDefinition Width="56" />
                                         </Grid.ColumnDefinitions>
-                                        <Border Width="10" Height="10" CornerRadius="2" Background="{Binding Brush}" Margin="0,0,10,0" />
-                                        <TextBlock Grid.Column="1" Text="{Binding Name}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Grid.Column="2" Text="{Binding CountText}" Style="{StaticResource Num}" FontSize="13" HorizontalAlignment="Right" />
-                                        <TextBlock Grid.Column="3" Text="{Binding Hours}" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Right"
+                                        <Border x:Name="Swatch" Width="10" Height="10" CornerRadius="2" Background="{Binding Brush}" Margin="0,0,10,0" />
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <TextBlock x:Name="RowName" Text="{Binding Name}" Style="{StaticResource Body}" FontSize="13" TextTrimming="CharacterEllipsis" />
+                                            <ui:SymbolIcon x:Name="Chevron" Symbol="ChevronRight16" FontSize="12" Margin="6,1,0,0"
+                                                           Foreground="{DynamicResource TextMutedBrush}" VerticalAlignment="Center" Visibility="Collapsed" />
+                                        </StackPanel>
+                                        <TextBlock x:Name="RowCount" Grid.Column="2" Text="{Binding CountText}" Style="{StaticResource Num}" FontSize="13" HorizontalAlignment="Right" />
+                                        <TextBlock x:Name="RowHours" Grid.Column="3" Text="{Binding Hours}" Style="{StaticResource Caption}" FontSize="13" HorizontalAlignment="Right"
                                                    Typography.NumeralAlignment="Tabular" />
-                                        <TextBlock Grid.Column="4" Text="{Binding Percent}" Style="{StaticResource Num}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                                        <TextBlock x:Name="RowPercent" Grid.Column="4" Text="{Binding Percent}" Style="{StaticResource Num}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Right" />
                                     </Grid>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsOther}" Value="True">
+                                            <Setter TargetName="Row" Property="Cursor" Value="Hand" />
+                                            <Setter TargetName="Chevron" Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                            <Setter TargetName="Chevron" Property="Symbol" Value="ChevronDown16" />
+                                        </DataTrigger>
+                                        <!-- sub-row of "Other": indented, smaller and muted -->
+                                        <DataTrigger Binding="{Binding IsMember}" Value="True">
+                                            <Setter TargetName="Row" Property="Margin" Value="0,2" />
+                                            <Setter TargetName="Swatch" Property="Margin" Value="18,0,10,0" />
+                                            <Setter TargetName="Swatch" Property="Width" Value="8" />
+                                            <Setter TargetName="Swatch" Property="Height" Value="8" />
+                                            <Setter TargetName="RowName" Property="FontSize" Value="12" />
+                                            <Setter TargetName="RowName" Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
+                                            <Setter TargetName="RowCount" Property="FontSize" Value="12" />
+                                            <Setter TargetName="RowCount" Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
+                                            <Setter TargetName="RowHours" Property="FontSize" Value="12" />
+                                            <Setter TargetName="RowPercent" Property="FontSize" Value="12" />
+                                            <Setter TargetName="RowPercent" Property="FontWeight" Value="Normal" />
+                                            <Setter TargetName="RowPercent" Property="Foreground" Value="{DynamicResource TextMutedBrush}" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <TextBlock Text="Types under 4 % are grouped as &quot;Other&quot;." Style="{StaticResource Caption}"
+                        <TextBlock Text="Types under 4 % are grouped as &quot;Other&quot; – click to expand." Style="{StaticResource Caption}"
                                    Margin="0,8,0,0" TextWrapping="Wrap" />
 
                     </StackPanel>
@@ -443,7 +532,6 @@
             <Grid Margin="0,0,0,12">
                 <StackPanel>
                     <TextBlock Text="Recent activities" Style="{StaticResource H3}" />
-                    <TextBlock Text="Your latest activities" Style="{StaticResource Caption}" Margin="0,2,0,0" />
                 </StackPanel>
                 <ui:Button Content="View all" HorizontalAlignment="Right" VerticalAlignment="Center"
                            Appearance="Transparent" Click="ViewAll_Click" />

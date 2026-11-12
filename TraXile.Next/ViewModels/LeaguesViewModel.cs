@@ -28,7 +28,8 @@ namespace TraXile.Next.ViewModels
     public sealed class LeagueChart
     {
         public string Title { get; set; }
-        public string Subtitle { get; set; }
+        /// <summary>How the figures are computed, if the title does not say it; null for none.</summary>
+        public string Note { get; set; }
         public ISeries[] Series { get; set; }
         public Axis[] XAxes { get; set; }
         public Axis[] YAxes { get; set; }
@@ -122,11 +123,11 @@ namespace TraXile.Next.ViewModels
             Func<double, string> hours = v => $"{v:0.#} h";
             Func<double, string> minutes = v => $"{v:0.#} min";
 
-            LeagueChart Chart(string title, string subtitle, Func<LeagueStats, double> value, Func<double, string> format) =>
+            LeagueChart Chart(string title, string note, Func<LeagueStats, double> value, Func<double, string> format) =>
                 new LeagueChart
                 {
                     Title = title,
-                    Subtitle = subtitle,
+                    Note = note,
                     Series = new[] { Columns(title, Stats.Select(s => Math.Round(value(s), 1)), color, format) },
                     XAxes = new[] { CategoryAxis(Stats.Select(s => s.League.Name).ToList()) },
                     YAxes = new[] { ValueAxis(format == count ? null : format) } // counts: whole steps
@@ -134,14 +135,14 @@ namespace TraXile.Next.ViewModels
 
             Charts = new[]
             {
-                Chart("Maps", "Maps done per league", s => s.Maps, count),
-                Chart("T16 maps", "Maps of area level 83 and above", s => s.MapsT16, count),
-                Chart("Activities", "All activities per league", s => s.Activities, count),
-                Chart("Playtime", "Hours in activities, capped at the time caps", s => s.PlaySeconds / 3600, hours),
-                Chart("Average map time", "Minutes per map", s => s.AverageMapSeconds / 60, minutes),
-                Chart("Average T16 map time", "Minutes per map of area level 83 and above", s => s.AverageMapT16Seconds / 60, minutes),
-                Chart("Deaths", "Deaths during the activities of the league", s => s.Deaths, count),
-                Chart("Campaign", "Hours in the campaign", s => s.CampaignSeconds / 3600, hours),
+                Chart("Maps", null, s => s.Maps, count),
+                Chart("T16 maps", "Maps of area level 83 and above.", s => s.MapsT16, count),
+                Chart("Activities", null, s => s.Activities, count),
+                Chart("Playtime", "Capped at the time caps.", s => s.PlaySeconds / 3600, hours),
+                Chart("Average map time", "Capped at the map time cap.", s => s.AverageMapSeconds / 60, minutes),
+                Chart("Average T16 map time", "Maps of area level 83 and above, capped at the map time cap.", s => s.AverageMapT16Seconds / 60, minutes),
+                Chart("Deaths", null, s => s.Deaths, count),
+                Chart("Campaign", null, s => s.CampaignSeconds / 3600, hours),
             };
         }
     }

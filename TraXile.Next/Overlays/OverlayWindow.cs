@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -105,60 +108,113 @@ namespace TraXile.Next.Overlays
         public void ApplyOpacity(int percent) =>
             Opacity = Math.Max(OverlaySettings.MinOpacity, Math.Min(100, percent)) / 100.0;
 
+        // Saved position (screen pixels) that is applied once more after the first render: WPF may still
+        // rescale/move the window when it lands on a monitor with a different DPI than where it was created.
+        private (int X, int Y)? _pendingPixels;
+
         /// <summary>
         /// Places the overlay at its saved position (screen pixels, also written by the classic app) or at
-        /// <paramref name="fallback"/> (device-independent units) if there is none or it is off all screens.
+        /// <paramref name="fallback"/> (device-independent units) if there is none or it is on no monitor.
+        /// Pixels are applied with SetWindowPos, so mixed-DPI multi-monitor setups need no DIP conversion.
         /// </summary>
         public void Place(Point fallback)
         {
-            Matrix fromDevice = DeviceTransform(toDevice: false);
+            IntPtr hwnd = new WindowInteropHelper(this).EnsureHandle();
             (int X, int Y)? saved = OverlaySettings.ReadPosition(_setup, Id);
-            Point p = saved.HasValue ? PixelsToDips(saved.Value.X, saved.Value.Y, fromDevice) : fallback;
-            if (!IsOnScreen(p, VirtualScreen)) p = fallback;
-            Left = p.X;
-            Top = p.Y;
+            if (saved.HasValue && IsOnScreen(saved.Value.X, saved.Value.Y, MonitorRects()))
+            {
+                _pendingPixels = saved;
+                MoveToPixels(hwnd, saved.Value.X, saved.Value.Y);
+            }
+            else
+            {
+                _pendingPixels = null;
+                Left = fallback.X;
+                Top = fallback.Y;
+            }
         }
 
         /// <summary>Forgets the saved position and moves the overlay to <paramref name="fallback"/>.</summary>
         public void ResetPosition(Point fallback)
         {
+            new WindowInteropHelper(this).EnsureHandle();
+            _pendingPixels = null;
             Left = fallback.X;
             Top = fallback.Y;
             SavePosition();
         }
 
+        /// <summary>Moves the overlay out of sight without saving (screenshot mode renders it off-screen).</summary>
+        public void MoveOffScreen()
+        {
+            _pendingPixels = null;
+            Left = -30000;
+            Top = -30000;
+        }
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+            if (_pendingPixels is (int x, int y)) MoveToPixels(new WindowInteropHelper(this).Handle, x, y);
+            _pendingPixels = null;
+        }
+
         private void SavePosition()
         {
             if (!_canWrite) return;
-            Point px = DeviceTransform(toDevice: true).Transform(new Point(Left, Top));
-            OverlaySettings.WritePosition(_setup, Id, (int)Math.Round(px.X), (int)Math.Round(px.Y));
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+            if (hwnd == IntPtr.Zero || !GetWindowRect(hwnd, out RECT r)) return;
+            OverlaySettings.WritePosition(_setup, Id, r.Left, r.Top);
         }
 
-        /// <summary>Screen pixels -> device-independent units of this window (classic positions are pixels).</summary>
-        public static Point PixelsToDips(int x, int y, Matrix fromDevice) => fromDevice.Transform(new Point(x, y));
+        private static void MoveToPixels(IntPtr hwnd, int x, int y) =>
+            SetWindowPos(hwnd, IntPtr.Zero, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 
-        /// <summary>True if the top-left corner (plus a little of the overlay) is on the desktop.</summary>
-        public static bool IsOnScreen(Point topLeft, Rect desktop) =>
-            topLeft.X >= desktop.Left - 20 && topLeft.Y >= desktop.Top - 10 &&
-            topLeft.X <= desktop.Right - 40 && topLeft.Y <= desktop.Bottom - 20;
-
-        private static Rect VirtualScreen => new Rect(SystemParameters.VirtualScreenLeft, SystemParameters.VirtualScreenTop,
-            SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight);
-
-        private Matrix DeviceTransform(bool toDevice)
+        /// <summary>
+        /// True if the top-left corner plus a little of the overlay (screen pixels) is on one of the
+        /// <paramref name="monitors"/> - checked per monitor, so gaps between monitors of different size count as off-screen.
+        /// </summary>
+        public static bool IsOnScreen(int x, int y, IEnumerable<Rect> monitors)
         {
-            new WindowInteropHelper(this).EnsureHandle();
-            CompositionTarget target = PresentationSource.FromVisual(this)?.CompositionTarget;
-            if (target == null) return Matrix.Identity;
-            return toDevice ? target.TransformToDevice : target.TransformFromDevice;
+            var probe = new Point(x + 20, y + 10);
+            return monitors.Any(m => m.Contains(probe));
+        }
+
+        /// <summary>Bounds of all monitors in screen pixels.</summary>
+        private static List<Rect> MonitorRects()
+        {
+            var rects = new List<Rect>();
+            EnumDisplayMonitors(IntPtr.Zero, IntPtr.Zero, (IntPtr hMonitor, IntPtr hdc, ref RECT r, IntPtr data) =>
+            {
+                rects.Add(new Rect(r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top));
+                return true;
+            }, IntPtr.Zero);
+            return rects;
         }
 
         /// <summary>Closes for real (app exit); otherwise closing only hides the overlay.</summary>
         public void CloseForGood()
         {
+            IsMovable = false; // saves a position that was moved but not fixed yet
             _allowClose = true;
             Close();
         }
+
+        private const uint SWP_NOSIZE = 0x0001, SWP_NOZORDER = 0x0004, SWP_NOACTIVATE = 0x0010;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT { public int Left, Top, Right, Bottom; }
+
+        private delegate bool MonitorEnumProc(IntPtr hMonitor, IntPtr hdc, ref RECT rect, IntPtr data);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr insertAfter, int x, int y, int cx, int cy, uint flags);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr clip, MonitorEnumProc callback, IntPtr data);
 
         protected override void OnClosing(CancelEventArgs e)
         {

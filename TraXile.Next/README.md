@@ -57,6 +57,8 @@ TraXile.exe      --screenshot out.png --page firstrun          # first-run scree
 TraXile.exe      --screenshot out.png --page overlay-stopwatch # stopwatch overlay (also: overlay-stopwatch-move)
 TraXile.exe      --screenshot out.png --page overlay-tags      # tags overlay (also: overlay-tags-move)
 TraXile.exe      --screenshot out.png --page tags --select 0   # Tags page with the first tag selected
+TraXile.exe      --screenshot out.png --select 0               # dashboard with "Other" expanded; 1 = its row tooltip,
+                                                               # 2 = hover + click on its donut slice (tooltip -> out.tooltip.png)
 TraXile.exe      --screenshot out.png --page settings --scroll 1500 # lower part of a long page
 TraXile.exe      --screenshot out.png --page log --filter last7days,map,level>=83,tag:juiced # with the global filter set
                                                                # (also: league, custom, area:<name>, and, not)

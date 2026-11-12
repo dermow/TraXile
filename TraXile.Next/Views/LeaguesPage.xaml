@@ -44,10 +44,20 @@
                 <DataTemplate DataType="{x:Type vm:LeagueChart}">
                     <Border Style="{StaticResource Card}" Margin="0,0,16,16">
                         <StackPanel>
-                            <TextBlock Text="{Binding Title}" Style="{StaticResource CardTitle}" />
-                            <TextBlock Text="{Binding Subtitle}" Style="{StaticResource CardSubtitle}" />
+                            <TextBlock Text="{Binding Title}" Style="{StaticResource CardHeading}" />
                             <lvc:CartesianChart Height="220" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"
                                                 TooltipPosition="Top" LegendPosition="Hidden" Background="Transparent" />
+                            <TextBlock Text="{Binding Note}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource CardNote}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Note}" Value="{x:Null}">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </StackPanel>
                     </Border>
                 </DataTemplate>
