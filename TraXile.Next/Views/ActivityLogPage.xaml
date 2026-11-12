@@ -21,7 +21,7 @@
         </ItemsPanelTemplate>
 
         <DataTemplate x:Key="TagChip" DataType="{x:Type svc:TagInfo}">
-            <Border Style="{StaticResource Chip}" Background="{Binding Background}" Padding="8,1" Margin="0,2,4,2">
+            <Border Style="{StaticResource Chip}" Background="{Binding Background}" Padding="6,0" Margin="0,1,4,1">
                 <TextBlock Text="{Binding Name}" Foreground="{Binding Foreground}" FontSize="11" FontWeight="SemiBold" />
             </Border>
         </DataTemplate>
@@ -148,18 +148,30 @@
                               SelectionChanged="Grid_SelectionChanged"
                               Sorting="Grid_Sorting"
                               PreviewKeyDown="Grid_PreviewKeyDown">
+                        <!-- compact rows: one line per activity -->
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow" BasedOn="{StaticResource CardRow}">
+                                <Setter Property="Margin" Value="0,0,0,2" />
+                                <Setter Property="MinHeight" Value="32" />
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Activity" Width="2.2*" MinWidth="200" SortMemberPath="Area">
+                            <DataGridTemplateColumn Header="Activity" Width="2*" MinWidth="200" SortMemberPath="Area">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate DataType="{x:Type svc:ActivityInfo}">
-                                        <StackPanel Orientation="Horizontal" Margin="0,6">
+                                        <!-- one line: area and type side by side (compact rows) -->
+                                        <Grid Margin="0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
                                             <Rectangle Width="8" Height="8" RadiusX="2" RadiusY="2" Fill="{Binding TypeBrush}"
-                                                       Margin="0,0,12,0" VerticalAlignment="Center" />
-                                            <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Area}" Style="{StaticResource Body}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                                                <TextBlock Text="{Binding TypeName}" Style="{StaticResource Caption}" />
-                                            </StackPanel>
-                                        </StackPanel>
+                                                       Margin="0,0,10,0" VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="1" Style="{StaticResource Body}" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
+                                                <Run Text="{Binding Area, Mode=OneWay}" FontWeight="SemiBold" /><Run Text="  " /><Run
+                                                     Text="{Binding TypeName, Mode=OneWay}" FontSize="12" Foreground="{DynamicResource TextMutedBrush}" />
+                                            </TextBlock>
+                                        </Grid>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -167,16 +179,34 @@
                             <DataGridTemplateColumn Header="Level" Width="70" SortMemberPath="AreaLevel">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate DataType="{x:Type svc:ActivityInfo}">
-                                        <TextBlock Text="{Binding LevelText}" Style="{StaticResource Body}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding LevelText}" Style="{StaticResource Body}" FontSize="13" VerticalAlignment="Center" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTemplateColumn Header="Tags" Width="2*" CanUserSort="False">
+                            <DataGridTemplateColumn Header="Tags" Width="2.4*" CanUserSort="False">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate DataType="{x:Type svc:ActivityInfo}">
-                                        <ItemsControl ItemsSource="{Binding Tags}" ItemTemplate="{StaticResource TagChip}"
-                                                      ItemsPanel="{StaticResource WrapPanelTemplate}" VerticalAlignment="Center" />
+                                        <!-- one line; tags that do not fit are clipped, the tooltip shows all of them -->
+                                        <ItemsControl ItemsSource="{Binding Tags}" ItemTemplate="{StaticResource TagChip}" ClipToBounds="True"
+                                                      VerticalAlignment="Center" Background="Transparent">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate><StackPanel Orientation="Horizontal" /></ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ToolTip>
+                                                <ItemsControl ItemsSource="{Binding Tags}" ItemTemplate="{StaticResource TagChip}"
+                                                              ItemsPanel="{StaticResource WrapPanelTemplate}" MaxWidth="320" />
+                                            </ItemsControl.ToolTip>
+                                            <ItemsControl.Style>
+                                                <Style TargetType="ItemsControl">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Tags.Count}" Value="0">
+                                                            <Setter Property="ToolTipService.IsEnabled" Value="False" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ItemsControl.Style>
+                                        </ItemsControl>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -184,7 +214,7 @@
                             <DataGridTemplateColumn Header="Deaths" Width="70" SortMemberPath="Deaths">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate DataType="{x:Type svc:ActivityInfo}">
-                                        <TextBlock x:Name="T" Text="{Binding Deaths}" Style="{StaticResource RightCell}" Margin="0,0,8,0" />
+                                        <TextBlock x:Name="T" Text="{Binding Deaths}" Style="{StaticResource RightCell}" FontSize="13" Margin="0,0,8,0" />
                                         <DataTemplate.Triggers>
                                             <DataTrigger Binding="{Binding Deaths}" Value="0">
                                                 <Setter TargetName="T" Property="Opacity" Value="0.35" />
@@ -206,7 +236,7 @@
                             <DataGridTemplateColumn Header="Duration" Width="90" SortMemberPath="TotalSeconds">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate DataType="{x:Type svc:ActivityInfo}">
-                                        <TextBlock Text="{Binding Duration}" Style="{StaticResource RightCell}" FontWeight="SemiBold" Margin="0,0,12,0" />
+                                        <TextBlock Text="{Binding Duration}" Style="{StaticResource RightCell}" FontSize="13" FontWeight="SemiBold" Margin="0,0,12,0" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

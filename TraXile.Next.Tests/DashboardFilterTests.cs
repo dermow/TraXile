@@ -80,7 +80,7 @@ namespace TraXile.Next.Tests
         }
 
         [Fact]
-        public void Type_and_tag_filter_apply_to_kpis_overview_and_recent()
+        public void Type_and_tag_filter_apply_to_kpis_and_overview()
         {
             _filter.Type = ACTIVITY_TYPES.MAP;
             _filter.SetTag("juiced", true);
@@ -89,7 +89,16 @@ namespace TraXile.Next.Tests
             Assert.Equal(expected, OverviewCount);
             // the type filter is maps only, so "Maps completed" counts all of them
             Assert.Equal(expected.ToString("N0"), _vm.Kpis.Single(k => k.Title == "Maps completed").Value);
-            Assert.All(_vm.Recent, a => Assert.Contains(a.Tags, t => t.Id == "juiced"));
+        }
+
+        [Fact]
+        public void Recent_activities_ignore_the_filter_and_show_the_latest_five()
+        {
+            _filter.Type = ACTIVITY_TYPES.MAP;
+            _filter.SetTag("juiced", true);
+            _filter.Time = FilterTime.Last24Hours;
+
+            Assert.Equal(_source.GetHistory().Take(5).Select(a => a.Id), _vm.Recent.Select(a => a.Id));
         }
 
         [Fact]
@@ -100,7 +109,6 @@ namespace TraXile.Next.Tests
             DateTime from = DateTime.Now.AddHours(-24).AddMinutes(-1);
             Assert.Equal(_source.GetHistory().Count(a => a.Started >= from), OverviewCount);
             Assert.Equal("Activity by hour", _vm.DailyTitle);
-            Assert.All(_vm.Recent, a => Assert.True(a.Started >= from));
         }
 
         private static readonly LeagueInfo[] Leagues =
